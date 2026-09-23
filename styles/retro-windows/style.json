@@ -1,0 +1,35 @@
+{
+  "id": "retro-windows",
+  "version": "1.0.0",
+  "tokens": {
+    "background": "#008080",
+    "ink": "#111111",
+    "muted": "#454545",
+    "accent": "#000080",
+    "accentAlt": "#00a6a6",
+    "paper": "#c0c0c0",
+    "grid": "#e6e6e6",
+    "displayFont": "Courier New, monospace",
+    "bodyFont": "Arial, sans-serif",
+    "pattern": "desktop",
+    "surfaceRadius": 0,
+    "surfaceBorder": "3px outset #f4f4f4",
+    "surfaceShadow": "7px 7px 0 #111111",
+    "labelRadius": 0,
+    "titleFontSize": 92
+  },
+  "safeArea": {
+    "landscape": {"top": 104, "right": 96, "bottom": 92, "left": 96},
+    "portrait": {"top": 138, "right": 64, "bottom": 124, "left": 64}
+  },
+  "supports": {
+    "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
+    "layers": ["label", "card", "annotation", "metric", "node", "screenshot"],
+    "actions": ["enter", "reveal", "draw", "focus", "highlight", "count", "camera-push"],
+    "transitions": ["fade", "slide", "paper-wipe", "carry"]
+  },
+  "provenance": {
+    "fonts": "System-installed Courier New and Arial; no bundled font assets.",
+    "assets": "CSS-only window chrome and desktop pattern; no external assets."
+  }
+}

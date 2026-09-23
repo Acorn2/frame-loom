@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "2.1",
+  "style": {"id": "scatterbrain", "version": "1.0.0"},
+  "project": {
+    "title": "Three checks, one review trail",
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "durationSec": 20,
+    "durationFrames": 600,
+    "status": "reviewed"
+  },
+  "scenes": [
+    {
+      "id": "data-hook",
+      "template": "statement",
+      "title": "A number needs a visible reason",
+      "narration": "数字不是装饰，它应该回答一个明确的问题。",
+      "durationFrames": 180,
+      "layers": [
+        {"id": "hook-label", "type": "label", "text": "DATA NOTE", "x": 0, "y": 520, "width": 240, "height": 48},
+        {"id": "hook-note", "type": "annotation", "text": "先说清楚要检查什么，再显示结果。", "x": 24, "y": 700, "width": 760, "height": 140, "rotate": -1}
+      ],
+      "connections": [],
+      "beats": [
+        {"id": "label-enter", "target": "hook-label", "action": "enter", "start": 10, "duration": 24},
+        {"id": "note-reveal", "target": "hook-note", "action": "reveal", "start": 52, "duration": 30}
+      ],
+      "captions": [{"id": "hook-caption", "text": "数字必须服务于判断。", "start": 62, "end": 158}],
+      "transitionOut": "paper-wipe"
+    },
+    {
+      "id": "data-checks",
+      "template": "metric-grid",
+      "title": "Three deterministic checks",
+      "narration": "结构、编码和代表帧分别回答不同问题。",
+      "durationFrames": 240,
+      "layers": [
+        {"id": "schema", "type": "metric", "label": "STRUCTURE", "value": "1", "x": 0, "y": 480, "width": 720, "height": 220},
+        {"id": "metadata", "type": "metric", "label": "METADATA", "value": "1", "x": 70, "y": 770, "width": 720, "height": 220, "rotate": 1},
+        {"id": "visual", "type": "metric", "label": "VISUAL EVIDENCE", "value": "6", "x": 0, "y": 1060, "width": 720, "height": 220}
+      ],
+      "connections": [],
+      "beats": [
+        {"id": "schema-count", "target": "schema", "action": "count", "start": 16, "duration": 34},
+        {"id": "metadata-count", "target": "metadata", "action": "count", "start": 68, "duration": 34},
+        {"id": "visual-count", "target": "visual", "action": "count", "start": 120, "duration": 34}
+      ],
+      "captions": [{"id": "checks-caption", "text": "不同检查不能互相替代。", "start": 24, "end": 214}],
+      "transitionOut": "slide"
+    },
+    {
+      "id": "data-result",
+      "template": "statement",
+      "title": "Evidence before confidence",
+      "narration": "自动化报告提供证据，完整播放才确认节奏和可读性。",
+      "durationFrames": 180,
+      "layers": [
+        {"id": "result-card", "type": "card", "label": "REVIEW TRAIL", "text": "Validate → Inspect → Watch", "x": 0, "y": 540, "width": 800, "height": 250},
+        {"id": "result-note", "type": "annotation", "text": "Contact sheet catches frames. Playback catches rhythm.", "x": 30, "y": 900, "width": 760, "height": 160, "rotate": -1}
+      ],
+      "connections": [],
+      "beats": [
+        {"id": "card-enter", "target": "result-card", "action": "enter", "start": 16, "duration": 30},
+        {"id": "result-reveal", "target": "result-note", "action": "reveal", "start": 70, "duration": 28}
+      ],
+      "captions": [{"id": "result-caption", "text": "报告是证据，不是视觉质量结论。", "start": 72, "end": 158}],
+      "transitionOut": "fade"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "statement": {
+    "label": "title-bar",
+    "title": "desktop-heading",
+    "annotation": "status-line",
+    "metric": "dialog-metric",
+    "card": "window-panel"
+  },
+  "graph-explainer": {"node": "dialog-node", "connection": "system-line"},
+  "metric-grid": {"metric": "dialog-metric", "annotation": "status-line"},
+  "interaction-flow": {"screenshot": "window-panel", "annotation": "status-line"}
+}

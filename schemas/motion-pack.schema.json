@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FrameLoom Motion Pack",
+  "type": "object",
+  "properties": {
+    "runtime": {
+      "type": "object",
+      "properties": {
+        "enterOffset": {
+          "type": "number",
+          "minimum": 0
+        },
+        "damping": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "stiffness": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "mass": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "emphasisScale": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "enterOffset",
+        "damping",
+        "stiffness",
+        "mass",
+        "emphasisScale"
+      ],
+      "additionalProperties": false
+    },
+    "enter": {
+      "type": "object",
+      "properties": {
+        "durationFrames": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "easing": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "durationFrames",
+        "easing"
+      ],
+      "additionalProperties": false
+    },
+    "reveal": {
+      "type": "object",
+      "properties": {
+        "durationFrames": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "easing": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "durationFrames",
+        "easing"
+      ],
+      "additionalProperties": false
+    },
+    "highlight": {
+      "type": "object",
+      "properties": {
+        "durationFrames": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "easing": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "durationFrames",
+        "easing"
+      ],
+      "additionalProperties": false
+    },
+    "focus": {
+      "type": "object",
+      "properties": {
+        "durationFrames": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "easing": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "durationFrames",
+        "easing"
+      ],
+      "additionalProperties": false
+    },
+    "count": {
+      "type": "object",
+      "properties": {
+        "durationFrames": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "easing": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "durationFrames",
+        "easing"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "runtime",
+    "enter",
+    "reveal",
+    "highlight",
+    "focus",
+    "count"
+  ],
+  "additionalProperties": false
+}

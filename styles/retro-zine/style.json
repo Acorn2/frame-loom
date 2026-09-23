@@ -1,0 +1,35 @@
+{
+  "id": "retro-zine",
+  "version": "1.0.0",
+  "tokens": {
+    "background": "#f2ead9",
+    "ink": "#18211d",
+    "muted": "#68736a",
+    "accent": "#e65335",
+    "accentAlt": "#218c72",
+    "paper": "#fffaf0",
+    "grid": "#d8cdb8",
+    "displayFont": "Georgia, serif",
+    "bodyFont": "Arial, sans-serif",
+    "pattern": "grid",
+    "surfaceRadius": 0,
+    "surfaceBorder": "2px solid #18211d",
+    "surfaceShadow": "10px 10px 0 #e65335",
+    "labelRadius": 0,
+    "titleFontSize": 104
+  },
+  "safeArea": {
+    "landscape": {"top": 100, "right": 120, "bottom": 100, "left": 120},
+    "portrait": {"top": 132, "right": 72, "bottom": 132, "left": 72}
+  },
+  "supports": {
+    "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
+    "layers": ["label", "card", "annotation", "metric", "node", "screenshot"],
+    "actions": ["enter", "reveal", "draw", "focus", "highlight", "count", "camera-push"],
+    "transitions": ["fade", "slide", "paper-wipe", "carry"]
+  },
+  "provenance": {
+    "fonts": "System-installed Georgia and Arial; no bundled font assets.",
+    "assets": "CSS-only texture and shapes; no external assets."
+  }
+}

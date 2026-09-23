@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "2.1",
+  "style": {"id": "retro-windows", "version": "1.0.0"},
+  "project": {
+    "title": "A reviewable product workflow",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 20,
+    "durationFrames": 600,
+    "status": "reviewed"
+  },
+  "scenes": [
+    {
+      "id": "product-hook",
+      "template": "statement",
+      "title": "A demo should show state, not decoration",
+      "narration": "产品演示的价值来自状态变化，而不是堆叠静态截图。",
+      "durationFrames": 180,
+      "layers": [
+        {"id": "hook-label", "type": "label", "text": "PRODUCT.EXE", "x": 0, "y": 350, "width": 260, "height": 48},
+        {"id": "hook-note", "type": "annotation", "text": "选择、确认、完成：每一步都有可见结果。", "x": 0, "y": 540, "width": 820, "height": 92}
+      ],
+      "connections": [],
+      "beats": [
+        {"id": "hook-label-enter", "target": "hook-label", "action": "enter", "start": 10, "duration": 20},
+        {"id": "hook-note-reveal", "target": "hook-note", "action": "reveal", "start": 48, "duration": 30}
+      ],
+      "captions": [{"id": "hook-caption", "text": "让界面状态解释产品流程。", "start": 54, "end": 156}],
+      "transitionOut": "slide"
+    },
+    {
+      "id": "product-flow",
+      "template": "interaction-flow",
+      "title": "Three explicit production states",
+      "narration": "先选择风格，再审核分镜，最后渲染并检查。",
+      "durationFrames": 240,
+      "layers": [
+        {"id": "select-state", "type": "screenshot", "label": "01 STYLE SELECTED", "asset": "assets/style-selected.svg", "replacementGroup": "product-state", "visibleFrom": 0, "visibleUntil": 120, "x": 0, "y": 390, "width": 820, "height": 360},
+        {"id": "review-state", "type": "screenshot", "label": "02 STORYBOARD REVIEWED", "asset": "assets/storyboard-reviewed.svg", "replacementGroup": "product-state", "visibleFrom": 120, "visibleUntil": 240, "x": 0, "y": 390, "width": 820, "height": 360},
+        {"id": "flow-note", "type": "annotation", "text": "The visible state changes only after the review gate passes.", "x": 900, "y": 470, "width": 600, "height": 120}
+      ],
+      "connections": [],
+      "beats": [
+        {"id": "select-enter", "target": "select-state", "action": "enter", "start": 12, "duration": 24},
+        {"id": "note-enter", "target": "flow-note", "action": "enter", "start": 54, "duration": 24},
+        {"id": "review-enter", "target": "review-state", "action": "enter", "start": 120, "duration": 24},
+        {"id": "review-focus", "target": "review-state", "action": "camera-push", "start": 168, "duration": 28}
+      ],
+      "captions": [{"id": "flow-caption", "text": "阶段门禁让返工发生在成本最低的位置。", "start": 28, "end": 214}],
+      "transitionOut": "carry"
+    },
+    {
+      "id": "product-result",
+      "template": "statement",
+      "title": "A preview you can inspect",
+      "narration": "编码完成只是起点，输出元数据、代表帧和完整播放都要复核。",
+      "durationFrames": 180,
+      "layers": [
+        {"id": "result-metric", "type": "metric", "label": "CHECKED OUTPUT", "value": 100, "x": 0, "y": 430, "width": 360, "height": 200},
+        {"id": "result-note", "type": "annotation", "text": "Silent preview ≠ finished audio video", "x": 470, "y": 500, "width": 760, "height": 92}
+      ],
+      "connections": [],
+      "beats": [
+        {"id": "metric-count", "target": "result-metric", "action": "count", "start": 20, "duration": 48},
+        {"id": "note-reveal", "target": "result-note", "action": "reveal", "start": 72, "duration": 28}
+      ],
+      "captions": [{"id": "result-caption", "text": "静音预览只代表视觉生产阶段。", "start": 74, "end": 158}],
+      "transitionOut": "fade"
+    }
+  ]
+}

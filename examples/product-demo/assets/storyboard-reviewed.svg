@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#c0c0c0"/><rect x="24" y="24" width="1232" height="54" fill="#000080"/>
+  <text x="48" y="61" font-family="Arial" font-size="24" fill="white">FrameLoom / Storyboard Review</text>
+  <rect x="70" y="125" width="1140" height="430" fill="#fff" stroke="#111" stroke-width="4"/>
+  <text x="110" y="185" font-family="Courier New" font-size="28">SCENE 01  statement</text>
+  <line x1="110" y1="230" x2="1110" y2="230" stroke="#888" stroke-width="3"/>
+  <text x="110" y="290" font-family="Arial" font-size="25">Layers: title, label, annotation</text><text x="110" y="345" font-family="Arial" font-size="25">Beats: enter, reveal, focus</text><text x="110" y="400" font-family="Arial" font-size="25">Timing: 180 frames</text>
+  <rect x="820" y="455" width="290" height="62" fill="#000080"/><text x="880" y="496" font-family="Arial" font-size="25" fill="white">REVIEWED</text>
+</svg>

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0",
+  "styles": [
+    {
+      "id": "retro-zine",
+      "name": "Retro Zine",
+      "version": "1.0.0",
+      "category": "editorial",
+      "mood": ["warm", "handmade", "printed"],
+      "bestFor": ["knowledge", "opinion", "story"],
+      "canvas": ["landscape", "portrait"],
+      "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
+      "preview": "styles/retro-zine/preview.md",
+      "status": "stable"
+    },
+    {
+      "id": "retro-windows",
+      "name": "Retro Windows",
+      "version": "1.0.0",
+      "category": "software",
+      "mood": ["technical", "mechanical", "nostalgic"],
+      "bestFor": ["product", "tutorial", "software"],
+      "canvas": ["landscape", "portrait"],
+      "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
+      "preview": "styles/retro-windows/preview.md",
+      "status": "stable"
+    },
+    {
+      "id": "scatterbrain",
+      "name": "Scatterbrain",
+      "version": "1.0.0",
+      "category": "notes",
+      "mood": ["playful", "informal", "annotated"],
+      "bestFor": ["knowledge", "learning", "creative", "product"],
+      "canvas": ["landscape", "portrait"],
+      "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
+      "preview": "styles/scatterbrain/preview.md",
+      "status": "stable"
+    }
+  ]
+}

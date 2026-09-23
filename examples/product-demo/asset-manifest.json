@@ -1,0 +1,8 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {"id": "style-selected", "path": "assets/style-selected.svg", "type": "screenshot", "source": "FrameLoom public example fixture", "license": "MIT", "intendedUse": "Product demo state 01"},
+    {"id": "storyboard-reviewed", "path": "assets/storyboard-reviewed.svg", "type": "screenshot", "source": "FrameLoom public example fixture", "license": "MIT", "intendedUse": "Product demo state 02"}
+  ],
+  "notes": "Deterministic local example UI states; no external or private assets."
+}

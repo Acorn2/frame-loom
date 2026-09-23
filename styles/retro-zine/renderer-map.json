@@ -1,0 +1,11 @@
+{
+  "statement": {
+    "label": "label",
+    "title": "card",
+    "annotation": "annotation",
+    "metric": "metric"
+  },
+  "graph-explainer": {"node": "paper-node", "connection": "ink-line"},
+  "metric-grid": {"metric": "editorial-metric", "annotation": "margin-note"},
+  "interaction-flow": {"screenshot": "paper-frame", "annotation": "margin-note"}
+}

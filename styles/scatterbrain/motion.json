@@ -1,0 +1,8 @@
+{
+  "runtime": {"enterOffset": 44, "damping": 12, "stiffness": 110, "mass": 0.9, "emphasisScale": 0.055},
+  "enter": {"durationFrames": 20, "easing": "spring"},
+  "reveal": {"durationFrames": 26, "easing": "ease-out"},
+  "highlight": {"durationFrames": 22, "easing": "ease-in-out"},
+  "focus": {"durationFrames": 30, "easing": "ease-in-out"},
+  "count": {"durationFrames": 30, "easing": "linear"}
+}

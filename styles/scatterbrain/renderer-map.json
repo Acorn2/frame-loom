@@ -1,0 +1,12 @@
+{
+  "statement": {
+    "label": "taped-label",
+    "title": "handwritten-heading",
+    "annotation": "margin-note",
+    "metric": "sticky-metric",
+    "card": "note-card"
+  },
+  "graph-explainer": {"node": "note-card", "connection": "drawn-line"},
+  "metric-grid": {"metric": "sticky-metric", "annotation": "margin-note"},
+  "interaction-flow": {"screenshot": "taped-screen", "annotation": "margin-note"}
+}

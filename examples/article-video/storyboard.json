@@ -1,0 +1,156 @@
+{
+  "schemaVersion": "2.1",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "project": {
+    "title": "From document to reviewable video",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 20,
+    "durationFrames": 600,
+    "status": "reviewed"
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "template": "statement",
+      "title": "A good video starts with a visible idea",
+      "narration": "很多视频失败，不是因为没有动画，而是因为内容没有被映射到可见的画面。",
+      "durationFrames": 180,
+      "layers": [
+        {
+          "id": "hook-label",
+          "type": "label",
+          "text": "THE PROBLEM",
+          "x": 0,
+          "y": 320,
+          "width": 220,
+          "height": 48
+        },
+        {
+          "id": "hook-note",
+          "type": "annotation",
+          "text": "每个重要含义，都应该有一个看得见的目标。",
+          "x": 0,
+          "y": 590,
+          "width": 760,
+          "height": 100
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {"id": "hook-label-enter", "target": "hook-label", "action": "enter", "start": 8, "duration": 24},
+        {"id": "hook-note-reveal", "target": "hook-note", "action": "reveal", "start": 48, "duration": 30}
+      ],
+      "captions": [
+        {"id": "hook-caption", "text": "动画只是手段，画面必须解释内容。", "start": 62, "end": 160}
+      ],
+      "transitionOut": "paper-wipe"
+    },
+    {
+      "id": "contract",
+      "template": "graph-explainer",
+      "title": "Separate meaning, timing, and style",
+      "narration": "FrameLoom 把文档、storyboard 和 renderer 分开：先决定讲什么，再决定什么时候出现，最后让程序稳定地执行。",
+      "durationFrames": 240,
+      "layers": [
+        {
+          "id": "contract-content",
+          "type": "node",
+          "label": "CONTENT",
+          "text": "讲什么",
+          "x": 0,
+          "y": 400,
+          "width": 330,
+          "height": 190
+        },
+        {
+          "id": "contract-structure",
+          "type": "node",
+          "label": "STRUCTURE",
+          "text": "什么时候出现",
+          "x": 390,
+          "y": 400,
+          "width": 390,
+          "height": 190
+        },
+        {
+          "id": "contract-style",
+          "type": "node",
+          "label": "STYLE",
+          "text": "如何呈现",
+          "x": 840,
+          "y": 400,
+          "width": 330,
+          "height": 190
+        }
+      ],
+      "connections": [
+        {"id": "content-to-structure", "from": "contract-content", "to": "contract-structure", "label": "organize"},
+        {"id": "structure-to-style", "from": "contract-structure", "to": "contract-style", "label": "render"}
+      ],
+      "beats": [
+        {"id": "content-enter", "target": "contract-content", "action": "enter", "start": 18, "duration": 30},
+        {"id": "structure-enter", "target": "contract-structure", "action": "enter", "start": 58, "duration": 30},
+        {"id": "content-line", "target": "content-to-structure", "action": "draw", "start": 88, "duration": 24},
+        {"id": "style-enter", "target": "contract-style", "action": "enter", "start": 98, "duration": 30},
+        {"id": "style-line", "target": "structure-to-style", "action": "draw", "start": 128, "duration": 24},
+        {"id": "style-focus", "target": "contract-style", "action": "focus", "start": 150, "duration": 36}
+      ],
+      "captions": [
+        {"id": "contract-caption", "text": "内容、结构、视觉三者分离，修改才不会牵一发动全身。", "start": 24, "end": 214}
+      ],
+      "transitionOut": "slide"
+    },
+    {
+      "id": "result",
+      "template": "statement",
+      "title": "A production path you can inspect",
+      "narration": "结果是一条可检查、可修改、可重复渲染的生产路径。",
+      "durationFrames": 180,
+      "layers": [
+        {
+          "id": "result-label",
+          "type": "label",
+          "text": "THE RESULT",
+          "x": 0,
+          "y": 350,
+          "width": 220,
+          "height": 48
+        },
+        {
+          "id": "result-metric",
+          "type": "metric",
+          "label": "REVIEWABLE",
+          "value": 100,
+          "x": 0,
+          "y": 510,
+          "width": 330,
+          "height": 190
+        },
+        {
+          "id": "result-note",
+          "type": "annotation",
+          "text": "先审核 storyboard，再渲染预览。",
+          "x": 420,
+          "y": 560,
+          "width": 620,
+          "height": 100
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {"id": "result-label-enter", "target": "result-label", "action": "enter", "start": 10, "duration": 24},
+        {"id": "result-metric-count", "target": "result-metric", "action": "count", "start": 42, "duration": 48},
+        {"id": "result-note-reveal", "target": "result-note", "action": "reveal", "start": 88, "duration": 28}
+      ],
+      "captions": [
+        {"id": "result-caption", "text": "静音预览是视觉验收，不等于音频成片。", "start": 88, "end": 160}
+      ],
+      "transitionOut": "fade"
+    }
+  ]
+}

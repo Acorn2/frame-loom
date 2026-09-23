@@ -1,0 +1,35 @@
+{
+  "id": "scatterbrain",
+  "version": "1.0.0",
+  "tokens": {
+    "background": "#fffaf0",
+    "ink": "#24211f",
+    "muted": "#6f625d",
+    "accent": "#ffd84d",
+    "accentAlt": "#2e75d4",
+    "paper": "#fffef8",
+    "grid": "#8fb6e8",
+    "displayFont": "Comic Sans MS, Chalkboard SE, cursive",
+    "bodyFont": "Arial, sans-serif",
+    "pattern": "dots",
+    "surfaceRadius": 14,
+    "surfaceBorder": "3px solid #24211f",
+    "surfaceShadow": "9px 11px 0 #ffd84d",
+    "labelRadius": 8,
+    "titleFontSize": 98
+  },
+  "safeArea": {
+    "landscape": {"top": 96, "right": 110, "bottom": 108, "left": 110},
+    "portrait": {"top": 128, "right": 72, "bottom": 144, "left": 72}
+  },
+  "supports": {
+    "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
+    "layers": ["label", "card", "annotation", "metric", "node", "screenshot"],
+    "actions": ["enter", "reveal", "draw", "focus", "highlight", "count", "camera-push"],
+    "transitions": ["fade", "slide", "paper-wipe", "carry"]
+  },
+  "provenance": {
+    "fonts": "System-installed Comic Sans MS or Chalkboard fallback plus Arial; no bundled font assets.",
+    "assets": "CSS-only dots, notes and annotation shapes; no external assets."
+  }
+}

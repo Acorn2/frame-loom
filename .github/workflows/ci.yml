@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: npm ci
+      - run: npm run generate:schemas
+      - run: git diff --exit-code -- schemas
+      - run: npm run validate:styles
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run validate:storyboard -- examples/article-video/storyboard.json
+      - run: npm run validate:storyboard -- examples/product-demo/storyboard.json
+      - run: npm run validate:storyboard -- examples/data-explainer/storyboard.json
+      - run: npm run validate:assets -- examples/product-demo/storyboard.json
+      - run: npm run check:safe-area -- examples/data-explainer/storyboard.json
+      - run: npm run build
+      - run: npm run render:storyboard -- examples/article-video/storyboard.json /tmp/frame-loom-ci.mp4
+      - run: npm run qa:storyboard -- examples/article-video/storyboard.json /tmp/frame-loom-ci.mp4 /tmp/frame-loom-ci-review
+      - run: npm run test:audio-pilot
+      - run: npm run test:visual-regression

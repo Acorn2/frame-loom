@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FrameLoom Style Pack",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "tokens": {
+      "type": "object",
+      "properties": {
+        "background": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ink": {
+          "type": "string",
+          "minLength": 1
+        },
+        "muted": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accentAlt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "paper": {
+          "type": "string",
+          "minLength": 1
+        },
+        "grid": {
+          "type": "string",
+          "minLength": 1
+        },
+        "displayFont": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bodyFont": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pattern": {
+          "type": "string",
+          "enum": [
+            "grid",
+            "desktop",
+            "dots"
+          ]
+        },
+        "surfaceRadius": {
+          "type": "number",
+          "minimum": 0
+        },
+        "surfaceBorder": {
+          "type": "string"
+        },
+        "surfaceShadow": {
+          "type": "string"
+        },
+        "labelRadius": {
+          "type": "number",
+          "minimum": 0
+        },
+        "titleFontSize": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "background",
+        "ink",
+        "muted",
+        "accent",
+        "accentAlt",
+        "paper",
+        "grid",
+        "displayFont",
+        "bodyFont",
+        "pattern",
+        "surfaceRadius",
+        "surfaceBorder",
+        "surfaceShadow",
+        "labelRadius",
+        "titleFontSize"
+      ],
+      "additionalProperties": false
+    },
+    "safeArea": {
+      "type": "object",
+      "properties": {
+        "landscape": {
+          "type": "object",
+          "properties": {
+            "top": {
+              "type": "number",
+              "minimum": 0
+            },
+            "right": {
+              "type": "number",
+              "minimum": 0
+            },
+            "bottom": {
+              "type": "number",
+              "minimum": 0
+            },
+            "left": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "top",
+            "right",
+            "bottom",
+            "left"
+          ],
+          "additionalProperties": false
+        },
+        "portrait": {
+          "type": "object",
+          "properties": {
+            "top": {
+              "type": "number",
+              "minimum": 0
+            },
+            "right": {
+              "type": "number",
+              "minimum": 0
+            },
+            "bottom": {
+              "type": "number",
+              "minimum": 0
+            },
+            "left": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "top",
+            "right",
+            "bottom",
+            "left"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "landscape",
+        "portrait"
+      ],
+      "additionalProperties": false
+    },
+    "supports": {
+      "type": "object",
+      "properties": {
+        "templates": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "statement",
+              "graph-explainer",
+              "metric-grid",
+              "interaction-flow"
+            ]
+          }
+        },
+        "layers": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "node",
+              "card",
+              "label",
+              "annotation",
+              "metric",
+              "screenshot"
+            ]
+          }
+        },
+        "actions": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "enter",
+              "reveal",
+              "draw",
+              "focus",
+              "highlight",
+              "count",
+              "camera-push"
+            ]
+          }
+        },
+        "transitions": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "fade",
+              "slide",
+              "paper-wipe",
+              "carry"
+            ]
+          }
+        }
+      },
+      "required": [
+        "templates",
+        "layers",
+        "actions",
+        "transitions"
+      ],
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "fonts": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assets": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "fonts",
+        "assets"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "id",
+    "version",
+    "tokens",
+    "safeArea",
+    "supports",
+    "provenance"
+  ],
+  "additionalProperties": false
+}
