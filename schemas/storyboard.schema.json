@@ -1,11 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "FrameLoom Storyboard V2.1",
+  "title": "FrameLoom Storyboard V2.1–2.2",
   "type": "object",
   "properties": {
     "schemaVersion": {
       "type": "string",
-      "const": "2.1"
+      "enum": [
+        "2.1",
+        "2.2"
+      ]
     },
     "style": {
       "type": "object",
@@ -57,6 +60,8 @@
           "type": "string",
           "enum": [
             "draft",
+            "generated",
+            "validated",
             "reviewed",
             "approved"
           ]
@@ -92,8 +97,27 @@
               "interaction-flow"
             ]
           },
+          "purpose": {
+            "type": "string",
+            "enum": [
+              "opening",
+              "claim",
+              "process",
+              "evidence",
+              "media",
+              "closing"
+            ]
+          },
           "title": {
             "type": "string"
+          },
+          "primaryClaim": {
+            "type": "string",
+            "minLength": 1
+          },
+          "attentionTarget": {
+            "type": "string",
+            "minLength": 1
           },
           "narration": {
             "type": "string"
@@ -120,7 +144,9 @@
                     "label",
                     "annotation",
                     "metric",
-                    "screenshot"
+                    "screenshot",
+                    "object",
+                    "callout"
                   ]
                 },
                 "text": {
@@ -162,6 +188,33 @@
                 },
                 "rotate": {
                   "type": "number"
+                },
+                "rotationDegrees": {
+                  "type": "number"
+                },
+                "semanticRole": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "target": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "fit": {
+                  "type": "string",
+                  "enum": [
+                    "contain",
+                    "cover"
+                  ]
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "upcoming",
+                    "current",
+                    "completed",
+                    "resolved"
+                  ]
                 },
                 "replacementGroup": {
                   "type": "string",
@@ -234,7 +287,18 @@
                     "focus",
                     "highlight",
                     "count",
-                    "camera-push"
+                    "camera-push",
+                    "rotate",
+                    "set-state"
+                  ]
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "upcoming",
+                    "current",
+                    "completed",
+                    "resolved"
                   ]
                 },
                 "start": {
@@ -287,6 +351,29 @@
               "additionalProperties": false
             }
           },
+          "transitionIn": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "overlap-fade",
+                  "overlap-slide",
+                  "overlap-carry"
+                ]
+              },
+              "durationFrames": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "type",
+              "durationFrames"
+            ],
+            "additionalProperties": false
+          },
           "transitionOut": {
             "type": "string",
             "enum": [
@@ -295,6 +382,26 @@
               "paper-wipe",
               "carry"
             ]
+          },
+          "outro": {
+            "type": "object",
+            "properties": {
+              "holdFrames": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "fadeFrames": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "holdFrames",
+              "fadeFrames"
+            ],
+            "additionalProperties": false
           }
         },
         "required": [

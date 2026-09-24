@@ -19,6 +19,9 @@ export function checkSafeArea(storyboard, stylePack = loadStylePack(storyboard.s
   const contentHeight = height - safeArea.top - safeArea.bottom;
   const issues = [];
   for (const scene of storyboard.scenes) {
+    // V2.2 family layouts own their geometry; raw layer coordinates are legacy overrides only.
+    if (scene.purpose) continue;
+    const sceneContentHeight = contentHeight - (scene.captions.length > 0 ? (orientation === 'portrait' ? 160 : 120) : 0);
     for (const layer of scene.layers) {
       const x = layer.x ?? 0;
       const y = layer.y ?? 0;
@@ -28,8 +31,8 @@ export function checkSafeArea(storyboard, stylePack = loadStylePack(storyboard.s
       if (typeof layer.width === 'number' && x + layer.width > contentWidth) {
         issues.push(issue('error', scene.id, layer.id, `右边界 ${x + layer.width}px 超出可用宽度 ${contentWidth}px。`));
       }
-      if (typeof layer.height === 'number' && y + layer.height > contentHeight) {
-        issues.push(issue('error', scene.id, layer.id, `下边界 ${y + layer.height}px 超出可用高度 ${contentHeight}px。`));
+      if (typeof layer.height === 'number' && y + layer.height > sceneContentHeight) {
+        issues.push(issue('error', scene.id, layer.id, `下边界 ${y + layer.height}px 进入字幕保留区；当前 scene 可用高度 ${sceneContentHeight}px。`));
       }
       if (typeof layer.width !== 'number' || typeof layer.height !== 'number') {
         issues.push(issue('warning', scene.id, layer.id, '缺少显式 width 或 height，只检查了已声明的边界；视觉尺寸需通过抽帧复核。'));

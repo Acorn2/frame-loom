@@ -3,6 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {pathToFileURL} from 'node:url';
+import {getSceneTimeline} from '../src/timeline/scene-timeline.ts';
 
 function run(command, args) {
   const result = spawnSync(command, args, {encoding: 'utf8'});
@@ -30,36 +31,41 @@ function uniqueCandidates(candidates, durationSec) {
 export function selectReviewFrames(storyboard) {
   const fps = storyboard.project.fps;
   const durationSec = storyboard.project.durationFrames / fps;
-  const candidates = [{label: 'opening', timeSec: Math.min(0.5, durationSec * 0.08)}];
-  let sceneStartFrames = 0;
-
-  for (const scene of storyboard.scenes) {
-    const startSec = sceneStartFrames / fps;
+  const candidates = [
+    {label: 'opening', timeSec: 0},
+    {label: 'opening-title-stable', timeSec: Math.min(1.2, durationSec * 0.08)}
+  ];
+  const timeline = getSceneTimeline(storyboard);
+  for (const {scene, startFrame, endFrame, overlapOutFrames} of timeline) {
+    const startSec = startFrame / fps;
     const sceneDurationSec = scene.durationFrames / fps;
     candidates.push({label: `${scene.id}-content`, timeSec: startSec + sceneDurationSec * 0.55});
-    if (scene.transitionOut) {
+    const firstAction = scene.beats.find((beat) => beat.action !== 'set-state');
+    if (firstAction) candidates.push({label: `${scene.id}-first-action`, timeSec: (startFrame + firstAction.start + firstAction.duration) / fps});
+    for (const stateSwitch of scene.beats.filter((beat) => beat.action === 'set-state' && beat.state === 'current')) {
+      candidates.push({label: `${scene.id}-${stateSwitch.target}-current`, timeSec: (startFrame + stateSwitch.start + 1) / fps});
+    }
+    const objectAction = scene.beats.find((beat) => beat.action === 'rotate');
+    if (objectAction) candidates.push({label: `${scene.id}-object-complete`, timeSec: (startFrame + objectAction.start + objectAction.duration + 1) / fps});
+    if (overlapOutFrames > 0) {
+      candidates.push({label: `${scene.id}-handoff`, timeSec: (endFrame - overlapOutFrames / 2) / fps});
+    } else if (scene.transitionOut) {
       candidates.push({label: `${scene.id}-transition`, timeSec: startSec + Math.max(0, sceneDurationSec - 0.35)});
     }
-    sceneStartFrames += scene.durationFrames;
+    if (scene.outro) candidates.push({label: `${scene.id}-stable-outro`, timeSec: (endFrame - scene.outro.fadeFrames - 2) / fps});
   }
 
-  candidates.push(
-    {label: 'quarter', timeSec: durationSec * 0.25},
-    {label: 'middle', timeSec: durationSec * 0.5},
-    {label: 'three-quarter', timeSec: durationSec * 0.75},
-    {label: 'ending', timeSec: Math.max(0, durationSec - 0.5)}
-  );
-
-  if (durationSec >= 20) {
+  if (durationSec >= 20 && uniqueCandidates(candidates, durationSec).length < 6) {
     for (let index = 1; index <= 6; index += 1) {
       candidates.push({label: `coverage-${index}`, timeSec: durationSec * (index / 7)});
     }
   }
+  candidates.push({label: 'ending', timeSec: Math.max(0, durationSec - 0.5)});
   const unique = uniqueCandidates(candidates, durationSec);
-  if (unique.length <= 12) return unique;
+  if (unique.length <= 24) return unique;
   const sampled = [];
-  for (let index = 0; index < 12; index += 1) {
-    sampled.push(unique[Math.round(index * (unique.length - 1) / 11)]);
+  for (let index = 0; index < 24; index += 1) {
+    sampled.push(unique[Math.round(index * (unique.length - 1) / 23)]);
   }
   return sampled;
 }

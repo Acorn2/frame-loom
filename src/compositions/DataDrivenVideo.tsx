@@ -6,6 +6,7 @@ import {getDefaultStyleTokens, type StyleTokens} from '../styles/style-loader';
 import {CaptionOverlay} from '../audio/CaptionOverlay';
 import type {CaptionCue} from '../audio/captions';
 import {getMusicVolumeAtFrame, type MusicDucking} from '../audio/ducking';
+import {getSceneTimeline} from '../timeline/scene-timeline';
 
 export interface AudioRuntime {
   voiceoverDataUri?: string;
@@ -32,7 +33,7 @@ export function DataDrivenVideo({storyboard, styleTokens, audioRuntime}: DataDri
   const tokens = styleTokens ?? getDefaultStyleTokens(storyboard.project.width, storyboard.project.height);
   const showSceneCaptions = shouldRenderSceneCaptions(audioRuntime);
   const musicVolume = audioRuntime?.musicVolume ?? 0.2;
-  let sceneStart = 0;
+  const timeline = getSceneTimeline(storyboard);
 
   return (
     <AbsoluteFill style={{backgroundColor: tokens.background}}>
@@ -54,19 +55,17 @@ export function DataDrivenVideo({storyboard, styleTokens, audioRuntime}: DataDri
           <Audio src={item.dataUri} volume={item.volume} />
         </Sequence>
       ))}
-      {storyboard.scenes.map((scene) => {
-        const start = sceneStart;
-        sceneStart += scene.durationFrames;
+      {timeline.map(({scene, startFrame, overlapOutFrames}) => {
         return (
-          <Sequence key={scene.id} from={start} durationInFrames={scene.durationFrames}>
-            <RenderScene scene={scene} tokens={tokens} showSceneCaptions={showSceneCaptions} />
+          <Sequence key={scene.id} from={startFrame} durationInFrames={scene.durationFrames}>
+            <RenderScene scene={scene} tokens={tokens} showSceneCaptions={showSceneCaptions} externalCaptions={Boolean(audioRuntime?.captions?.length)} overlapOutFrames={overlapOutFrames} />
           </Sequence>
         );
       })}
       <div style={{
         position: 'absolute',
         right: 32,
-        bottom: 24,
+        top: 26,
         fontFamily: tokens.bodyFont,
         fontSize: 14,
         color: tokens.muted,

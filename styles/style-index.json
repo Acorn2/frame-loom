@@ -14,6 +14,18 @@
       "status": "stable"
     },
     {
+      "id": "signal",
+      "name": "Signal",
+      "version": "1.0.0",
+      "category": "cinematic",
+      "mood": ["focused", "calm", "contemporary"],
+      "bestFor": ["knowledge", "story", "product", "tutorial"],
+      "canvas": ["landscape", "portrait"],
+      "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
+      "preview": "styles/signal/preview.md",
+      "status": "experimental"
+    },
+    {
       "id": "retro-windows",
       "name": "Retro Windows",
       "version": "1.0.0",
@@ -23,7 +35,7 @@
       "canvas": ["landscape", "portrait"],
       "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
       "preview": "styles/retro-windows/preview.md",
-      "status": "stable"
+      "status": "deprecated"
     },
     {
       "id": "scatterbrain",

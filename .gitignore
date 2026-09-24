@@ -11,3 +11,5 @@ projects/*/audio/*
 *.mov
 *.webm
 docs/
+projects/
+mydoc/

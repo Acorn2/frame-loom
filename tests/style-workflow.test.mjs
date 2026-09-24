@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import {spawnSync} from 'node:child_process';
 import {afterEach, describe, expect, it} from 'vitest';
 import {validateAssets} from '../scripts/validate-assets.mjs';
 import articleStoryboard from '../examples/article-video/storyboard.json' with {type: 'json'};
@@ -20,6 +21,11 @@ import {buildStyleGallery} from '../scripts/preview-styles.mjs';
 import {CAPABILITY_MANIFEST} from '../src/renderer/capability-manifest.ts';
 import {createStyleTokens} from '../src/styles/style-loader.ts';
 import {AudioConfigSchema} from '../src/schemas/audio-config.ts';
+import {promoteDraftStoryboard} from '../scripts/produce.mjs';
+import {runProduction} from '../scripts/produce.mjs';
+import {fingerprintFiles, fingerprintProjectInputs} from '../scripts/lib/input-fingerprint.mjs';
+import {checkExternalCaptionLayout, checkTextLayout} from '../scripts/lib/text-layout.mjs';
+import {checkAudioInput} from '../scripts/lib/preflight.mjs';
 
 const tempDirs = [];
 
@@ -89,6 +95,158 @@ describe('Style Pack workflow', () => {
     const audioExample = JSON.parse(fs.readFileSync(path.join(project, 'audio/audio-config.example.json'), 'utf8'));
     expect(AudioConfigSchema.safeParse(audioExample).success).toBe(true);
     expect(() => initProject(['demo-project', '--projects-dir', temp])).toThrow(/已存在/);
+  });
+
+  it('promotes a draft to generated without changing its content contract', () => {
+    const draft = structuredClone(articleStoryboard);
+    draft.project.status = 'draft';
+    const generated = promoteDraftStoryboard(draft);
+    expect(generated.project.status).toBe('generated');
+    expect(generated.project.title).toBe(draft.project.title);
+    expect(generated.scenes).toEqual(draft.scenes);
+  });
+
+  it('records reused stages when resuming from QA', () => {
+    const temp = makeTempDir();
+    const project = path.join(temp, 'resume-project');
+    fs.mkdirSync(path.join(project, 'output', 'review'), {recursive: true});
+    fs.writeFileSync(path.join(project, 'storyboard.json'), `${JSON.stringify(articleStoryboard, null, 2)}\n`);
+    fs.writeFileSync(path.join(project, 'asset-manifest.json'), JSON.stringify({schemaVersion: '1.0', assets: []}));
+    fs.writeFileSync(path.join(project, 'output', 'preview-silent.mp4'), 'placeholder');
+    const inputFingerprint = fingerprintProjectInputs(project, path.resolve('styles'));
+    const outputFingerprint = fingerprintFiles([path.join(project, 'output', 'preview-silent.mp4')], project);
+    fs.writeFileSync(path.join(project, 'run.json'), JSON.stringify({
+      schemaVersion: '1.0',
+      projectId: 'resume-project',
+      projectPath: project,
+      executionMode: 'review',
+      status: 'completed',
+      currentStage: 'done',
+      inputFingerprint,
+      outputFingerprint,
+      audioConfigPath: null,
+      stages: {
+        storyboard: 'completed',
+        validation: 'completed',
+        assets: 'completed',
+        safeArea: 'completed',
+        render: 'completed',
+        qa: 'completed'
+      },
+      artifacts: {
+        storyboard: 'storyboard.json',
+        video: 'output/preview-silent.mp4',
+        reviewDir: 'output/review'
+      },
+      warnings: [],
+      errors: []
+    }));
+
+    const run = runProduction({
+      projectPath: project,
+      executionMode: 'review',
+      from: 'qa',
+      force: false
+    });
+    expect(run.status).toBe('blocked');
+    expect(run.resumedFrom).toBe('qa');
+    expect(run.stages.storyboard).toBe('reused');
+    expect(run.stages.validation).toBe('reused');
+    expect(run.stages.assets).toBe('reused');
+    expect(run.stages.safeArea).toBe('reused');
+    expect(run.stages.render).toBe('reused');
+    expect(run.errors.some((item) => item.includes('ffprobe'))).toBe(true);
+  });
+
+  it('rejects resuming after an input changes and keeps the previous run record', () => {
+    const temp = makeTempDir();
+    const project = path.join(temp, 'resume-project');
+    fs.mkdirSync(project, {recursive: true});
+    const storyboardPath = path.join(project, 'storyboard.json');
+    fs.writeFileSync(storyboardPath, JSON.stringify(articleStoryboard));
+    const runPath = path.join(project, 'run.json');
+    const previousRun = {
+      executionMode: 'review',
+      inputFingerprint: fingerprintProjectInputs(project, path.resolve('styles')),
+      stages: {storyboard: 'completed', validation: 'completed'}
+    };
+    fs.writeFileSync(runPath, JSON.stringify(previousRun));
+    fs.writeFileSync(storyboardPath, JSON.stringify({...articleStoryboard, project: {...articleStoryboard.project, title: 'Changed'}}));
+
+    expect(() => runProduction({projectPath: project, executionMode: 'review', from: 'assets'})).toThrow(/输入与上次运行不同/);
+    expect(JSON.parse(fs.readFileSync(runPath, 'utf8'))).toEqual(previousRun);
+  });
+
+  it('rejects reusing a video whose bytes changed before QA', () => {
+    const temp = makeTempDir();
+    const project = path.join(temp, 'resume-project');
+    const outputPath = path.join(project, 'output', 'preview-silent.mp4');
+    fs.mkdirSync(path.dirname(outputPath), {recursive: true});
+    fs.writeFileSync(path.join(project, 'storyboard.json'), JSON.stringify(articleStoryboard));
+    fs.writeFileSync(outputPath, 'original-video');
+    const previousRun = {
+      executionMode: 'review',
+      inputFingerprint: fingerprintProjectInputs(project, path.resolve('styles')),
+      outputFingerprint: fingerprintFiles([outputPath], project),
+      stages: {storyboard: 'completed', validation: 'completed', assets: 'completed', safeArea: 'completed', render: 'completed'},
+      artifacts: {video: 'output/preview-silent.mp4', reviewDir: 'output/review'}
+    };
+    fs.writeFileSync(path.join(project, 'run.json'), JSON.stringify(previousRun));
+    fs.writeFileSync(outputPath, 'changed-video');
+
+    expect(() => runProduction({projectPath: project, executionMode: 'review', from: 'qa'})).toThrow(/输出视频与上次渲染结果不同/);
+  });
+
+  it('catches a node text overflow and accepts the shorter replacement', () => {
+    const storyboard = structuredClone(articleStoryboard);
+    const scene = storyboard.scenes[1];
+    scene.layers.push({id: 'dense-node', type: 'node', label: '02 / 发现', text: '注意到翅膀纹理', state: 'current', x: 100, y: 350, width: 380, height: 165});
+    expect(checkTextLayout(storyboard).some((item) => item.target === 'dense-node' && item.severity === 'error')).toBe(true);
+    scene.layers.at(-1).text = '发现翅膀纹理';
+    expect(checkTextLayout(storyboard).some((item) => item.target === 'dense-node')).toBe(false);
+  });
+
+  it('blocks production before rendering when card text exceeds its box', () => {
+    const temp = makeTempDir();
+    const project = path.join(temp, 'text-overflow-project');
+    fs.mkdirSync(project, {recursive: true});
+    const storyboard = structuredClone(articleStoryboard);
+    storyboard.scenes[0].layers.push({id: 'dense-node', type: 'node', label: '02 / 发现', text: '注意到翅膀纹理', state: 'current', x: 100, y: 350, width: 380, height: 165});
+    fs.writeFileSync(path.join(project, 'storyboard.json'), JSON.stringify(storyboard));
+    fs.writeFileSync(path.join(project, 'asset-manifest.json'), JSON.stringify({schemaVersion: '1.0', assets: []}));
+
+    const run = runProduction({projectPath: project, executionMode: 'review'});
+    expect(run.status).toBe('blocked');
+    expect(run.stages.safeArea).toBe('blocked');
+    expect(run.errors.some((item) => item.includes('dense-node'))).toBe(true);
+    expect(fs.existsSync(path.join(project, 'output', 'preview-silent.mp4'))).toBe(false);
+  });
+
+  it('flags an external caption that needs more than two lines', () => {
+    const cues = [{startSec: 0, endSec: 2, text: '这是一条过长的外部字幕，需要在安全区内排成许多行，应该先拆成多个字幕窗口。'.repeat(3)}];
+    expect(checkExternalCaptionLayout(articleStoryboard, cues).some((item) => item.severity === 'error')).toBe(true);
+    expect(checkExternalCaptionLayout(articleStoryboard, [{...cues[0], text: '短字幕'}])).toEqual([]);
+  });
+
+  it('rejects an overlong external SRT cue during audio preflight', () => {
+    const temp = makeTempDir();
+    const storyboardPath = path.join(temp, 'storyboard.json');
+    const configPath = path.join(temp, 'audio-config.json');
+    fs.writeFileSync(storyboardPath, JSON.stringify(articleStoryboard));
+    fs.writeFileSync(configPath, JSON.stringify({schemaVersion: '1.0', captions: {enabled: true, path: 'captions.srt', format: 'srt', source: 'test'}}));
+    fs.writeFileSync(path.join(temp, 'captions.srt'), `1\n00:00:01,000 --> 00:00:03,000\n${'这是一条很长的字幕，需要拆分后才能安全显示。'.repeat(5)}\n`);
+    expect(() => checkAudioInput(storyboardPath, configPath)).toThrow(/外部字幕预计占/);
+  });
+
+  it('rejects a direct render with no asset manifest before bundling', () => {
+    const temp = makeTempDir();
+    const storyboardPath = path.join(temp, 'storyboard.json');
+    fs.writeFileSync(storyboardPath, JSON.stringify(articleStoryboard));
+    const outputPath = path.join(temp, 'preview.mp4');
+    const result = spawnSync(process.execPath, ['--import', 'tsx/esm', 'scripts/render-storyboard.mjs', storyboardPath, outputPath], {cwd: process.cwd(), encoding: 'utf8'});
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('asset-manifest');
+    expect(fs.existsSync(outputPath)).toBe(false);
   });
 
   it('checks screenshot provenance paths and manifest types', () => {

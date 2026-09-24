@@ -7,10 +7,11 @@ import {TemplateShell} from '../shared/TemplateShell';
 export function MetricGridTemplate({
   scene,
   tokens,
-  showSceneCaptions
-}: {scene: StoryboardScene; tokens: StyleTokens; showSceneCaptions: boolean}) {
+  showSceneCaptions,
+  overlapOutFrames
+}: {scene: StoryboardScene; tokens: StyleTokens; showSceneCaptions: boolean; overlapOutFrames: number}) {
   return (
-    <TemplateShell scene={scene} tokens={tokens} showSceneCaptions={showSceneCaptions} sectionLabel="FRAMELOOM / METRICS">
+    <TemplateShell scene={scene} tokens={tokens} showSceneCaptions={showSceneCaptions} overlapOutFrames={overlapOutFrames} sectionLabel="FRAMELOOM / METRICS">
       {scene.layers.map((layer) => <RenderLayer key={layer.id} layer={layer} scene={scene} tokens={tokens} />)}
     </TemplateShell>
   );

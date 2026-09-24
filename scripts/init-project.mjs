@@ -63,7 +63,7 @@ export function initProject(args = process.argv.slice(2)) {
   write(path.join(target, 'assets/.gitkeep'), '');
   write(path.join(target, 'output/.gitkeep'), '');
   write(path.join(target, 'storyboard.draft.json'), `${JSON.stringify({
-    schemaVersion: '2.1',
+    schemaVersion: style.id === 'retro-windows' ? '2.1' : '2.2',
     style: {id: style.id, version: style.version},
     project: {
       title: videoId,
@@ -76,6 +76,7 @@ export function initProject(args = process.argv.slice(2)) {
     scenes: [{
       id: 'opening',
       template: 'statement',
+      ...(style.id === 'retro-windows' ? {} : {purpose: 'opening'}),
       title: 'Replace with the approved opening',
       narration: '',
       durationFrames: 600,
@@ -88,7 +89,7 @@ export function initProject(args = process.argv.slice(2)) {
   }, null, 2)}\n`);
 
   console.log(`PROJECT INITIALIZED ${target}`);
-  console.log('Next: complete source, content brief and style selection before drafting the final storyboard.');
+  console.log('Next: add source material, then use SKILL.md with a Coding Agent to complete the brief, script, assets and storyboard before running produce.');
   return target;
 }
 

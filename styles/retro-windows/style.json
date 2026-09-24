@@ -24,9 +24,10 @@
   },
   "supports": {
     "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
-    "layers": ["label", "card", "annotation", "metric", "node", "screenshot"],
-    "actions": ["enter", "reveal", "draw", "focus", "highlight", "count", "camera-push"],
-    "transitions": ["fade", "slide", "paper-wipe", "carry"]
+    "layers": ["label", "card", "annotation", "metric", "node", "screenshot", "object", "callout"],
+    "actions": ["enter", "reveal", "draw", "focus", "highlight", "count", "camera-push", "rotate", "set-state"],
+    "transitions": ["fade", "slide", "paper-wipe", "carry"],
+    "overlapTransitions": ["overlap-fade", "overlap-slide", "overlap-carry"]
   },
   "provenance": {
     "fonts": "System-installed Courier New and Arial; no bundled font assets.",

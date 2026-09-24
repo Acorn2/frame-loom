@@ -23,10 +23,12 @@
     "portrait": {"top": 128, "right": 72, "bottom": 144, "left": 72}
   },
   "supports": {
+    "purposes": ["opening", "claim", "process", "evidence", "media", "closing"],
     "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
-    "layers": ["label", "card", "annotation", "metric", "node", "screenshot"],
-    "actions": ["enter", "reveal", "draw", "focus", "highlight", "count", "camera-push"],
-    "transitions": ["fade", "slide", "paper-wipe", "carry"]
+    "layers": ["label", "card", "annotation", "metric", "node", "screenshot", "object", "callout"],
+    "actions": ["enter", "reveal", "draw", "focus", "highlight", "count", "camera-push", "rotate", "set-state"],
+    "transitions": ["fade", "slide", "paper-wipe", "carry"],
+    "overlapTransitions": ["overlap-fade", "overlap-slide", "overlap-carry"]
   },
   "provenance": {
     "fonts": "System-installed Comic Sans MS or Chalkboard fallback plus Arial; no bundled font assets.",

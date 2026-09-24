@@ -52,7 +52,7 @@ export function filterStyles(styles, filters = {}) {
   return styles.filter((style) => {
     const contentMatches = !content || style.bestFor.some((value) => value.toLowerCase() === content);
     const canvasMatches = !canvas || style.canvas.some((value) => value.toLowerCase() === canvas);
-    const statusMatches = !status || style.status.toLowerCase() === status;
+    const statusMatches = status ? style.status.toLowerCase() === status : style.status !== 'deprecated';
     return contentMatches && canvasMatches && statusMatches;
   });
 }

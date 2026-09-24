@@ -2,16 +2,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 import {StoryboardSchema} from '../src/schemas/storyboard.ts';
+import {getSceneTimeline} from '../src/timeline/scene-timeline.ts';
+import {getNodeState} from '../src/renderer/node-state.ts';
 import {AudioConfigSchema} from '../src/schemas/audio-config.ts';
-import {validateStoryboard} from '../src/validation/storyboard-validator.ts';
-import {checkSafeArea} from './check-safe-area.mjs';
 import {extractReviewFrames} from './extract-review-frames.mjs';
-import {inspectAudio} from './inspect-audio.mjs';
 import {inspectOutput} from './inspect-output.mjs';
-import {validateAssets} from './validate-assets.mjs';
+import {checkAssetInput, checkAudioInput, checkStoryboardInput, checkVisualInput} from './lib/preflight.mjs';
 
 function parseArgs(args) {
-  const options = {expectAudio: false};
+  const options = {expectAudio: false, executionMode: 'review'};
   const positional = [];
   for (let index = 0; index < args.length; index += 1) {
     if (args[index] === '--expect-audio') options.expectAudio = true;
@@ -19,15 +18,23 @@ function parseArgs(args) {
       options.audioConfigPath = args[index + 1];
       if (!options.audioConfigPath) throw new Error('--audio-config 需要一个路径。');
       index += 1;
+    } else if (args[index] === '--mode') {
+      options.executionMode = args[index + 1];
+      if (!options.executionMode) throw new Error('--mode 需要 review 或 fast。');
+      index += 1;
     } else positional.push(args[index]);
   }
+  if (!['review', 'fast'].includes(options.executionMode)) {
+    throw new Error('--mode 只能是 review 或 fast。');
+  }
   if (positional.length < 2 || positional.length > 3) {
-    throw new Error('Usage: npm run qa:storyboard -- <storyboard.json> <video.mp4> [review-dir] [--audio-config <audio-config.json>] [--expect-audio]');
+    throw new Error('Usage: npm run qa:storyboard -- <storyboard.json> <video.mp4> [review-dir] [--mode review|fast] [--audio-config <audio-config.json>] [--expect-audio]');
   }
   return {storyboardPath: positional[0], videoPath: positional[1], reviewDir: positional[2], ...options};
 }
 
 export function runQa(options) {
+  const executionMode = options.executionMode ?? 'review';
   const resolvedStoryboard = path.resolve(options.storyboardPath);
   const resolvedVideo = path.resolve(options.videoPath);
   const resolvedReviewDir = path.resolve(options.reviewDir ?? path.join(path.dirname(resolvedVideo), `${path.parse(resolvedVideo).name}-review`));
@@ -60,18 +67,40 @@ export function runQa(options) {
       }
     }
     const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-    const validationIssues = validateStoryboard(storyboard, {storyboardPath: resolvedStoryboard, styleRoot: path.join(projectRoot, 'styles')});
+    const validationIssues = checkStoryboardInput(storyboard, {
+      storyboardPath: resolvedStoryboard,
+      styleRoot: path.join(projectRoot, 'styles'),
+      executionMode
+    });
     checks.storyboard = {passed: !validationIssues.some((item) => item.severity === 'error'), issues: validationIssues};
     if (!checks.storyboard.passed) errors.push('storyboard validation failed');
+    checks.timeline = {
+      passed: true,
+      scenes: getSceneTimeline(storyboard).map(({scene, startFrame, endFrame, overlapInFrames, overlapOutFrames}) => {
+        const lastActionEnd = Math.max(0, ...scene.beats.map((beat) => beat.start + beat.duration));
+        const stateFrames = [0, ...scene.beats.filter((beat) => beat.action === 'set-state').map((beat) => beat.start)];
+        const peakCurrentNodes = Math.max(0, ...stateFrames.map((frame) => scene.layers.filter((layer) => getNodeState(layer, scene, frame) === 'current').length));
+        return {
+          id: scene.id, startFrame, endFrame, overlapInFrames, overlapOutFrames,
+          primaryClaim: scene.primaryClaim ?? null,
+          attentionTarget: scene.attentionTarget ?? null,
+          lastActionEnd,
+          stableHoldFrames: scene.durationFrames - (overlapOutFrames > 0 ? overlapOutFrames : (scene.outro?.fadeFrames ?? 24)) - lastActionEnd,
+          peakCurrentNodes
+        };
+      })
+    };
 
-    const assetIssues = validateAssets(resolvedStoryboard);
+    const assetIssues = checkAssetInput(resolvedStoryboard);
     checks.assets = {passed: assetIssues.length === 0, issues: assetIssues};
     if (!checks.assets.passed) errors.push('asset validation failed');
 
     try {
-      const safeArea = checkSafeArea(storyboard);
+      const {safeArea, textLayout} = checkVisualInput(storyboard);
       checks.safeArea = {passed: !safeArea.issues.some((item) => item.severity === 'error'), ...safeArea};
       if (!checks.safeArea.passed) errors.push('safe-area validation failed');
+      checks.textLayout = {passed: !textLayout.some((item) => item.severity === 'error'), issues: textLayout};
+      if (!checks.textLayout.passed) errors.push('text-layout validation failed');
     } catch (error) {
       checks.safeArea = {passed: false, error: error instanceof Error ? error.message : String(error)};
       errors.push(`safe area: ${checks.safeArea.error}`);
@@ -86,7 +115,7 @@ export function runQa(options) {
 
     if (options.audioConfigPath) {
       try {
-        const audio = inspectAudio(resolvedStoryboard, options.audioConfigPath);
+        const audio = checkAudioInput(resolvedStoryboard, options.audioConfigPath);
         checks.audio = {passed: !audio.needsRetiming, ...audio};
         if (!checks.audio.passed) errors.push('audio timing failed');
       } catch (error) {
@@ -117,6 +146,7 @@ export function runQa(options) {
     generatedAt: new Date().toISOString(),
     storyboard: resolvedStoryboard,
     video: resolvedVideo,
+    executionMode,
     mode: checks.output?.audioStreams > 0 ? 'audio-pilot' : 'silent-preview',
     automatedPassed,
     releaseReady: false,

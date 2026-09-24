@@ -55,7 +55,8 @@
           "enum": [
             "grid",
             "desktop",
-            "dots"
+            "dots",
+            "solid"
           ]
         },
         "surfaceRadius": {
@@ -178,6 +179,21 @@
             ]
           }
         },
+        "purposes": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "opening",
+              "claim",
+              "process",
+              "evidence",
+              "media",
+              "closing"
+            ]
+          }
+        },
         "layers": {
           "minItems": 1,
           "type": "array",
@@ -189,7 +205,9 @@
               "label",
               "annotation",
               "metric",
-              "screenshot"
+              "screenshot",
+              "object",
+              "callout"
             ]
           }
         },
@@ -205,7 +223,9 @@
               "focus",
               "highlight",
               "count",
-              "camera-push"
+              "camera-push",
+              "rotate",
+              "set-state"
             ]
           }
         },
@@ -219,6 +239,17 @@
               "slide",
               "paper-wipe",
               "carry"
+            ]
+          }
+        },
+        "overlapTransitions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "overlap-fade",
+              "overlap-slide",
+              "overlap-carry"
             ]
           }
         }

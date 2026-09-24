@@ -45,13 +45,15 @@ export function validateAssets(storyboardPath, manifestPath) {
   }
   for (const scene of storyboard.scenes) {
     for (const layer of scene.layers) {
-      if (layer.type !== 'screenshot' || !layer.asset) continue;
+      if (!['screenshot', 'object'].includes(layer.type) || !layer.asset) continue;
       const layerAssetPath = path.resolve(path.dirname(resolvedStoryboard), layer.asset);
       const asset = assetsByPath.get(path.normalize(layerAssetPath));
       if (!asset) {
-        issues.push(`scene ${scene.id}, layer ${layer.id}: screenshot 未登记在 asset-manifest.json：${layer.asset}`);
-      } else if (asset.type !== 'screenshot') {
+        issues.push(`scene ${scene.id}, layer ${layer.id}: ${layer.type} 未登记在 asset-manifest.json：${layer.asset}`);
+      } else if (layer.type === 'screenshot' && asset.type !== 'screenshot') {
         issues.push(`scene ${scene.id}, layer ${layer.id}: screenshot 在 asset-manifest.json 中登记为 ${asset.type}：${asset.path}`);
+      } else if (layer.type === 'object' && asset.type !== 'image') {
+        issues.push(`scene ${scene.id}, layer ${layer.id}: object 在 asset-manifest.json 中必须登记为 image：${asset.path}`);
       }
     }
   }

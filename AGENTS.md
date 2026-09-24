@@ -2,7 +2,7 @@
 
 ## 定位
 
-FrameLoom 是面向 Coding Agent 的本地、确定性视频生产 Skill。当前版本优先完成 `storyboard.json → validate → silent MP4` 的垂直闭环。
+FrameLoom 是以 Codex 为主要入口、兼容其他 Coding Agent 的本地、确定性视频生产 Skill。当前版本优先完成 `storyboard.json → validate → silent MP4` 的垂直闭环。
 
 ## 目录职责
 
@@ -12,6 +12,8 @@ FrameLoom 是面向 Coding Agent 的本地、确定性视频生产 Skill。当�
 - `scripts/`：本地校验和渲染入口。
 - `examples/`：公开、可替换、无私有凭据的示例生产层。
 - `projects/`：用户视频生产目录，不提交输出视频。
+- `.agents/skills/frame-loom/`：Codex 自动发现入口；根目录 `SKILL.md` 是共享生产流程。
+- `.claude-plugin/`：Claude Code 插件元数据，复用根目录 `SKILL.md`。
 
 ## 验证入口
 
@@ -24,7 +26,7 @@ npm run render:storyboard -- examples/article-video/storyboard.json /tmp/frame-l
 npm run inspect:output -- /tmp/frame-loom-preview.mp4 examples/article-video/storyboard.json
 ```
 
-渲染只接受 `reviewed` 或 `approved` 状态的 storyboard。默认不生成音频，静音 MP4 只能作为视觉预览。
+默认 review 渲染只接受 `reviewed` 或 `approved` 状态的 storyboard；只有 `produce --mode fast` 显式允许自动校验通过的 `generated` 或 `validated` 状态。默认不生成音频，静音 MP4 只能作为视觉预览。
 
 ## 约束
 

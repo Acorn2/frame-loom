@@ -2,7 +2,7 @@ import retroZineMotionJson from '../../styles/retro-zine/motion.json' with {type
 import retroZineJson from '../../styles/retro-zine/style.json' with {type: 'json'};
 import type {MotionPack, StylePack} from '../schemas/style-pack';
 
-export type StylePattern = 'grid' | 'desktop' | 'dots';
+export type StylePattern = 'grid' | 'desktop' | 'dots' | 'solid';
 
 export interface StyleTokens {
   id: string;
@@ -22,6 +22,7 @@ export interface StyleTokens {
   labelRadius: number;
   titleFontSize: number;
   motion: MotionPack['runtime'];
+  motionRules: Pick<MotionPack, 'enter' | 'reveal' | 'count'>;
   safeArea: StylePack['safeArea']['landscape'];
 }
 
@@ -30,6 +31,7 @@ export function createStyleTokens(style: StylePack, motion: MotionPack, width: n
     id: style.id,
     ...style.tokens,
     motion: motion.runtime,
+    motionRules: {enter: motion.enter, reveal: motion.reveal, count: motion.count},
     safeArea: width < height ? style.safeArea.portrait : style.safeArea.landscape
   };
 }

@@ -2,6 +2,35 @@
 
 FrameLoom separates semantic decisions from deterministic execution. Each stage produces an artifact and has a stop condition.
 
+## Execution policy
+
+The stages below are always available, but they do not always require a user
+interaction:
+
+- `review`: pause at the storyboard and approval gates; render only
+  `reviewed` or `approved` storyboards.
+- `fast`: run the same validation and QA chain automatically; promote a draft
+  to `generated`, then to `validated` after deterministic checks pass. The
+  output is an automated preview and still requires playback review.
+
+Use the unified entry point:
+
+```bash
+npm run produce -- projects/<video-id> --mode review
+npm run produce -- projects/<video-id> --mode fast
+npm run produce -- projects/<video-id> --mode fast --from qa
+```
+
+The orchestrator records progress in `projects/<video-id>/run.json`, so a
+failed stage and its artifacts are visible without reading terminal history.
+After a failed run, `--from validation|assets|safeArea|render|qa` reuses only
+the successfully completed stages recorded by the previous `run.json`. A
+resume also compares fingerprints of project inputs and the rendered video;
+changed inputs require an updated `storyboard.json` when content changed, then
+a new run from `storyboard`. A render resume still
+respects the explicit output overwrite guard. `init:project` creates an empty
+draft scaffold; the Agent must first turn source material into a valid draft.
+
 ## Stage 01 — Intake and route
 
 - Put source material in `source/`.
@@ -35,7 +64,8 @@ Output: `script.md` and `storyboard.draft.json`.
 - Confirm every beat target exists and every scene has enough final hold time.
 - After approval, create `storyboard.json` with `project.status` set to `reviewed` or `approved`.
 
-Output: reviewed `storyboard.json`.
+Output: reviewed `storyboard.json`, or a `generated`/`validated` storyboard
+when the fast execution policy is explicitly selected.
 
 ## Stage 05 — Assets and provenance
 

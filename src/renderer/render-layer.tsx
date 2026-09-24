@@ -3,6 +3,7 @@ import {Img, interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotio
 import type {StoryboardBeat, StoryboardLayer, StoryboardScene} from '../schemas/storyboard';
 import {getBeatProgress} from '../motion/beat-progress';
 import type {StyleTokens} from '../styles/style-loader';
+import {getNodeState} from './node-state';
 
 interface RenderLayerProps {
   layer: StoryboardLayer;
@@ -76,10 +77,13 @@ export function RenderLayer({layer, scene, tokens}: RenderLayerProps) {
   const beats = layerBeats(scene, layer);
   const appearance = appearanceBeat(beats);
   const emphasis = emphasisBeat(beats);
+  const nodeState = getNodeState(layer, scene, frame);
+  const rotateBeat = beats.find((beat) => beat.action === 'rotate');
   const insideVisibilityWindow = (layer.visibleFrom === undefined || frame >= layer.visibleFrom)
     && (layer.visibleUntil === undefined || frame < layer.visibleUntil);
   const opacity = insideVisibilityWindow ? layerOpacity(frame, appearance) : 0;
-  const transform = `${layerTransform(frame, appearance, emphasis, fps, tokens)} rotate(${layerRotation(layer, tokens)}deg)`;
+  const rotation = layerRotation(layer, tokens) + (layer.rotationDegrees ?? 0) * getBeatProgress(frame, rotateBeat);
+  const transform = `${layerTransform(frame, appearance, emphasis, fps, tokens)} rotate(${rotation}deg)`;
   const baseStyle = layerStyle(layer, tokens);
   const sharedStyle: React.CSSProperties = {
     ...baseStyle,
@@ -174,24 +178,52 @@ export function RenderLayer({layer, scene, tokens}: RenderLayerProps) {
     );
   }
 
+  if (layer.type === 'object') {
+    return (
+      <div style={{...sharedStyle, background: tokens.paper, border: tokens.surfaceBorder, boxShadow: tokens.surfaceShadow, overflow: 'hidden'}}>
+        {layer.assetDataUri ? <Img src={layer.assetDataUri} style={{width: '100%', height: '100%', objectFit: layer.fit ?? 'contain'}} /> : null}
+        <div style={{position: 'absolute', left: 12, bottom: 12, padding: '7px 11px', background: tokens.ink, color: tokens.paper, fontSize: 18}}>
+          {layer.label ?? '示意对象'}
+        </div>
+      </div>
+    );
+  }
+
+  if (layer.type === 'callout') {
+    const target = scene.layers.find((item) => item.id === layer.target);
+    return (
+      <div style={{...sharedStyle, border: `4px solid ${tokens.accent}`, background: tokens.paper, boxShadow: tokens.surfaceShadow, overflow: 'hidden'}}>
+        {target?.assetDataUri ? <Img src={target.assetDataUri} style={{width: '100%', height: '72%', objectFit: 'cover', objectPosition: 'center', transform: 'scale(1.7)'}} /> : null}
+        <div style={{position: 'absolute', left: 0, right: 0, bottom: 0, padding: 12, background: tokens.ink, color: tokens.paper, fontSize: 22}}>
+          {layer.text ?? layer.label}
+        </div>
+      </div>
+    );
+  }
+
   if (layer.type === 'card' || layer.type === 'node') {
+    const stateOpacity = nodeState === 'upcoming' ? 0.45 : nodeState === 'completed' ? 0.72 : 1;
+    const stateBackground = nodeState === 'current' || nodeState === 'resolved' ? tokens.accent : tokens.paper;
+    const stateColor = nodeState === 'current' || nodeState === 'resolved' ? tokens.paper : baseStyle.color;
     return (
       <div style={{
         ...sharedStyle,
+        opacity: opacity * stateOpacity,
         padding: 32,
-        background: tokens.paper,
-        border: tokens.surfaceBorder,
+        background: stateBackground,
+        color: stateColor,
+        border: nodeState === 'current' || nodeState === 'resolved' ? `5px solid ${tokens.ink}` : tokens.surfaceBorder,
         borderRadius: tokens.surfaceRadius,
         boxShadow: tokens.surfaceShadow,
         fontFamily: tokens.bodyFont
       }}>
-        <div style={{fontSize: 18, color: tokens.muted, letterSpacing: 1.5, textTransform: 'uppercase'}}>
+        <div style={{fontSize: 18, color: nodeState === 'current' || nodeState === 'resolved' ? tokens.paper : tokens.muted, opacity: nodeState === 'current' || nodeState === 'resolved' ? 0.86 : 1, letterSpacing: 1.5, textTransform: 'uppercase'}}>
           {layer.label}
         </div>
         <div style={{
           marginTop: 16,
           fontFamily: tokens.displayFont,
-          fontSize: layer.type === 'node' ? 34 : 40,
+          fontSize: layer.type === 'node' ? (nodeState === 'current' || nodeState === 'resolved' ? 44 : 34) : 40,
           lineHeight: 1.12
         }}>
           {layer.text}

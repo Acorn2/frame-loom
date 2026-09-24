@@ -1,5 +1,5 @@
 import {z} from 'zod';
-import {ACTION_IDS, LAYER_TYPES, TEMPLATE_IDS, TRANSITION_IDS} from './storyboard';
+import {ACTION_IDS, LAYER_TYPES, OVERLAP_TRANSITION_IDS, SCENE_PURPOSES, TEMPLATE_IDS, TRANSITION_IDS} from './storyboard';
 
 const SafeAreaSchema = z.object({
   top: z.number().nonnegative(),
@@ -12,7 +12,7 @@ export const StyleTokensSchema = z.object({
   background: z.string().min(1), ink: z.string().min(1), muted: z.string().min(1),
   accent: z.string().min(1), accentAlt: z.string().min(1), paper: z.string().min(1),
   grid: z.string().min(1), displayFont: z.string().min(1), bodyFont: z.string().min(1),
-  pattern: z.enum(['grid', 'desktop', 'dots']), surfaceRadius: z.number().nonnegative(),
+  pattern: z.enum(['grid', 'desktop', 'dots', 'solid']), surfaceRadius: z.number().nonnegative(),
   surfaceBorder: z.string(), surfaceShadow: z.string(), labelRadius: z.number().nonnegative(),
   titleFontSize: z.number().positive()
 }).strict();
@@ -24,9 +24,11 @@ export const StylePackSchema = z.object({
   safeArea: z.object({landscape: SafeAreaSchema, portrait: SafeAreaSchema}).strict(),
   supports: z.object({
     templates: z.array(z.enum(TEMPLATE_IDS)).min(1),
+    purposes: z.array(z.enum(SCENE_PURPOSES)).min(1).optional(),
     layers: z.array(z.enum(LAYER_TYPES)).min(1),
     actions: z.array(z.enum(ACTION_IDS)).min(1),
-    transitions: z.array(z.enum(TRANSITION_IDS)).min(1)
+    transitions: z.array(z.enum(TRANSITION_IDS)).min(1),
+    overlapTransitions: z.array(z.enum(OVERLAP_TRANSITION_IDS)).optional()
   }).strict(),
   provenance: z.object({fonts: z.string().min(1), assets: z.string().min(1)}).strict()
 }).strict();

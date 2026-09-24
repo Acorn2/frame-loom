@@ -7,6 +7,8 @@ import dataStoryboard from '../examples/data-explainer/storyboard.json' with {ty
 import productStoryboard from '../examples/product-demo/storyboard.json' with {type: 'json'};
 import {validateStoryboard} from '../src/validation/storyboard-validator.js';
 import type {Storyboard} from '../src/schemas/storyboard.js';
+import {getSceneTimeline, getTimelineDuration} from '../src/timeline/scene-timeline.js';
+import {getNodeState} from '../src/renderer/node-state.js';
 
 const styleRoot = path.resolve(process.cwd(), 'styles');
 const example = sampleStoryboard as unknown as Storyboard;
@@ -48,6 +50,17 @@ describe('validateStoryboard', () => {
     draft.project.status = 'draft';
     const issues = validateStoryboard(draft);
     expect(issues.some((item) => item.path === 'project.status')).toBe(true);
+  });
+
+  it('accepts generated and validated storyboard states only in fast mode', () => {
+    const generated = structuredClone(example);
+    generated.project.status = 'generated';
+    expect(validateStoryboard(generated).some((item) => item.path === 'project.status')).toBe(true);
+    expect(validateStoryboard(generated, {executionMode: 'fast'}).some((item) => item.path === 'project.status')).toBe(false);
+
+    const validated = structuredClone(example);
+    validated.project.status = 'validated';
+    expect(validateStoryboard(validated, {executionMode: 'fast'}).some((item) => item.path === 'project.status')).toBe(false);
   });
 
   it('returns structural issues instead of throwing for a malformed scene', () => {
@@ -157,5 +170,51 @@ describe('validateStoryboard', () => {
 
     const issues = validateStoryboard(invalid);
     expect(issues.some((item) => item.message.includes('内容 layer 未被任何 beat 触达') && item.message.includes('unanimated-card'))).toBe(true);
+  });
+
+  it('keeps legacy timing and computes explicit scene overlaps', () => {
+    expect(getTimelineDuration(example)).toBe(600);
+    const overlapped = structuredClone(example);
+    overlapped.scenes[1]!.transitionIn = {type: 'overlap-fade', durationFrames: 15};
+    overlapped.scenes[2]!.transitionIn = {type: 'overlap-slide', durationFrames: 15};
+    overlapped.project.durationFrames = 570;
+    overlapped.project.durationSec = 19;
+    expect(getSceneTimeline(overlapped).map((item) => item.startFrame)).toEqual([0, 165, 390]);
+    expect(getTimelineDuration(overlapped)).toBe(570);
+    expect(validateStoryboard(overlapped).filter((item) => item.severity === 'error')).toEqual([]);
+    overlapped.project.durationFrames = 600;
+    expect(validateStoryboard(overlapped).some((item) => item.path === 'scenes')).toBe(true);
+  });
+
+  it('rejects a final beat that leaves too little stable outro time', () => {
+    const invalid = structuredClone(example);
+    const finalScene = invalid.scenes.at(-1)!;
+    finalScene.outro = {holdFrames: 30, fadeFrames: 18};
+    finalScene.beats.at(-1)!.start = 150;
+    finalScene.beats.at(-1)!.duration = 20;
+    expect(validateStoryboard(invalid).some((item) => item.path.includes('outro') && item.message.includes('稳定画面'))).toBe(true);
+  });
+
+  it('rejects simultaneous current nodes and computes node state from beats', () => {
+    const invalid = structuredClone(example);
+    const scene = invalid.scenes[1]!;
+    const nodes = scene.layers.filter((layer) => layer.type === 'node').slice(0, 2);
+    expect(nodes).toHaveLength(2);
+    for (const node of nodes) {
+      scene.beats.push({id: `current-${node.id}`, target: node.id, action: 'set-state', state: 'current', start: 30, duration: 1});
+    }
+    expect(getNodeState(nodes[0]!, scene, 29)).not.toBe('current');
+    expect(getNodeState(nodes[0]!, scene, 30)).toBe('current');
+    expect(validateStoryboard(invalid).some((item) => item.message.includes('多个 current 节点'))).toBe(true);
+  });
+
+  it('requires an object asset and a callout target', () => {
+    const invalid = structuredClone(example);
+    const scene = invalid.scenes[0]!;
+    scene.layers.push({id: 'subject', type: 'object'});
+    scene.layers.push({id: 'detail', type: 'callout', target: 'missing'});
+    const issues = validateStoryboard(invalid);
+    expect(issues.some((item) => item.message.includes('object 必须声明'))).toBe(true);
+    expect(issues.some((item) => item.message.includes('callout.target'))).toBe(true);
   });
 });

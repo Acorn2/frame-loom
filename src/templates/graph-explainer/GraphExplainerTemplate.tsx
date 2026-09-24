@@ -8,10 +8,11 @@ import {TemplateShell} from '../shared/TemplateShell';
 export function GraphExplainerTemplate({
   scene,
   tokens,
-  showSceneCaptions
-}: {scene: StoryboardScene; tokens: StyleTokens; showSceneCaptions: boolean}) {
+  showSceneCaptions,
+  overlapOutFrames
+}: {scene: StoryboardScene; tokens: StyleTokens; showSceneCaptions: boolean; overlapOutFrames: number}) {
   return (
-    <TemplateShell scene={scene} tokens={tokens} showSceneCaptions={showSceneCaptions} sectionLabel="FRAMELOOM / RELATIONSHIPS">
+    <TemplateShell scene={scene} tokens={tokens} showSceneCaptions={showSceneCaptions} overlapOutFrames={overlapOutFrames} sectionLabel="FRAMELOOM / RELATIONSHIPS">
       {scene.connections.map((connection) => (
         <RenderConnection key={connection.id} connection={connection} scene={scene} tokens={tokens} />
       ))}

@@ -1,0 +1,6 @@
+{
+  "statement": {"label": "focus-rule", "title": "large-focus-heading", "annotation": "quiet-note", "metric": "signal-metric"},
+  "graph-explainer": {"node": "ordered-step", "connection": "focus-line"},
+  "metric-grid": {"metric": "signal-metric", "annotation": "quiet-note"},
+  "interaction-flow": {"screenshot": "media-stage", "annotation": "quiet-note"}
+}

@@ -1,8 +1,13 @@
+---
+name: frame-loom
+description: Turn Markdown, product materials, or structured storyboards into reviewable Remotion video previews. Use when planning, producing, or reviewing a FrameLoom video.
+---
+
 # FrameLoom Skill
 
-FrameLoom turns an approved structured storyboard into a deterministic Remotion
-video preview. It is a local, file-based workflow for Codex, Claude Code and
-other coding agents.
+FrameLoom turns a structured storyboard into a deterministic Remotion video
+preview. It is a local, file-based workflow for Codex, Claude Code and other
+coding agents, with explicit review and fast execution modes.
 
 ## Use This Skill For
 
@@ -26,15 +31,39 @@ reviewed storyboard.json
 
 The current runtime supports:
 
-- `statement`, `graph-explainer`, `metric-grid` and `interaction-flow` templates
-- `retro-zine`, `retro-windows` and `scatterbrain` Style Packs
-- `node`, `card`, `label`, `annotation`, `metric`, `screenshot` layers
-- `enter`, `reveal`, `draw`, `focus`, `highlight`, `count`, `camera-push` beats
+- `statement`, `graph-explainer`, `metric-grid` and `interaction-flow` base templates
+- `retro-zine`, `signal` and `scatterbrain` for Storyboard 2.2 purpose layouts; deprecated `retro-windows` remains for 2.1 projects
+- `opening`, `claim`, `process`, `evidence`, `media`, `closing` scene purposes in 2.2
+- `node`, `card`, `label`, `annotation`, `metric`, `screenshot`, `object`, `callout` layers in the legacy renderer; 2.2 purpose layouts use the narrower content slots in `references/storyboard-schema.md`
+- `enter`, `reveal`, `draw`, `focus`, `highlight`, `count`, `camera-push`, `rotate`, `set-state` beats in the legacy renderer; 2.2 purpose layouts currently execute only the documented subset
 - `fade`, `slide`, `paper-wipe`, `carry` transition declarations
 
 The default v0.5 output is a silent visual preview. Optional local audio,
 SRT/VTT captions, music and SFX can produce an audio pilot. Neither mode is
 release-ready until manual playback review is complete.
+
+## Execution Modes
+
+`review` is the default mode. It requires `reviewed` or `approved` storyboard
+status and keeps human approval as a production gate.
+
+`fast` runs the same deterministic validation, asset, safe-area, rendering and
+QA stages without stopping for each intermediate confirmation. It can promote
+`storyboard.draft.json` to `generated`, then to `validated` after automated
+checks pass. The result is still an automated preview and is not human-approved.
+
+```bash
+npm run produce -- projects/my-video --mode review
+npm run produce -- projects/my-video --mode fast
+npm run produce -- projects/my-video --mode fast --from qa
+```
+
+Both modes write `run.json` with stage status, warnings, errors and artifact
+paths. Fast mode stops on errors and continues past warnings; review mode keeps
+the existing human approval gate. `--from` reuses successfully completed
+stages from the previous `run.json` only when project inputs and any reused
+video match their recorded fingerprints. `init:project` creates an empty draft
+scaffold; an Agent must fill it from source material before either mode runs.
 
 ## Required Gates
 
@@ -43,8 +72,11 @@ release-ready until manual playback review is complete.
 3. Keep every beat target inside its scene and every timing value inside its
    scene duration.
 4. Verify screenshot assets and their provenance before rendering.
+   Check title, card and caption layout warnings or errors before rendering.
 5. Run `qa:storyboard` after rendering. A successful encoder exit is not enough
    to claim the video passed visual QA.
+6. `review` accepts only `reviewed` or `approved`; `fast` accepts only
+   `generated`, `validated`, `reviewed` or `approved`.
 
 ## Commands
 
@@ -55,6 +87,7 @@ npm run lint
 npm test
 npm run list:styles
 npm run preview:styles -- /tmp/frame-loom-style-gallery.html
+npm run preview:templates
 npm run init:project -- my-video --style retro-zine --canvas landscape
 npm run validate:storyboard -- examples/article-video/storyboard.json
 npm run validate:assets -- examples/article-video/storyboard.json
@@ -62,6 +95,9 @@ npm run check:safe-area -- examples/article-video/storyboard.json
 npm run render:storyboard -- examples/article-video/storyboard.json /tmp/frame-loom-preview.mp4
 npm run qa:storyboard -- examples/article-video/storyboard.json /tmp/frame-loom-preview.mp4 /tmp/frame-loom-review
 ```
+
+After the Agent creates a valid project storyboard, run `produce --mode review`
+for a reviewed storyboard or `produce --mode fast` for an automated preview.
 
 `render:storyboard` already runs output inspection. Run `inspect:output`
 separately when checking an existing MP4.

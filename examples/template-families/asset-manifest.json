@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "id": "product-workflow",
+      "path": "assets/product-workflow.svg",
+      "type": "screenshot",
+      "source": "Adapted from FrameLoom examples/product-demo/assets/style-selected.svg",
+      "license": "MIT",
+      "intendedUse": "同一公开产品示例素材用于三套模板真实渲染对比"
+    }
+  ],
+  "notes": "示例 SVG 来自仓库内公开 fixture，不含外部或私有素材。"
+}

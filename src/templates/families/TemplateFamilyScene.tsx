@@ -1,0 +1,253 @@
+import React from 'react';
+import {AbsoluteFill, Img, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
+import type {StoryboardLayer, StoryboardScene} from '../../schemas/storyboard';
+import type {StyleTokens} from '../../styles/style-loader';
+import type {TemplateFamilyId as FamilyId} from './family-registry';
+
+interface Props {
+  scene: StoryboardScene;
+  tokens: StyleTokens;
+  showSceneCaptions: boolean;
+  externalCaptions?: boolean;
+  overlapOutFrames: number;
+}
+
+const clamp = (value: number) => Math.max(0, Math.min(1, value));
+
+function textUnits(value: string): number {
+  return [...value].reduce((sum, char) => sum + (/\p{Script=Han}|[\u3000-\uffef]/u.test(char) ? 1 : /\s/u.test(char) ? 0.35 : 0.6), 0);
+}
+
+function fittedFont(text: string, width: number, height: number, largest: number, smallest: number, lineHeight = 1.12): number {
+  for (let size = largest; size >= smallest; size -= 2) {
+    const lines = Math.max(1, Math.ceil(textUnits(text) * size / Math.max(1, width)));
+    if (lines * size * lineHeight <= height) return size;
+  }
+  return smallest;
+}
+
+function layerText(layer: StoryboardLayer): string {
+  return layer.text ?? String(layer.value ?? layer.label ?? '');
+}
+
+function entry(scene: StoryboardScene, layer: StoryboardLayer | undefined, index: number, frame: number, family: FamilyId, tokens: StyleTokens): React.CSSProperties {
+  const beat = layer ? scene.beats.find((item) => item.target === layer.id && ['enter', 'reveal', 'count'].includes(item.action)) : undefined;
+  const start = beat?.start ?? 8 + index * (family === 'scatterbrain' ? 16 : 13);
+  const duration = beat?.duration ?? tokens.motionRules.enter.durationFrames;
+  const raw = clamp((frame - start) / Math.max(1, duration));
+  const eased = 1 - Math.pow(1 - raw, family === 'scatterbrain' ? 3 : 2);
+  const translate = (1 - eased) * tokens.motion.enterOffset * (family === 'scatterbrain' ? 1.25 : family === 'retro-zine' ? 1.5 : 1);
+  return {
+    opacity: eased,
+    transform: family === 'retro-zine'
+      ? `translateX(${-translate}px)`
+      : family === 'scatterbrain'
+        ? `translateY(${translate}px) rotate(${(index % 2 === 0 ? -1 : 1) * (1 - eased) * 5}deg)`
+        : `translateY(${translate}px)`
+  };
+}
+
+function rootTransition(scene: StoryboardScene, frame: number, overlapOutFrames: number): React.CSSProperties {
+  const exitFrames = overlapOutFrames > 0 ? overlapOutFrames : (scene.outro?.fadeFrames ?? 24);
+  const out = exitFrames > 0 ? interpolate(frame, [scene.durationFrames - exitFrames, scene.durationFrames], [0, 1], {
+    extrapolateLeft: 'clamp', extrapolateRight: 'clamp'
+  }) : 0;
+  const incoming = scene.transitionIn;
+  const entering = incoming ? clamp(frame / incoming.durationFrames) : 1;
+  return {
+    opacity: (1 - out) * (incoming?.type === 'overlap-slide' ? 1 : entering),
+    clipPath: incoming?.type === 'overlap-slide'
+      ? `inset(0 ${(1 - entering) * 100}% 0 0)`
+      : scene.transitionOut === 'paper-wipe' && overlapOutFrames === 0
+        ? `inset(0 ${out * 100}% 0 0)`
+        : undefined,
+    transform: incoming?.type === 'overlap-carry'
+      ? `translateY(${(1 - entering) * 24}px)`
+      : scene.transitionOut === 'slide'
+        ? `translateX(${-8 * out}%)`
+        : scene.transitionOut === 'carry'
+          ? `translateY(${-20 * out}px)`
+          : undefined
+  };
+}
+
+function subtitle(scene: StoryboardScene): string | undefined {
+  return scene.layers.find((layer) => layer.semanticRole === 'subtitle')?.text
+    ?? scene.layers.find((layer) => layer.type === 'annotation')?.text;
+}
+
+function roleContent(scene: StoryboardScene): StoryboardLayer[] {
+  if (scene.purpose === 'evidence') return scene.layers.filter((layer) => layer.type === 'metric');
+  return scene.layers.filter((layer) => layer.type === 'node' || layer.type === 'card');
+}
+
+function itemHeading(item: StoryboardLayer, purpose: StoryboardScene['purpose'], scene: StoryboardScene, frame: number): string {
+  if (purpose !== 'evidence') return item.label ?? layerText(item);
+  const raw = item.value ?? '';
+  const count = scene.beats.find((beat) => beat.target === item.id && beat.action === 'count');
+  if (!count || typeof raw !== 'number') return String(raw);
+  const decimals = String(raw).split('.')[1]?.length ?? 0;
+  return (raw * clamp((frame - count.start) / count.duration)).toFixed(decimals);
+}
+
+function itemDescription(item: StoryboardLayer, purpose: StoryboardScene['purpose']): string | undefined {
+  return purpose === 'evidence' ? item.label ?? item.text : item.label ? item.text : undefined;
+}
+
+interface LayoutProps {
+  scene: StoryboardScene;
+  tokens: StyleTokens;
+  frame: number;
+  width: number;
+  height: number;
+  scale: number;
+  portrait: boolean;
+}
+
+const full: React.CSSProperties = {position: 'absolute', inset: 0};
+
+function ZineLayout({scene, tokens, frame, width, height, scale, portrait}: LayoutProps) {
+  const purpose = scene.purpose;
+  const items = roleContent(scene);
+  const media = scene.layers.find((layer) => layer.type === 'screenshot' || layer.type === 'object');
+  const note = subtitle(scene);
+  const accent = tokens.accent;
+  const masthead = <div style={{position: 'absolute', top: 0, left: 0, right: 0, height: 36 * scale, borderBottom: `3px solid ${tokens.ink}`, display: 'flex', justifyContent: 'space-between', fontSize: 17 * scale, letterSpacing: 3 * scale, fontWeight: 800}}><span>FIELD NOTES</span><span>{purpose?.toUpperCase()}</span></div>;
+  const footer = <div style={{position: 'absolute', left: 0, right: 0, bottom: 0, borderTop: `2px solid ${tokens.ink}`, paddingTop: 14 * scale, display: 'flex', justifyContent: 'space-between', fontSize: 16 * scale, letterSpacing: 2 * scale}}><span>VISUAL STORY</span><span>◆</span></div>;
+  const titleSize = fittedFont(scene.title, width * (portrait ? 0.94 : 0.68), height * 0.39, (portrait ? 105 : 146) * scale, 46 * scale, 1.06);
+
+  let body: React.ReactNode;
+  if (purpose === 'process' || purpose === 'evidence') {
+    const sidebarWidth = portrait ? width : width * 0.32;
+    const sidebarHeight = portrait ? height * 0.22 : height * 0.69;
+    const sideFont = fittedFont(scene.title, sidebarWidth * 0.9, sidebarHeight * 0.75, (portrait ? 76 : 76) * scale, 34 * scale, 1.08);
+    body = <>
+      <div style={{position: 'absolute', left: 0, top: height * 0.19, width: sidebarWidth, height: sidebarHeight, borderRight: portrait ? undefined : `3px solid ${tokens.ink}`, borderBottom: portrait ? `3px solid ${tokens.ink}` : undefined, paddingRight: 24 * scale, fontFamily: tokens.displayFont, fontSize: sideFont, lineHeight: 1.08, fontWeight: 700}}>{scene.title}</div>
+      <div style={{position: 'absolute', top: portrait ? height * 0.45 : height * 0.18, right: 0, width: portrait ? width : width * 0.61, height: portrait ? height * 0.42 : height * 0.69, display: 'grid', gridTemplateRows: `repeat(${Math.max(1, items.length)}, minmax(0, 1fr))`, gap: 10 * scale}}>
+        {items.map((item, index) => <div key={item.id} style={{minHeight: 0, display: 'flex', alignItems: 'center', gap: 24 * scale, background: index === 1 ? '#dce7d3' : tokens.paper, borderBottom: `3px solid ${tokens.ink}`, padding: `8px ${22 * scale}px`, ...entry(scene, item, index, frame, 'retro-zine', tokens)}}>
+          <strong style={{fontFamily: tokens.displayFont, fontSize: 58 * scale, color: accent, flexShrink: 0}}>{purpose === 'evidence' ? itemHeading(item, purpose, scene, frame) : String(index + 1).padStart(2, '0')}</strong>
+          <div style={{minWidth: 0}}><div style={{fontWeight: 800, fontSize: fittedFont(purpose === 'evidence' ? itemDescription(item, purpose) ?? '' : itemHeading(item, purpose, scene, frame), portrait ? width * 0.67 : width * 0.42, height * 0.12 / Math.max(1, items.length / 3), 38 * scale, 22 * scale)}}>{purpose === 'evidence' ? itemDescription(item, purpose) : itemHeading(item, purpose, scene, frame)}</div>{purpose !== 'evidence' && itemDescription(item, purpose) ? <div style={{fontSize: 20 * scale, lineHeight: 1.2}}>{itemDescription(item, purpose)}</div> : null}</div>
+        </div>)}
+      </div>
+    </>;
+  } else if (purpose === 'media' && media) {
+    body = <>
+      <div style={{position: 'absolute', left: 0, top: height * 0.18, width: portrait ? width : width * 0.67, height: portrait ? height * 0.48 : height * 0.65, padding: 18 * scale, border: `3px solid ${tokens.ink}`, background: tokens.paper, boxShadow: `${18 * scale}px ${18 * scale}px 0 ${accent}`, ...entry(scene, media, 0, frame, 'retro-zine', tokens)}}>{media.assetDataUri ? <Img src={media.assetDataUri} style={{width: '100%', height: '100%', objectFit: media.fit ?? 'contain'}} /> : null}</div>
+      <div style={{position: 'absolute', left: portrait ? 0 : width * 0.73, top: portrait ? height * 0.7 : height * 0.26, width: portrait ? width : width * 0.26, fontFamily: tokens.displayFont, fontSize: fittedFont(scene.title, portrait ? width : width * 0.26, height * 0.3, 63 * scale, 28 * scale), lineHeight: 1.08}}>{scene.title}</div>
+      {media.label ? <div style={{position: 'absolute', left: 0, bottom: height * 0.08, fontSize: 18 * scale}}>SOURCE / {media.label}</div> : null}
+    </>;
+  } else {
+    body = <>
+      <div style={{position: 'absolute', left: 0, top: height * 0.21, padding: `${10 * scale}px ${16 * scale}px`, color: tokens.paper, background: accent, fontSize: 20 * scale, fontWeight: 800, ...entry(scene, undefined, 0, frame, 'retro-zine', tokens)}}>{purpose === 'closing' ? 'END NOTE' : purpose === 'claim' ? 'POINT OF VIEW' : 'VISUAL ESSAY'}</div>
+      <h1 style={{position: 'absolute', left: width * 0.04, top: height * 0.34, width: portrait ? width * 0.92 : width * 0.7, margin: 0, fontFamily: tokens.displayFont, fontSize: titleSize, lineHeight: 1.06, letterSpacing: '-0.04em', overflowWrap: 'anywhere', ...entry(scene, undefined, 1, frame, 'retro-zine', tokens)}}>{scene.title}</h1>
+      {!portrait ? <div style={{position: 'absolute', right: width * 0.06, top: height * 0.43, width: width * 0.14, aspectRatio: '1', borderRadius: '50%', border: `5px solid ${tokens.ink}`, boxShadow: `${14 * scale}px ${14 * scale}px 0 ${accent}`}} /> : null}
+      {note ? <div style={{position: 'absolute', left: width * 0.04, bottom: height * 0.1, maxWidth: width * 0.72, borderLeft: `7px solid ${tokens.accentAlt}`, paddingLeft: 22 * scale, fontSize: 27 * scale, lineHeight: 1.25, ...entry(scene, scene.layers.find((item) => item.text === note), 2, frame, 'retro-zine', tokens)}}>{note}</div> : null}
+    </>;
+  }
+  return <div style={{...full, color: tokens.ink}}>{masthead}{body}{footer}</div>;
+}
+
+function SignalLayout({scene, tokens, frame, width, height, scale, portrait}: LayoutProps) {
+  const purpose = scene.purpose;
+  const items = roleContent(scene);
+  const media = scene.layers.find((layer) => layer.type === 'screenshot' || layer.type === 'object');
+  const note = subtitle(scene);
+  const titleSize = fittedFont(scene.title, width * 0.8, height * 0.36, (portrait ? 108 : 136) * scale, 42 * scale);
+  const edge: React.CSSProperties = {fontSize: 17 * scale, letterSpacing: 3 * scale, fontWeight: 800, color: '#bad0d0'};
+  let body: React.ReactNode;
+  if (purpose === 'process' || purpose === 'evidence') {
+    const columns = portrait ? (items.length > 3 ? 2 : 1) : Math.min(3, Math.max(1, items.length));
+    body = <>
+      <h1 style={{position: 'absolute', left: 0, top: height * 0.2, width: width * 0.95, margin: 0, fontSize: fittedFont(scene.title, width * 0.95, height * 0.17, 74 * scale, 34 * scale), lineHeight: 1.1}}>{scene.title}</h1>
+      <div style={{position: 'absolute', top: portrait ? height * 0.38 : height * 0.46, left: 0, right: 0, bottom: height * 0.12, display: 'grid', gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, gap: 24 * scale, alignContent: 'stretch'}}>
+        {items.map((item, index) => <div key={item.id} style={{minWidth: 0, borderTop: `6px solid ${index % 3 === 1 ? '#f2cf79' : index % 3 === 2 ? '#849ddd' : tokens.accent}`, paddingTop: 24 * scale, ...entry(scene, item, index, frame, 'signal', tokens)}}>
+          <div style={{fontSize: 64 * scale, fontWeight: 700, lineHeight: 1, color: index % 3 === 1 ? '#f2cf79' : index % 3 === 2 ? '#849ddd' : tokens.accent}}>{purpose === 'evidence' ? itemHeading(item, purpose, scene, frame) : String(index + 1).padStart(2, '0')}</div>
+          <div style={{fontSize: 39 * scale, fontWeight: 800, marginTop: 16 * scale, lineHeight: 1.13}}>{purpose === 'evidence' ? itemDescription(item, purpose) : itemHeading(item, purpose, scene, frame)}</div>
+          {purpose !== 'evidence' && item.label && item.text ? <div style={{fontSize: 22 * scale, color: '#bdd0cf', marginTop: 12 * scale, lineHeight: 1.25}}>{item.text}</div> : null}
+        </div>)}
+      </div>
+    </>;
+  } else if (purpose === 'media' && media) {
+    body = <>
+      <div style={{position: 'absolute', left: 0, top: height * 0.2, width: portrait ? width : width * 0.7, height: portrait ? height * 0.51 : height * 0.64, border: `2px solid #7d9da0`, overflow: 'hidden', ...entry(scene, media, 0, frame, 'signal', tokens)}}>{media.assetDataUri ? <Img src={media.assetDataUri} style={{width: '100%', height: '100%', objectFit: media.fit ?? 'contain'}} /> : null}</div>
+      <div style={{position: 'absolute', left: portrait ? 0 : width * 0.75, top: portrait ? height * 0.75 : height * 0.35, width: portrait ? width : width * 0.24, borderTop: `5px solid ${tokens.accent}`, paddingTop: 18 * scale, fontSize: fittedFont(scene.title, portrait ? width : width * 0.24, portrait ? height * 0.14 : height * 0.25, portrait ? 52 * scale : 58 * scale, 27 * scale), lineHeight: 1.12, fontWeight: 800}}>{scene.title}</div>
+      {media.label ? <div style={{position: 'absolute', left: 0, bottom: portrait ? height * 0.27 : height * 0.07, ...edge}}>SOURCE / {media.label}</div> : null}
+    </>;
+  } else {
+    body = <>
+      <div style={{position: 'absolute', left: 0, top: height * 0.3, width: 20 * scale, height: height * 0.35, background: tokens.accent, ...entry(scene, undefined, 0, frame, 'signal', tokens)}} />
+      <h1 style={{position: 'absolute', left: 56 * scale, top: height * 0.3, width: width * 0.78, margin: 0, fontSize: titleSize, fontWeight: 800, lineHeight: 1.12, letterSpacing: '-0.04em', overflowWrap: 'anywhere', ...entry(scene, undefined, 1, frame, 'signal', tokens)}}>{scene.title}</h1>
+      {note ? <div style={{position: 'absolute', left: 56 * scale, bottom: height * 0.12, maxWidth: width * 0.8, color: '#bdd0cf', fontSize: 27 * scale, ...entry(scene, scene.layers.find((item) => item.text === note), 2, frame, 'signal', tokens)}}>{note}</div> : null}
+      {!portrait ? <div style={{position: 'absolute', right: width * 0.04, top: height * 0.35, width: width * 0.12, aspectRatio: '1', border: `3px solid ${tokens.accent}`, borderRadius: '50%', boxShadow: `inset 0 0 0 ${25 * scale}px #44e0d318, 0 0 ${56 * scale}px #44e0d344`}} /> : null}
+    </>;
+  }
+  return <div style={{...full, color: tokens.ink}}><div style={{position: 'absolute', top: 0, left: 0, right: 0, borderBottom: '1px solid #748b8c', paddingBottom: 18 * scale, display: 'flex', justifyContent: 'space-between', ...edge}}><span>SIGNAL / {purpose?.toUpperCase()}</span><span style={{color: tokens.accent}}>● FRAME</span></div>{body}<div style={{position: 'absolute', bottom: 0, left: 0, right: 0, borderTop: '1px solid #748b8c', paddingTop: 16 * scale, display: 'flex', justifyContent: 'space-between', ...edge}}><span>ONE IDEA / ONE FRAME</span><span>◆</span></div></div>;
+}
+
+function ScatterLayout({scene, tokens, frame, width, height, scale, portrait}: LayoutProps) {
+  const purpose = scene.purpose;
+  const items = roleContent(scene);
+  const media = scene.layers.find((layer) => layer.type === 'screenshot' || layer.type === 'object');
+  const note = subtitle(scene);
+  let body: React.ReactNode;
+  if (purpose === 'process' || purpose === 'evidence') {
+    const columns = portrait ? (items.length > 3 ? 2 : 1) : Math.min(3, Math.max(1, items.length));
+    body = <>
+      <h1 style={{position: 'absolute', top: height * 0.08, left: width * 0.04, width: width * 0.92, margin: 0, fontFamily: tokens.displayFont, fontSize: fittedFont(scene.title, width * 0.92, height * 0.18, 68 * scale, 34 * scale), lineHeight: 1.12, transform: 'rotate(-2deg)'}}>{scene.title}</h1>
+      <div style={{position: 'absolute', top: height * 0.31, left: width * 0.03, right: width * 0.03, bottom: height * 0.08, display: 'grid', gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, gap: 20 * scale, alignItems: 'stretch'}}>
+        {items.map((item, index) => <div key={item.id} style={{position: 'relative', minWidth: 0, background: [tokens.accent, '#d8e9fa', '#e8efc8'][index % 3], border: `4px solid ${tokens.ink}`, borderRadius: 8 * scale, boxShadow: `${9 * scale}px ${11 * scale}px 0 #24211f33`, padding: 27 * scale, rotate: `${index % 2 ? 2 : -2}deg`, ...entry(scene, item, index, frame, 'scatterbrain', tokens)}}>
+          <div style={{position: 'absolute', left: '48%', top: -11 * scale, width: 20 * scale, height: 20 * scale, borderRadius: '50%', background: '#e65335', border: `2px solid ${tokens.ink}`}} />
+          <div style={{fontSize: 23 * scale, fontWeight: 900}}>{purpose === 'evidence' ? 'DATA' : String(index + 1).padStart(2, '0')}</div>
+          <div style={{fontFamily: tokens.displayFont, fontWeight: 800, fontSize: fittedFont(itemHeading(item, purpose, scene, frame), width / columns * 0.7, height * 0.18, 48 * scale, 25 * scale), lineHeight: 1.12, marginTop: 20 * scale}}>{itemHeading(item, purpose, scene, frame)}</div>
+          {itemDescription(item, purpose) ? <div style={{fontSize: 22 * scale, lineHeight: 1.2, marginTop: 16 * scale}}>{itemDescription(item, purpose)}</div> : null}
+        </div>)}
+      </div>
+    </>;
+  } else if (purpose === 'media' && media) {
+    body = <>
+      <div style={{position: 'absolute', left: portrait ? width * 0.07 : width * 0.04, top: height * 0.17, width: portrait ? width * 0.85 : width * 0.67, height: portrait ? height * 0.51 : height * 0.66, background: tokens.paper, border: `5px solid ${tokens.ink}`, padding: 21 * scale, boxShadow: `${16 * scale}px ${18 * scale}px 0 ${tokens.accent}`, rotate: '-2deg', ...entry(scene, media, 0, frame, 'scatterbrain', tokens)}}>{media.assetDataUri ? <Img src={media.assetDataUri} style={{width: '100%', height: '100%', objectFit: media.fit ?? 'contain'}} /> : null}</div>
+      <div style={{position: 'absolute', left: portrait ? width * 0.07 : width * 0.76, top: portrait ? height * 0.77 : height * 0.28, width: portrait ? width * 0.85 : width * 0.22, fontFamily: tokens.displayFont, fontSize: fittedFont(scene.title, portrait ? width * 0.85 : width * 0.22, portrait ? height * 0.13 : height * 0.32, portrait ? 52 * scale : 62 * scale, 28 * scale), lineHeight: 1.12, rotate: '3deg'}}>{scene.title}</div>
+      {media.label ? <div style={{position: 'absolute', left: width * 0.05, bottom: portrait ? height * 0.27 : height * 0.05, fontSize: 18 * scale}}>SOURCE / {media.label}</div> : null}
+    </>;
+  } else {
+    const titleSize = fittedFont(scene.title, width * 0.71, height * 0.42, (portrait ? 110 : 136) * scale, 42 * scale);
+    body = <>
+      <div style={{position: 'absolute', left: portrait ? width * 0.05 : width * 0.13, top: height * 0.18, width: portrait ? width * 0.9 : width * 0.73, height: height * 0.64, background: purpose === 'closing' ? tokens.paper : tokens.accent, border: `5px solid ${tokens.ink}`, borderRadius: 16 * scale, boxShadow: `${18 * scale}px ${21 * scale}px 0 ${tokens.accentAlt}`, rotate: '-2deg', padding: 45 * scale, ...entry(scene, undefined, 0, frame, 'scatterbrain', tokens)}}>
+        <div style={{position: 'absolute', width: width * 0.14, height: 30 * scale, top: -18 * scale, left: '42%', background: '#a8c8e7aa', rotate: '-6deg'}} />
+        <h1 style={{margin: 0, fontFamily: tokens.displayFont, fontSize: titleSize, lineHeight: 1.12, overflowWrap: 'anywhere'}}>{scene.title}</h1>
+        {note ? <div style={{fontSize: 26 * scale, lineHeight: 1.25, marginTop: 25 * scale}}>{note}</div> : null}
+        {purpose === 'closing' ? <div style={{height: 7 * scale, background: tokens.accentAlt, width: '66%', marginTop: 24 * scale, rotate: '-2deg'}} /> : null}
+      </div>
+    </>;
+  }
+  return <div style={{...full, color: tokens.ink}}>{body}</div>;
+}
+
+const familyLayouts: Record<FamilyId, React.ComponentType<LayoutProps>> = {
+  'retro-zine': ZineLayout,
+  signal: SignalLayout,
+  scatterbrain: ScatterLayout
+};
+
+export function TemplateFamilyScene({scene, tokens, showSceneCaptions, externalCaptions, overlapOutFrames}: Props) {
+  const frame = useCurrentFrame();
+  const {width, height} = useVideoConfig();
+  const portrait = width < height;
+  const family = tokens.id as FamilyId;
+  const activeCaption = showSceneCaptions ? scene.captions.find((caption) => frame >= caption.start && frame < caption.end) : undefined;
+  const captionReserve = ((scene.captions.length > 0 && showSceneCaptions) || externalCaptions) ? (portrait ? 170 : 125) : 0;
+  const innerWidth = width - tokens.safeArea.left - tokens.safeArea.right;
+  const innerHeight = height - tokens.safeArea.top - tokens.safeArea.bottom - captionReserve;
+  const scale = portrait ? width / 1080 : width / 1920;
+  const layoutProps = {scene, tokens, frame, width: innerWidth, height: innerHeight, scale, portrait};
+  const Layout = familyLayouts[family];
+  return <AbsoluteFill style={{backgroundColor: tokens.background, color: tokens.ink, fontFamily: tokens.bodyFont, overflow: 'hidden', ...rootTransition(scene, frame, overlapOutFrames)}}>
+    {family === 'retro-zine' ? <AbsoluteFill style={{backgroundImage: `linear-gradient(${tokens.grid}55 1px, transparent 1px), linear-gradient(90deg, ${tokens.grid}55 1px, transparent 1px)`, backgroundSize: `${64 * scale}px ${64 * scale}px`, opacity: 0.65}} /> : null}
+    {family === 'scatterbrain' ? <AbsoluteFill style={{backgroundImage: `radial-gradient(${tokens.grid} 2px, transparent 2px)`, backgroundSize: `${34 * scale}px ${34 * scale}px`, opacity: 0.62}} /> : null}
+    {family === 'signal' ? <AbsoluteFill style={{backgroundImage: `radial-gradient(circle at 82% 32%, ${tokens.accent}27, transparent 26%)`}} /> : null}
+    <div style={{position: 'absolute', left: tokens.safeArea.left, right: tokens.safeArea.right, top: tokens.safeArea.top, bottom: tokens.safeArea.bottom + captionReserve}}>
+      <Layout {...layoutProps} />
+    </div>
+    {activeCaption ? <div style={{position: 'absolute', left: tokens.safeArea.left, right: tokens.safeArea.right, bottom: tokens.safeArea.bottom + 10 * scale, minHeight: 90 * scale, display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', background: family === 'scatterbrain' ? tokens.paper : family === 'signal' ? '#0a121bd9' : '#18211ddb', color: family === 'scatterbrain' ? tokens.ink : '#fff', borderTop: family === 'scatterbrain' ? `4px solid ${tokens.ink}` : undefined, fontSize: (portrait ? 34 : 30) * scale, lineHeight: 1.3, padding: `${12 * scale}px ${28 * scale}px`, overflowWrap: 'anywhere'}}>{activeCaption.text}</div> : null}
+  </AbsoluteFill>;
+}

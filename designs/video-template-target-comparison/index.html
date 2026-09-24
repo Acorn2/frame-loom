@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FrameLoom · 三套视频模板目标效果</title>
+  <style>
+    :root{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:#25272a;background:#e9e9e5}*{box-sizing:border-box}body{margin:0}button{font:inherit;cursor:pointer}.page{max-width:1740px;margin:auto;padding:48px 54px 76px}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.19em;color:#6d7274}.page h1{font-size:clamp(32px,3.2vw,54px);letter-spacing:-.045em;margin:9px 0 10px}.lede{color:#61686b;font-size:16px;margin:0 0 14px}.notice{display:inline-block;background:#fff9e5;border:1px solid #decf91;color:#665618;padding:8px 12px;font-size:13px;font-weight:650;margin:9px 0 27px}.comparison-key{display:flex;gap:15px;color:#777f82;font-size:12px;margin-bottom:10px}.comparison-key span{width:33.333%;padding-left:5px}.style-row{background:#fafaf8;border:1px solid #d6d9d7;border-radius:13px;padding:20px 20px 22px;margin-bottom:24px;box-shadow:0 10px 28px #1725220b}.style-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:14px}.style-title{margin:0;font-size:26px;letter-spacing:-.04em}.style-id{font-size:11px;letter-spacing:.08em;color:#879091;font-family:monospace;margin-left:10px}.style-desc{margin:5px 0 0;color:#626c6d;font-size:13px}.play{border:1px solid #252c2d;border-radius:6px;background:#202626;color:white;padding:9px 13px;font-size:12px;font-weight:700;white-space:nowrap}.play:hover{background:#394344}.frames{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.frame-wrap{min-width:0}.frame{aspect-ratio:16/9;width:100%;position:relative;overflow:hidden;isolation:isolate}.frame-label{display:flex;align-items:center;justify-content:space-between;padding:9px 2px 0;font-size:12px;font-weight:700;color:#596161}.frame-label i{font-style:normal;font-weight:400;color:#9aa1a0}.frame .animate{animation:none}.frame.playing .animate{animation:reveal .65s cubic-bezier(.22,.85,.3,1) both}.frame.playing .late{animation-delay:.45s}.frame.playing .later{animation-delay:.85s}@keyframes reveal{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+    /* Retro Zine: layout is built as editorial pages, not generic centered cards. */
+    .zine{background:#f2ead9;color:#18211d;font-family:Arial,"PingFang SC",sans-serif;background-image:linear-gradient(#d8cdb875 1px,transparent 1px),linear-gradient(90deg,#d8cdb875 1px,transparent 1px);background-size:28px 28px}.zine .folio{position:absolute;left:5%;top:5%;right:5%;display:flex;justify-content:space-between;border-bottom:2px solid #18211d;padding-bottom:1.3%;font-size:clamp(5px,.53vw,10px);font-weight:800;letter-spacing:.15em}.zine .foot{position:absolute;bottom:4.5%;left:5%;right:5%;display:flex;justify-content:space-between;border-top:1px solid #18211d;padding-top:1.5%;font-size:clamp(5px,.49vw,9px);letter-spacing:.1em}.zine .serif{font-family:Georgia,"Songti SC",serif}.zine .small{font-size:clamp(5px,.55vw,10px);letter-spacing:.05em;line-height:1.45}.zine.open .issue{position:absolute;left:5%;top:19%;background:#e65335;color:#fff;font-weight:900;padding:1.3% 2%;font-size:clamp(6px,.65vw,12px);transform:rotate(-3deg)}.zine.open h2{position:absolute;left:8%;top:28%;width:67%;margin:0;font-size:clamp(24px,3.55vw,66px);line-height:1.04;letter-spacing:-.075em;font-weight:700}.zine.open h2 em{color:#e65335;font-style:normal}.zine.open .sub{position:absolute;left:9%;top:72%;border-left:5px solid #218c72;padding-left:3%;font-size:clamp(7px,.85vw,15px);font-weight:700}.zine.open .vertical{position:absolute;right:5%;top:25%;writing-mode:vertical-rl;font-size:clamp(5px,.52vw,10px);font-weight:800;letter-spacing:.2em}.zine.open .shape{position:absolute;right:10%;top:39%;width:17%;aspect-ratio:1;border:3px solid #18211d;border-radius:50%;box-shadow:8px 8px 0 #e65335}.zine.explain .side{position:absolute;left:5%;top:20%;width:26%;height:65%;border-right:2px solid #18211d;padding-right:3%}.zine.explain .side strong{font:700 clamp(18px,2.4vw,43px)/1.02 Georgia,"Songti SC",serif;letter-spacing:-.06em;display:block}.zine.explain .side p{font-size:clamp(6px,.57vw,11px);margin-top:10%}.zine.explain .stack{position:absolute;right:5%;top:19%;width:60%;height:66%;display:grid;grid-template-rows:repeat(3,1fr);gap:2.5%}.zine.explain .item{display:flex;align-items:center;gap:4%;border-bottom:2px solid #18211d;background:#fffaf0;padding:0 3%}.zine.explain .item:nth-child(2){background:#dce7d3}.zine.explain .num{font:700 clamp(17px,2vw,38px) Georgia,serif;color:#e65335}.zine.explain .item strong{font-size:clamp(11px,1.13vw,21px)}.zine.explain .item small{font-size:clamp(5px,.56vw,11px);display:block;margin-top:3px}.zine.close .redline{position:absolute;left:5%;top:27%;height:2%;width:21%;background:#e65335}.zine.close .quote{position:absolute;left:9%;top:33%;width:65%;font:700 clamp(22px,3.2vw,59px)/1.1 Georgia,"Songti SC",serif;letter-spacing:-.07em}.zine.close .quote b{color:#218c72}.zine.close .seal{position:absolute;right:9%;bottom:22%;height:24%;aspect-ratio:1;border:3px solid #e65335;border-radius:50%;display:grid;place-items:center;color:#e65335;font-weight:900;font-size:clamp(5px,.52vw,10px);transform:rotate(14deg)}.zine.close .caption{position:absolute;left:9%;bottom:18%;font-size:clamp(7px,.72vw,13px);font-weight:700}
+    /* Scatterbrain: board, irregular note shapes, hand-drawn relationships. */
+    .scatter{background:#fffaf0;color:#24211f;font-family:Arial,"PingFang SC",sans-serif;background-image:radial-gradient(#8fb6e899 1.1px,transparent 1.1px);background-size:17px 17px}.scatter .pen{font-family:"Comic Sans MS","Chalkboard SE","Songti SC",cursive}.scatter .tape{position:absolute;width:15%;height:8%;background:#b5d2ebaa;transform:rotate(-8deg);z-index:5}.scatter .hand{position:absolute;color:#2e75d4;font-weight:800;transform:rotate(-9deg)}.scatter.open .note{position:absolute;left:14%;top:19%;width:68%;height:61%;background:#ffd84d;border:3px solid #24211f;box-shadow:10px 11px 0 #2e75d4;transform:rotate(-3deg);padding:10% 7%}.scatter.open .note h2{font:700 clamp(19px,2.52vw,47px)/1.16 "Comic Sans MS","Chalkboard SE","Songti SC",cursive;letter-spacing:-.07em;margin:0}.scatter.open .tape{left:41%;top:15%}.scatter.open .hand{right:5%;bottom:12%;font-size:clamp(8px,.88vw,16px)}.scatter.open .arrow{position:absolute;right:13%;bottom:18%;width:19%;height:17%;border-bottom:3px solid #2e75d4;border-radius:50%;transform:rotate(-25deg)}.scatter.open .arrow:after{content:"➤";position:absolute;right:-1%;bottom:-40%;color:#2e75d4;font-size:clamp(13px,1.5vw,28px)}.scatter.explain .lead{position:absolute;top:9%;left:9%;font:700 clamp(14px,1.63vw,30px) "Comic Sans MS","Chalkboard SE","Songti SC",cursive;transform:rotate(-3deg)}.scatter.explain .scribble{position:absolute;top:27%;left:8%;right:8%;height:5px;background:#2e75d4;transform:rotate(-2deg)}.scatter.explain .sticky{position:absolute;top:39%;width:26%;height:43%;border:2px solid #24211f;box-shadow:5px 7px 0 #24211f29;padding:5%;font-size:clamp(10px,1.1vw,21px);font-weight:900}.scatter.explain .sticky small{display:block;font-size:clamp(6px,.56vw,11px);margin-top:9%;line-height:1.3;font-weight:500}.scatter.explain .sticky.one{left:8%;background:#ffe081;transform:rotate(-7deg)}.scatter.explain .sticky.two{left:37%;background:#d4e4f5;transform:rotate(4deg);top:36%}.scatter.explain .sticky.three{left:67%;background:#e6eac9;transform:rotate(-5deg);top:42%}.scatter.explain .pin{position:absolute;z-index:2;width:9px;height:9px;border-radius:50%;background:#e65335;border:1px solid #24211f;top:38%}.scatter.explain .pin.p1{left:20%}.scatter.explain .pin.p2{left:50%;top:36%}.scatter.explain .pin.p3{left:80%;top:41%}.scatter.close .paper{position:absolute;left:17%;top:20%;width:66%;height:59%;background:#fffef8;border:3px solid #24211f;border-radius:13px;box-shadow:9px 11px 0 #ffd84d;transform:rotate(2deg);padding:7%}.scatter.close .paper h2{font:700 clamp(17px,2.35vw,44px)/1.16 "Comic Sans MS","Chalkboard SE","Songti SC",cursive;letter-spacing:-.06em;margin:0}.scatter.close .underline{height:4px;background:#2e75d4;width:75%;transform:rotate(-3deg);margin-top:5%}.scatter.close .paper p{font-size:clamp(7px,.7vw,13px);margin-top:7%}.scatter.close .star{position:absolute;left:7%;bottom:15%;color:#2e75d4;font-size:clamp(28px,3.4vw,63px);transform:rotate(-18deg)}.scatter.close .tape{left:43%;top:16%}
+    dialog{border:0;padding:0;background:transparent;max-width:min(92vw,1050px);width:1050px;box-shadow:none}dialog::backdrop{background:#16201fe0}.modal{background:#f4f5f2;border-radius:13px;padding:20px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;font-weight:750}.modal-head button{border:0;background:#e2e5e2;border-radius:5px;padding:6px 10px}.stage{width:100%;aspect-ratio:16/9;position:relative;background:black;overflow:hidden}.stage .frame{position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none;transition:opacity .15s}.stage .frame.active{opacity:1}.stage .frame.active .animate{animation:reveal .6s cubic-bezier(.22,.85,.3,1) both}.stage .frame.active .late{animation-delay:.45s}.stage .frame.active .later{animation-delay:.85s}.stage .scatter.active .sticky,.stage .scatter.active .note,.stage .scatter.active .paper{animation:notePop .6s cubic-bezier(.18,1.4,.25,1) both}.stage .zine.active .item,.stage .zine.active .quote,.stage .zine.active h2{animation:paperSlide .65s cubic-bezier(.2,.8,.3,1) both}@keyframes notePop{from{opacity:0;scale:.7;translate:0 35px}to{opacity:1;scale:1;translate:0 0}}@keyframes paperSlide{from{opacity:0;translate:-9% 0}to{opacity:1;translate:0 0}}.playerbar{display:flex;gap:12px;align-items:center;padding-top:13px;font-size:12px;color:#657074}.playerbar button{border:1px solid #b9c0be;background:white;border-radius:5px;padding:6px 12px}.progress{height:5px;background:#d7ddda;flex:1;border-radius:8px;overflow:hidden}.progress i{height:100%;width:0;display:block;background:#232c2c;transition:width .12s linear}.motion-note{font-size:13px;color:#596364;margin:10px 0 0}@media(max-width:900px){.page{padding:25px 16px}.frames{grid-template-columns:1fr}.comparison-key{display:none}.style-head{flex-direction:column}.frame-label{font-size:13px}}
+  </style>
+  <style>
+    /* V2 direction: editorial paper, cinematic signal, and playful notes.
+       Frame typography uses container units so the gallery and modal share one safe layout. */
+    .frame { container-type: inline-size; }
+    .zine .folio, .zine .foot { font-size: 1.55cqw; }
+    .zine .folio { top: 5%; }
+    .zine .foot { bottom: 5%; }
+    .zine.open .issue { top: 20%; font-size: 1.9cqw; padding: 1% 1.8%; }
+    .zine.open h2 { left: 8%; top: 32%; width: 62%; font-size: 8.4cqw; line-height: 1.05; letter-spacing: -.065em; }
+    .zine.open .sub { left: 9%; top: 75%; font-size: 2.1cqw; max-width: 62%; line-height: 1.25; }
+    .zine.open .vertical { top: 27%; font-size: 1.5cqw; }
+    .zine.open .shape { right: 10%; top: 42%; width: 16%; }
+    .zine.explain .side { top: 22%; height: 59%; width: 29%; }
+    .zine.explain .side strong { font-size: 4.55cqw; line-height: 1.07; }
+    .zine.explain .side p { font-size: 1.65cqw; line-height: 1.25; margin-top: 7%; }
+    .zine.explain .stack { top: 20%; height: 61%; width: 57%; }
+    .zine.explain .item { min-height: 0; padding: 0 3%; }
+    .zine.explain .num { font-size: 4.6cqw; flex: 0 0 auto; }
+    .zine.explain .item strong { font-size: 2.65cqw; }
+    .zine.explain .item small { font-size: 1.6cqw; line-height: 1.2; }
+    .zine.close .redline { top: 23%; }
+    .zine.close .quote { top: 34%; width: 62%; font-size: 7.05cqw; line-height: 1.02; letter-spacing: -.055em; }
+    .zine.close .caption { left: 9%; bottom: 16%; font-size: 1.95cqw; }
+    .zine.close .seal { right: 8%; bottom: 24%; height: 21%; font-size: 1.4cqw; }
+
+    .signal { background: #111b27; color: #f5f3ec; font-family: Arial, "PingFang SC", sans-serif; }
+    .signal::before { content: ""; position: absolute; inset: 0; background: linear-gradient(120deg, transparent 0 66%, #1c3440 66% 67%, transparent 67%), radial-gradient(circle at 85% 35%, #35d1c42a, transparent 27%); pointer-events: none; }
+    .signal .topline, .signal .bottomline { position: absolute; left: 7%; right: 7%; display: flex; justify-content: space-between; align-items: center; font-size: 1.5cqw; font-weight: 800; letter-spacing: .17em; }
+    .signal .topline { top: 7%; border-bottom: 1px solid #c4d3cf66; padding-bottom: 2%; }
+    .signal .bottomline { bottom: 7%; border-top: 1px solid #c4d3cf66; padding-top: 2%; color: #abc3c1; }
+    .signal .eyemark { color: #44e0d3; }
+    .signal.open .marker { position: absolute; left: 7%; top: 28%; width: 2%; height: 40%; background: #44e0d3; }
+    .signal.open h2 { position: absolute; left: 12%; top: 28%; width: 67%; margin: 0; font-size: 7.6cqw; line-height: 1.12; letter-spacing: -.065em; }
+    .signal.open h2 em { color: #44e0d3; font-style: normal; }
+    .signal.open .sub { position: absolute; left: 12%; bottom: 22%; font-size: 2.15cqw; color: #bfd2d1; }
+    .signal.open .orb { position: absolute; right: 5%; top: 35%; width: 17%; aspect-ratio: 1; border: 2px solid #44e0d3; border-radius: 50%; box-shadow: inset 0 0 0 15px #44e0d318, 0 0 34px #44e0d339; }
+    .signal.explain h2 { position: absolute; left: 7%; top: 20%; margin: 0; font-size: 4.2cqw; letter-spacing: -.05em; }
+    .signal.explain .steps { position: absolute; left: 7%; right: 7%; top: 42%; height: 36%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 3%; }
+    .signal.explain .step { border-top: 3px solid #44e0d3; padding-top: 5%; min-width: 0; }
+    .signal.explain .step:nth-child(2) { border-color: #f2cf79; }
+    .signal.explain .step:nth-child(3) { border-color: #849ddd; }
+    .signal.explain .step b { display: block; font-size: 4.4cqw; line-height: 1; color: #44e0d3; font-weight: 700; }
+    .signal.explain .step:nth-child(2) b { color: #f2cf79; }
+    .signal.explain .step:nth-child(3) b { color: #849ddd; }
+    .signal.explain .step strong { display: block; font-size: 2.65cqw; margin-top: 6%; }
+    .signal.explain .step small { display: block; font-size: 1.58cqw; line-height: 1.3; margin-top: 5%; color: #b8c8c8; }
+    .signal.close .bar { position: absolute; left: 7%; top: 29%; width: 11%; height: 2%; background: #44e0d3; }
+    .signal.close h2 { position: absolute; left: 7%; top: 36%; width: 80%; margin: 0; font-size: 7.25cqw; line-height: 1.13; letter-spacing: -.065em; }
+    .signal.close h2 em { color: #44e0d3; font-style: normal; }
+    .signal.close .sub { position: absolute; left: 7%; bottom: 22%; font-size: 2cqw; color: #bfd2d1; }
+
+    .scatter.open .note { top: 20%; height: 58%; padding: 6% 6%; }
+    .scatter.open .note h2 { font-size: 6.5cqw; line-height: 1.13; letter-spacing: -.04em; }
+    .scatter.open .hand { right: 6%; bottom: 10%; font-size: 1.9cqw; }
+    .scatter.open .arrow { right: 11%; bottom: 15%; width: 15%; height: 12%; }
+    .scatter.explain .lead { top: 9%; left: 9%; font-size: 3.6cqw; white-space: nowrap; }
+    .scatter.explain .scribble { top: 28%; }
+    .scatter.explain .sticky { top: 42%; height: 37%; padding: 3%; font-size: 2.7cqw; line-height: 1.2; overflow: hidden; }
+    .scatter.explain .sticky small { font-size: 1.75cqw; line-height: 1.25; margin-top: 10%; }
+    .scatter.explain .sticky.two { top: 39%; }
+    .scatter.explain .sticky.three { top: 43%; }
+    .scatter.explain .pin { top: 41%; }
+    .scatter.explain .pin.p2 { top: 38%; }
+    .scatter.explain .pin.p3 { top: 42%; }
+    .scatter.close .paper { left: 17%; top: 20%; width: 68%; height: 58%; padding: 5%; }
+    .scatter.close .paper h2 { font-size: 5.15cqw; line-height: 1.1; letter-spacing: -.045em; }
+    .scatter.close .paper p { font-size: 1.75cqw; margin-top: 5%; }
+    .scatter.close .underline { margin-top: 5%; width: 68%; }
+    .scatter.close .star { left: 8%; bottom: 15%; font-size: 7cqw; }
+    @media(max-width:900px) {
+      .zine.open h2 { font-size: 8.4cqw; }.zine.explain .side strong { font-size: 4.55cqw; }
+      .zine.explain .item strong { font-size: 2.65cqw; }.zine.close .quote { font-size: 7.05cqw; }
+      .scatter.open .note h2 { font-size: 6.5cqw; }.scatter.explain .lead { font-size: 3.6cqw; }
+      .scatter.explain .sticky { font-size: 2.7cqw; }.scatter.close .paper h2 { font-size: 5.15cqw; }
+    }
+    .stage .signal.active h2, .stage .signal.active .step, .stage .signal.active .bar { animation: signalIn .55s cubic-bezier(.2,.8,.2,1) both; }
+    .stage .signal.active .step:nth-child(2) { animation-delay: .24s; }.stage .signal.active .step:nth-child(3) { animation-delay: .48s; }
+    @keyframes signalIn { from { opacity: 0; translate: 0 16px; } to { opacity: 1; translate: 0 0; } }
+  </style>
+</head>
+<body>
+<main class="page">
+  <div class="eyebrow">FRAMELOOM · TEMPLATE STUDY / 01</div>
+  <h1>同一份内容，三套视频模板</h1>
+  <p class="lede">统一文案：把复杂问题讲清楚 → 提问、拆解、回答 → 让观众跟得上每一步。</p>
+  <div class="notice">目标效果稿 · 用于讨论模板设计；以下画面与动效不是当前 renderer 的实际输出</div>
+  <div class="comparison-key"><span>01　开场镜头</span><span>02　解释镜头</span><span>03　结论镜头</span></div>
+
+  <section class="style-row" data-style="zine">
+    <div class="style-head"><div><h2 class="style-title">Retro Zine <span class="style-id">retro-zine</span></h2><p class="style-desc">像杂志编辑一页页翻开：大标题、错位版心、页边批注、纸张切换。</p></div><button class="play" data-play="zine">▶ 播放动效预览</button></div>
+    <div class="frames">
+      <div class="frame-wrap"><div class="frame zine open" data-screen-label="Retro Zine 开场"><div class="folio"><span>FRAMELOOM / FIELD NOTES</span><span>VOL. 01　—　2026</span></div><span class="issue animate">视觉专题 01</span><h2 class="serif animate late">把复杂问题<br><em>讲清楚。</em></h2><div class="shape animate later"></div><div class="vertical">STORY / DESIGN / RHYTHM</div><div class="sub animate later">从问题，到证据，再到结论</div><div class="foot"><span>AN EDITORIAL VIDEO SERIES</span><span>01 / 03</span></div></div><div class="frame-label">开场：大标题占据版面<i>纸张滑入</i></div></div>
+      <div class="frame-wrap"><div class="frame zine explain" data-screen-label="Retro Zine 解释"><div class="folio"><span>FRAMELOOM / THREE STEPS</span><span>EXPLAINER</span></div><div class="side animate"><strong>三步，<br>建立清晰<br>的叙事。</strong><p>同一条主线，不同的信息密度。把观众的注意力留在当前要点。</p></div><div class="stack"><div class="item animate"><span class="num">01</span><span><strong>提问</strong><small>先让观众知道要解决什么。</small></span></div><div class="item animate late"><span class="num">02</span><span><strong>拆解</strong><small>把复杂关系分成看得见的步骤。</small></span></div><div class="item animate later"><span class="num">03</span><span><strong>回答</strong><small>收束为一条明确的结论。</small></span></div></div><div class="foot"><span>CHAPTER 01　/　METHOD</span><span>02 / 03</span></div></div><div class="frame-label">解释：页边标题＋逐条纸卡<i>依次揭示</i></div></div>
+      <div class="frame-wrap"><div class="frame zine close" data-screen-label="Retro Zine 结论"><div class="folio"><span>FRAMELOOM / TAKEAWAY</span><span>END NOTE</span></div><div class="redline animate"></div><div class="quote animate late">让观众<br><b>跟得上</b><br>每一步。</div><div class="caption animate later">重点更突出，画面更好懂。</div><div class="seal animate later">THE END<br>◆</div><div class="foot"><span>ONE IDEA, CLEARLY TOLD</span><span>03 / 03</span></div></div><div class="frame-label">结尾：留白＋一句话结论<i>缓慢定格</i></div></div>
+    </div>
+  </section>
+
+  <section class="style-row" data-style="signal">
+    <div class="style-head"><div><h2 class="style-title">Signal <span class="style-id">new concept</span></h2><p class="style-desc">纪录片式信息聚焦：深色舞台、清晰的字幕层级、细线和聚焦光，适合不同题材的讲解。</p></div><button class="play" data-play="signal">▶ 播放动效预览</button></div>
+    <div class="frames">
+      <div class="frame-wrap"><div class="frame signal open" data-screen-label="Signal 开场"><div class="topline"><span>FRAMELOOM / EXPLAINER</span><span class="eyemark">● REC 01</span></div><div class="marker animate"></div><h2 class="animate late">把复杂问题<br><em>讲清楚。</em></h2><div class="orb animate later"></div><div class="sub animate later">从问题，到证据，再到结论</div><div class="bottomline"><span>ONE IDEA / ONE FRAME</span><span>01 — 03</span></div></div><div class="frame-label">开场：焦点标题与留白<i>光线进入</i></div></div>
+      <div class="frame-wrap"><div class="frame signal explain" data-screen-label="Signal 解释"><div class="topline"><span>FRAMELOOM / STRUCTURE</span><span class="eyemark">● REC 02</span></div><h2>三步，建立清晰的叙事</h2><div class="steps"><div class="step"><b>01</b><strong>提问</strong><small>先明确要解决什么。</small></div><div class="step"><b>02</b><strong>拆解</strong><small>把关系逐层展开。</small></div><div class="step"><b>03</b><strong>回答</strong><small>给出清楚的结论。</small></div></div><div class="bottomline"><span>QUESTION → PROCESS → ANSWER</span><span>02 — 03</span></div></div><div class="frame-label">解释：横向节奏与顺序聚焦<i>依次点亮</i></div></div>
+      <div class="frame-wrap"><div class="frame signal close" data-screen-label="Signal 结论"><div class="topline"><span>FRAMELOOM / FINAL THOUGHT</span><span class="eyemark">● REC 03</span></div><div class="bar"></div><h2>让观众跟得上<br><em>每一步。</em></h2><div class="sub">重点更突出，画面更好懂。</div><div class="bottomline"><span>THE MESSAGE STAYS</span><span>03 — 03</span></div></div><div class="frame-label">结尾：结论占据视线<i>轻推定格</i></div></div>
+    </div>
+  </section>
+
+  <section class="style-row" data-style="scatter">
+    <div class="style-head"><div><h2 class="style-title">Scatterbrain <span class="style-id">scatterbrain</span></h2><p class="style-desc">像在白板上边想边贴：倾斜便签、蓝色手绘线、图钉、错落的纸片节奏。</p></div><button class="play" data-play="scatter">▶ 播放动效预览</button></div>
+    <div class="frames">
+      <div class="frame-wrap"><div class="frame scatter open" data-screen-label="Scatterbrain 开场"><div class="tape"></div><div class="note animate"><h2>把复杂问题<br>讲清楚！</h2></div><div class="arrow animate late"></div><div class="hand pen animate later">从问题到结论 ↗</div></div><div class="frame-label">开场：主便签倾斜进入<i>弹性落下</i></div></div>
+      <div class="frame-wrap"><div class="frame scatter explain" data-screen-label="Scatterbrain 解释"><div class="lead pen">三步，建立清晰的叙事</div><div class="scribble animate"></div><div class="pin p1"></div><div class="pin p2"></div><div class="pin p3"></div><div class="sticky one animate">01　提问<small>要解决什么？</small></div><div class="sticky two animate late">02　拆解<small>一层层展开。</small></div><div class="sticky three animate later">03　回答<small>留下清楚结论。</small></div></div><div class="frame-label">解释：便签逐张加入<i>旋转弹入</i></div></div>
+      <div class="frame-wrap"><div class="frame scatter close" data-screen-label="Scatterbrain 结论"><div class="tape"></div><div class="paper animate"><h2>让观众跟得上<br>每一步。</h2><div class="underline animate late"></div><p class="animate later">重点更突出，画面更好懂。</p></div><div class="star animate later">✳</div></div><div class="frame-label">结尾：总结纸片贴上白板<i>手绘强调</i></div></div>
+    </div>
+  </section>
+</main>
+<dialog id="preview"><div class="modal"><div class="modal-head"><span id="modalTitle">动效预览</span><button id="close">关闭 ✕</button></div><div class="stage" id="stage"></div><div class="playerbar"><button id="restart">↺ 重播</button><span id="sceneName">开场</span><div class="progress"><i id="progressFill"></i></div><span id="time">0:00 / 0:09</span></div><p class="motion-note" id="motionNote"></p></div></dialog>
+<script>
+  const dialog=document.querySelector('#preview');const stage=document.querySelector('#stage');const sceneName=document.querySelector('#sceneName');const modalTitle=document.querySelector('#modalTitle');const motionNote=document.querySelector('#motionNote');const progressFill=document.querySelector('#progressFill');const time=document.querySelector('#time');let cards=[],start=0,raf=0;const duration=9000;const info={zine:{name:'Retro Zine',note:'纸张横向滑入 → 要点按编辑顺序逐条揭示 → 结论留白停住。'},signal:{name:'Signal',note:'光线与标题进入 → 三个节点依次点亮 → 结论轻推定格。'},scatter:{name:'Scatterbrain',note:'便签带轻微旋转弹入 → 纸片错时贴上 → 手绘线最后强调。'}};
+  function tick(now){let elapsed=(now-start)%duration;let index=Math.floor(elapsed/3000);cards.forEach((c,i)=>{if(c.classList.contains('active')!==(i===index)){c.classList.toggle('active',i===index)}});sceneName.textContent=['开场','解释','结尾'][index];progressFill.style.width=(elapsed/duration*100)+'%';time.textContent='0:0'+Math.floor(elapsed/1000)+' / 0:09';raf=requestAnimationFrame(tick)}
+  document.querySelectorAll('[data-play]').forEach(button=>button.addEventListener('click',()=>{cancelAnimationFrame(raf);let row=button.closest('.style-row');let kind=button.dataset.play;cards=[...row.querySelectorAll('.frame')].map(node=>node.cloneNode(true));stage.replaceChildren(...cards);modalTitle.textContent=info[kind].name+' · 目标动效预览';motionNote.textContent=info[kind].note;dialog.showModal();start=performance.now();raf=requestAnimationFrame(tick)}));document.querySelector('#close').addEventListener('click',()=>dialog.close());document.querySelector('#restart').addEventListener('click',()=>{start=performance.now();cards.forEach(c=>c.classList.remove('active'))});dialog.addEventListener('close',()=>cancelAnimationFrame(raf));dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
+</script>
+</body>
+</html>

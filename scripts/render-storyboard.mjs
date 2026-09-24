@@ -7,13 +7,13 @@ import {parseCaptions} from '../src/audio/captions.ts';
 import {AudioConfigSchema} from '../src/schemas/audio-config.ts';
 import {MotionPackSchema, StylePackSchema} from '../src/schemas/style-pack.ts';
 import {createStyleTokens} from '../src/styles/style-loader.ts';
-import {validateStoryboard} from '../src/validation/storyboard-validator.ts';
 import {inspectOutput} from './inspect-output.mjs';
-import {inspectAudio} from './inspect-audio.mjs';
+import {checkAssetInput, checkAudioInput, checkStoryboardInput, checkVisualInput} from './lib/preflight.mjs';
 
 const args = process.argv.slice(2);
 let force = false;
 let audioConfigPath;
+let executionMode = 'review';
 const positional = [];
 for (let index = 0; index < args.length; index += 1) {
   const arg = args[index];
@@ -26,13 +26,24 @@ for (let index = 0; index < args.length; index += 1) {
       process.exit(1);
     }
     index += 1;
+  } else if (arg === '--mode') {
+    executionMode = args[index + 1];
+    if (!executionMode) {
+      console.error('--mode 需要 review 或 fast。');
+      process.exit(1);
+    }
+    index += 1;
   } else {
     positional.push(arg);
   }
 }
+if (!['review', 'fast'].includes(executionMode)) {
+  console.error('--mode 只能是 review 或 fast。');
+  process.exit(1);
+}
 const [inputPath, outputPath, ...unknown] = positional;
 if (!inputPath || !outputPath || unknown.length > 0) {
-  console.error('Usage: npm run render:storyboard -- <storyboard.json> <output.mp4> [--audio-config <audio-config.json>] [--force]');
+  console.error('Usage: npm run render:storyboard -- <storyboard.json> <output.mp4> [--mode review|fast] [--audio-config <audio-config.json>] [--force]');
   process.exit(1);
 }
 
@@ -61,10 +72,18 @@ try {
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const styleRoot = path.join(projectRoot, 'styles');
-const issues = validateStoryboard(storyboard, {storyboardPath: resolvedInput, styleRoot});
+const issues = checkStoryboardInput(storyboard, {storyboardPath: resolvedInput, styleRoot, executionMode});
 const errors = issues.filter((item) => item.severity === 'error');
 for (const item of issues) console[item.severity === 'error' ? 'error' : 'warn'](`${item.severity.toUpperCase()} ${item.path}: ${item.message}`);
 if (errors.length > 0) process.exit(1);
+const assetIssues = checkAssetInput(resolvedInput);
+for (const item of assetIssues) console.error(`ERROR assets: ${item}`);
+if (assetIssues.length > 0) process.exit(1);
+const {safeArea, textLayout} = checkVisualInput(storyboard);
+for (const item of safeArea.issues) console[item.severity === 'error' ? 'error' : 'warn'](`${item.severity.toUpperCase()} scene ${item.sceneId}, layer ${item.layerId}: ${item.message}`);
+for (const item of textLayout) console[item.severity === 'error' ? 'error' : 'warn'](`${item.severity.toUpperCase()} scene ${item.sceneId}, ${item.target}: ${item.message}`);
+if ([...safeArea.issues, ...textLayout].some((item) => item.severity === 'error')) process.exit(1);
+const audioTiming = audioConfigPath ? checkAudioInput(resolvedInput, audioConfigPath) : undefined;
 
 function parseFile(schema, filePath, label) {
   const result = schema.safeParse(JSON.parse(fs.readFileSync(filePath, 'utf8')));
@@ -121,11 +140,11 @@ function loadAudioRuntime(configPath, audioTiming) {
   return runtime;
 }
 
-function hydrateScreenshotAssets(value) {
+function hydrateStoryboardAssets(value) {
   const hydrated = structuredClone(value);
   for (const scene of hydrated.scenes) {
     for (const layer of scene.layers) {
-      if (layer.type !== 'screenshot' || !layer.asset) continue;
+      if (!['screenshot', 'object'].includes(layer.type) || !layer.asset) continue;
       const assetPath = path.resolve(path.dirname(resolvedInput), layer.asset);
       layer.assetDataUri = `data:${assetMime(assetPath)};base64,${fs.readFileSync(assetPath).toString('base64')}`;
     }
@@ -137,8 +156,7 @@ const styleDirectory = path.join(styleRoot, storyboard.style.id);
 const style = parseFile(StylePackSchema, path.join(styleDirectory, 'style.json'), 'style.json');
 const motion = parseFile(MotionPackSchema, path.join(styleDirectory, 'motion.json'), 'motion.json');
 const styleTokens = createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height);
-const hydratedStoryboard = hydrateScreenshotAssets(storyboard);
-const audioTiming = audioConfigPath ? inspectAudio(resolvedInput, audioConfigPath) : undefined;
+const hydratedStoryboard = hydrateStoryboardAssets(storyboard);
 const audioRuntime = loadAudioRuntime(audioConfigPath, audioTiming);
 const hasAudio = Boolean(audioRuntime?.voiceoverDataUri || audioRuntime?.musicDataUri || audioRuntime?.sfx?.length);
 

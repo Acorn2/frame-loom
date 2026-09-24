@@ -7,7 +7,7 @@ import {MotionPackSchema, StylePackSchema} from '../src/schemas/style-pack.ts';
 import {AudioConfigSchema} from '../src/schemas/audio-config.ts';
 
 const schemas = [
-  ['storyboard.schema.json', 'FrameLoom Storyboard V2.1', StoryboardSchema],
+  ['storyboard.schema.json', 'FrameLoom Storyboard V2.1–2.2', StoryboardSchema],
   ['style-pack.schema.json', 'FrameLoom Style Pack', StylePackSchema],
   ['motion-pack.schema.json', 'FrameLoom Motion Pack', MotionPackSchema],
   ['asset-manifest.schema.json', 'FrameLoom Asset Manifest', AssetManifestSchema],

@@ -1,8 +1,10 @@
 import React from 'react';
 import {interpolate, useCurrentFrame} from 'remotion';
-import type {StoryboardConnection, StoryboardLayer, StoryboardScene} from '../schemas/storyboard';
+import type {StoryboardConnection, StoryboardScene} from '../schemas/storyboard';
 import {getBeatProgress} from '../motion/beat-progress';
 import type {StyleTokens} from '../styles/style-loader';
+import {getNodeState} from './node-state';
+import {getConnectionGeometry} from './connection-geometry';
 
 interface RenderConnectionProps {
   connection: StoryboardConnection;
@@ -10,41 +12,46 @@ interface RenderConnectionProps {
   tokens: StyleTokens;
 }
 
-function center(layer: StoryboardLayer) {
-  return {
-    x: (layer.x ?? 0) + (layer.width ?? 240) / 2,
-    y: (layer.y ?? 0) + (layer.height ?? 120) / 2
-  };
-}
-
 export function RenderConnection({connection, scene, tokens}: RenderConnectionProps) {
   const frame = useCurrentFrame();
   const fromLayer = scene.layers.find((layer) => layer.id === connection.from);
   const toLayer = scene.layers.find((layer) => layer.id === connection.to);
   if (!fromLayer || !toLayer) return null;
-  const from = center(fromLayer);
-  const to = center(toLayer);
-  const length = Math.hypot(to.x - from.x, to.y - from.y);
+  const geometry = getConnectionGeometry(fromLayer, toLayer);
   const drawBeat = scene.beats.find((beat) => beat.target === connection.id && beat.action === 'draw');
   const highlightBeat = scene.beats.find((beat) => beat.target === connection.id && beat.action === 'highlight');
   const drawProgress = drawBeat ? getBeatProgress(frame, drawBeat) : 1;
   const highlightProgress = getBeatProgress(frame, highlightBeat);
-  const strokeWidth = interpolate(highlightProgress, [0, 1], [3, 7]);
-  const stroke = highlightProgress > 0 ? tokens.accent : tokens.accentAlt;
-  const labelX = (from.x + to.x) / 2;
-  const labelY = (from.y + to.y) / 2 - 14;
+  const fromState = getNodeState(fromLayer, scene, frame);
+  const toState = getNodeState(toLayer, scene, frame);
+  const strokeWidth = interpolate(highlightProgress, [0, 1], [3.5, 6]);
+  const stroke = highlightProgress > 0 || toState === 'current' || toState === 'resolved' ? tokens.accent : tokens.accentAlt;
+  const labelWidth = connection.label
+    ? [...connection.label].reduce((width, character) => width + (character.charCodeAt(0) > 255 ? 18 : 10), 24)
+    : 0;
+  const labelX = geometry.direction === 'down' || geometry.direction === 'up'
+    ? geometry.label.x + labelWidth / 2 + 20
+    : geometry.label.x;
 
   return (
-    <svg style={{position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'visible', pointerEvents: 'none'}}>
-      <line
-        x1={from.x} y1={from.y} x2={to.x} y2={to.y}
+    <svg style={{position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'visible', pointerEvents: 'none', opacity: fromState === 'upcoming' || toState === 'upcoming' ? 0.78 : 1}}>
+      <path
+        d={geometry.path} pathLength={1} fill="none"
         stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round"
-        strokeDasharray={length} strokeDashoffset={length * (1 - drawProgress)}
+        strokeDasharray={1} strokeDashoffset={1 - drawProgress}
       />
-      {connection.label && drawProgress > 0.75 ? (
-        <text x={labelX} y={labelY} textAnchor="middle" fill={tokens.muted} fontFamily={tokens.bodyFont} fontSize={18}>
-          {connection.label}
-        </text>
+      {drawProgress >= 0.98 ? <polygon points={geometry.arrow} fill={stroke} /> : null}
+      {connection.label && drawProgress >= 0.95 ? (
+        <g>
+          <rect
+            x={labelX - labelWidth / 2} y={geometry.label.y - 15}
+            width={labelWidth} height={30} rx={tokens.labelRadius}
+            fill={tokens.paper} stroke={stroke} strokeWidth={1.5}
+          />
+          <text x={labelX} y={geometry.label.y + 6} textAnchor="middle" fill={tokens.ink} fontFamily={tokens.bodyFont} fontSize={18} fontWeight={700}>
+            {connection.label}
+          </text>
+        </g>
       ) : null}
     </svg>
   );

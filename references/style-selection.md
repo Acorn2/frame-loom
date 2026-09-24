@@ -23,7 +23,7 @@ The command reads only `styles/style-index.json` plus minimal file consistency d
 
 ## 3. Compare candidates
 
-Generate a self-contained HTML gallery:
+Generate a lightweight token gallery:
 
 ```bash
 npm run preview:styles -- /tmp/frame-loom-style-gallery.html
@@ -31,6 +31,15 @@ npm run preview:styles -- /tmp/product-styles.html --content product --canvas la
 ```
 
 Each card contains hook, content and result frames built from the Style Pack tokens. The gallery is a selection aid, not a rendered storyboard or visual QA result.
+
+For the three current video-template candidates, generate **real Remotion output** from the same five-scene example:
+
+```bash
+npm run preview:templates
+npm run preview:templates -- --portrait --stills-only
+```
+
+The command writes a new directory under `projects/` containing an HTML gallery, storyboard variants, sourced example asset, five representative frames per style and, unless `--stills-only` is set, three 15-second silent MP4s with automated QA reports and review frames. Use `--output <new-directory>` to choose a destination; an existing directory is never overwritten. Automated QA still requires complete human playback. `retro-windows` is deprecated for new selection but remains loadable for existing 2.1 projects. `signal` is experimental until broader content and playback review is complete.
 
 Present up to three candidates with:
 
