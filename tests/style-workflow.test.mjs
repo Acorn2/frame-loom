@@ -7,6 +7,7 @@ import {validateAssets} from '../scripts/validate-assets.mjs';
 import articleStoryboard from '../examples/article-video/storyboard.json' with {type: 'json'};
 import dataStoryboard from '../examples/data-explainer/storyboard.json' with {type: 'json'};
 import productStoryboard from '../examples/product-demo/storyboard.json' with {type: 'json'};
+import semanticStoryboard from '../examples/semantic-visuals/storyboard.json' with {type: 'json'};
 import retroWindowsMotion from '../styles/retro-windows/motion.json' with {type: 'json'};
 import retroWindowsStyle from '../styles/retro-windows/style.json' with {type: 'json'};
 import retroZineMotion from '../styles/retro-zine/motion.json' with {type: 'json'};
@@ -26,6 +27,7 @@ import {runProduction} from '../scripts/produce.mjs';
 import {fingerprintFiles, fingerprintProjectInputs} from '../scripts/lib/input-fingerprint.mjs';
 import {checkExternalCaptionLayout, checkTextLayout} from '../scripts/lib/text-layout.mjs';
 import {checkAudioInput} from '../scripts/lib/preflight.mjs';
+import {storyboardApprovalFingerprint} from '../scripts/lib/storyboard-approval.mjs';
 
 const tempDirs = [];
 
@@ -35,6 +37,12 @@ function makeTempDir() {
   return directory;
 }
 
+function approveFixture(project) {
+  fs.writeFileSync(path.join(project, 'storyboard-approval.json'), JSON.stringify({
+    reviewer: 'test reviewer', notes: 'fixture approved', fingerprint: storyboardApprovalFingerprint(project)
+  }));
+}
+
 afterEach(() => {
   for (const directory of tempDirs.splice(0)) {
     fs.rmSync(directory, {recursive: true, force: true});
@@ -42,14 +50,14 @@ afterEach(() => {
 });
 
 describe('Style Pack workflow', () => {
-  it('loads three consistent styles and filters by content and canvas', () => {
+  it('loads the Style Pack index and filters by content and canvas', () => {
     const index = loadStyleIndex();
-    expect(index.styles).toHaveLength(3);
-    expect(index.styles.map((item) => item.id).sort()).toEqual(['retro-windows', 'retro-zine', 'scatterbrain']);
+    expect(index.styles).toHaveLength(7);
+    expect(index.styles.map((item) => item.id).sort()).toEqual(['archive-grid', 'retro-windows', 'retro-zine', 'scatterbrain', 'signal-noir', 'signal', 'studio-frame'].sort());
     expect(CAPABILITY_MANIFEST.templates).toEqual(['statement', 'graph-explainer', 'metric-grid', 'interaction-flow']);
     expect(CAPABILITY_MANIFEST.actions).toContain('draw');
-    expect(filterStyles(index.styles, {content: 'software', canvas: 'landscape'}).map((item) => item.id)).toEqual(['retro-windows']);
-    expect(filterStyles(index.styles, {content: 'knowledge', canvas: 'portrait'}).map((item) => item.id)).toEqual(['retro-zine', 'scatterbrain']);
+    expect(filterStyles(index.styles, {content: 'software', canvas: 'landscape'}).map((item) => item.id)).toEqual(['signal-noir', 'studio-frame']);
+    expect(filterStyles(index.styles, {content: 'knowledge', canvas: 'portrait'}).map((item) => item.id)).toEqual(['retro-zine', 'signal', 'scatterbrain', 'archive-grid', 'signal-noir']);
   });
 
   it('loads visually distinct runtime tokens and orientation-specific safe areas', () => {
@@ -82,19 +90,85 @@ describe('Style Pack workflow', () => {
   it('creates a gallery and a non-overwriting project scaffold', () => {
     const temp = makeTempDir();
     const gallery = buildStyleGallery([path.join(temp, 'gallery.html')]);
-    expect(fs.readFileSync(gallery, 'utf8')).toContain('Retro Windows');
+    expect(fs.readFileSync(gallery, 'utf8')).toContain('Blueprint');
     expect(fs.readFileSync(gallery, 'utf8')).toContain('Scatterbrain');
 
     const project = initProject(['demo-project', '--style', 'scatterbrain', '--canvas', 'portrait', '--projects-dir', temp]);
     const draft = JSON.parse(fs.readFileSync(path.join(project, 'storyboard.draft.json'), 'utf8'));
+    expect(draft.schemaVersion).toBe('2.3');
+    expect(draft.scenes[0].visual.kind).toBe('statement');
     expect(draft.project.status).toBe('draft');
     expect(draft.project.width).toBe(1080);
     expect(draft.project.durationSec).toBe(20);
     expect(draft.project.durationFrames).toBe(600);
     expect(draft.scenes[0].durationFrames).toBe(600);
+    expect(fs.readFileSync(path.join(project, 'route-card.md'), 'utf8')).toContain('Selected route');
+    expect(fs.readFileSync(path.join(project, 'content-gaps.md'), 'utf8')).toContain('Gap ID');
+    expect(fs.readFileSync(path.join(project, 'shot-map.md'), 'utf8')).toContain('Scene ID');
+    expect(JSON.parse(fs.readFileSync(path.join(project, 'project-input.json'), 'utf8')).inputMode).toBe('document');
+    expect(fs.existsSync(path.join(project, 'visual-sources.md'))).toBe(false);
     const audioExample = JSON.parse(fs.readFileSync(path.join(project, 'audio/audio-config.example.json'), 'utf8'));
     expect(AudioConfigSchema.safeParse(audioExample).success).toBe(true);
     expect(() => initProject(['demo-project', '--projects-dir', temp])).toThrow(/已存在/);
+  });
+
+  it('uses a local creation date and numbered suffix for new production projects', () => {
+    const temp = makeTempDir();
+    const options = {now: new Date(2026, 8, 28, 12)};
+    const args = ['--slug', 'tongliao-zhihu-update', '--projects-dir', temp];
+    const first = initProject(args, options);
+    fs.writeFileSync(path.join(first, 'source/source.md'), 'Keep this source');
+    const second = initProject(args, options);
+    const third = initProject(args, options);
+
+    expect(path.basename(first)).toBe('20260928-tongliao-zhihu-update');
+    expect(path.basename(second)).toBe('20260928-tongliao-zhihu-update-02');
+    expect(path.basename(third)).toBe('20260928-tongliao-zhihu-update-03');
+    expect(fs.readFileSync(path.join(first, 'source/source.md'), 'utf8')).toBe('Keep this source');
+    expect(() => initProject(['--slug', '20260928-tongliao', '--projects-dir', temp], options)).toThrow(/不要包含日期前缀/);
+  });
+
+  it('initializes the semantic route for every installed Style Pack', () => {
+    const temp = makeTempDir();
+    for (const style of loadStyleIndex().styles) {
+      const project = initProject([`semantic-${style.id}`, '--style', style.id, '--projects-dir', temp]);
+      const draft = JSON.parse(fs.readFileSync(path.join(project, 'storyboard.draft.json'), 'utf8'));
+      expect(draft.schemaVersion).toBe('2.3');
+      expect(draft.style.id).toBe(style.id);
+      expect(draft.scenes[0].visual.kind).toBe('statement');
+    }
+  });
+
+  it('lets the creator choose document plus images and requires a used image before rendering', () => {
+    const temp = makeTempDir();
+    const project = initProject(['image-project', '--input-mode', 'document-images', '--projects-dir', temp]);
+    expect(JSON.parse(fs.readFileSync(path.join(project, 'project-input.json'), 'utf8')).inputMode).toBe('document-images');
+    expect(fs.readFileSync(path.join(project, 'visual-sources.md'), 'utf8')).toContain('Original path or URL');
+    expect(fs.readFileSync(path.join(project, 'visual-sources.md'), 'utf8')).toContain('Final URL');
+    expect(fs.readFileSync(path.join(project, 'production-brief.md'), 'utf8')).toContain('Image sources, capture details and intended shots checked\n');
+    expect(() => initProject(['invalid-project', '--input-mode', 'video', '--projects-dir', temp])).toThrow(/--input-mode/);
+    const beforeSources = fingerprintProjectInputs(project, path.resolve('styles'));
+    fs.appendFileSync(path.join(project, 'visual-sources.md'), '\n| V1 | URL screenshot | https://example.test | assets/screen.svg | pending | C1 / opening | review |\n');
+    expect(fingerprintProjectInputs(project, path.resolve('styles'))).not.toBe(beforeSources);
+
+    const storyboardPath = path.join(project, 'storyboard.json');
+    fs.writeFileSync(storyboardPath, JSON.stringify(articleStoryboard));
+    expect(validateAssets(storyboardPath).some((item) => item.includes('至少需要一个'))).toBe(true);
+
+    const sourcePath = path.resolve('examples/template-families/assets/product-workflow.svg');
+    const assetPath = path.join(project, 'assets', 'screen.svg');
+    fs.copyFileSync(sourcePath, assetPath);
+    const storyboard = structuredClone(articleStoryboard);
+    storyboard.scenes[0].layers.push({id: 'screen', type: 'screenshot', asset: 'assets/screen.svg'});
+    fs.writeFileSync(storyboardPath, JSON.stringify(storyboard));
+    fs.writeFileSync(path.join(project, 'asset-manifest.json'), JSON.stringify({
+      schemaVersion: '1.0',
+      assets: [{id: 'screen', path: 'assets/screen.svg', type: 'screenshot', source: 'Local fixture', license: 'MIT', intendedUse: 'Opening scene'}]
+    }));
+    expect(validateAssets(storyboardPath)).toEqual([]);
+
+    fs.writeFileSync(path.join(project, 'project-input.json'), JSON.stringify({schemaVersion: '1.0', inputMode: 'document'}));
+    expect(validateAssets(storyboardPath).some((item) => item.includes('不能使用图片或截图'))).toBe(true);
   });
 
   it('promotes a draft to generated without changing its content contract', () => {
@@ -112,6 +186,7 @@ describe('Style Pack workflow', () => {
     fs.mkdirSync(path.join(project, 'output', 'review'), {recursive: true});
     fs.writeFileSync(path.join(project, 'storyboard.json'), `${JSON.stringify(articleStoryboard, null, 2)}\n`);
     fs.writeFileSync(path.join(project, 'asset-manifest.json'), JSON.stringify({schemaVersion: '1.0', assets: []}));
+    approveFixture(project);
     fs.writeFileSync(path.join(project, 'output', 'preview-silent.mp4'), 'placeholder');
     const inputFingerprint = fingerprintProjectInputs(project, path.resolve('styles'));
     const outputFingerprint = fingerprintFiles([path.join(project, 'output', 'preview-silent.mp4')], project);
@@ -177,6 +252,14 @@ describe('Style Pack workflow', () => {
     expect(JSON.parse(fs.readFileSync(runPath, 'utf8'))).toEqual(previousRun);
   });
 
+  it('invalidates a resumed render when the source-to-shot plan changes', () => {
+    const temp = makeTempDir();
+    const project = initProject(['plan-fingerprint', '--projects-dir', temp]);
+    const before = fingerprintProjectInputs(project, path.resolve('styles'));
+    fs.appendFileSync(path.join(project, 'shot-map.md'), '\n| C2 | revised claim | source.md | needs-review | scene-2 | diagram | none |\n');
+    expect(fingerprintProjectInputs(project, path.resolve('styles'))).not.toBe(before);
+  });
+
   it('rejects reusing a video whose bytes changed before QA', () => {
     const temp = makeTempDir();
     const project = path.join(temp, 'resume-project');
@@ -184,6 +267,7 @@ describe('Style Pack workflow', () => {
     fs.mkdirSync(path.dirname(outputPath), {recursive: true});
     fs.writeFileSync(path.join(project, 'storyboard.json'), JSON.stringify(articleStoryboard));
     fs.writeFileSync(outputPath, 'original-video');
+    approveFixture(project);
     const previousRun = {
       executionMode: 'review',
       inputFingerprint: fingerprintProjectInputs(project, path.resolve('styles')),
@@ -214,6 +298,7 @@ describe('Style Pack workflow', () => {
     storyboard.scenes[0].layers.push({id: 'dense-node', type: 'node', label: '02 / 发现', text: '注意到翅膀纹理', state: 'current', x: 100, y: 350, width: 380, height: 165});
     fs.writeFileSync(path.join(project, 'storyboard.json'), JSON.stringify(storyboard));
     fs.writeFileSync(path.join(project, 'asset-manifest.json'), JSON.stringify({schemaVersion: '1.0', assets: []}));
+    approveFixture(project);
 
     const run = runProduction({projectPath: project, executionMode: 'review'});
     expect(run.status).toBe('blocked');
@@ -294,5 +379,16 @@ describe('Style Pack workflow', () => {
     expect(frames.length).toBeGreaterThanOrEqual(6);
     expect(frames.some((item) => item.label === 'opening')).toBe(true);
     expect(frames.some((item) => item.label === 'ending')).toBe(true);
+  });
+
+  it('samples semantic completion and the stable frame before a fade', () => {
+    const storyboard = structuredClone(semanticStoryboard);
+    storyboard.scenes = [storyboard.scenes[0], storyboard.scenes.at(-1)];
+    storyboard.scenes[0].transitionOut = 'fade';
+    storyboard.project.durationFrames = storyboard.scenes.reduce((total, scene) => total + scene.durationFrames, 0);
+    storyboard.project.durationSec = storyboard.project.durationFrames / storyboard.project.fps;
+    const frames = selectReviewFrames(storyboard);
+    const preFade = frames.find((item) => item.label === 's1-before-handoff');
+    expect(preFade.timeSec).toBe((storyboard.scenes[0].durationFrames - 12 - 2) / storyboard.project.fps);
   });
 });

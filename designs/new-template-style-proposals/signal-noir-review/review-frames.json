@@ -1,0 +1,82 @@
+{
+  "video": "/Users/ankanghao/ai_code/frame-loom/designs/new-template-style-proposals/signal-noir.mp4",
+  "storyboard": "/Users/ankanghao/ai_code/frame-loom/designs/new-template-style-proposals/storyboard.signal-noir.json",
+  "frames": [
+    {
+      "label": "opening",
+      "timeSec": 0,
+      "file": "frame-01.png"
+    },
+    {
+      "label": "opening-title-stable",
+      "timeSec": 1.2,
+      "file": "frame-02.png"
+    },
+    {
+      "label": "opening-content",
+      "timeSec": 1.6500000000000001,
+      "file": "frame-03.png"
+    },
+    {
+      "label": "opening-transition",
+      "timeSec": 2.65,
+      "file": "frame-04.png"
+    },
+    {
+      "label": "process-first-action",
+      "timeSec": 3.8,
+      "file": "frame-05.png"
+    },
+    {
+      "label": "process-content",
+      "timeSec": 4.65,
+      "file": "frame-06.png"
+    },
+    {
+      "label": "process-transition",
+      "timeSec": 5.65,
+      "file": "frame-07.png"
+    },
+    {
+      "label": "evidence-first-action",
+      "timeSec": 6.866666666666666,
+      "file": "frame-08.png"
+    },
+    {
+      "label": "evidence-content",
+      "timeSec": 7.65,
+      "file": "frame-09.png"
+    },
+    {
+      "label": "evidence-transition",
+      "timeSec": 8.65,
+      "file": "frame-10.png"
+    },
+    {
+      "label": "media-first-action",
+      "timeSec": 9.933333333333334,
+      "file": "frame-11.png"
+    },
+    {
+      "label": "media-content",
+      "timeSec": 10.65,
+      "file": "frame-12.png"
+    },
+    {
+      "label": "media-transition",
+      "timeSec": 11.65,
+      "file": "frame-13.png"
+    },
+    {
+      "label": "closing-content",
+      "timeSec": 13.65,
+      "file": "frame-14.png"
+    },
+    {
+      "label": "ending",
+      "timeSec": 14.5,
+      "file": "frame-15.png"
+    }
+  ],
+  "contactSheet": "contact-sheet.png"
+}

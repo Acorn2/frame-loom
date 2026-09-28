@@ -1,4 +1,11 @@
-export const TEMPLATE_FAMILY_IDS = ['retro-zine', 'signal', 'scatterbrain'] as const;
+export const TEMPLATE_FAMILY_IDS = [
+  'retro-zine',
+  'signal',
+  'scatterbrain',
+  'archive-grid',
+  'signal-noir',
+  'studio-frame'
+] as const;
 
 export type TemplateFamilyId = (typeof TEMPLATE_FAMILY_IDS)[number];
 

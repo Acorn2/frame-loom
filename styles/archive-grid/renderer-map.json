@@ -1,0 +1,6 @@
+{
+  "statement": {"label": "archive-label", "title": "archive-heading", "annotation": "margin-note", "metric": "archive-metric"},
+  "graph-explainer": {"node": "paper-card", "connection": "ink-line"},
+  "metric-grid": {"metric": "archive-metric", "annotation": "margin-note"},
+  "interaction-flow": {"screenshot": "paper-frame", "annotation": "source-note"}
+}

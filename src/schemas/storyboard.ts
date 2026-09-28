@@ -1,6 +1,8 @@
 import {z} from 'zod';
 
-export const STORYBOARD_SCHEMA_VERSION = '2.2' as const;
+export const STORYBOARD_SCHEMA_VERSION = '2.3' as const;
+export const VISUAL_KINDS = ['statement', 'compare', 'sequence', 'network', 'change', 'metric', 'media'] as const;
+export const VISUAL_GLYPHS = ['document', 'search', 'map', 'list', 'person', 'timeline', 'video', 'quote', 'spark', 'database', 'chart', 'link'] as const;
 export const SCENE_PURPOSES = ['opening', 'claim', 'process', 'evidence', 'media', 'closing'] as const;
 export const TEMPLATE_IDS = ['statement', 'graph-explainer', 'metric-grid', 'interaction-flow'] as const;
 export const LAYER_TYPES = ['node', 'card', 'label', 'annotation', 'metric', 'screenshot', 'object', 'callout'] as const;
@@ -16,6 +18,8 @@ export const LayerTypeSchema = z.enum(LAYER_TYPES);
 export const ActionIdSchema = z.enum(ACTION_IDS);
 export const TransitionIdSchema = z.enum(TRANSITION_IDS);
 export const NodeStateSchema = z.enum(NODE_STATES);
+export const VisualKindSchema = z.enum(VISUAL_KINDS);
+export const VisualGlyphSchema = z.enum(VISUAL_GLYPHS);
 export const OverlapTransitionSchema = z.object({
   type: z.enum(OVERLAP_TRANSITION_IDS),
   durationFrames: z.number().int().positive()
@@ -52,6 +56,7 @@ export const StoryboardLayerSchema = z.object({
   rotate: z.number().optional(),
   rotationDegrees: z.number().optional(),
   semanticRole: z.string().min(1).optional(),
+  glyph: VisualGlyphSchema.optional(),
   target: z.string().min(1).optional(),
   fit: z.enum(['contain', 'cover']).optional(),
   state: NodeStateSchema.optional(),
@@ -83,12 +88,24 @@ export const StoryboardCaptionSchema = z.object({
   end: z.number().positive()
 }).strict();
 
+export const SceneVisualSchema = z.object({
+  kind: VisualKindSchema,
+  explanation: z.string().min(1),
+  representation: z.enum(['diagram', 'source-media']),
+  anchorId: z.string().min(1).optional(),
+  beforeId: z.string().min(1).optional(),
+  afterId: z.string().min(1).optional(),
+  unit: z.string().min(1).optional(),
+  source: z.string().min(1).optional()
+}).strict();
+
 export const StoryboardSceneSchema = z.object({
   id: z.string().min(1),
   template: TemplateIdSchema,
   purpose: ScenePurposeSchema.optional(),
   title: z.string(),
   primaryClaim: z.string().min(1).optional(),
+  visual: SceneVisualSchema.optional(),
   attentionTarget: z.string().min(1).optional(),
   narration: z.string(),
   durationFrames: z.number().int().positive(),
@@ -102,7 +119,7 @@ export const StoryboardSceneSchema = z.object({
 }).strict();
 
 export const StoryboardSchema = z.object({
-  schemaVersion: z.enum(['2.1', STORYBOARD_SCHEMA_VERSION]),
+  schemaVersion: z.enum(['2.1', '2.2', STORYBOARD_SCHEMA_VERSION]),
   style: StoryboardStyleRefSchema,
   project: StoryboardProjectSchema,
   scenes: z.array(StoryboardSceneSchema).min(1)
@@ -120,6 +137,7 @@ export type StoryboardLayer = z.infer<typeof StoryboardLayerSchema>;
 export type StoryboardConnection = z.infer<typeof StoryboardConnectionSchema>;
 export type StoryboardBeat = z.infer<typeof StoryboardBeatSchema>;
 export type StoryboardCaption = z.infer<typeof StoryboardCaptionSchema>;
+export type SceneVisual = z.infer<typeof SceneVisualSchema>;
 export type StoryboardScene = z.infer<typeof StoryboardSceneSchema>;
 export type Storyboard = z.infer<typeof StoryboardSchema>;
 

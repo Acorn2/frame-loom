@@ -1,0 +1,147 @@
+{
+  "generatedAt": "2026-09-24T08:28:11.192Z",
+  "storyboard": "/Users/ankanghao/ai_code/frame-loom/designs/new-template-style-proposals/storyboard.studio-frame.json",
+  "video": "/Users/ankanghao/ai_code/frame-loom/designs/new-template-style-proposals/studio-frame.mp4",
+  "executionMode": "review",
+  "mode": "silent-preview",
+  "automatedPassed": true,
+  "releaseReady": false,
+  "checks": {
+    "schema": {
+      "passed": true
+    },
+    "storyboard": {
+      "passed": true,
+      "issues": []
+    },
+    "timeline": {
+      "passed": true,
+      "scenes": [
+        {
+          "id": "opening",
+          "startFrame": 0,
+          "endFrame": 90,
+          "overlapInFrames": 0,
+          "overlapOutFrames": 0,
+          "primaryClaim": null,
+          "attentionTarget": null,
+          "lastActionEnd": 0,
+          "stableHoldFrames": 66,
+          "peakCurrentNodes": 0
+        },
+        {
+          "id": "process",
+          "startFrame": 90,
+          "endFrame": 180,
+          "overlapInFrames": 0,
+          "overlapOutFrames": 0,
+          "primaryClaim": null,
+          "attentionTarget": null,
+          "lastActionEnd": 58,
+          "stableHoldFrames": 8,
+          "peakCurrentNodes": 0
+        },
+        {
+          "id": "evidence",
+          "startFrame": 180,
+          "endFrame": 270,
+          "overlapInFrames": 0,
+          "overlapOutFrames": 0,
+          "primaryClaim": null,
+          "attentionTarget": null,
+          "lastActionEnd": 46,
+          "stableHoldFrames": 20,
+          "peakCurrentNodes": 0
+        },
+        {
+          "id": "media",
+          "startFrame": 270,
+          "endFrame": 360,
+          "overlapInFrames": 0,
+          "overlapOutFrames": 0,
+          "primaryClaim": null,
+          "attentionTarget": null,
+          "lastActionEnd": 28,
+          "stableHoldFrames": 38,
+          "peakCurrentNodes": 0
+        },
+        {
+          "id": "closing",
+          "startFrame": 360,
+          "endFrame": 450,
+          "overlapInFrames": 0,
+          "overlapOutFrames": 0,
+          "primaryClaim": null,
+          "attentionTarget": null,
+          "lastActionEnd": 0,
+          "stableHoldFrames": 78,
+          "peakCurrentNodes": 0
+        }
+      ]
+    },
+    "assets": {
+      "passed": true,
+      "issues": []
+    },
+    "safeArea": {
+      "passed": true,
+      "orientation": "landscape",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "safeArea": {
+        "top": 90,
+        "right": 120,
+        "bottom": 105,
+        "left": 120
+      },
+      "content": {
+        "width": 1680,
+        "height": 885
+      },
+      "issues": []
+    },
+    "textLayout": {
+      "passed": true,
+      "issues": []
+    },
+    "output": {
+      "passed": true,
+      "path": "/Users/ankanghao/ai_code/frame-loom/designs/new-template-style-proposals/studio-frame.mp4",
+      "bytes": 1329378,
+      "codec": "h264",
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "durationSec": 15,
+      "expectedDurationSec": 15,
+      "durationDeltaSec": 0,
+      "durationToleranceSec": 0.05,
+      "audioStreams": 0,
+      "pixelFormat": "yuvj420p",
+      "formatName": "mov,mp4,m4a,3gp,3g2,mj2",
+      "bitRate": 709001,
+      "orientation": "landscape"
+    },
+    "audio": {
+      "passed": true,
+      "skipped": true,
+      "reason": "静音预览"
+    },
+    "reviewFrames": {
+      "passed": true,
+      "count": 15,
+      "contactSheet": "/Users/ankanghao/ai_code/frame-loom/designs/new-template-style-proposals/studio-frame-review/contact-sheet.png"
+    }
+  },
+  "manualReview": {
+    "required": true,
+    "fullPlaybackPassed": false,
+    "visualHierarchyPassed": false,
+    "textReadabilityPassed": false,
+    "transitionTimingPassed": false,
+    "notes": ""
+  },
+  "errors": []
+}

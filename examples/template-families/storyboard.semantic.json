@@ -1,0 +1,543 @@
+{
+  "schemaVersion": "2.3",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "project": {
+    "title": "从材料到可审阅画面｜六套模板统一样例",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 50.8,
+    "durationFrames": 1524,
+    "status": "reviewed"
+  },
+  "scenes": [
+    {
+      "id": "opening",
+      "template": "statement",
+      "purpose": "opening",
+      "title": "把材料变成可检查的画面",
+      "primaryClaim": "先找到每一屏真正需要说明的主张。",
+      "visual": {
+        "kind": "statement",
+        "explanation": "先找到每一屏真正需要说明的主张。",
+        "representation": "diagram"
+      },
+      "narration": "从一篇文档出发，先提炼主张，再把需要解释的关系交给画面。",
+      "durationFrames": 180,
+      "layers": [
+        {
+          "id": "article",
+          "type": "label",
+          "label": "文章"
+        },
+        {
+          "id": "script",
+          "type": "label",
+          "label": "讲稿"
+        },
+        {
+          "id": "brief",
+          "type": "label",
+          "label": "产品说明"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "article-enter-10",
+          "target": "article",
+          "action": "enter",
+          "start": 10,
+          "duration": 18
+        },
+        {
+          "id": "script-enter-60",
+          "target": "script",
+          "action": "enter",
+          "start": 60,
+          "duration": 18
+        },
+        {
+          "id": "brief-enter-110",
+          "target": "brief",
+          "action": "enter",
+          "start": 110,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "input-compare",
+      "template": "metric-grid",
+      "purpose": "claim",
+      "title": "纯文档与图片输入，各有边界",
+      "primaryClaim": "纯文档用有依据的图解；图片模式使用有来源的真实素材。",
+      "visual": {
+        "kind": "compare",
+        "explanation": "纯文档用有依据的图解；图片模式使用有来源的真实素材。",
+        "representation": "diagram"
+      },
+      "narration": "纯文档可以只用文字和图解；若加入图片，需先保存素材并记录来源。",
+      "durationFrames": 234,
+      "layers": [
+        {
+          "id": "document",
+          "type": "node",
+          "label": "纯文档",
+          "text": "原文文字与 CSS 图解",
+          "glyph": "document"
+        },
+        {
+          "id": "images",
+          "type": "node",
+          "label": "文档＋图片",
+          "text": "登记来源后展示素材",
+          "glyph": "map"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "document-enter-8",
+          "target": "document",
+          "action": "enter",
+          "start": 8,
+          "duration": 18
+        },
+        {
+          "id": "images-enter-72",
+          "target": "images",
+          "action": "enter",
+          "start": 72,
+          "duration": 18
+        },
+        {
+          "id": "images-focus-170",
+          "target": "images",
+          "action": "focus",
+          "start": 170,
+          "duration": 12
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "process",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "同一份材料，展开四条制作线索",
+      "primaryClaim": "主张、关系、讲稿和素材，都来自原始资料。",
+      "visual": {
+        "kind": "network",
+        "explanation": "主张、关系、讲稿和素材，都来自原始资料。",
+        "representation": "diagram",
+        "anchorId": "source"
+      },
+      "narration": "从原始材料中找出主张、关系、讲稿和素材，再决定每个镜头如何表达。",
+      "durationFrames": 270,
+      "layers": [
+        {
+          "id": "source",
+          "type": "node",
+          "label": "一份材料",
+          "text": "保留原始内容",
+          "glyph": "document"
+        },
+        {
+          "id": "claim",
+          "type": "node",
+          "label": "主张",
+          "text": "一句话说清结论",
+          "glyph": "quote"
+        },
+        {
+          "id": "relation",
+          "type": "node",
+          "label": "关系",
+          "text": "识别差异与连接",
+          "glyph": "link"
+        },
+        {
+          "id": "script",
+          "type": "node",
+          "label": "讲稿",
+          "text": "安排讲解顺序",
+          "glyph": "list"
+        },
+        {
+          "id": "media",
+          "type": "node",
+          "label": "素材",
+          "text": "只用有来源的图片",
+          "glyph": "map"
+        }
+      ],
+      "connections": [
+        {
+          "id": "source-to-claim",
+          "from": "source",
+          "to": "claim"
+        },
+        {
+          "id": "source-to-relation",
+          "from": "source",
+          "to": "relation"
+        },
+        {
+          "id": "source-to-script",
+          "from": "source",
+          "to": "script"
+        },
+        {
+          "id": "source-to-media",
+          "from": "source",
+          "to": "media"
+        }
+      ],
+      "beats": [
+        {
+          "id": "source-enter-6",
+          "target": "source",
+          "action": "enter",
+          "start": 6,
+          "duration": 18
+        },
+        {
+          "id": "claim-enter-50",
+          "target": "claim",
+          "action": "enter",
+          "start": 50,
+          "duration": 18
+        },
+        {
+          "id": "source-to-claim-draw-54",
+          "target": "source-to-claim",
+          "action": "draw",
+          "start": 54,
+          "duration": 18
+        },
+        {
+          "id": "relation-enter-94",
+          "target": "relation",
+          "action": "enter",
+          "start": 94,
+          "duration": 18
+        },
+        {
+          "id": "source-to-relation-draw-98",
+          "target": "source-to-relation",
+          "action": "draw",
+          "start": 98,
+          "duration": 18
+        },
+        {
+          "id": "script-enter-138",
+          "target": "script",
+          "action": "enter",
+          "start": 138,
+          "duration": 18
+        },
+        {
+          "id": "source-to-script-draw-142",
+          "target": "source-to-script",
+          "action": "draw",
+          "start": 142,
+          "duration": 18
+        },
+        {
+          "id": "media-enter-182",
+          "target": "media",
+          "action": "enter",
+          "start": 182,
+          "duration": 18
+        },
+        {
+          "id": "source-to-media-draw-186",
+          "target": "source-to-media",
+          "action": "draw",
+          "start": 186,
+          "duration": 18
+        },
+        {
+          "id": "media-focus-220",
+          "target": "media",
+          "action": "focus",
+          "start": 220,
+          "duration": 10
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "sequence",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "从文档到预览，步骤有先后",
+      "primaryClaim": "先写分镜，再校验、渲染和检查。",
+      "visual": {
+        "kind": "sequence",
+        "explanation": "先写分镜，再校验、渲染和检查。",
+        "representation": "diagram"
+      },
+      "narration": "制作流程是从原文到分镜，再经校验，最后渲染预览并检查。",
+      "durationFrames": 240,
+      "layers": [
+        {
+          "id": "document",
+          "type": "node",
+          "label": "文档",
+          "text": "保留事实和语境",
+          "glyph": "document"
+        },
+        {
+          "id": "storyboard",
+          "type": "node",
+          "label": "分镜",
+          "text": "选择可见的解释方式",
+          "glyph": "map"
+        },
+        {
+          "id": "validation",
+          "type": "node",
+          "label": "校验",
+          "text": "检查来源、排版和时间",
+          "glyph": "search"
+        },
+        {
+          "id": "preview",
+          "type": "node",
+          "label": "预览",
+          "text": "渲染后检查画面",
+          "glyph": "video"
+        }
+      ],
+      "connections": [
+        {
+          "id": "document-to-storyboard",
+          "from": "document",
+          "to": "storyboard"
+        },
+        {
+          "id": "storyboard-to-validation",
+          "from": "storyboard",
+          "to": "validation"
+        },
+        {
+          "id": "validation-to-preview",
+          "from": "validation",
+          "to": "preview"
+        }
+      ],
+      "beats": [
+        {
+          "id": "document-enter-6",
+          "target": "document",
+          "action": "enter",
+          "start": 6,
+          "duration": 18
+        },
+        {
+          "id": "storyboard-enter-58",
+          "target": "storyboard",
+          "action": "enter",
+          "start": 58,
+          "duration": 18
+        },
+        {
+          "id": "document-to-storyboard-draw-62",
+          "target": "document-to-storyboard",
+          "action": "draw",
+          "start": 62,
+          "duration": 18
+        },
+        {
+          "id": "validation-enter-110",
+          "target": "validation",
+          "action": "enter",
+          "start": 110,
+          "duration": 18
+        },
+        {
+          "id": "storyboard-to-validation-draw-114",
+          "target": "storyboard-to-validation",
+          "action": "draw",
+          "start": 114,
+          "duration": 18
+        },
+        {
+          "id": "preview-enter-162",
+          "target": "preview",
+          "action": "enter",
+          "start": 162,
+          "duration": 18
+        },
+        {
+          "id": "validation-to-preview-draw-166",
+          "target": "validation-to-preview",
+          "action": "draw",
+          "start": 166,
+          "duration": 18
+        },
+        {
+          "id": "preview-focus-205",
+          "target": "preview",
+          "action": "focus",
+          "start": 205,
+          "duration": 10
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "change",
+      "template": "interaction-flow",
+      "purpose": "claim",
+      "title": "从罗列文字，到让关系可见",
+      "primaryClaim": "同一条信息的结构，可以在画面里直接看懂。",
+      "visual": {
+        "kind": "change",
+        "explanation": "同一条信息的结构，可以在画面里直接看懂。",
+        "representation": "diagram",
+        "beforeId": "before",
+        "afterId": "after"
+      },
+      "narration": "当内容有关系时，画面应把连接和变化呈现出来，而不是只排文字。",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "before",
+          "type": "node",
+          "label": "并排的句子",
+          "text": "观众还要自己拼关系",
+          "glyph": "list"
+        },
+        {
+          "id": "after",
+          "type": "node",
+          "label": "可见的结构",
+          "text": "主体与连接一眼可见",
+          "glyph": "link"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "before-enter-8",
+          "target": "before",
+          "action": "enter",
+          "start": 8,
+          "duration": 18
+        },
+        {
+          "id": "after-enter-70",
+          "target": "after",
+          "action": "enter",
+          "start": 70,
+          "duration": 18
+        },
+        {
+          "id": "after-focus-160",
+          "target": "after",
+          "action": "focus",
+          "start": 160,
+          "duration": 10
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "media",
+      "template": "interaction-flow",
+      "purpose": "media",
+      "title": "公开示例素材，也要写清来源",
+      "primaryClaim": "这是仓库内演示插画，不是真实产品截图。",
+      "visual": {
+        "kind": "media",
+        "explanation": "这是仓库内演示插画，不是真实产品截图。",
+        "representation": "source-media"
+      },
+      "narration": "这一镜使用仓库内的公开演示插画，示范有来源素材的展示方式。",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "demo-image",
+          "type": "object",
+          "label": "仓库内演示插画",
+          "asset": "assets/product-workflow.svg",
+          "fit": "contain"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "demo-image-enter-10",
+          "target": "demo-image",
+          "action": "enter",
+          "start": 10,
+          "duration": 20
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "closing",
+      "template": "statement",
+      "purpose": "closing",
+      "title": "先看预览，再决定下一步",
+      "primaryClaim": "画面审过后，再选择底片交接或接入旁白。",
+      "visual": {
+        "kind": "statement",
+        "explanation": "画面审过后，再选择底片交接或接入旁白。",
+        "representation": "diagram"
+      },
+      "narration": "静音预览用来判断画面。审过后，可以导出底片，或接入旁白制作有声视频。",
+      "durationFrames": 180,
+      "layers": [
+        {
+          "id": "review",
+          "type": "label",
+          "label": "看画面"
+        },
+        {
+          "id": "master",
+          "type": "label",
+          "label": "交底片"
+        },
+        {
+          "id": "narrated",
+          "type": "label",
+          "label": "做有声版"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "review-enter-10",
+          "target": "review",
+          "action": "enter",
+          "start": 10,
+          "duration": 18
+        },
+        {
+          "id": "master-enter-60",
+          "target": "master",
+          "action": "enter",
+          "start": 60,
+          "duration": 18
+        },
+        {
+          "id": "narrated-enter-110",
+          "target": "narrated",
+          "action": "enter",
+          "start": 110,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

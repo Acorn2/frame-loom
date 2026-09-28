@@ -23,17 +23,27 @@ export interface DataDrivenVideoProps extends Record<string, unknown> {
   storyboard: Storyboard;
   styleTokens?: StyleTokens;
   audioRuntime?: AudioRuntime;
+  renderProfile?: {
+    purpose: 'visual-preview' | 'visual-master' | 'in-project-video';
+    facecamRightFraction?: number;
+    subtitleBottomFraction?: number;
+  };
 }
 
 export function shouldRenderSceneCaptions(audioRuntime?: AudioRuntime): boolean {
   return !(audioRuntime?.captions && audioRuntime.captions.length > 0);
 }
 
-export function DataDrivenVideo({storyboard, styleTokens, audioRuntime}: DataDrivenVideoProps) {
+export function DataDrivenVideo({storyboard, styleTokens, audioRuntime, renderProfile}: DataDrivenVideoProps) {
   const tokens = styleTokens ?? getDefaultStyleTokens(storyboard.project.width, storyboard.project.height);
-  const showSceneCaptions = shouldRenderSceneCaptions(audioRuntime);
+  const cleanMaster = renderProfile?.purpose === 'visual-master';
+  const showSceneCaptions = !cleanMaster && shouldRenderSceneCaptions(audioRuntime);
   const musicVolume = audioRuntime?.musicVolume ?? 0.2;
   const timeline = getSceneTimeline(storyboard);
+  const scale = cleanMaster ? Math.min(
+    1 - (renderProfile?.facecamRightFraction ?? 0),
+    1 - (renderProfile?.subtitleBottomFraction ?? 0)
+  ) : 1;
 
   return (
     <AbsoluteFill style={{backgroundColor: tokens.background}}>
@@ -58,11 +68,13 @@ export function DataDrivenVideo({storyboard, styleTokens, audioRuntime}: DataDri
       {timeline.map(({scene, startFrame, overlapOutFrames}) => {
         return (
           <Sequence key={scene.id} from={startFrame} durationInFrames={scene.durationFrames}>
-            <RenderScene scene={scene} tokens={tokens} showSceneCaptions={showSceneCaptions} externalCaptions={Boolean(audioRuntime?.captions?.length)} overlapOutFrames={overlapOutFrames} />
+            <div style={{position: 'absolute', width: '100%', height: '100%', transform: scale < 1 ? `scale(${scale})` : undefined, transformOrigin: 'top left'}}>
+              <RenderScene scene={scene} tokens={tokens} showSceneCaptions={showSceneCaptions} externalCaptions={!cleanMaster && Boolean(audioRuntime?.captions?.length)} overlapOutFrames={overlapOutFrames} />
+            </div>
           </Sequence>
         );
       })}
-      <div style={{
+      {!cleanMaster ? <div style={{
         position: 'absolute',
         right: 32,
         top: 26,
@@ -72,8 +84,8 @@ export function DataDrivenVideo({storyboard, styleTokens, audioRuntime}: DataDri
         letterSpacing: 1
       }}>
         {audioRuntime?.voiceoverDataUri || audioRuntime?.musicDataUri || audioRuntime?.sfx?.length ? 'AUDIO PILOT' : 'SILENT PREVIEW'}
-      </div>
-      {audioRuntime?.captions ? <CaptionOverlay captions={audioRuntime.captions} tokens={tokens} /> : null}
+      </div> : null}
+      {!cleanMaster && audioRuntime?.captions ? <CaptionOverlay captions={audioRuntime.captions} tokens={tokens} /> : null}
     </AbsoluteFill>
   );
 }

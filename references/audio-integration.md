@@ -1,8 +1,29 @@
 # Audio Integration
 
-Audio is optional and vendor-neutral. FrameLoom does not call TTS or voice-cloning services; it consumes local audio and subtitle files whose source and permission are recorded in `audio-config.json`.
+FrameLoom supports three audio routes:
 
-## Contract
+1. `silent`: render either an inspection preview or a clean visual master for external editing, chosen with `--output-purpose`.
+2. `tts`: generate narration before rendering. The first adapter is
+   configuration-based Doubao HTTP TTS, with `mock` for deterministic tests.
+3. `external`: consume any locally produced voiceover, including recording,
+   voice cloning, third-party TTS or manually edited audio.
+
+The storyboard's `scene.narration` is the only source for built-in TTS. TTS
+does not create one file per sentence: it creates one segment per scene, then
+measures the actual segment duration and uses that duration for the matching
+SRT cue. The segment must fit inside its scene. This is what keeps the
+visual scene, audio and generated subtitle aligned.
+
+When recording external narration after a script handoff, run
+`prepare:script-handoff` first. It exports a scene-keyed script and no MP4;
+the later external-audio run compares the current text/version with that
+handoff. The CLI checks text identity and audio timing, but it cannot
+automatically prove that spoken words match the script. The Agent and creator
+must listen to or transcribe the recording before approving delivery. When
+the recording already exists at intake, measure it directly and skip the
+waiting stage.
+
+## External Audio Contract
 
 Copy `audio/audio-config.example.json` to `audio/audio-config.json`, then enable only the tracks that exist. Paths resolve relative to the config file. Each audio entry requires `source` and `license`; `volume` is between `0` and `1`. SFX may also set `startSec`.
 
@@ -33,6 +54,45 @@ Copy `audio/audio-config.example.json` to `audio/audio-config.json`, then enable
 }
 ```
 
+## Built-in TTS Contract
+
+Initialize a project with `audio/tts-config.example.json`, copy it to
+`audio/tts-config.json`, set `enabled` to `true`, and provide the credentials
+through the configured environment variable names. The default example uses
+the Doubao HTTP v3 endpoint but intentionally leaves provider-specific voice
+and resource values for the project owner to fill in.
+
+Profiles may also live in `audio/tts-config.<name>.json` or
+`audio/tts-profiles/<name>.json`. Run `npm run list:tts-profiles --
+projects/<video-id>` to see safe summaries. With more than one enabled valid
+profile, pass `--tts-config <selected-file>` to `produce`; it will not choose a
+voice silently. The selected provider and voice are recorded in `run.json`.
+
+```bash
+cp projects/<video-id>/audio/tts-config.example.json projects/<video-id>/audio/tts-config.json
+npm run synthesize:voiceover -- projects/<video-id>
+```
+
+Generated files:
+
+- `audio/generated/<scene-id>.wav`: one measured segment per narrated scene
+- `audio/generated/voiceover.wav`: scene segments placed on the project timeline
+- `audio/generated/captions.srt`: subtitles derived from the same text and
+  measured durations
+- `audio/audio-manifest.json`: text hash, scene mapping, timings and paths
+- `audio/audio-config.tts.json`: renderable audio contract
+
+`produce --audio-mode tts` reuses a previously generated package only when the
+selected TTS config, scene text/timing and audio bytes still match its
+manifest. If they differ, it stops and asks for an explicit `--force`
+regeneration. A failed synthesis keeps its temporary segments out of the
+project's ready audio package, so correcting scene timing and retrying does
+not require clearing partial files manually.
+
+`mock` produces an audible test tone so timing and loudness QA can run. It is
+only for tests and local verification and cannot be approved for delivery. Real providers must be
+checked for pronunciation, rights, rate limits and response format.
+
 ## Timing and loudness gate
 
 Measure files before rendering:
@@ -59,8 +119,11 @@ When enabled, `music.ducking` lowers music while the voiceover is active. `volum
 ## Render and QA
 
 ```bash
-npm run render:storyboard -- projects/<video-id>/storyboard.json projects/<video-id>/output/pilot-audio.mp4 --audio-config projects/<video-id>/audio/audio-config.json
-npm run qa:storyboard -- projects/<video-id>/storyboard.json projects/<video-id>/output/pilot-audio.mp4 projects/<video-id>/output/review-audio --audio-config projects/<video-id>/audio/audio-config.json
+npm run render:storyboard -- projects/<video-id>/storyboard.json projects/<video-id>/output/pilot-audio.mp4 --mode fast --audio-config projects/<video-id>/audio/audio-config.json --output-purpose in-project-video
+npm run qa:storyboard -- projects/<video-id>/storyboard.json projects/<video-id>/output/pilot-audio.mp4 projects/<video-id>/output/review-audio --mode fast --audio-config projects/<video-id>/audio/audio-config.json --output-purpose in-project-video
 ```
 
-An audio pilot is still not automatically release-ready. Listen to the full output, verify pronunciation and loudness, inspect subtitle readability, and confirm every asset's permission.
+An audio pilot is still not automatically release-ready. Listen to the full
+output, verify that narration matches the visible scene and generated/external
+captions, check pronunciation and loudness, inspect subtitle readability, and
+confirm every asset's permission.

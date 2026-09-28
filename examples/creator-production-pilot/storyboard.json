@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "2.2",
+  "style": {"id": "retro-zine", "version": "1.0.0"},
+  "project": {
+    "title": "从材料到可审阅视频",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 20,
+    "durationFrames": 600,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "opening",
+      "template": "graph-explainer",
+      "purpose": "opening",
+      "title": "从材料到可审阅视频",
+      "primaryClaim": "已有材料可以进入可复核的视频制作流程。",
+      "narration": "FrameLoom 把 Markdown 和结构化内容组织成可审阅、可重复渲染的视频。",
+      "durationFrames": 135,
+      "layers": [
+        {"id": "opening-source", "type": "card", "label": "材料", "text": "从已有文稿开始。"},
+        {"id": "opening-result", "type": "card", "label": "目标", "text": "先组织内容与画面。"}
+      ],
+      "connections": [],
+      "beats": [
+        {"id": "opening-source-enter", "target": "opening-source", "action": "enter", "start": 10, "duration": 18},
+        {"id": "opening-result-enter", "target": "opening-result", "action": "enter", "start": 52, "duration": 18}
+      ],
+      "captions": [
+        {"id": "opening-caption", "text": "从真实材料开始，先看清要表达什么。", "start": 20, "end": 105}
+      ],
+      "transitionOut": "fade"
+    },
+    {
+      "id": "process",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "内容、分镜、复核",
+      "primaryClaim": "当前本地流程从内容和分镜进入校验、渲染与 QA。",
+      "narration": "先整理材料和分镜，再校验渲染，最后检查预览与 QA 报告。",
+      "durationFrames": 180,
+      "layers": [
+        {"id": "source-step", "type": "card", "label": "整理材料", "text": "确认主张与来源。"},
+        {"id": "storyboard-step", "type": "card", "label": "分镜与渲染", "text": "校验后执行画面。"},
+        {"id": "review-step", "type": "card", "label": "预览与 QA", "text": "查看输出和代表帧。"}
+      ],
+      "connections": [],
+      "beats": [
+        {"id": "source-enter", "target": "source-step", "action": "enter", "start": 10, "duration": 18},
+        {"id": "storyboard-enter", "target": "storyboard-step", "action": "enter", "start": 50, "duration": 18},
+        {"id": "review-enter", "target": "review-step", "action": "enter", "start": 90, "duration": 18}
+      ],
+      "captions": [
+        {"id": "process-caption", "text": "材料有出处，分镜可修改，输出可检查。", "start": 35, "end": 152}
+      ],
+      "transitionOut": "fade"
+    },
+    {
+      "id": "claim",
+      "template": "graph-explainer",
+      "purpose": "claim",
+      "title": "自动预览不等于人工审核",
+      "primaryClaim": "fast 模式不代表人工审核通过。",
+      "narration": "fast 模式能生成自动预览，但不会把空白占位草稿做成视频，也不代表人工审核通过。",
+      "durationFrames": 135,
+      "layers": [
+        {"id": "claim-preview", "type": "card", "label": "fast", "text": "自动生成画面预览。"},
+        {"id": "claim-boundary", "type": "card", "label": "边界", "text": "不代表人工审核通过。"}
+      ],
+      "connections": [],
+      "beats": [
+        {"id": "claim-preview-enter", "target": "claim-preview", "action": "enter", "start": 10, "duration": 18},
+        {"id": "claim-boundary-enter", "target": "claim-boundary", "action": "enter", "start": 52, "duration": 18}
+      ],
+      "captions": [
+        {"id": "claim-caption", "text": "自动检查通过，仍需人判断画面是否支持内容。", "start": 25, "end": 110}
+      ],
+      "transitionOut": "fade"
+    },
+    {
+      "id": "closing",
+      "template": "graph-explainer",
+      "purpose": "closing",
+      "title": "看完整支视频，再决定采用",
+      "primaryClaim": "自动检查通过后仍需完整播放复核。",
+      "narration": "自动检查通过之后，还要按正常速度完整播放，再决定是否采用这支视频。",
+      "durationFrames": 150,
+      "layers": [
+        {"id": "closing-qa", "type": "card", "label": "自动 QA", "text": "先通过技术检查。"},
+        {"id": "closing-review", "type": "card", "label": "完整审片", "text": "再决定是否采用。"}
+      ],
+      "connections": [],
+      "beats": [
+        {"id": "closing-qa-enter", "target": "closing-qa", "action": "enter", "start": 10, "duration": 18},
+        {"id": "closing-review-enter", "target": "closing-review", "action": "enter", "start": 52, "duration": 18}
+      ],
+      "captions": [
+        {"id": "closing-caption", "text": "先审阅画面和节奏，再进入下一轮制作。", "start": 28, "end": 108}
+      ],
+      "outro": {"holdFrames": 32, "fadeFrames": 16}
+    }
+  ]
+}

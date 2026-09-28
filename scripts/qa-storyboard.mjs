@@ -8,6 +8,8 @@ import {AudioConfigSchema} from '../src/schemas/audio-config.ts';
 import {extractReviewFrames} from './extract-review-frames.mjs';
 import {inspectOutput} from './inspect-output.mjs';
 import {checkAssetInput, checkAudioInput, checkStoryboardInput, checkVisualInput} from './lib/preflight.mjs';
+import {loadHandoffConfig, OUTPUT_PURPOSES} from './lib/output-purpose.mjs';
+import {fingerprintFiles} from './lib/input-fingerprint.mjs';
 
 function parseArgs(args) {
   const options = {expectAudio: false, executionMode: 'review'};
@@ -22,19 +24,41 @@ function parseArgs(args) {
       options.executionMode = args[index + 1];
       if (!options.executionMode) throw new Error('--mode 需要 review 或 fast。');
       index += 1;
+    } else if (args[index] === '--output-purpose') {
+      options.outputPurpose = args[++index];
+      if (!OUTPUT_PURPOSES.includes(options.outputPurpose)) throw new Error(`--output-purpose 只能是 ${OUTPUT_PURPOSES.join('、')}。`);
     } else positional.push(args[index]);
   }
   if (!['review', 'fast'].includes(options.executionMode)) {
     throw new Error('--mode 只能是 review 或 fast。');
   }
   if (positional.length < 2 || positional.length > 3) {
-    throw new Error('Usage: npm run qa:storyboard -- <storyboard.json> <video.mp4> [review-dir] [--mode review|fast] [--audio-config <audio-config.json>] [--expect-audio]');
+    throw new Error('Usage: npm run qa:storyboard -- <storyboard.json> <video.mp4> [review-dir] [--mode review|fast] [--output-purpose visual-preview|visual-master|in-project-video] [--audio-config <audio-config.json>] [--expect-audio]');
   }
   return {storyboardPath: positional[0], videoPath: positional[1], reviewDir: positional[2], ...options};
 }
 
+function invalidatePriorDelivery(storyboardPath, reportPath, report) {
+  const projectPath = path.dirname(storyboardPath);
+  const runPath = path.join(projectPath, 'run.json');
+  if (!fs.existsSync(runPath)) return;
+  const run = JSON.parse(fs.readFileSync(runPath, 'utf8'));
+  if (!['release-ready', 'visual-handoff-ready'].includes(run.deliveryStatus) || !run.artifacts?.qaReport) return;
+  if (path.resolve(projectPath, run.artifacts.qaReport) !== reportPath) return;
+  run.deliveryStatus = report.automatedPassed
+    ? (report.mode === 'audio-pilot' ? 'manual-review-pending' : report.mode === 'visual-master' ? 'visual-handoff-pending' : 'preview-only')
+    : 'pending';
+  delete run.deliveryReviewedAt;
+  delete run.artifacts.deliverableVideo;
+  delete run.artifacts.handoffVideo;
+  run.updatedAt = new Date().toISOString();
+  fs.writeFileSync(runPath, `${JSON.stringify(run, null, 2)}\n`);
+}
+
 export function runQa(options) {
   const executionMode = options.executionMode ?? 'review';
+  const outputPurpose = options.outputPurpose ?? (options.expectAudio ? 'in-project-video' : 'visual-preview');
+  if (outputPurpose === 'visual-master' && (options.audioConfigPath || options.expectAudio)) throw new Error('画面底片 QA 必须按无音轨检查。');
   const resolvedStoryboard = path.resolve(options.storyboardPath);
   const resolvedVideo = path.resolve(options.videoPath);
   const resolvedReviewDir = path.resolve(options.reviewDir ?? path.join(path.dirname(resolvedVideo), `${path.parse(resolvedVideo).name}-review`));
@@ -55,10 +79,13 @@ export function runQa(options) {
   }
 
   if (storyboard) {
-    let expectAudio = options.expectAudio;
+    let expectAudio = options.expectAudio || outputPurpose === 'in-project-video';
     if (options.audioConfigPath) {
       try {
         const config = AudioConfigSchema.parse(JSON.parse(fs.readFileSync(path.resolve(options.audioConfigPath), 'utf8')));
+        if (outputPurpose === 'in-project-video' && !config.voiceover?.enabled) {
+          errors.push('项目内讲解视频需要已启用的旁白音轨。');
+        }
         expectAudio ||= Boolean(
           config.voiceover?.enabled || config.music?.enabled || config.sfx?.some((item) => item.enabled)
         );
@@ -83,9 +110,11 @@ export function runQa(options) {
         return {
           id: scene.id, startFrame, endFrame, overlapInFrames, overlapOutFrames,
           primaryClaim: scene.primaryClaim ?? null,
+          visualKind: scene.visual?.kind ?? null,
+          visualExplanation: scene.visual?.explanation ?? null,
           attentionTarget: scene.attentionTarget ?? null,
           lastActionEnd,
-          stableHoldFrames: scene.durationFrames - (overlapOutFrames > 0 ? overlapOutFrames : (scene.outro?.fadeFrames ?? 24)) - lastActionEnd,
+          stableHoldFrames: scene.durationFrames - (overlapOutFrames > 0 ? overlapOutFrames : (scene.outro?.fadeFrames ?? (storyboard.schemaVersion === '2.3' ? 0 : 24))) - lastActionEnd,
           peakCurrentNodes
         };
       })
@@ -106,6 +135,43 @@ export function runQa(options) {
       errors.push(`safe area: ${checks.safeArea.error}`);
     }
 
+    if (outputPurpose === 'visual-master') {
+      try {
+        const projectPath = path.dirname(resolvedStoryboard);
+        const config = loadHandoffConfig(projectPath);
+        const runPath = path.join(projectPath, 'run.json');
+        if (!fs.existsSync(runPath)) throw new Error('画面底片 QA 需要 produce 的渲染记录。');
+        const run = JSON.parse(fs.readFileSync(runPath, 'utf8'));
+        if (run.outputPurpose !== 'visual-master' || !run.artifacts?.video || path.resolve(projectPath, run.artifacts.video) !== resolvedVideo) {
+          throw new Error('画面底片 QA 与本次 produce 输出不匹配。');
+        }
+        if (run.outputFingerprint !== fingerprintFiles([resolvedVideo], projectPath)) throw new Error('画面底片在渲染后已变化。');
+        if (run.visualHandoff?.facecamRightFraction !== config.facecamRightFraction || run.visualHandoff?.subtitleBottomFraction !== config.subtitleBottomFraction || run.visualHandoff?.timelinePolicy !== config.timelinePolicy) {
+          throw new Error('画面预留配置与渲染时的配置不同，请重新渲染。');
+        }
+        const scale = Math.min(1 - config.facecamRightFraction, 1 - config.subtitleBottomFraction);
+        const contentRight = storyboard.project.width * scale;
+        const contentBottom = storyboard.project.height * scale;
+        const facecamLeft = storyboard.project.width * (1 - config.facecamRightFraction);
+        const subtitleTop = storyboard.project.height * (1 - config.subtitleBottomFraction);
+        checks.visualMasterProfile = {
+          passed: contentRight <= facecamLeft && contentBottom <= subtitleTop,
+          renderProfileSuppressesNarrationCaptions: true,
+          renderProfileSuppressesPreviewMarker: true,
+          verification: 'renderer profile and output metadata; full visual playback remains required',
+          facecamRightFraction: config.facecamRightFraction,
+          subtitleBottomFraction: config.subtitleBottomFraction,
+          sceneScale: scale,
+          contentBounds: {right: contentRight, bottom: contentBottom},
+          reservedFrom: {rightColumnLeft: facecamLeft, bottomBandTop: subtitleTop}
+        };
+        if (!checks.visualMasterProfile.passed) errors.push('visual master overlay clearance failed');
+      } catch (error) {
+        checks.visualMasterProfile = {passed: false, error: error instanceof Error ? error.message : String(error)};
+        errors.push(`visual master profile: ${checks.visualMasterProfile.error}`);
+      }
+    }
+
     try {
       checks.output = {passed: true, ...inspectOutput(resolvedVideo, storyboard, {expectAudio})};
     } catch (error) {
@@ -123,7 +189,7 @@ export function runQa(options) {
         errors.push(`audio: ${checks.audio.error}`);
       }
     } else {
-      checks.audio = {passed: !expectAudio, skipped: !expectAudio, reason: expectAudio ? '需要 --audio-config 才能验证音频时长和字幕。' : '静音预览'};
+      checks.audio = {passed: !expectAudio, skipped: !expectAudio, reason: expectAudio ? '需要 --audio-config 才能验证音频时长和字幕。' : '本次输出无需音轨'};
       if (!checks.audio.passed) errors.push('audio config missing');
     }
 
@@ -147,7 +213,8 @@ export function runQa(options) {
     storyboard: resolvedStoryboard,
     video: resolvedVideo,
     executionMode,
-    mode: checks.output?.audioStreams > 0 ? 'audio-pilot' : 'silent-preview',
+    outputPurpose,
+    mode: outputPurpose === 'visual-master' ? 'visual-master' : checks.output?.audioStreams > 0 ? 'audio-pilot' : 'silent-preview',
     automatedPassed,
     releaseReady: false,
     checks,
@@ -157,11 +224,17 @@ export function runQa(options) {
       visualHierarchyPassed: false,
       textReadabilityPassed: false,
       transitionTimingPassed: false,
+      audioQualityPassed: false,
+      captionReadabilityPassed: false,
+      assetRightsPassed: false,
+      reviewer: '',
+      reviewedAt: null,
       notes: ''
     },
     errors
   };
   fs.writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`);
+  invalidatePriorDelivery(resolvedStoryboard, reportPath, report);
   console.log(`QA ${automatedPassed ? 'AUTOMATED PASS' : 'FAILED'} ${reportPath}`);
   console.log('MANUAL REVIEW REQUIRED before releaseReady can be true.');
   return {report, reportPath};

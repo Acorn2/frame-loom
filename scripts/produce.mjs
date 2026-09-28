@@ -7,6 +7,11 @@ import {StoryboardSchema} from '../src/schemas/storyboard.ts';
 import {runQa} from './qa-storyboard.mjs';
 import {fingerprintFiles, fingerprintProjectInputs} from './lib/input-fingerprint.mjs';
 import {checkAssetInput, checkStoryboardInput, checkVisualInput} from './lib/preflight.mjs';
+import {loadHandoffConfig, nextMasterOutput, OUTPUT_PURPOSES, resolveOutputPurpose} from './lib/output-purpose.mjs';
+import {assertStoryboardApproval} from './lib/storyboard-approval.mjs';
+import {assertNarrationMatchesHandoff, buildNarrationHandoff, writeNarrationHandoff} from './lib/narration-handoff.mjs';
+import {getSceneTimeline} from '../src/timeline/scene-timeline.ts';
+import {selectTtsProfile} from './lib/tts-profiles.mjs';
 
 const STAGE_NAMES = ['storyboard', 'validation', 'assets', 'safeArea', 'render', 'qa'];
 const AUTOMATED_STATUSES = new Set(['generated', 'validated', 'reviewed', 'approved']);
@@ -15,7 +20,7 @@ const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 const styleRoot = path.join(projectRoot, 'styles');
 
 function parseArgs(args) {
-  const options = {executionMode: 'review', from: 'storyboard', force: false};
+  const options = {executionMode: 'review', from: 'storyboard', force: false, audioMode: 'auto'};
   const positional = [];
   for (let index = 0; index < args.length; index += 1) {
     const arg = args[index];
@@ -27,8 +32,21 @@ function parseArgs(args) {
       options.audioConfigPath = args[index + 1];
       if (!options.audioConfigPath) throw new Error('--audio-config 需要一个路径。');
       index += 1;
+    } else if (arg === '--tts-config') {
+      options.ttsConfigPath = args[index + 1];
+      if (!options.ttsConfigPath) throw new Error('--tts-config 需要一个路径。');
+      index += 1;
+    } else if (arg === '--audio-mode') {
+      options.audioMode = args[index + 1];
+      if (!options.audioMode) throw new Error('--audio-mode 需要 silent、tts、external 或 auto。');
+      index += 1;
+    } else if (arg === '--output-purpose') {
+      options.outputPurpose = args[++index];
+      if (!OUTPUT_PURPOSES.includes(options.outputPurpose)) throw new Error(`--output-purpose 只能是 ${OUTPUT_PURPOSES.join('、')}。`);
     } else if (arg === '--force') {
       options.force = true;
+    } else if (arg === '--retime-from-master') {
+      options.retimeFromMaster = true;
     } else if (arg === '--from') {
       options.from = args[index + 1];
       if (!options.from) throw new Error('--from 需要一个阶段名称。');
@@ -40,11 +58,17 @@ function parseArgs(args) {
   if (!['review', 'fast'].includes(options.executionMode)) {
     throw new Error('--mode 只能是 review 或 fast。');
   }
+  if (!['silent', 'tts', 'external', 'auto'].includes(options.audioMode)) {
+    throw new Error('--audio-mode 只能是 silent、tts、external 或 auto。');
+  }
+  if (options.outputPurpose && options.outputPurpose !== 'in-project-video' && !['silent', 'auto'].includes(options.audioMode)) {
+    throw new Error(`${options.outputPurpose} 只能使用静音模式。`);
+  }
   if (!STAGE_NAMES.includes(options.from)) {
     throw new Error(`--from 只能是 ${STAGE_NAMES.join('、')}。`);
   }
   if (positional.length !== 1) {
-    throw new Error('Usage: npm run produce -- <project-dir> [--mode review|fast] [--from storyboard|validation|assets|safeArea|render|qa] [--audio-config <audio-config.json>] [--force]');
+    throw new Error('Usage: npm run produce -- <project-dir> [--mode review|fast] [--output-purpose visual-preview|visual-master|in-project-video] [--audio-mode silent|tts|external|auto] [--audio-config <audio-config.json>] [--tts-config <tts-config.json>] [--retime-from-master] [--from storyboard|validation|assets|safeArea|render|qa] [--force]');
   }
   options.projectPath = path.resolve(process.cwd(), positional[0]);
   return options;
@@ -70,6 +94,7 @@ function createRunState(projectPath, executionMode, from, previousRun) {
       updatedAt: previousRun.updatedAt
     } : null,
     status: 'running',
+    deliveryStatus: 'pending',
     currentStage: 'storyboard',
     startedAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -109,7 +134,19 @@ function assertResumePreconditions(options, previousRun) {
   if ((previousRun.audioConfigPath ?? null) !== (options.audioConfigPath ? path.resolve(options.audioConfigPath) : null)) {
     throw new Error('无法恢复：音频配置路径已变化，请从 storyboard 阶段重跑。');
   }
-  const currentFingerprint = fingerprintProjectInputs(options.projectPath, styleRoot, options.audioConfigPath);
+  const selectedTtsPath = options.ttsConfigPath
+    ? path.resolve(options.ttsConfigPath)
+    : previousRun.audioModeResolved === 'tts' ? selectTtsProfile(options.projectPath)?.path ?? null : null;
+  if ((previousRun.ttsConfigPath ?? null) !== selectedTtsPath) {
+    throw new Error('无法恢复：TTS 配置路径已变化，请从 storyboard 阶段重跑。');
+  }
+  if ((previousRun.audioMode ?? 'auto') !== options.audioMode) {
+    throw new Error('无法恢复：音频模式已变化，请从 storyboard 阶段重跑。');
+  }
+  if ((previousRun.outputPurposeRequested ?? null) !== (options.outputPurpose ?? null)) {
+    throw new Error('无法恢复：输出用途已变化，请从 storyboard 阶段重跑。');
+  }
+  const currentFingerprint = fingerprintProjectInputs(options.projectPath, styleRoot, options.audioConfigPath, selectedTtsPath, {includeAudio: !['visual-preview', 'visual-master'].includes(options.outputPurpose)});
   if (!previousRun.inputFingerprint || previousRun.inputFingerprint !== currentFingerprint) {
     throw new Error('无法恢复：storyboard、素材、风格或音频输入与上次运行不同。请先同步有效的 storyboard.json，再从 storyboard 阶段重跑。');
   }
@@ -199,6 +236,25 @@ function resolveAudioConfig(options) {
   return {path: configuredPath, enabled};
 }
 
+function resolveTtsConfig(options) {
+  return selectTtsProfile(options.projectPath, options.ttsConfigPath)?.path;
+}
+
+function resolveAudioMode(options) {
+  if (options.audioMode !== 'auto') return options.audioMode;
+  if (options.executionMode === 'fast' && resolveTtsConfig(options)) return 'tts';
+  if (resolveTtsConfig(options)) return 'tts';
+  const external = resolveAudioConfig(options);
+  return external?.enabled ? 'external' : 'silent';
+}
+
+function requireEnabledAudio(audio, mode) {
+  if (!audio?.enabled) {
+    throw new Error(`${mode} 模式需要一个已启用且可读取的 audio-config.json。`);
+  }
+  return audio;
+}
+
 function runCommand(args) {
   const result = spawnSync(process.execPath, ['--import', 'tsx/esm', ...args], {
     cwd: projectRoot,
@@ -226,6 +282,7 @@ export function runProduction(options) {
   const executionMode = options.executionMode ?? 'review';
   const from = options.from ?? 'storyboard';
   const projectPath = path.resolve(options.projectPath);
+  options = {...options, executionMode, from, projectPath, audioMode: options.audioMode ?? 'auto'};
   if (!fs.existsSync(projectPath) || !fs.statSync(projectPath).isDirectory()) {
     throw new Error(`项目目录不存在：${projectPath}`);
   }
@@ -234,6 +291,15 @@ export function runProduction(options) {
   assertResumePreconditions({...options, executionMode, from, projectPath}, previousRun);
   const run = createRunState(projectPath, executionMode, from, previousRun);
   run.audioConfigPath = options.audioConfigPath ? path.resolve(options.audioConfigPath) : null;
+  run.ttsConfigPath = options.ttsConfigPath ? path.resolve(options.ttsConfigPath) : null;
+  run.audioMode = options.audioMode;
+  run.outputPurposeRequested = options.outputPurpose ?? null;
+  run.retimeFromMaster = Boolean(options.retimeFromMaster);
+  if (previousRun?.outputPurpose === 'visual-master' && previousRun.artifacts?.visualHandoff) {
+    run.sourceVisualMaster = {video: previousRun.artifacts.video, handoff: previousRun.artifacts.visualHandoff};
+  } else if (previousRun?.sourceVisualMaster) {
+    run.sourceVisualMaster = previousRun.sourceVisualMaster;
+  }
   if (previousRun && from !== 'storyboard') {
     run.artifacts = {...(previousRun.artifacts ?? {})};
     run.outputFingerprint = previousRun.outputFingerprint;
@@ -250,9 +316,10 @@ export function runProduction(options) {
     setStage(run, 'storyboard', shouldRunStage(from, 'storyboard') ? 'running' : 'reused');
     persistRun(projectPath, run);
     ({storyboardPath, storyboard} = prepareStoryboard(options, run));
+    if (executionMode === 'review') assertStoryboardApproval(projectPath);
     if (shouldRunStage(from, 'storyboard')) setStage(run, 'storyboard', 'completed');
     assertReusableStoryboardStatus(storyboard, executionMode, from);
-    run.inputFingerprint = fingerprintProjectInputs(projectPath, styleRoot, options.audioConfigPath);
+    run.inputFingerprint = fingerprintProjectInputs(projectPath, styleRoot, options.audioConfigPath, options.ttsConfigPath, {includeAudio: !['visual-preview', 'visual-master'].includes(options.outputPurpose)});
     persistRun(projectPath, run);
 
     if (!shouldRunStage(from, 'validation')) {
@@ -318,17 +385,84 @@ export function runProduction(options) {
       }
       setStage(run, 'safeArea', 'completed');
       storyboard = completeAutomatedStatus(storyboardPath, storyboard, executionMode);
-      run.inputFingerprint = fingerprintProjectInputs(projectPath, styleRoot, options.audioConfigPath);
+      run.inputFingerprint = fingerprintProjectInputs(projectPath, styleRoot, options.audioConfigPath, undefined, {includeAudio: !['visual-preview', 'visual-master'].includes(options.outputPurpose)});
       persistRun(projectPath, run);
     }
 
     try {
-      audio = resolveAudioConfig({...options, projectPath});
+      const audioMode = options.outputPurpose && options.outputPurpose !== 'in-project-video'
+        ? 'silent'
+        : resolveAudioMode({...options, projectPath});
+      run.audioModeResolved = audioMode;
+      run.outputPurpose = resolveOutputPurpose(options.outputPurpose, audioMode);
+      if (run.outputPurpose === 'in-project-video' && run.sourceVisualMaster?.handoff) {
+        const priorHandoff = readJson(path.resolve(projectPath, run.sourceVisualMaster.handoff));
+        const previousNarration = path.join(path.dirname(path.resolve(projectPath, run.sourceVisualMaster.handoff)), 'narration-manifest.json');
+        assertNarrationMatchesHandoff(projectPath, storyboard, previousNarration);
+        const currentStoryboardFingerprint = fingerprintFiles([storyboardPath], projectPath);
+        const storyboardChanged = currentStoryboardFingerprint !== priorHandoff.storyboardFingerprint;
+        if (storyboardChanged && priorHandoff.timelinePolicy === 'picture-locked' && !options.retimeFromMaster) {
+          throw new Error('前一版画面底片已锁定时间线；若要按新配音调整画面，请明确使用 --retime-from-master，旧底片会保留。');
+        }
+        run.sourceVisualMaster = {
+          video: run.sourceVisualMaster.video,
+          handoff: run.sourceVisualMaster.handoff,
+          timelinePolicy: priorHandoff.timelinePolicy,
+          storyboardChanged
+        };
+      }
+      if (run.outputPurpose === 'visual-master') {
+        buildNarrationHandoff(projectPath, storyboard);
+        const handoff = loadHandoffConfig(projectPath);
+        run.visualHandoff = {
+          facecamRightFraction: handoff.facecamRightFraction,
+          subtitleBottomFraction: handoff.subtitleBottomFraction,
+          timelinePolicy: handoff.timelinePolicy
+        };
+      }
+      if (audioMode === 'tts') {
+        const selectedTts = selectTtsProfile(projectPath, options.ttsConfigPath);
+        if (!selectedTts) throw new Error('没有可用的 TTS 配置；请选择静音预览、画面底片，或先准备外部音频。');
+        run.ttsProfile = {id: selectedTts.id, provider: selectedTts.provider, voiceType: selectedTts.voiceType, model: selectedTts.model};
+        run.ttsConfigPath = selectedTts.path;
+        const generatedAudioConfigPath = path.join(projectPath, 'audio', 'audio-config.tts.json');
+        if (shouldRunStage(from, 'render')) {
+          const ttsArgs = [
+            'scripts/synthesize-voiceover.mjs',
+            projectPath
+          ];
+          ttsArgs.push('--tts-config', selectedTts.path);
+          ttsArgs.push('--reuse');
+          if (options.force) ttsArgs.push('--force');
+          runCommand(ttsArgs);
+        } else if (!fs.existsSync(generatedAudioConfigPath)) {
+          throw new Error(`无法从 ${from} 恢复：缺少 TTS 音频配置 ${generatedAudioConfigPath}，请从 render 阶段重跑。`);
+        }
+        run.artifacts.audioManifest = 'audio/audio-manifest.json';
+        run.artifacts.ttsAudioConfig = 'audio/audio-config.tts.json';
+        audio = requireEnabledAudio(
+          resolveAudioConfig({...options, projectPath, audioConfigPath: generatedAudioConfigPath}),
+          'tts'
+        );
+        run.inputFingerprint = fingerprintProjectInputs(projectPath, styleRoot, options.audioConfigPath, selectedTts.path);
+        persistRun(projectPath, run);
+      } else if (audioMode === 'external') {
+        const priorScript = path.join(projectPath, 'output', 'script-handoff', 'narration-manifest.json');
+        assertNarrationMatchesHandoff(projectPath, storyboard, priorScript);
+        audio = requireEnabledAudio(resolveAudioConfig({...options, projectPath}), 'external');
+      } else {
+        audio = undefined;
+      }
     } catch (error) {
       setStage(run, 'render', 'failed');
       throw error;
     }
-    const outputName = audio?.enabled ? 'pilot-audio.mp4' : 'preview-silent.mp4';
+    if (run.outputPurpose === 'in-project-video' && audio?.path) {
+      const config = AudioConfigSchema.parse(readJson(audio.path));
+      if (!config.voiceover?.enabled) throw new Error('项目内讲解视频需要已启用的旁白；只有配乐或音效不构成讲解成片。');
+    }
+    const outputName = run.outputPurpose === 'visual-master' ? path.basename(nextMasterOutput(projectPath, options.force))
+      : run.outputPurpose === 'in-project-video' ? 'pilot-audio.mp4' : 'preview-silent.mp4';
     const previousOutput = previousRun?.artifacts?.video;
     const previousReviewDir = previousRun?.artifacts?.reviewDir;
     const outputPath = previousOutput && from !== 'storyboard'
@@ -358,6 +492,7 @@ export function runProduction(options) {
         executionMode
       ];
       if (audio?.path) renderArgs.push('--audio-config', audio.path);
+      renderArgs.push('--output-purpose', run.outputPurpose);
       if (options.force) renderArgs.push('--force');
       runCommand(renderArgs);
       setStage(run, 'render', 'completed');
@@ -377,7 +512,8 @@ export function runProduction(options) {
         reviewDir,
         audioConfigPath: audio?.path,
         expectAudio: Boolean(audio?.enabled),
-        executionMode
+        executionMode,
+        outputPurpose: run.outputPurpose
       });
       run.artifacts.qaReport = path.relative(projectPath, qa.reportPath);
       if (!qa.report.automatedPassed) {
@@ -390,6 +526,41 @@ export function runProduction(options) {
       setStage(run, 'qa', 'completed');
     }
     run.status = 'completed';
+    if (run.outputPurpose === 'visual-master') {
+      const handoffDir = path.join(reviewDir, 'handoff');
+      const narration = writeNarrationHandoff(projectPath, storyboard, handoffDir, options.force);
+      const timingPath = path.join(handoffDir, 'shot-timing.json');
+      const timing = getSceneTimeline(storyboard).map(({scene, startFrame, endFrame}) => ({
+        sceneId: scene.id,
+        startFrame,
+        endFrame,
+        startSec: startFrame / storyboard.project.fps,
+        endSec: endFrame / storyboard.project.fps,
+        narration: scene.narration
+      }));
+      writeJson(timingPath, {schemaVersion: '1.0', fps: storyboard.project.fps, durationSec: storyboard.project.durationSec, timelinePolicy: run.visualHandoff.timelinePolicy, scenes: timing});
+      const packagePath = path.join(handoffDir, 'visual-handoff.json');
+      writeJson(packagePath, {
+        schemaVersion: '1.0',
+        video: path.relative(projectPath, outputPath),
+        videoFingerprint: run.outputFingerprint,
+        storyboardFingerprint: narration.handoff.storyboardFingerprint,
+        scriptFingerprint: narration.handoff.scriptFingerprint,
+        width: storyboard.project.width,
+        height: storyboard.project.height,
+        fps: storyboard.project.fps,
+        durationSec: storyboard.project.durationSec,
+        ...run.visualHandoff,
+        manualReviewRequired: true
+      });
+      run.artifacts.narrationScript = path.relative(projectPath, narration.markdownPath);
+      run.artifacts.shotTiming = path.relative(projectPath, timingPath);
+      run.artifacts.visualHandoff = path.relative(projectPath, packagePath);
+      run.handoffFingerprint = fingerprintFiles([narration.markdownPath, narration.manifestPath, timingPath, packagePath], projectPath);
+      run.deliveryStatus = 'visual-handoff-pending';
+    } else {
+      run.deliveryStatus = run.outputPurpose === 'in-project-video' ? 'manual-review-pending' : 'preview-only';
+    }
     run.currentStage = 'done';
     persistRun(projectPath, run);
     return run;

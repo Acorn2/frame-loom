@@ -1,0 +1,218 @@
+{
+  "schemaVersion": "2.2",
+  "style": {
+    "id": "studio-frame",
+    "version": "1.0.0"
+  },
+  "project": {
+    "title": "从材料到可审阅视频",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 15,
+    "durationFrames": 450,
+    "status": "reviewed"
+  },
+  "scenes": [
+    {
+      "id": "opening",
+      "template": "statement",
+      "purpose": "opening",
+      "title": "把复杂问题讲清楚",
+      "narration": "一支可审阅的视频，从清楚的问题开始。",
+      "durationFrames": 90,
+      "layers": [
+        {
+          "id": "opening-note",
+          "type": "annotation",
+          "text": "从文稿、素材到第一版画面"
+        }
+      ],
+      "connections": [],
+      "beats": [],
+      "captions": [
+        {
+          "id": "opening-caption",
+          "text": "先让观众知道，这支视频要回答什么。",
+          "start": 22,
+          "end": 72
+        }
+      ],
+      "transitionOut": "fade"
+    },
+    {
+      "id": "process",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "三步，建立清晰的叙事",
+      "narration": "先提问，再拆解，最后给出回答。",
+      "durationFrames": 90,
+      "layers": [
+        {
+          "id": "ask",
+          "type": "card",
+          "label": "提问",
+          "text": "明确观众最关心的疑问。"
+        },
+        {
+          "id": "explain",
+          "type": "card",
+          "label": "拆解",
+          "text": "按顺序展开必要的事实。"
+        },
+        {
+          "id": "answer",
+          "type": "card",
+          "label": "回答",
+          "text": "收束为可复述的结论。"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "ask-enter",
+          "target": "ask",
+          "action": "enter",
+          "start": 8,
+          "duration": 16
+        },
+        {
+          "id": "explain-enter",
+          "target": "explain",
+          "action": "enter",
+          "start": 25,
+          "duration": 16
+        },
+        {
+          "id": "answer-enter",
+          "target": "answer",
+          "action": "enter",
+          "start": 42,
+          "duration": 16
+        }
+      ],
+      "captions": [
+        {
+          "id": "process-caption",
+          "text": "提问、拆解、回答：画面跟着信息顺序出现。",
+          "start": 25,
+          "end": 72
+        }
+      ],
+      "transitionOut": "fade"
+    },
+    {
+      "id": "evidence",
+      "template": "metric-grid",
+      "purpose": "evidence",
+      "title": "一份材料，多种画面",
+      "narration": "同一份内容，可以通过三套不同的模板呈现。",
+      "durationFrames": 90,
+      "layers": [
+        {
+          "id": "input-count",
+          "type": "metric",
+          "value": "1",
+          "label": "份公开示例内容"
+        },
+        {
+          "id": "style-count",
+          "type": "metric",
+          "value": "3",
+          "label": "套视频模板"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "input-enter",
+          "target": "input-count",
+          "action": "enter",
+          "start": 10,
+          "duration": 16
+        },
+        {
+          "id": "style-enter",
+          "target": "style-count",
+          "action": "enter",
+          "start": 30,
+          "duration": 16
+        }
+      ],
+      "captions": [
+        {
+          "id": "evidence-caption",
+          "text": "内容和素材保持一致，构图与节奏发生变化。",
+          "start": 28,
+          "end": 72
+        }
+      ],
+      "transitionOut": "fade"
+    },
+    {
+      "id": "media",
+      "template": "statement",
+      "purpose": "media",
+      "title": "让真实素材成为主角",
+      "narration": "如果提供产品截图，模板应该留出足够大的画面展示它。",
+      "durationFrames": 90,
+      "layers": [
+        {
+          "id": "product-screen",
+          "type": "screenshot",
+          "label": "FrameLoom 公开示例界面",
+          "asset": "assets/product-workflow.svg",
+          "fit": "contain"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "screen-enter",
+          "target": "product-screen",
+          "action": "enter",
+          "start": 8,
+          "duration": 20
+        }
+      ],
+      "captions": [
+        {
+          "id": "media-caption",
+          "text": "截图有来源，主体画面保持完整可见。",
+          "start": 25,
+          "end": 72
+        }
+      ],
+      "transitionOut": "fade"
+    },
+    {
+      "id": "closing",
+      "template": "statement",
+      "purpose": "closing",
+      "title": "让观点跟得上每一步",
+      "narration": "最终给观众留下明确、可理解的结论。",
+      "durationFrames": 90,
+      "layers": [
+        {
+          "id": "closing-note",
+          "type": "annotation",
+          "text": "重点突出，画面更好懂。"
+        }
+      ],
+      "connections": [],
+      "beats": [],
+      "captions": [
+        {
+          "id": "closing-caption",
+          "text": "先看清，再决定是否采用这套模板。",
+          "start": 24,
+          "end": 72
+        }
+      ],
+      "outro": {
+        "holdFrames": 24,
+        "fadeFrames": 12
+      }
+    }
+  ]
+}

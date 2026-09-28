@@ -41,7 +41,16 @@ export function selectReviewFrames(storyboard) {
     const sceneDurationSec = scene.durationFrames / fps;
     candidates.push({label: `${scene.id}-content`, timeSec: startSec + sceneDurationSec * 0.55});
     const firstAction = scene.beats.find((beat) => beat.action !== 'set-state');
-    if (firstAction) candidates.push({label: `${scene.id}-first-action`, timeSec: (startFrame + firstAction.start + firstAction.duration) / fps});
+    if (firstAction) {
+      candidates.push({label: `${scene.id}-first-action-mid`, timeSec: (startFrame + firstAction.start + firstAction.duration / 2) / fps});
+      candidates.push({label: `${scene.id}-first-action`, timeSec: (startFrame + firstAction.start + firstAction.duration) / fps});
+    }
+    if (storyboard.schemaVersion === '2.3') {
+      const lastActionEnd = Math.max(0, ...scene.beats.map((beat) => beat.start + beat.duration));
+      if (lastActionEnd > 0) candidates.push({label: `${scene.id}-complete`, timeSec: (startFrame + Math.min(scene.durationFrames - 1, lastActionEnd + 2)) / fps});
+      const fadeFrames = scene.outro?.fadeFrames ?? (overlapOutFrames === 0 && scene.transitionOut ? 12 : 0);
+      candidates.push({label: `${scene.id}-before-handoff`, timeSec: (endFrame - overlapOutFrames - fadeFrames - 2) / fps});
+    }
     for (const stateSwitch of scene.beats.filter((beat) => beat.action === 'set-state' && beat.state === 'current')) {
       candidates.push({label: `${scene.id}-${stateSwitch.target}-current`, timeSec: (startFrame + stateSwitch.start + 1) / fps});
     }
@@ -62,10 +71,11 @@ export function selectReviewFrames(storyboard) {
   }
   candidates.push({label: 'ending', timeSec: Math.max(0, durationSec - 0.5)});
   const unique = uniqueCandidates(candidates, durationSec);
-  if (unique.length <= 24) return unique;
+  const limit = storyboard.schemaVersion === '2.3' ? 48 : 24;
+  if (unique.length <= limit) return unique;
   const sampled = [];
-  for (let index = 0; index < 24; index += 1) {
-    sampled.push(unique[Math.round(index * (unique.length - 1) / 23)]);
+  for (let index = 0; index < limit; index += 1) {
+    sampled.push(unique[Math.round(index * (unique.length - 1) / (limit - 1))]);
   }
   return sampled;
 }

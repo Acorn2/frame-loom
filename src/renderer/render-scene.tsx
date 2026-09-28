@@ -7,6 +7,7 @@ import {InteractionFlowTemplate} from '../templates/interaction-flow/Interaction
 import {MetricGridTemplate} from '../templates/metric-grid/MetricGridTemplate';
 import {TemplateFamilyScene} from '../templates/families/TemplateFamilyScene';
 import {isTemplateFamily} from '../templates/families/family-registry';
+import {SemanticScene} from '../templates/semantic/SemanticScene';
 
 interface RenderSceneProps {
   scene: StoryboardScene;
@@ -18,6 +19,9 @@ interface RenderSceneProps {
 
 export function RenderScene({scene, tokens, showSceneCaptions, externalCaptions, overlapOutFrames}: RenderSceneProps) {
   const props = {scene, tokens, showSceneCaptions, overlapOutFrames};
+  if (scene.visual) {
+    return <SemanticScene {...props} externalCaptions={externalCaptions} />;
+  }
   if (scene.purpose && isTemplateFamily(tokens.id)) {
     return <TemplateFamilyScene {...props} externalCaptions={externalCaptions} />;
   }

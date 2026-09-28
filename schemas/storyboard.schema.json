@@ -1,13 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "FrameLoom Storyboard V2.1–2.2",
+  "title": "FrameLoom Storyboard V2.1–2.3",
   "type": "object",
   "properties": {
     "schemaVersion": {
       "type": "string",
       "enum": [
         "2.1",
-        "2.2"
+        "2.2",
+        "2.3"
       ]
     },
     "style": {
@@ -115,6 +116,60 @@
             "type": "string",
             "minLength": 1
           },
+          "visual": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "statement",
+                  "compare",
+                  "sequence",
+                  "network",
+                  "change",
+                  "metric",
+                  "media"
+                ]
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1
+              },
+              "representation": {
+                "type": "string",
+                "enum": [
+                  "diagram",
+                  "source-media"
+                ]
+              },
+              "anchorId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "beforeId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "afterId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "unit": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "kind",
+              "explanation",
+              "representation"
+            ],
+            "additionalProperties": false
+          },
           "attentionTarget": {
             "type": "string",
             "minLength": 1
@@ -195,6 +250,23 @@
                 "semanticRole": {
                   "type": "string",
                   "minLength": 1
+                },
+                "glyph": {
+                  "type": "string",
+                  "enum": [
+                    "document",
+                    "search",
+                    "map",
+                    "list",
+                    "person",
+                    "timeline",
+                    "video",
+                    "quote",
+                    "spark",
+                    "database",
+                    "chart",
+                    "link"
+                  ]
                 },
                 "target": {
                   "type": "string",

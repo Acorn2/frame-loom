@@ -1,0 +1,1223 @@
+:root {
+  font-family: "Manrope", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #15221f;
+  background: #e7ebe8;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+button {
+  font: inherit;
+}
+
+.canvas-top-space {
+  height: 148px;
+}
+
+.control-dock {
+  position: fixed;
+  z-index: 30;
+  inset: 0 0 auto;
+  padding: 18px 26px 14px;
+  background: #f5f7f5f2;
+  border-bottom: 1px solid #cbd4cf;
+  box-shadow: 0 6px 24px #17211e12;
+  backdrop-filter: blur(12px);
+}
+
+.dock-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: 1740px;
+  margin: 0 auto 13px;
+}
+
+.dock-eyebrow {
+  color: #5c6f68;
+  font: 500 10px/1.3 "DM Mono", monospace;
+}
+
+.dock-heading h1 {
+  margin: 3px 0 0;
+  font-size: 21px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.proposal-badge {
+  padding: 6px 9px;
+  color: #70531b;
+  background: #f4e9c8;
+  border: 1px solid #dfcf9d;
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.scene-tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 5px;
+  max-width: 1740px;
+  margin: 0 auto;
+}
+
+.scene-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: #52625c;
+  background: transparent;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.scene-tab span {
+  color: #86948e;
+  font: 10px "DM Mono", monospace;
+}
+
+.scene-tab:hover {
+  color: #182d26;
+  background: #e7ede9;
+}
+
+.scene-tab.is-selected {
+  color: #f5f8f6;
+  background: #1a3028;
+  border-color: #1a3028;
+}
+
+.scene-tab.is-selected span {
+  color: #a5d3be;
+}
+
+.dock-note {
+  position: fixed;
+  right: 24px;
+  bottom: 18px;
+  z-index: 20;
+  padding: 8px 11px;
+  color: #52625c;
+  background: #f5f7f5ed;
+  border: 1px solid #cad4ce;
+  font-size: 11px;
+}
+
+.dock-note span {
+  margin-left: 9px;
+  padding-left: 9px;
+  border-left: 1px solid #c6d0ca;
+  color: #75837d;
+}
+
+.template-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  container-type: inline-size;
+}
+
+.frame-running-head,
+.frame-caption {
+  position: absolute;
+  z-index: 5;
+  left: 42px;
+  right: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font: 11px "DM Mono", monospace;
+}
+
+.frame-running-head {
+  top: 19px;
+  height: 24px;
+}
+
+.frame-caption {
+  bottom: 16px;
+  height: 22px;
+}
+
+.frame-running-head span:last-child,
+.frame-caption b {
+  font-weight: 500;
+}
+
+.frame-running-head b {
+  color: #d78645;
+  font-weight: 500;
+}
+
+.editorial-frame {
+  color: #172522;
+  background: #f5f7f3;
+  font-family: "Manrope", "PingFang SC", sans-serif;
+}
+
+.editorial-frame .frame-running-head,
+.editorial-frame .frame-caption {
+  color: #4d625a;
+}
+
+.editorial-frame .frame-running-head {
+  border-bottom: 1px solid #b9c8c1;
+}
+
+.editorial-frame .frame-caption {
+  border-top: 1px solid #b9c8c1;
+}
+
+.editorial-body {
+  position: absolute;
+  inset: 66px 42px 54px;
+}
+
+.editorial-kicker {
+  color: #405d51;
+  font: 500 12px "DM Mono", monospace;
+}
+
+.editorial-opening .editorial-open-title {
+  position: absolute;
+  left: 52px;
+  top: 130px;
+  display: flex;
+  flex-direction: column;
+  font-size: 82px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.editorial-open-title strong {
+  color: #1859d1;
+  font-weight: 800;
+}
+
+.editorial-open-index {
+  position: absolute;
+  right: 40px;
+  top: 86px;
+  color: #dce3de;
+  font: 800 276px/1 "Manrope", sans-serif;
+}
+
+.editorial-open-note {
+  position: absolute;
+  right: 60px;
+  bottom: 84px;
+  z-index: 1;
+  padding-left: 16px;
+  border-left: 4px solid #d9e629;
+  font-size: 17px;
+  line-height: 1.7;
+  font-weight: 600;
+}
+
+.editorial-rule {
+  position: absolute;
+  left: 52px;
+  bottom: 72px;
+  width: 410px;
+  height: 1px;
+  background: #9bb1a6;
+}
+
+.editorial-process h2,
+.editorial-evidence h2 {
+  position: absolute;
+  left: 0;
+  top: 48px;
+  margin: 0;
+  font-size: 50px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.editorial-columns {
+  position: absolute;
+  left: 410px;
+  right: 6px;
+  top: 150px;
+  bottom: 28px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 3px solid #1859d1;
+}
+
+.editorial-columns > div {
+  padding: 23px 19px 0;
+  border-left: 1px solid #bdcac4;
+}
+
+.editorial-columns > div:last-child {
+  border-right: 1px solid #bdcac4;
+}
+
+.editorial-columns b {
+  display: block;
+  color: #1859d1;
+  font: 500 20px "DM Mono", monospace;
+}
+
+.editorial-columns strong {
+  display: block;
+  margin-top: 38px;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.editorial-columns p {
+  max-width: 210px;
+  margin: 12px 0 0;
+  color: #53635c;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.editorial-evidence h2 {
+  top: 88px;
+  font-size: 48px;
+}
+
+.editorial-measures {
+  position: absolute;
+  left: 475px;
+  top: 100px;
+  display: flex;
+  gap: 26px;
+}
+
+.editorial-measures > div {
+  display: flex;
+  min-width: 210px;
+  flex-direction: column;
+  gap: 11px;
+  padding-left: 17px;
+  border-left: 3px solid #1859d1;
+}
+
+.editorial-measures strong {
+  font: 700 112px/1 "Manrope", sans-serif;
+}
+
+.editorial-measures span {
+  color: #53635c;
+  font-size: 15px;
+}
+
+.editorial-side-note {
+  position: absolute;
+  right: 14px;
+  bottom: 55px;
+  color: #64756d;
+  font: 12px/1.8 "DM Mono", monospace;
+  text-align: right;
+}
+
+.editorial-media-screen {
+  position: absolute;
+  left: 0;
+  top: 72px;
+  width: 760px;
+  height: 430px;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #a9b8b0;
+}
+
+.editorial-media-screen img,
+.product-opening-graphic img,
+.product-media-image img,
+.blueprint-media-screen img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.editorial-media-copy {
+  position: absolute;
+  right: 5px;
+  top: 110px;
+  width: 300px;
+}
+
+.editorial-media-copy > span {
+  color: #1859d1;
+  font: 500 12px "DM Mono", monospace;
+}
+
+.editorial-media-copy h2 {
+  margin: 18px 0 16px;
+  font-size: 45px;
+  line-height: 1.2;
+}
+
+.editorial-media-copy p {
+  color: #53635c;
+  font-size: 15px;
+}
+
+.editorial-closing .editorial-close-mark {
+  position: absolute;
+  top: 73px;
+  right: 32px;
+  color: #e0e7e2;
+  font: 800 92px/0.95 "Manrope", sans-serif;
+}
+
+.editorial-closing h2 {
+  position: absolute;
+  top: 135px;
+  left: 65px;
+  margin: 0;
+  font-size: 72px;
+  line-height: 1.2;
+}
+
+.editorial-closing h2 strong {
+  color: #1859d1;
+}
+
+.editorial-close-line {
+  position: absolute;
+  left: 65px;
+  right: 80px;
+  bottom: 56px;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 13px;
+  border-top: 2px solid #172522;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.family-product {
+  display: grid;
+  place-items: center;
+  background: #dfe5e1;
+  color: #19231f;
+  font-family: "Manrope", "PingFang SC", sans-serif;
+}
+
+.family-product .frame-running-head,
+.family-product .frame-caption {
+  color: #4d625a;
+}
+
+.product-shell {
+  position: absolute;
+  inset: 58px 42px 50px;
+  overflow: hidden;
+  background: #f8faf8;
+  border: 1px solid #aab6b0;
+  border-radius: 10px;
+  box-shadow: 0 16px 32px #17231e1c;
+}
+
+.product-topbar {
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 25px;
+  border-bottom: 1px solid #d9e0dc;
+  background: #fff;
+  font-size: 12px;
+}
+
+.product-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+}
+
+.product-brand i {
+  width: 13px;
+  height: 13px;
+  background: #b2d72b;
+  border-radius: 3px;
+}
+
+.product-brand span,
+.product-project {
+  color: #728079;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.product-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #53665c;
+  font: 10px "DM Mono", monospace;
+}
+
+.product-status b {
+  width: 7px;
+  height: 7px;
+  background: #6caf70;
+  border-radius: 50%;
+}
+
+.product-opening {
+  position: relative;
+  height: calc(100% - 62px);
+}
+
+.product-side-label {
+  position: absolute;
+  top: 38px;
+  left: 34px;
+  color: #78877f;
+  font: 10px/1.8 "DM Mono", monospace;
+}
+
+.product-opening-copy {
+  position: absolute;
+  left: 80px;
+  top: 90px;
+  width: 450px;
+}
+
+.product-opening-copy > span {
+  color: #6a7a71;
+  font-size: 13px;
+}
+
+.product-opening-copy h2 {
+  margin: 15px 0;
+  font-size: 57px;
+  line-height: 1.2;
+}
+
+.product-opening-copy h2 strong {
+  color: #608719;
+}
+
+.product-opening-copy p {
+  color: #65746c;
+  font-size: 14px;
+}
+
+.product-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 22px;
+  margin-top: 20px;
+  padding: 12px 15px;
+  background: #b5d832;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.product-action b {
+  font-size: 16px;
+}
+
+.product-opening-graphic {
+  position: absolute;
+  top: 92px;
+  right: 45px;
+  width: 500px;
+  height: 285px;
+  padding: 11px;
+  background: #fff;
+  border: 1px solid #c9d3cd;
+  box-shadow: 0 8px 25px #1b292018;
+}
+
+.product-opening-graphic span {
+  position: absolute;
+  right: 12px;
+  bottom: -25px;
+  color: #718078;
+  font: 9px "DM Mono", monospace;
+}
+
+.product-workspace {
+  padding: 37px 54px;
+}
+
+.product-pane-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #d4ddd7;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.product-pane-title b {
+  color: #849188;
+  font: 10px "DM Mono", monospace;
+}
+
+.product-step-list {
+  margin-top: 14px;
+}
+
+.product-step {
+  display: grid;
+  grid-template-columns: 54px 110px 1fr 86px;
+  align-items: center;
+  min-height: 96px;
+  border-bottom: 1px solid #dce3de;
+}
+
+.product-step > i {
+  color: #86938c;
+  font: 12px "DM Mono", monospace;
+  font-style: normal;
+}
+
+.product-step > strong {
+  font-size: 21px;
+}
+
+.product-step > span {
+  color: #64736b;
+  font-size: 14px;
+}
+
+.product-step > b {
+  padding: 7px 9px;
+  color: #79857e;
+  background: #edf1ee;
+  font-size: 10px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.product-step.is-active > i,
+.product-step.is-active > strong {
+  color: #5e7c16;
+}
+
+.product-step.is-active > b {
+  color: #36450d;
+  background: #e4f0b3;
+}
+
+.product-progress {
+  display: grid;
+  grid-template-columns: 120px 1fr 64px;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+  color: #6c7a72;
+  font-size: 11px;
+}
+
+.product-progress > i {
+  height: 5px;
+  background: #e3e8e4;
+}
+
+.product-progress > i b {
+  display: block;
+  width: 68%;
+  height: 100%;
+  background: #9ebc2d;
+}
+
+.product-progress strong {
+  color: #46574e;
+  font: 10px "DM Mono", monospace;
+  text-align: right;
+}
+
+.product-metrics {
+  padding-top: 34px;
+}
+
+.product-metric-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 27px;
+}
+
+.product-metric-grid > div {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  min-height: 205px;
+  padding: 23px 25px;
+  background: #fff;
+  border: 1px solid #d8e0db;
+}
+
+.product-metric-grid small {
+  grid-column: 1 / -1;
+  color: #708077;
+  font-size: 12px;
+}
+
+.product-metric-grid strong {
+  font-size: 82px;
+  line-height: 1;
+}
+
+.product-metric-grid span {
+  padding-bottom: 10px;
+  color: #63736a;
+  font-size: 13px;
+}
+
+.product-metric-highlight {
+  background: #f1f6dc !important;
+  border-color: #d5e5a2 !important;
+}
+
+.product-metric-highlight strong {
+  color: #587710;
+}
+
+.product-compare-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 21px;
+  color: #58685f;
+  font-size: 12px;
+}
+
+.product-compare-line i {
+  width: 9px;
+  height: 9px;
+  background: #9ebc2d;
+  border-radius: 50%;
+}
+
+.product-compare-line b {
+  margin-left: auto;
+  color: #354d1a;
+  font-weight: 600;
+}
+
+.product-media-workspace {
+  position: relative;
+  height: calc(100% - 62px);
+  padding: 24px 25px;
+  background: #edf1ee;
+}
+
+.product-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 19px;
+  height: 28px;
+  margin-bottom: 12px;
+  color: #63736b;
+  font: 9px "DM Mono", monospace;
+}
+
+.product-toolbar span:first-child {
+  color: #263a30;
+  font: 600 13px "Manrope", "PingFang SC", sans-serif;
+}
+
+.product-media-image {
+  width: 770px;
+  height: 365px;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #c7d1cb;
+}
+
+.product-inspector {
+  position: absolute;
+  top: 64px;
+  right: 30px;
+  bottom: 27px;
+  width: 220px;
+  padding: 20px 17px;
+  background: #fff;
+  border: 1px solid #d5ddd8;
+}
+
+.product-inspector small {
+  color: #718078;
+  font: 9px "DM Mono", monospace;
+}
+
+.product-inspector strong,
+.product-inspector > span {
+  display: block;
+}
+
+.product-inspector strong {
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.product-inspector > span {
+  margin-top: 7px;
+  color: #63801b;
+  font-size: 11px;
+}
+
+.product-inspector > div {
+  margin-top: 32px;
+  padding-top: 13px;
+  border-top: 1px solid #dce3de;
+  color: #65746c;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.product-close-workspace {
+  position: relative;
+  height: calc(100% - 62px);
+  padding: 53px 70px;
+}
+
+.product-close-label {
+  display: flex;
+  justify-content: space-between;
+  color: #77857d;
+  font: 10px "DM Mono", monospace;
+}
+
+.product-close-label span {
+  color: #4f6758;
+}
+
+.product-close-workspace h2 {
+  margin: 42px 0 12px;
+  font-size: 68px;
+  line-height: 1.16;
+}
+
+.product-close-workspace h2 strong {
+  color: #5e7e18;
+}
+
+.product-close-workspace p {
+  color: #68776f;
+  font-size: 14px;
+}
+
+.product-close-footer {
+  position: absolute;
+  left: 70px;
+  right: 70px;
+  bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 15px;
+  border-top: 1px solid #d4ddd7;
+  color: #68776f;
+  font-size: 11px;
+}
+
+.product-close-footer b {
+  padding: 5px 8px;
+  color: #39520d;
+  background: #e4f0b3;
+  font-weight: 600;
+}
+
+.product-close-footer span:last-child {
+  margin-left: auto;
+}
+
+.family-blueprint {
+  color: #eef5f0;
+  background-color: #123a5a;
+  background-image:
+    linear-gradient(#c4e1ec20 1px, transparent 1px),
+    linear-gradient(90deg, #c4e1ec20 1px, transparent 1px),
+    linear-gradient(#c4e1ec0c 1px, transparent 1px),
+    linear-gradient(90deg, #c4e1ec0c 1px, transparent 1px);
+  background-size: 40px 40px, 40px 40px, 8px 8px, 8px 8px;
+  font-family: "Manrope", "PingFang SC", sans-serif;
+}
+
+.blueprint-frame .frame-running-head,
+.family-blueprint .frame-running-head,
+.family-blueprint .frame-caption {
+  color: #c0d9e4;
+}
+
+.family-blueprint .frame-running-head {
+  border-bottom: 1px solid #b6d4e24a;
+}
+
+.family-blueprint .frame-caption {
+  border-top: 1px solid #b6d4e24a;
+}
+
+.blueprint-body {
+  position: absolute;
+  inset: 66px 42px 54px;
+}
+
+.blueprint-meta {
+  display: flex;
+  justify-content: space-between;
+  color: #b2d1df;
+  font: 10px "DM Mono", monospace;
+}
+
+.blueprint-meta span {
+  color: #f3c568;
+}
+
+.blueprint-opening .blueprint-title {
+  position: absolute;
+  left: 55px;
+  top: 110px;
+}
+
+.blueprint-title small,
+.blueprint-close-copy small {
+  color: #8de2d6;
+  font: 11px "DM Mono", monospace;
+}
+
+.blueprint-title h2 {
+  margin: 19px 0 0;
+  font-size: 70px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.blueprint-title h2 strong {
+  color: #f3c568;
+}
+
+.blueprint-flow {
+  position: absolute;
+  right: 26px;
+  top: 165px;
+  display: flex;
+  align-items: center;
+}
+
+.blueprint-flow > div {
+  display: flex;
+  width: 112px;
+  height: 100px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 9px;
+  padding-left: 15px;
+  border: 1px solid #a9d1df;
+  background: #123a5ae8;
+}
+
+.blueprint-flow b {
+  color: #f3c568;
+  font: 11px "DM Mono", monospace;
+}
+
+.blueprint-flow span {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.blueprint-flow > i {
+  width: 35px;
+  height: 1px;
+  background: #8de2d6;
+}
+
+.blueprint-coord {
+  position: absolute;
+  right: 28px;
+  bottom: 40px;
+  color: #8db4c4;
+  font: 9px/1.7 "DM Mono", monospace;
+  text-align: right;
+}
+
+.blueprint-process h2,
+.blueprint-evidence h2 {
+  margin: 42px 0 0;
+  font-size: 42px;
+  font-weight: 600;
+}
+
+.blueprint-route {
+  position: absolute;
+  left: 9px;
+  right: 9px;
+  top: 205px;
+  display: grid;
+  grid-template-columns: 1fr 76px 1fr 76px 1fr;
+  align-items: center;
+}
+
+.blueprint-route > i {
+  height: 1px;
+  background: #8de2d6;
+}
+
+.blueprint-node {
+  position: relative;
+  min-height: 190px;
+  padding: 20px;
+  border: 1px solid #8ebccc;
+  background: #123a5a;
+}
+
+.blueprint-node-active {
+  border: 2px solid #f3c568;
+  background: #1a4969;
+}
+
+.blueprint-node b {
+  color: #f3c568;
+  font: 12px "DM Mono", monospace;
+}
+
+.blueprint-node strong {
+  display: block;
+  margin-top: 22px;
+  font-size: 22px;
+}
+
+.blueprint-node span {
+  display: block;
+  margin-top: 10px;
+  color: #c2d9e2;
+  font-size: 12px;
+}
+
+.blueprint-node small {
+  position: absolute;
+  left: 20px;
+  bottom: 17px;
+  color: #8de2d6;
+  font: 8px "DM Mono", monospace;
+}
+
+.blueprint-measure {
+  position: absolute;
+  left: 72px;
+  top: 180px;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.blueprint-measure > div {
+  display: flex;
+  width: 270px;
+  flex-direction: column;
+  gap: 13px;
+  padding: 0 0 15px 19px;
+  border-left: 2px solid #8de2d6;
+  border-bottom: 1px solid #9bc0cf;
+}
+
+.blueprint-measure strong {
+  color: #f3c568;
+  font: 600 100px/1 "Manrope", sans-serif;
+}
+
+.blueprint-measure span {
+  color: #c2d9e2;
+  font-size: 13px;
+}
+
+.blueprint-measure > i {
+  color: #8de2d6;
+  font: normal 30px "DM Mono", monospace;
+}
+
+.blueprint-stamp {
+  position: absolute;
+  top: 86px;
+  right: 72px;
+  display: grid;
+  width: 92px;
+  height: 92px;
+  place-content: center;
+  color: #f3c568;
+  border: 1px solid #f3c568;
+  font: 11px/1.5 "DM Mono", monospace;
+  text-align: center;
+  rotate: -8deg;
+}
+
+.blueprint-caption {
+  position: absolute;
+  right: 74px;
+  bottom: 47px;
+  color: #b2d1df;
+  font: 10px "DM Mono", monospace;
+}
+
+.blueprint-media-screen {
+  position: absolute;
+  left: 22px;
+  top: 92px;
+  width: 755px;
+  height: 420px;
+  padding: 15px;
+  background: #f1f5f1;
+  border: 1px solid #a9d1df;
+  outline: 1px dashed #8de2d6;
+  outline-offset: 7px;
+}
+
+.blueprint-corner {
+  position: absolute;
+  padding: 4px 6px;
+  color: #123a5a;
+  background: #f3c568;
+  font: 9px "DM Mono", monospace;
+}
+
+.blueprint-corner.tl {
+  top: -13px;
+  left: -13px;
+}
+
+.blueprint-corner.br {
+  right: -13px;
+  bottom: -13px;
+}
+
+.blueprint-media-note {
+  position: absolute;
+  top: 132px;
+  right: 20px;
+  width: 275px;
+}
+
+.blueprint-media-note small {
+  color: #8de2d6;
+  font: 10px "DM Mono", monospace;
+}
+
+.blueprint-media-note h2 {
+  margin: 17px 0;
+  font-size: 37px;
+  line-height: 1.25;
+}
+
+.blueprint-media-note > i {
+  display: block;
+  width: 90px;
+  height: 2px;
+  background: #f3c568;
+}
+
+.blueprint-media-note > span {
+  display: block;
+  margin-top: 17px;
+  color: #c2d9e2;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.blueprint-closing .blueprint-crosshair {
+  position: absolute;
+  top: 96px;
+  right: 98px;
+  color: #8de2d6;
+  font: 60px/1 "DM Mono", monospace;
+}
+
+.blueprint-close-copy {
+  position: absolute;
+  left: 70px;
+  top: 127px;
+}
+
+.blueprint-close-copy h2 {
+  margin: 17px 0;
+  font-size: 70px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.blueprint-close-copy h2 strong {
+  color: #f3c568;
+}
+
+.blueprint-close-copy > span {
+  color: #c2d9e2;
+  font-size: 14px;
+}
+
+.blueprint-dimension {
+  position: absolute;
+  left: 70px;
+  right: 70px;
+  bottom: 47px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #8de2d6;
+  font: 9px "DM Mono", monospace;
+}
+
+.blueprint-dimension i {
+  flex: 1;
+  height: 1px;
+  background: #93bac9;
+}
+
+@media (max-width: 760px) {
+  .control-dock {
+    padding: 13px 14px 11px;
+  }
+
+  .dock-heading {
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .dock-heading h1 {
+    font-size: 18px;
+  }
+
+  .proposal-badge {
+    font-size: 10px;
+  }
+
+  .scene-tabs {
+    overflow-x: auto;
+  }
+
+  .scene-tab {
+    flex: 0 0 auto;
+    padding: 0 9px;
+  }
+
+  .dock-note {
+    right: 12px;
+    bottom: 12px;
+    font-size: 10px;
+  }
+}

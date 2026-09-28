@@ -1,0 +1,6 @@
+{
+  "statement": {"label": "studio-label", "title": "workspace-heading", "annotation": "inspector-note", "metric": "studio-metric"},
+  "graph-explainer": {"node": "workflow-step", "connection": "progress-line"},
+  "metric-grid": {"metric": "studio-metric", "annotation": "inspector-note"},
+  "interaction-flow": {"screenshot": "workspace-screen", "annotation": "inspector-note"}
+}

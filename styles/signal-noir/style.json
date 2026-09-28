@@ -1,0 +1,87 @@
+{
+  "id": "signal-noir",
+  "version": "1.0.0",
+  "tokens": {
+    "background": "#123a5a",
+    "ink": "#eef5f0",
+    "muted": "#c2d9e2",
+    "accent": "#8de2d6",
+    "accentAlt": "#f3c568",
+    "paper": "#1a4969",
+    "grid": "#8ebccc",
+    "displayFont": "Arial, PingFang SC, sans-serif",
+    "bodyFont": "Arial, PingFang SC, sans-serif",
+    "pattern": "grid",
+    "surfaceRadius": 10,
+    "surfaceBorder": "2px solid #5c7b85",
+    "surfaceShadow": "8px 10px 0 #0d2d47",
+    "labelRadius": 4,
+    "titleFontSize": 116
+  },
+  "safeArea": {
+    "landscape": {
+      "top": 84,
+      "right": 104,
+      "bottom": 88,
+      "left": 104
+    },
+    "portrait": {
+      "top": 132,
+      "right": 70,
+      "bottom": 140,
+      "left": 70
+    }
+  },
+  "supports": {
+    "purposes": [
+      "opening",
+      "claim",
+      "process",
+      "evidence",
+      "media",
+      "closing"
+    ],
+    "templates": [
+      "statement",
+      "graph-explainer",
+      "metric-grid",
+      "interaction-flow"
+    ],
+    "layers": [
+      "label",
+      "card",
+      "annotation",
+      "metric",
+      "node",
+      "screenshot",
+      "object",
+      "callout"
+    ],
+    "actions": [
+      "enter",
+      "reveal",
+      "draw",
+      "focus",
+      "highlight",
+      "count",
+      "camera-push",
+      "rotate",
+      "set-state"
+    ],
+    "transitions": [
+      "fade",
+      "slide",
+      "paper-wipe",
+      "carry"
+    ],
+    "overlapTransitions": [
+      "overlap-fade",
+      "overlap-slide",
+      "overlap-carry"
+    ]
+  },
+  "provenance": {
+    "fonts": "System Arial and PingFang SC fallback; no bundled font assets.",
+    "assets": "CSS-only layout chrome; media is supplied by the storyboard and must be recorded in its asset manifest."
+  }
+}

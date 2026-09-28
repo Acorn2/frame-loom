@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "id": "product-workflow-illustration",
+      "path": "assets/product-workflow.svg",
+      "type": "image",
+      "source": "FrameLoom 仓库公开示例 SVG：examples/template-families/assets/product-workflow.svg",
+      "license": "MIT",
+      "intendedUse": "六套模板共用的公开演示插画；不作为真实网站截图"
+    }
+  ],
+  "notes": "示例 SVG 是仓库内演示插画，不是实时产品界面截图。"
+}

@@ -5,13 +5,16 @@ import {afterEach, describe, expect, it} from 'vitest';
 import sampleStoryboard from '../examples/article-video/storyboard.json' with {type: 'json'};
 import dataStoryboard from '../examples/data-explainer/storyboard.json' with {type: 'json'};
 import productStoryboard from '../examples/product-demo/storyboard.json' with {type: 'json'};
+import semanticStoryboard from '../examples/semantic-visuals/storyboard.json' with {type: 'json'};
 import {validateStoryboard} from '../src/validation/storyboard-validator.js';
 import type {Storyboard} from '../src/schemas/storyboard.js';
 import {getSceneTimeline, getTimelineDuration} from '../src/timeline/scene-timeline.js';
 import {getNodeState} from '../src/renderer/node-state.js';
+import {estimateVisibleReadingSeconds, readingUnits} from '../src/validation/reading-time.js';
 
 const styleRoot = path.resolve(process.cwd(), 'styles');
 const example = sampleStoryboard as unknown as Storyboard;
+const semanticExample = semanticStoryboard as unknown as Storyboard;
 const temporaryStyleRoots: string[] = [];
 
 afterEach(() => {
@@ -28,6 +31,64 @@ function copyStyleRoot() {
 }
 
 describe('validateStoryboard', () => {
+  it('accepts semantic scenes and keeps the old storyboard route valid', () => {
+    expect(validateStoryboard(semanticExample, {styleRoot})).toEqual([]);
+    expect(validateStoryboard(example, {styleRoot})).toEqual([]);
+  });
+
+  it('estimates concurrent diagram reading without adding headline and labels twice', () => {
+    const scene = semanticExample.scenes.find((item) => item.visual?.kind === 'compare')!;
+    const headlineUnits = readingUnits(scene.title) + readingUnits(scene.primaryClaim ?? '');
+    const labelUnits = scene.layers.reduce((sum, layer) => sum + readingUnits(layer.label ?? '') + readingUnits(layer.text ?? ''), 0);
+    expect(estimateVisibleReadingSeconds(scene)).toBe(Math.max(headlineUnits, labelUnits) / 5 + 1);
+    expect(estimateVisibleReadingSeconds(scene)).toBeLessThan((headlineUnits + labelUnits) / 5 + 1);
+  });
+
+  it('warns about slow silent pacing and large gaps between subjects', () => {
+    const slow = structuredClone(semanticExample);
+    const scene = slow.scenes.find((item) => item.visual?.kind === 'compare')!;
+    scene.durationFrames = 360;
+    scene.beats[1]!.start = 180;
+    scene.beats[2]!.start = 220;
+    slow.project.durationFrames += 150;
+    slow.project.durationSec = slow.project.durationFrames / slow.project.fps;
+    const issues = validateStoryboard(slow);
+    expect(issues.some((item) => item.path === `scene ${scene.id}.durationFrames` && item.message.includes('慢节奏'))).toBe(true);
+    expect(issues.some((item) => item.path === `scene ${scene.id}.beats` && item.message.includes('入场间隔'))).toBe(true);
+  });
+
+  it('rejects a fake relationship, an undrawn link and a metric without a source', () => {
+    const invalid = structuredClone(semanticExample);
+    const sequence = invalid.scenes.find((scene) => scene.visual?.kind === 'sequence')!;
+    sequence.connections[0]!.to = sequence.layers[2]!.id;
+    sequence.beats = sequence.beats.filter((beat) => beat.target !== sequence.connections[1]!.id);
+    const network = invalid.scenes.find((scene) => scene.visual?.kind === 'network')!;
+    network.connections[1]!.to = network.connections[0]!.to;
+    const metric = structuredClone(invalid.scenes[1]!);
+    metric.id = 'metric-source-check';
+    metric.template = 'metric-grid';
+    metric.visual = {kind: 'metric', explanation: '比较数量', representation: 'diagram'};
+    metric.layers = [{id: 'count', type: 'metric', label: '数量', value: 3}];
+    metric.connections = [];
+    metric.beats = [{id: 'count-in', target: 'count', action: 'count', start: 0, duration: 18}];
+    invalid.scenes.push(metric);
+    invalid.project.durationFrames += metric.durationFrames;
+    invalid.project.durationSec = invalid.project.durationFrames / invalid.project.fps;
+    const messages = validateStoryboard(invalid).map((item) => item.message);
+    expect(messages.some((message) => message.includes('主体顺序一一对应'))).toBe(true);
+    expect(messages.some((message) => message.includes('缺少 draw beat'))).toBe(true);
+    expect(messages.some((message) => message.includes('每个分支'))).toBe(true);
+    expect(messages.some((message) => message.includes('visual.source'))).toBe(true);
+  });
+
+  it('warns when the final action leaves too little reading time', () => {
+    const invalid = structuredClone(semanticExample);
+    const scene = invalid.scenes.find((item) => item.visual?.kind === 'compare')!;
+    scene.beats.at(-1)!.start = scene.durationFrames - 12;
+    const issues = validateStoryboard(invalid);
+    expect(issues.some((item) => item.path === `scene ${scene.id}.beats` && item.message.includes('稳定停留'))).toBe(true);
+  });
+
   it('accepts the reviewed article example', () => {
     expect(validateStoryboard(example, {
       storyboardPath: path.resolve('examples/article-video/storyboard.json'),

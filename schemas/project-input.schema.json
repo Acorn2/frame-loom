@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FrameLoom Project Input",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "inputMode": {
+      "type": "string",
+      "enum": [
+        "document",
+        "document-images"
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "inputMode"
+  ],
+  "additionalProperties": false
+}

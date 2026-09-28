@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {AssetManifestSchema} from '../src/schemas/asset-manifest.ts';
+import {ProjectInputSchema} from '../src/schemas/project-input.ts';
 import {StoryboardSchema} from '../src/schemas/storyboard.ts';
 
 export function validateAssets(storyboardPath, manifestPath) {
@@ -10,6 +11,7 @@ export function validateAssets(storyboardPath, manifestPath) {
   const issues = [];
   let storyboard;
   let manifest;
+  let projectInput;
   try {
     const parsed = StoryboardSchema.safeParse(JSON.parse(fs.readFileSync(resolvedStoryboard, 'utf8')));
     if (!parsed.success) return parsed.error.issues.map((item) => `storyboard.${item.path.join('.')}: ${item.message}`);
@@ -23,6 +25,29 @@ export function validateAssets(storyboardPath, manifestPath) {
     manifest = parsed.data;
   } catch (error) {
     return [`asset-manifest: ${error instanceof Error ? error.message : String(error)}`];
+  }
+  const inputPath = path.join(path.dirname(resolvedStoryboard), 'project-input.json');
+  if (fs.existsSync(inputPath)) {
+    try {
+      const parsed = ProjectInputSchema.safeParse(JSON.parse(fs.readFileSync(inputPath, 'utf8')));
+      if (!parsed.success) return parsed.error.issues.map((item) => `project-input.${item.path.join('.')}: ${item.message}`);
+      projectInput = parsed.data;
+    } catch (error) {
+      return [`project-input: ${error instanceof Error ? error.message : String(error)}`];
+    }
+  }
+
+  const mediaLayers = storyboard.scenes.flatMap((scene) => scene.layers.filter((layer) => ['screenshot', 'object'].includes(layer.type)));
+  const visibleMediaLayers = storyboard.scenes.flatMap((scene) => {
+    if (storyboard.schemaVersion === '2.2' && scene.purpose !== 'media') return [];
+    return scene.layers.filter((layer) => ['screenshot', 'object'].includes(layer.type));
+  });
+  if (projectInput?.inputMode === 'document') {
+    if (mediaLayers.length > 0 || manifest.assets.some((asset) => ['image', 'screenshot'].includes(asset.type))) {
+      issues.push('project-input.inputMode 为 document：不能使用图片或截图；如需使用，请由用户选择 document-images。');
+    }
+  } else if (projectInput?.inputMode === 'document-images' && visibleMediaLayers.length === 0) {
+    issues.push('project-input.inputMode 为 document-images：分镜至少需要一个可见的图片或截图镜头；Storyboard 2.2 请使用 media purpose。');
   }
 
   const ids = new Set();

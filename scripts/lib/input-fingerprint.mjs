@@ -22,17 +22,18 @@ export function fingerprintFiles(files, basePath) {
   return hash.digest('hex');
 }
 
-export function fingerprintProjectInputs(projectPath, styleRoot, audioConfigPath) {
+export function fingerprintProjectInputs(projectPath, styleRoot, audioConfigPath, ttsConfigPath, options = {}) {
+  const includeAudio = options.includeAudio !== false;
   const inputNames = [
-    'production-brief.md', 'content-brief.md', 'script.md',
-    'storyboard.draft.json', 'storyboard.json', 'asset-manifest.json'
+    'project-input.json', 'production-brief.md', 'route-card.md', 'content-gaps.md', 'asset-gaps.md', 'visual-sources.md', 'shot-map.md', 'content-brief.md', 'script.md',
+    'storyboard.draft.json', 'storyboard.json', 'asset-manifest.json', 'visual-handoff.json'
   ];
   const files = inputNames.map((name) => path.join(projectPath, name));
-  for (const directory of ['source', 'assets', 'audio']) {
+  for (const directory of includeAudio ? ['source', 'assets', 'audio'] : ['source', 'assets']) {
     files.push(...collectFiles(path.join(projectPath, directory)));
   }
   const configuredAudio = audioConfigPath ? path.resolve(audioConfigPath) : path.join(projectPath, 'audio', 'audio-config.json');
-  if (fs.existsSync(configuredAudio)) {
+  if (includeAudio && fs.existsSync(configuredAudio)) {
     files.push(configuredAudio);
     try {
       const config = JSON.parse(fs.readFileSync(configuredAudio, 'utf8'));
@@ -45,6 +46,10 @@ export function fingerprintProjectInputs(projectPath, styleRoot, audioConfigPath
       // The audio config validator reports malformed JSON.
     }
   }
+  const configuredTts = ttsConfigPath
+    ? path.resolve(ttsConfigPath)
+    : path.join(projectPath, 'audio', 'tts-config.json');
+  if (includeAudio && fs.existsSync(configuredTts)) files.push(configuredTts);
   const storyboardPath = path.join(projectPath, 'storyboard.json');
   const draftPath = path.join(projectPath, 'storyboard.draft.json');
   const selectedPath = fs.existsSync(storyboardPath) ? storyboardPath : draftPath;

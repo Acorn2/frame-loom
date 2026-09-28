@@ -63,6 +63,36 @@ export function checkTextLayout(storyboard, style = loadStylePack(storyboard.sty
     const familyLayout = Boolean(scene.purpose);
     const captionReserve = scene.captions.length > 0 ? (portrait ? 170 : 125) : 0;
     const contentHeight = height - safeArea.top - safeArea.bottom - captionReserve;
+    if (scene.visual) {
+      const titleWidth = contentWidth * (scene.visual.kind === 'statement' ? 0.83 : 0.96);
+      const titleFont = (scene.visual.kind === 'statement' ? 120 : 78) * scale;
+      const titleHeight = contentHeight * (scene.visual.kind === 'statement' ? 0.5 : 0.2);
+      if (estimateTextLines(scene.title, titleFont, titleWidth) * titleFont * 1.1 > titleHeight) {
+        issues.push({severity: 'error', sceneId: scene.id, target: 'title', message: '语义画面标题超出可读区域；请缩短标题或拆屏。'});
+      }
+      const items = scene.layers.filter((layer) => ['node', 'card', 'metric'].includes(layer.type));
+      const itemWidth = scene.visual.kind === 'network' ? contentWidth * 0.22
+        : scene.visual.kind === 'change' ? contentWidth * 0.65
+          : scene.visual.kind === 'sequence' || scene.visual.kind === 'compare' ? contentWidth / Math.max(1, items.length) - 85 * scale
+            : contentWidth * 0.3;
+      const maxLines = scene.visual.kind === 'network' ? 2 : 3;
+      for (const layer of items) {
+        for (const value of [layer.label ?? layer.text ?? String(layer.value ?? ''), layer.label && layer.text ? layer.text : '']) {
+          const lines = estimateTextLines(value, 39 * scale, itemWidth);
+          if (lines > maxLines) issues.push({severity: 'error', sceneId: scene.id, target: layer.id, message: `语义图解文字预计占 ${lines} 行；请缩短文案或拆屏。`});
+        }
+      }
+      const claimLines = estimateTextLines(scene.primaryClaim ?? '', 25 * scale, contentWidth);
+      if (claimLines > 2) issues.push({severity: 'warning', sceneId: scene.id, target: 'primaryClaim', message: '屏底结论超过两行，建议浓缩为一句。'});
+      const captionFont = portrait ? 32 : 28;
+      const captionWidth = Math.min(contentWidth, portrait ? 850 : 1160) - (portrait ? 48 : 44);
+      for (const caption of scene.captions) {
+        if (estimateTextLines(caption.text, captionFont, captionWidth) > 2) {
+          issues.push({severity: 'error', sceneId: scene.id, target: caption.id, message: '字幕超出两行安全区；请拆分字幕窗口。'});
+        }
+      }
+      continue;
+    }
     const slot = familyLayout ? familyTitleSlot(scene, style.id, contentWidth, contentHeight, portrait, scale) : null;
     if (slot) {
       let fits = false;

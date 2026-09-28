@@ -1,0 +1,416 @@
+{
+  "schemaVersion": "2.3",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "project": {
+    "title": "语义画面样片",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 40.5,
+    "durationFrames": 1215,
+    "status": "reviewed"
+  },
+  "scenes": [
+    {
+      "id": "s1",
+      "template": "statement",
+      "purpose": "opening",
+      "title": "让画面解释关系",
+      "primaryClaim": "一屏一结论。",
+      "visual": {
+        "kind": "statement",
+        "explanation": "一屏一结论。",
+        "representation": "diagram"
+      },
+      "narration": "",
+      "durationFrames": 90,
+      "layers": [],
+      "connections": [],
+      "beats": [],
+      "captions": []
+    },
+    {
+      "id": "s2",
+      "template": "metric-grid",
+      "purpose": "claim",
+      "title": "两种入口，各有用途",
+      "primaryClaim": "时间入口和主题入口解决不同查找需求。",
+      "visual": {
+        "kind": "compare",
+        "explanation": "时间入口和主题入口解决不同查找需求。",
+        "representation": "diagram"
+      },
+      "narration": "",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "time",
+          "type": "node",
+          "label": "按时间",
+          "glyph": "timeline",
+          "text": "沿时间线查找"
+        },
+        {
+          "id": "topic",
+          "type": "node",
+          "label": "按主题",
+          "glyph": "list",
+          "text": "沿类别查找"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "b1",
+          "target": "time",
+          "action": "enter",
+          "start": 12,
+          "duration": 18
+        },
+        {
+          "id": "b2",
+          "target": "topic",
+          "action": "enter",
+          "start": 80,
+          "duration": 18
+        },
+        {
+          "id": "b3",
+          "target": "topic",
+          "action": "focus",
+          "start": 125,
+          "duration": 6
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "s3",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "从文档走到画面",
+      "primaryClaim": "原文先变成分镜，再变成可观看的画面。",
+      "visual": {
+        "kind": "sequence",
+        "explanation": "原文先变成分镜，再变成可观看的画面。",
+        "representation": "diagram"
+      },
+      "narration": "",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "doc",
+          "type": "node",
+          "label": "原文",
+          "glyph": "document"
+        },
+        {
+          "id": "plan",
+          "type": "node",
+          "label": "分镜",
+          "glyph": "map"
+        },
+        {
+          "id": "video",
+          "type": "node",
+          "label": "画面",
+          "glyph": "video"
+        }
+      ],
+      "connections": [
+        {
+          "id": "l1",
+          "from": "doc",
+          "to": "plan"
+        },
+        {
+          "id": "l2",
+          "from": "plan",
+          "to": "video"
+        }
+      ],
+      "beats": [
+        {
+          "id": "b1",
+          "target": "doc",
+          "action": "enter",
+          "start": 8,
+          "duration": 18
+        },
+        {
+          "id": "b2",
+          "target": "plan",
+          "action": "enter",
+          "start": 60,
+          "duration": 18
+        },
+        {
+          "id": "b3",
+          "target": "l1",
+          "action": "draw",
+          "start": 64,
+          "duration": 18
+        },
+        {
+          "id": "b4",
+          "target": "plan",
+          "action": "focus",
+          "start": 78,
+          "duration": 6
+        },
+        {
+          "id": "b5",
+          "target": "video",
+          "action": "enter",
+          "start": 120,
+          "duration": 18
+        },
+        {
+          "id": "b6",
+          "target": "l2",
+          "action": "draw",
+          "start": 124,
+          "duration": 18
+        },
+        {
+          "id": "b7",
+          "target": "video",
+          "action": "focus",
+          "start": 140,
+          "duration": 6
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "s4",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "一份资料，展开三条线索",
+      "primaryClaim": "资料中的事实、结构和讲解各有去处。",
+      "visual": {
+        "kind": "network",
+        "explanation": "资料中的事实、结构和讲解各有去处。",
+        "representation": "diagram",
+        "anchorId": "source"
+      },
+      "narration": "",
+      "durationFrames": 240,
+      "layers": [
+        {
+          "id": "source",
+          "type": "node",
+          "label": "资料",
+          "glyph": "document"
+        },
+        {
+          "id": "fact",
+          "type": "node",
+          "label": "事实",
+          "glyph": "search"
+        },
+        {
+          "id": "map",
+          "type": "node",
+          "label": "结构",
+          "glyph": "map"
+        },
+        {
+          "id": "script",
+          "type": "node",
+          "label": "讲解",
+          "glyph": "quote"
+        }
+      ],
+      "connections": [
+        {
+          "id": "l1",
+          "from": "source",
+          "to": "fact"
+        },
+        {
+          "id": "l2",
+          "from": "source",
+          "to": "map"
+        },
+        {
+          "id": "l3",
+          "from": "source",
+          "to": "script"
+        }
+      ],
+      "beats": [
+        {
+          "id": "b1",
+          "target": "source",
+          "action": "enter",
+          "start": 5,
+          "duration": 18
+        },
+        {
+          "id": "b2",
+          "target": "fact",
+          "action": "enter",
+          "start": 50,
+          "duration": 18
+        },
+        {
+          "id": "b3",
+          "target": "l1",
+          "action": "draw",
+          "start": 54,
+          "duration": 18
+        },
+        {
+          "id": "b4",
+          "target": "map",
+          "action": "enter",
+          "start": 100,
+          "duration": 18
+        },
+        {
+          "id": "b5",
+          "target": "l2",
+          "action": "draw",
+          "start": 104,
+          "duration": 18
+        },
+        {
+          "id": "b6",
+          "target": "script",
+          "action": "enter",
+          "start": 150,
+          "duration": 18
+        },
+        {
+          "id": "b7",
+          "target": "l3",
+          "action": "draw",
+          "start": 154,
+          "duration": 18
+        },
+        {
+          "id": "b8",
+          "target": "script",
+          "action": "focus",
+          "start": 175,
+          "duration": 6
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "s5",
+      "template": "interaction-flow",
+      "purpose": "process",
+      "title": "从堆字到看见变化",
+      "primaryClaim": "前后状态应在同一位置交接，突出真正的变化。",
+      "visual": {
+        "kind": "change",
+        "explanation": "前后状态应在同一位置交接，突出真正的变化。",
+        "representation": "diagram",
+        "beforeId": "before",
+        "afterId": "after"
+      },
+      "narration": "",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "before",
+          "type": "node",
+          "label": "三句并列文字",
+          "glyph": "list",
+          "text": "信息并排，关系模糊"
+        },
+        {
+          "id": "after",
+          "type": "node",
+          "label": "一张关系图",
+          "glyph": "map",
+          "text": "主体相连，关系清楚"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "b1",
+          "target": "before",
+          "action": "enter",
+          "start": 8,
+          "duration": 18
+        },
+        {
+          "id": "b2",
+          "target": "after",
+          "action": "enter",
+          "start": 80,
+          "duration": 18
+        },
+        {
+          "id": "b3",
+          "target": "after",
+          "action": "focus",
+          "start": 125,
+          "duration": 6
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "s6",
+      "template": "metric-grid",
+      "purpose": "evidence",
+      "title": "四种关系，四种画法",
+      "primaryClaim": "四类关系，对应四种图解。",
+      "visual": {
+        "kind": "metric",
+        "explanation": "用可核对的数量总结这份示例中实际展示的关系类型",
+        "representation": "diagram",
+        "unit": "种",
+        "source": "本文件 scenes s2–s5 的 visual.kind"
+      },
+      "narration": "",
+      "durationFrames": 150,
+      "layers": [
+        {
+          "id": "count",
+          "type": "metric",
+          "label": "已经演示的关系类型",
+          "value": 4
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "count-in",
+          "target": "count",
+          "action": "count",
+          "start": 40,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "s7",
+      "template": "statement",
+      "purpose": "closing",
+      "title": "动作结束，留给阅读",
+      "primaryClaim": "动作落稳再切。",
+      "visual": {
+        "kind": "statement",
+        "explanation": "动作落稳再切。",
+        "representation": "diagram"
+      },
+      "narration": "",
+      "durationFrames": 105,
+      "layers": [],
+      "connections": [],
+      "beats": [],
+      "captions": []
+    }
+  ]
+}

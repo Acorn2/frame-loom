@@ -1,6 +1,6 @@
 ---
 name: frame-loom
-description: Turn Markdown, product materials, or structured storyboards into reviewable Remotion video previews. Use when planning, producing, or reviewing a FrameLoom video.
+description: Turn documents, optional images or webpage screenshots, and structured storyboards into Remotion previews, clean visual masters for external editing, or narrated videos. Use when planning, producing, or reviewing a FrameLoom video.
 ---
 
 # FrameLoom for Codex

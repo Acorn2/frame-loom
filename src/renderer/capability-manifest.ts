@@ -1,8 +1,9 @@
-import type {ActionId, LayerType, TemplateId, TransitionId} from '../schemas/storyboard';
+import type {ActionId, LayerType, TemplateId, TransitionId, SceneVisual} from '../schemas/storyboard';
 
 export const CAPABILITY_MANIFEST = {
   purposes: ['opening', 'claim', 'process', 'evidence', 'media', 'closing'],
   templates: ['statement', 'graph-explainer', 'metric-grid', 'interaction-flow'] as TemplateId[],
+  visualKinds: ['statement', 'compare', 'sequence', 'network', 'change', 'metric', 'media'] as SceneVisual['kind'][],
   layers: ['node', 'card', 'label', 'annotation', 'metric', 'screenshot', 'object', 'callout'] as LayerType[],
   actions: ['enter', 'reveal', 'draw', 'focus', 'highlight', 'count', 'camera-push', 'rotate', 'set-state'] as ActionId[],
   transitions: ['fade', 'slide', 'paper-wipe', 'carry'] as TransitionId[],

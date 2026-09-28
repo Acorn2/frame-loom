@@ -7,6 +7,7 @@ import {validateContentMapping} from './mapping-validator';
 import {getNodeState} from '../renderer/node-state';
 import {getTimelineDuration} from '../timeline/scene-timeline';
 import {isTemplateFamily} from '../templates/families/family-registry';
+import {estimateVisibleReadingSeconds} from './reading-time';
 
 export interface ValidationIssue {
   path: string;
@@ -113,8 +114,8 @@ function validateLayer(
   }
 }
 
-function validateScene(scene: StoryboardScene, issues: ValidationIssue[], storyboardPath: string | undefined, style?: StylePack) {
-  if (scene.purpose && style && !style.supports.purposes?.includes(scene.purpose)) {
+function validateScene(scene: StoryboardScene, issues: ValidationIssue[], storyboardPath: string | undefined, schemaVersion: Storyboard['schemaVersion'], fps: number, style?: StylePack) {
+  if (scene.purpose && style && (schemaVersion !== '2.3' || style.supports.purposes) && !style.supports.purposes?.includes(scene.purpose)) {
     issues.push(issue(`scene ${scene.id}.purpose`, `Style Pack "${style.id}" 不支持镜头职责 "${scene.purpose}"。`));
   }
   if (!CAPABILITY_MANIFEST.templates.includes(scene.template)) {
@@ -138,6 +139,9 @@ function validateScene(scene: StoryboardScene, issues: ValidationIssue[], storyb
     }
     if (scene.transitionIn.durationFrames >= scene.durationFrames) {
       issues.push(issue(`scene ${scene.id}.transitionIn`, '重叠时长必须短于当前 scene。'));
+    }
+    if (schemaVersion === '2.3' && scene.transitionIn.durationFrames > Math.ceil(fps * 0.8)) {
+      issues.push(issue(`scene ${scene.id}.transitionIn`, '常规转场超过 0.8 秒，请核对是否真的需要这么长。', 'warning'));
     }
   }
   if (scene.outro && scene.outro.holdFrames + scene.outro.fadeFrames >= scene.durationFrames) {
@@ -189,6 +193,9 @@ function validateScene(scene: StoryboardScene, issues: ValidationIssue[], storyb
     if (beat.action !== 'set-state' && beat.state) {
       issues.push(issue(`scene ${scene.id}, beat ${beat.id}`, '只有 set-state 可以声明 state。'));
     }
+    if (schemaVersion === '2.3' && ['enter', 'reveal'].includes(beat.action) && beat.duration > Math.ceil(fps * 1.2)) {
+      issues.push(issue(`scene ${scene.id}, beat ${beat.id}`, '常规入场超过 1.2 秒；动作应尽快落稳，把时间留给理解。', 'warning'));
+    }
   }
   const stateFrames = [...new Set([0, ...scene.beats.filter((beat) => beat.action === 'set-state').map((beat) => beat.start)])];
   for (const frame of stateFrames) {
@@ -212,6 +219,23 @@ function validateScene(scene: StoryboardScene, issues: ValidationIssue[], storyb
       issues.push(issue(`scene ${scene.id}, caption ${caption.id}`, 'caption 时间必须位于当前 scene 内。'));
     }
   }
+  if (schemaVersion === '2.3') {
+    const readingSeconds = estimateVisibleReadingSeconds(scene);
+    const sceneSeconds = scene.durationFrames / fps;
+    if (sceneSeconds < readingSeconds * 0.75) {
+      issues.push(issue(`scene ${scene.id}.durationFrames`, '按可见文字估算，阅读时间可能不足；有实测旁白时再按实际时间校准。', 'warning'));
+    }
+    if (sceneSeconds > readingSeconds * 1.4 + 1 && scene.beats.length > 0) {
+      issues.push(issue(`scene ${scene.id}.durationFrames`, '静音预览的场景时长明显长于屏显阅读估算；确认是否被拉成慢节奏。', 'warning'));
+    }
+    const entries = scene.beats.filter((beat) => ['enter', 'reveal', 'count'].includes(beat.action)).sort((left, right) => left.start - right.start);
+    if (entries.length > 0 && entries[0]!.start > fps * 1.5) {
+      issues.push(issue(`scene ${scene.id}.beats`, '首个主体等待超过 1.5 秒才出现；静音预览可能显得迟缓。', 'warning'));
+    }
+    if (entries.some((beat, index) => index > 0 && beat.start - entries[index - 1]!.start > fps * 2.5)) {
+      issues.push(issue(`scene ${scene.id}.beats`, '主体入场间隔超过 2.5 秒；没有对应讲解或阅读理由时应收紧。', 'warning'));
+    }
+  }
 }
 
 const STORYBOARD_STATUS_FOR_REVIEW = new Set(['reviewed', 'approved']);
@@ -223,12 +247,14 @@ export function validateStoryboard(value: unknown, options: ValidationOptions = 
 
   const storyboard = parsed.data;
   const issues: ValidationIssue[] = [];
-  if (storyboard.schemaVersion === '2.2') {
+  if (storyboard.schemaVersion === '2.2' || storyboard.schemaVersion === '2.3') {
     for (const scene of storyboard.scenes) {
-      if (!scene.purpose) issues.push(issue(`scene ${scene.id}.purpose`, 'Storyboard 2.2 的每个 scene 必须声明镜头职责。'));
+      if (!scene.purpose) issues.push(issue(`scene ${scene.id}.purpose`, 'Storyboard 2.2/2.3 的每个 scene 必须声明镜头职责。'));
+      if (storyboard.schemaVersion === '2.3' && !scene.visual) issues.push(issue(`scene ${scene.id}.visual`, 'Storyboard 2.3 需要语义画面计划。'));
+      if (storyboard.schemaVersion === '2.2' && scene.visual) issues.push(issue(`scene ${scene.id}.visual`, 'Storyboard 2.2 不支持 visual；请升级为 2.3。'));
     }
-  } else if (storyboard.scenes.some((scene) => scene.purpose)) {
-    issues.push(issue('schemaVersion', '使用 scene.purpose 时必须升级为 Storyboard 2.2。'));
+  } else if (storyboard.scenes.some((scene) => scene.purpose || scene.visual)) {
+    issues.push(issue('schemaVersion', '使用 scene.purpose 或 visual 时必须升级为 Storyboard 2.2/2.3。'));
   }
   const allowedStatuses = options.executionMode === 'fast'
     ? STORYBOARD_STATUS_FOR_FAST
@@ -252,12 +278,16 @@ export function validateStoryboard(value: unknown, options: ValidationOptions = 
     if (index > 0 && scene.transitionIn && scene.transitionIn.durationFrames >= storyboard.scenes[index - 1]!.durationFrames) {
       issues.push(issue(`scene ${scene.id}.transitionIn`, '重叠时长必须短于前一个 scene。'));
     }
-    validateScene(scene, issues, options.storyboardPath, style);
+    validateScene(scene, issues, options.storyboardPath, storyboard.schemaVersion, storyboard.project.fps, style);
     if (scene.primaryClaim && !scene.outro) {
-      const overlapOut = storyboard.scenes[index + 1]?.transitionIn?.durationFrames ?? 24;
+      const overlapOut = storyboard.scenes[index + 1]?.transitionIn?.durationFrames ?? (storyboard.schemaVersion === '2.3' ? 0 : 24);
       const lastBeatEnd = Math.max(0, ...scene.beats.map((beat) => beat.start + beat.duration));
-      if (scene.durationFrames - overlapOut - lastBeatEnd < 24) {
-        issues.push(issue(`scene ${scene.id}.beats`, '关键动作后不足 24 帧稳定停留，可能在观众读完前进入转场。', 'warning'));
+      const requiredHold = storyboard.schemaVersion === '2.3' ? Math.ceil(storyboard.project.fps * 0.8) : 24;
+      if (scene.durationFrames - overlapOut - lastBeatEnd < requiredHold) {
+        issues.push(issue(`scene ${scene.id}.beats`, `关键动作后不足 ${requiredHold} 帧稳定停留，可能在观众读完前进入转场。`, 'warning'));
+      }
+      if (storyboard.schemaVersion === '2.3' && scene.beats.length > 0 && scene.durationFrames - overlapOut - lastBeatEnd > Math.max(storyboard.project.fps * 3, scene.durationFrames * 0.35)) {
+        issues.push(issue(`scene ${scene.id}.beats`, '最后动作后长时间不再变化；确认这是必要的阅读停留，或把入场时间按讲解顺序分配。', 'warning'));
       }
     }
   }

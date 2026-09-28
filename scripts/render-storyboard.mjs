@@ -9,11 +9,13 @@ import {MotionPackSchema, StylePackSchema} from '../src/schemas/style-pack.ts';
 import {createStyleTokens} from '../src/styles/style-loader.ts';
 import {inspectOutput} from './inspect-output.mjs';
 import {checkAssetInput, checkAudioInput, checkStoryboardInput, checkVisualInput} from './lib/preflight.mjs';
+import {loadHandoffConfig, OUTPUT_PURPOSES} from './lib/output-purpose.mjs';
 
 const args = process.argv.slice(2);
 let force = false;
 let audioConfigPath;
 let executionMode = 'review';
+let outputPurpose;
 const positional = [];
 for (let index = 0; index < args.length; index += 1) {
   const arg = args[index];
@@ -33,6 +35,12 @@ for (let index = 0; index < args.length; index += 1) {
       process.exit(1);
     }
     index += 1;
+  } else if (arg === '--output-purpose') {
+    outputPurpose = args[++index];
+    if (!OUTPUT_PURPOSES.includes(outputPurpose)) {
+      console.error(`--output-purpose 只能是 ${OUTPUT_PURPOSES.join('、')}。`);
+      process.exit(1);
+    }
   } else {
     positional.push(arg);
   }
@@ -43,12 +51,20 @@ if (!['review', 'fast'].includes(executionMode)) {
 }
 const [inputPath, outputPath, ...unknown] = positional;
 if (!inputPath || !outputPath || unknown.length > 0) {
-  console.error('Usage: npm run render:storyboard -- <storyboard.json> <output.mp4> [--mode review|fast] [--audio-config <audio-config.json>] [--force]');
+  console.error('Usage: npm run render:storyboard -- <storyboard.json> <output.mp4> [--mode review|fast] [--output-purpose visual-preview|visual-master|in-project-video] [--audio-config <audio-config.json>] [--force]');
   process.exit(1);
 }
 
 const resolvedInput = path.resolve(process.cwd(), inputPath);
 const resolvedOutput = path.resolve(process.cwd(), outputPath);
+if (['visual-preview', 'visual-master'].includes(outputPurpose) && audioConfigPath) {
+  console.error(`${outputPurpose} 不能接入音频配置。`);
+  process.exit(1);
+}
+if (outputPurpose === 'in-project-video' && !audioConfigPath) {
+  console.error('项目内有声视频必须指定音频配置。');
+  process.exit(1);
+}
 if (resolvedInput.endsWith('storyboard.draft.json')) {
   console.error('禁止直接渲染 storyboard.draft.json，请先完成人工审核并输出 storyboard.json。');
   process.exit(1);
@@ -159,17 +175,25 @@ const styleTokens = createStyleTokens(style, motion, storyboard.project.width, s
 const hydratedStoryboard = hydrateStoryboardAssets(storyboard);
 const audioRuntime = loadAudioRuntime(audioConfigPath, audioTiming);
 const hasAudio = Boolean(audioRuntime?.voiceoverDataUri || audioRuntime?.musicDataUri || audioRuntime?.sfx?.length);
+if (outputPurpose === 'in-project-video' && !audioRuntime?.voiceoverDataUri) {
+  throw new Error('项目内讲解视频必须有旁白音轨；只有配乐或音效不能作为讲解成片。');
+}
+const handoff = outputPurpose === 'visual-master' ? loadHandoffConfig(path.dirname(resolvedInput)) : undefined;
 
 fs.mkdirSync(path.dirname(resolvedOutput), {recursive: true});
 const entryPoint = path.join(projectRoot, 'src/index.ts');
 console.log('Bundling Remotion composition...');
 const bundleLocation = await bundle({entryPoint});
-const inputProps = {storyboard: hydratedStoryboard, styleTokens, audioRuntime};
+const inputProps = {storyboard: hydratedStoryboard, styleTokens, audioRuntime, renderProfile: {
+  purpose: outputPurpose ?? (hasAudio ? 'in-project-video' : 'visual-preview'),
+  facecamRightFraction: handoff?.facecamRightFraction ?? 0,
+  subtitleBottomFraction: handoff?.subtitleBottomFraction ?? 0
+}};
 const compositions = await getCompositions(bundleLocation, {inputProps});
 const composition = compositions.find((item) => item.id === 'StoryboardV2');
 if (!composition) throw new Error('找不到 StoryboardV2 composition。');
 
-console.log(`Rendering ${storyboard.project.durationSec}s ${hasAudio ? 'audio pilot' : 'silent preview'}...`);
+console.log(`Rendering ${storyboard.project.durationSec}s ${inputProps.renderProfile.purpose}...`);
 await renderMedia({
   composition, serveUrl: bundleLocation, codec: 'h264', outputLocation: resolvedOutput,
   inputProps, audioCodec: hasAudio ? 'aac' : null, muted: !hasAudio, enforceAudioTrack: hasAudio, overwrite: force

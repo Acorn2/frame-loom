@@ -2,7 +2,7 @@ import eslint from '@eslint/js';
 
 export default [
   {
-    ignores: ['dist/**', 'dist-types/**', 'node_modules/**', 'projects/**/output/**']
+    ignores: ['dist/**', 'dist-types/**', 'node_modules/**', 'projects/**/output/**', 'designs/**']
   },
   eslint.configs.recommended,
   {

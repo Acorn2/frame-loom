@@ -13,14 +13,20 @@
   "scenes": [
     {
       "id": "opening",
-      "template": "statement",
+      "template": "graph-explainer",
       "purpose": "opening",
       "title": "把复杂问题讲清楚",
       "narration": "一支可审阅的视频，从清楚的问题开始。",
       "durationFrames": 90,
-      "layers": [{"id": "opening-note", "type": "annotation", "text": "从文稿、素材到第一版画面"}],
+      "layers": [
+        {"id": "opening-question", "type": "card", "label": "问题", "text": "从文稿提炼核心疑问。"},
+        {"id": "opening-preview", "type": "card", "label": "目标", "text": "先看第一版画面效果。"}
+      ],
       "connections": [],
-      "beats": [],
+      "beats": [
+        {"id": "opening-question-enter", "target": "opening-question", "action": "enter", "start": 8, "duration": 16},
+        {"id": "opening-preview-enter", "target": "opening-preview", "action": "enter", "start": 30, "duration": 16}
+      ],
       "captions": [{"id": "opening-caption", "text": "先让观众知道，这支视频要回答什么。", "start": 22, "end": 72}],
       "transitionOut": "fade"
     },
@@ -79,14 +85,20 @@
     },
     {
       "id": "closing",
-      "template": "statement",
+      "template": "graph-explainer",
       "purpose": "closing",
       "title": "让观点跟得上每一步",
       "narration": "最终给观众留下明确、可理解的结论。",
       "durationFrames": 90,
-      "layers": [{"id": "closing-note", "type": "annotation", "text": "重点突出，画面更好懂。"}],
+      "layers": [
+        {"id": "closing-focus", "type": "card", "label": "重点", "text": "让观点有可见的焦点。"},
+        {"id": "closing-result", "type": "card", "label": "结论", "text": "留下明确的观看结果。"}
+      ],
       "connections": [],
-      "beats": [],
+      "beats": [
+        {"id": "closing-focus-enter", "target": "closing-focus", "action": "enter", "start": 8, "duration": 16},
+        {"id": "closing-result-enter", "target": "closing-result", "action": "enter", "start": 30, "duration": 16}
+      ],
       "captions": [{"id": "closing-caption", "text": "先看清，再决定是否采用这套模板。", "start": 24, "end": 72}],
       "outro": {"holdFrames": 24, "fadeFrames": 12}
     }

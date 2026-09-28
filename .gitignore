@@ -1,6 +1,8 @@
 node_modules/
 dist/
 dist-types/
+.tmp/
+.idea/
 .DS_Store
 .env
 .env.*
@@ -8,6 +10,7 @@ dist-types/
 projects/*/output/*
 projects/*/audio/*
 *.mp4
+!examples/template-families/previews/*-semantic.mp4
 *.mov
 *.webm
 docs/

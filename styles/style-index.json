@@ -48,6 +48,42 @@
       "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
       "preview": "styles/scatterbrain/preview.md",
       "status": "stable"
+    },
+    {
+      "id": "archive-grid",
+      "name": "Clean Editorial",
+      "version": "1.0.0",
+      "category": "editorial",
+      "mood": ["clean", "structured", "modern"],
+      "bestFor": ["knowledge", "opinion", "story", "learning"],
+      "canvas": ["landscape", "portrait"],
+      "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
+      "preview": "styles/archive-grid/preview.md",
+      "status": "experimental"
+    },
+    {
+      "id": "signal-noir",
+      "name": "Blueprint",
+      "version": "1.0.0",
+      "category": "technical",
+      "mood": ["structured", "technical", "precise"],
+      "bestFor": ["knowledge", "product", "tutorial", "software", "story"],
+      "canvas": ["landscape", "portrait"],
+      "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
+      "preview": "styles/signal-noir/preview.md",
+      "status": "experimental"
+    },
+    {
+      "id": "studio-frame",
+      "name": "Product Frame",
+      "version": "1.0.0",
+      "category": "software",
+      "mood": ["clear", "product", "modern"],
+      "bestFor": ["product", "tutorial", "software"],
+      "canvas": ["landscape", "portrait"],
+      "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
+      "preview": "styles/studio-frame/preview.md",
+      "status": "experimental"
     }
   ]
 }
