@@ -1,6 +1,8 @@
 import {createHash} from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import {TtsConfigSchema} from '../../src/schemas/tts-config.ts';
+import {resolveTtsVoiceType} from './tts-profiles.mjs';
 
 function collectFiles(directory) {
   if (!fs.existsSync(directory)) return [];
@@ -39,6 +41,22 @@ export function fingerprintFiles(files, basePath) {
     hash.update('\0');
   }
   return hash.digest('hex');
+}
+
+function includeEnvironmentVoice(fingerprint, ttsConfigPath, strict = false) {
+  let config;
+  try {
+    config = TtsConfigSchema.parse(JSON.parse(fs.readFileSync(ttsConfigPath, 'utf8')));
+  } catch (error) {
+    if (strict) throw error;
+    return fingerprint;
+  }
+  if (!config.enabled || !config.voiceTypeEnv) return fingerprint;
+  return createHash('sha256').update(fingerprint).update('\0').update(resolveTtsVoiceType(config)).digest('hex');
+}
+
+export function fingerprintTtsConfig(ttsConfigPath, basePath) {
+  return includeEnvironmentVoice(fingerprintFiles([ttsConfigPath], basePath), ttsConfigPath, true);
 }
 
 export function fingerprintProjectInputs(projectPath, styleRoot, audioConfigPath, ttsConfigPath, options = {}) {
@@ -85,5 +103,8 @@ export function fingerprintProjectInputs(projectPath, styleRoot, audioConfigPath
       // The regular storyboard validator reports malformed JSON.
     }
   }
-  return fingerprintFiles(files, projectPath);
+  const fingerprint = fingerprintFiles(files, projectPath);
+  return includeAudio && ttsConfigPath && fs.existsSync(configuredTts)
+    ? includeEnvironmentVoice(fingerprint, configuredTts)
+    : fingerprint;
 }

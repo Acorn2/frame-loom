@@ -9,7 +9,7 @@ const SafeAreaSchema = z.object({
 }).strict();
 
 export const StyleTokensSchema = z.object({
-  background: z.string().min(1), ink: z.string().min(1), muted: z.string().min(1),
+  background: z.string().min(1), ink: z.string().min(1), captionInk: z.string().min(1), muted: z.string().min(1),
   accent: z.string().min(1), accentAlt: z.string().min(1), paper: z.string().min(1),
   grid: z.string().min(1), displayFont: z.string().min(1), bodyFont: z.string().min(1),
   pattern: z.enum(['grid', 'desktop', 'dots', 'solid']), surfaceRadius: z.number().nonnegative(),

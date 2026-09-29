@@ -17,10 +17,11 @@ import scatterbrainStyle from '../styles/scatterbrain/style.json' with {type: 'j
 import {checkSafeArea} from '../scripts/check-safe-area.mjs';
 import {selectReviewFrames} from '../scripts/extract-review-frames.mjs';
 import {initProject} from '../scripts/init-project.mjs';
-import {filterStyles, loadStyleIndex} from '../scripts/lib/style-catalog.mjs';
+import {filterStyles, loadStyleIndex, loadStylePack} from '../scripts/lib/style-catalog.mjs';
 import {buildStyleGallery} from '../scripts/preview-styles.mjs';
 import {CAPABILITY_MANIFEST} from '../src/renderer/capability-manifest.ts';
 import {createStyleTokens} from '../src/styles/style-loader.ts';
+import {captionTextStyle} from '../src/audio/caption-style.ts';
 import {AudioConfigSchema} from '../src/schemas/audio-config.ts';
 import {TtsConfigSchema} from '../src/schemas/tts-config.ts';
 import {listTtsProfiles} from '../scripts/lib/tts-profiles.mjs';
@@ -52,6 +53,19 @@ afterEach(() => {
 });
 
 describe('Style Pack workflow', () => {
+  it('uses distinct, readable caption colors without a subtitle background', () => {
+    const darkStyles = new Set(['retro-windows', 'signal', 'signal-noir']);
+    for (const entry of loadStyleIndex().styles) {
+      const style = loadStylePack(entry.id);
+      const caption = captionTextStyle(style.tokens);
+      expect(caption.color).toBe(style.tokens.captionInk);
+      expect(caption.color.toLowerCase()).not.toBe(style.tokens.ink.toLowerCase());
+      expect(caption).not.toHaveProperty('background');
+      expect(caption).not.toHaveProperty('backgroundColor');
+      expect(style.tokens.captionInk.toLowerCase() === '#ffffff').toBe(darkStyles.has(entry.id));
+    }
+  });
+
   it('loads the Style Pack index and filters by content and canvas', () => {
     const index = loadStyleIndex();
     expect(index.styles).toHaveLength(7);
@@ -318,7 +332,7 @@ describe('Style Pack workflow', () => {
     expect(fs.existsSync(path.join(project, 'output', 'preview-silent.mp4'))).toBe(false);
   });
 
-  it('flags an external caption that needs more than two lines', () => {
+  it('flags an overlong external caption that would switch too quickly after splitting', () => {
     const cues = [{startSec: 0, endSec: 2, text: '这是一条过长的外部字幕，需要在安全区内排成许多行，应该先拆成多个字幕窗口。'.repeat(3)}];
     expect(checkExternalCaptionLayout(articleStoryboard, cues).some((item) => item.severity === 'error')).toBe(true);
     expect(checkExternalCaptionLayout(articleStoryboard, [{...cues[0], text: '短字幕'}])).toEqual([]);
@@ -331,7 +345,7 @@ describe('Style Pack workflow', () => {
     fs.writeFileSync(storyboardPath, JSON.stringify(articleStoryboard));
     fs.writeFileSync(configPath, JSON.stringify({schemaVersion: '1.0', captions: {enabled: true, path: 'captions.srt', format: 'srt', source: 'test'}}));
     fs.writeFileSync(path.join(temp, 'captions.srt'), `1\n00:00:01,000 --> 00:00:03,000\n${'这是一条很长的字幕，需要拆分后才能安全显示。'.repeat(5)}\n`);
-    expect(() => checkAudioInput(storyboardPath, configPath)).toThrow(/外部字幕预计占/);
+    expect(() => checkAudioInput(storyboardPath, configPath)).toThrow(/外部字幕拆分后切换过快/);
   });
 
   it('rejects a direct render with no asset manifest before bundling', () => {

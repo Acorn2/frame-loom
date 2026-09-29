@@ -1,126 +1,262 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "FrameLoom TTS Config",
-  "type": "object",
-  "properties": {
-    "schemaVersion": {
-      "type": "string",
-      "const": "1.0"
-    },
-    "enabled": {
-      "type": "boolean"
-    },
-    "provider": {
-      "type": "string",
-      "enum": [
-        "doubao",
-        "openai",
-        "elevenlabs",
-        "aliyun",
-        "mock"
-      ]
-    },
-    "apiVersion": {
-      "default": "generic",
-      "type": "string",
-      "enum": [
-        "generic",
-        "v3"
-      ]
-    },
-    "endpoint": {
-      "type": "string",
-      "format": "uri"
-    },
-    "apiKeyEnv": {
-      "type": "string",
-      "minLength": 1
-    },
-    "appIdEnv": {
-      "type": "string",
-      "minLength": 1
-    },
-    "accessTokenEnv": {
-      "type": "string",
-      "minLength": 1
-    },
-    "resourceIdEnv": {
-      "type": "string",
-      "minLength": 1
-    },
-    "userId": {
-      "type": "string",
-      "minLength": 1
-    },
-    "model": {
-      "type": "string",
-      "minLength": 1
-    },
-    "voiceType": {
-      "type": "string",
-      "minLength": 1
-    },
-    "format": {
-      "default": "wav",
-      "type": "string",
-      "enum": [
-        "wav",
-        "mp3"
-      ]
-    },
-    "sampleRate": {
-      "default": 24000,
-      "type": "integer",
-      "exclusiveMinimum": 0,
-      "maximum": 9007199254740991
-    },
-    "speedRatio": {
-      "default": 1,
-      "type": "number",
-      "exclusiveMinimum": 0
-    },
-    "volumeRatio": {
-      "default": 1,
-      "type": "number",
-      "exclusiveMinimum": 0
-    },
-    "pitchRatio": {
-      "default": 1,
-      "type": "number",
-      "exclusiveMinimum": 0
-    },
-    "outputDirectory": {
-      "default": "audio/generated",
-      "type": "string",
-      "minLength": 1
-    },
-    "timeoutMs": {
-      "default": 30000,
-      "type": "integer",
-      "exclusiveMinimum": 0,
-      "maximum": 9007199254740991
-    },
-    "requestBody": {
+  "anyOf": [
+    {
       "type": "object",
-      "propertyNames": {
-        "type": "string"
+      "properties": {
+        "schemaVersion": {
+          "type": "string",
+          "const": "1.0"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "provider": {
+          "type": "string",
+          "enum": [
+            "doubao",
+            "openai",
+            "elevenlabs",
+            "aliyun",
+            "mock"
+          ]
+        },
+        "apiVersion": {
+          "default": "generic",
+          "type": "string",
+          "enum": [
+            "generic",
+            "v3"
+          ]
+        },
+        "endpoint": {
+          "type": "string",
+          "format": "uri"
+        },
+        "apiKeyEnv": {
+          "type": "string",
+          "minLength": 1
+        },
+        "appIdEnv": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accessTokenEnv": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resourceIdEnv": {
+          "type": "string",
+          "minLength": 1
+        },
+        "userId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "format": {
+          "default": "wav",
+          "type": "string",
+          "enum": [
+            "wav",
+            "mp3"
+          ]
+        },
+        "sampleRate": {
+          "default": 24000,
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "speedRatio": {
+          "default": 1,
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "volumeRatio": {
+          "default": 1,
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "pitchRatio": {
+          "default": 1,
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "outputDirectory": {
+          "default": "audio/generated",
+          "type": "string",
+          "minLength": 1
+        },
+        "timeoutMs": {
+          "default": 30000,
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "requestBody": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {}
+        },
+        "voiceType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "voiceTypeEnv": {
+          "type": "string",
+          "minLength": 1
+        }
       },
-      "additionalProperties": {}
+      "required": [
+        "schemaVersion",
+        "enabled",
+        "provider",
+        "apiVersion",
+        "format",
+        "sampleRate",
+        "speedRatio",
+        "volumeRatio",
+        "pitchRatio",
+        "outputDirectory",
+        "timeoutMs",
+        "voiceType"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "string",
+          "const": "1.0"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "provider": {
+          "type": "string",
+          "enum": [
+            "doubao",
+            "openai",
+            "elevenlabs",
+            "aliyun",
+            "mock"
+          ]
+        },
+        "apiVersion": {
+          "default": "generic",
+          "type": "string",
+          "enum": [
+            "generic",
+            "v3"
+          ]
+        },
+        "endpoint": {
+          "type": "string",
+          "format": "uri"
+        },
+        "apiKeyEnv": {
+          "type": "string",
+          "minLength": 1
+        },
+        "appIdEnv": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accessTokenEnv": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resourceIdEnv": {
+          "type": "string",
+          "minLength": 1
+        },
+        "userId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "format": {
+          "default": "wav",
+          "type": "string",
+          "enum": [
+            "wav",
+            "mp3"
+          ]
+        },
+        "sampleRate": {
+          "default": 24000,
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "speedRatio": {
+          "default": 1,
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "volumeRatio": {
+          "default": 1,
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "pitchRatio": {
+          "default": 1,
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "outputDirectory": {
+          "default": "audio/generated",
+          "type": "string",
+          "minLength": 1
+        },
+        "timeoutMs": {
+          "default": 30000,
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "requestBody": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {}
+        },
+        "voiceType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "voiceTypeEnv": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "enabled",
+        "provider",
+        "apiVersion",
+        "format",
+        "sampleRate",
+        "speedRatio",
+        "volumeRatio",
+        "pitchRatio",
+        "outputDirectory",
+        "timeoutMs",
+        "voiceTypeEnv"
+      ],
+      "additionalProperties": false
     }
-  },
-  "required": [
-    "schemaVersion",
-    "enabled",
-    "provider",
-    "apiVersion",
-    "voiceType",
-    "format",
-    "sampleRate",
-    "speedRatio",
-    "volumeRatio",
-    "pitchRatio",
-    "outputDirectory",
-    "timeoutMs"
-  ],
-  "additionalProperties": false
+  ]
 }

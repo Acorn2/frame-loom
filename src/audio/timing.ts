@@ -29,6 +29,28 @@ export interface AudioTimingReport {
   issues: AudioTimingIssue[];
 }
 
+export function analyzeSceneAudioAlignment(
+  scenes: Array<{sceneId: string; startSec: number; endSec: number}>,
+  segments: Array<{sceneId: string; startSec: number; endSec: number}>,
+  maxTrailingGapSec = 0.5
+) {
+  const issues: string[] = [];
+  const measurements = scenes.map((scene) => {
+    const segment = segments.find((item) => item.sceneId === scene.sceneId);
+    if (!segment) {
+      issues.push(`${scene.sceneId}: 缺少对应旁白片段。`);
+      return {sceneId: scene.sceneId, startDeltaSec: null, trailingGapSec: null};
+    }
+    const startDeltaSec = segment.startSec - scene.startSec;
+    const trailingGapSec = scene.endSec - segment.endSec;
+    if (Math.abs(startDeltaSec) > 0.1) issues.push(`${scene.sceneId}: 旁白起点与镜头相差 ${startDeltaSec.toFixed(3)}s。`);
+    if (trailingGapSec > maxTrailingGapSec) issues.push(`${scene.sceneId}: 旁白结束后画面仍停留 ${trailingGapSec.toFixed(3)}s。`);
+    if (trailingGapSec < -0.08) issues.push(`${scene.sceneId}: 旁白超出镜头 ${(-trailingGapSec).toFixed(3)}s。`);
+    return {sceneId: scene.sceneId, startDeltaSec, trailingGapSec};
+  });
+  return {passed: issues.length === 0, measurements, issues};
+}
+
 export function analyzeAudioTiming(
   videoDurationSec: number,
   tracks: AudioTrackTiming[],

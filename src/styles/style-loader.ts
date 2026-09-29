@@ -8,6 +8,7 @@ export interface StyleTokens {
   id: string;
   background: string;
   ink: string;
+  captionInk: string;
   muted: string;
   accent: string;
   accentAlt: string;

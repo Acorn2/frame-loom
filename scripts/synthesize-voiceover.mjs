@@ -5,9 +5,10 @@ import {AudioManifestSchema} from '../src/schemas/audio-manifest.ts';
 import {TtsConfigSchema} from '../src/schemas/tts-config.ts';
 import {StoryboardSchema} from '../src/schemas/storyboard.ts';
 import {hashNarration} from '../src/audio/text-hash.ts';
+import {splitCaptionWindow} from '../src/audio/captions.ts';
 import {getSceneTimeline} from '../src/timeline/scene-timeline.ts';
 import {combineAudioSegments, probeAudioDuration, synthesizeSpeech} from './lib/tts-provider.mjs';
-import {fingerprintFiles} from './lib/input-fingerprint.mjs';
+import {fingerprintFiles, fingerprintTtsConfig} from './lib/input-fingerprint.mjs';
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -140,7 +141,7 @@ async function main(options) {
   const audioConfigPath = path.join(projectPath, 'audio', 'audio-config.tts.json');
   const manifestPath = path.join(projectPath, 'audio', 'audio-manifest.json');
   const timeline = getSceneTimeline(storyboardResult.data);
-  const configFingerprint = fingerprintFiles([ttsConfigPath], projectPath);
+  const configFingerprint = fingerprintTtsConfig(ttsConfigPath, projectPath);
   const narratedScenes = timeline.filter(({scene}) => scene.narration.trim());
   const segmentNames = narratedScenes.map(({scene}) => scene.id.toLowerCase());
   if (segmentNames.includes('voiceover')) throw new Error('scene id 不能是 voiceover：它与合成后的旁白文件名冲突。');
@@ -205,10 +206,10 @@ async function main(options) {
 
     const stagedFullAudioPath = path.join(stagingDirectory, `voiceover.${extension}`);
     combineAudioSegments(segments, stagedFullAudioPath, projectDurationSec);
-    const captions = segments.map((segment, index) => [
+    const captions = segments.flatMap((segment) => splitCaptionWindow(segment.text, segment.startSec, segment.endSec)).map((cue, index) => [
       String(index + 1),
-      `${formatTimestamp(segment.startSec)} --> ${formatTimestamp(segment.endSec)}`,
-      segment.text,
+      `${formatTimestamp(cue.start)} --> ${formatTimestamp(cue.end)}`,
+      cue.text,
       ''
     ].join('\n')).join('\n');
     const stagedCaptionsPath = path.join(stagingDirectory, 'captions.srt');

@@ -289,7 +289,7 @@ npm run prepare:script-handoff -- projects/my-video --mode review
 
 | 服务 | 去哪里获取 | 本项目读取的环境变量 | 新项目中的样例文件 |
 | --- | --- | --- | --- |
-| 豆包语音 | 在[火山引擎豆包语音 API Key 控制台](https://console.volcengine.com/speech/new/setting/apikeys?projectName=default)创建或复制 API Key；按[API Key 使用说明](https://docs.volcengine.com/docs/DoubaoVoice/APIKeyUsage?lang=zh)核对鉴权方式，并从[大模型音色列表](https://www.volcengine.com/docs/6561/1257544)、[V3 接口文档](https://www.volcengine.com/docs/6561/1598757)和控制台确认已开通的音色及对应 Resource ID。 | `DOUBAO_TTS_API_KEY`、`DOUBAO_TTS_RESOURCE_ID` | `audio/tts-config.example.json` |
+| 豆包语音 | 在[火山引擎豆包语音 API Key 控制台](https://console.volcengine.com/speech/new/setting/apikeys?projectName=default)创建或复制 API Key；按[API Key 使用说明](https://docs.volcengine.com/docs/DoubaoVoice/APIKeyUsage?lang=zh)核对鉴权方式，并从[大模型音色列表](https://www.volcengine.com/docs/6561/1257544)、[V3 接口文档](https://www.volcengine.com/docs/6561/1598757)和控制台确认已开通的音色及对应 Resource ID。 | `VOLC_TTS_API_KEY`、`VOLC_TTS_RESOURCE_ID`、`VOLC_TTS_SPEAKER` | `audio/tts-config.example.json` |
 | OpenAI | 登录 [OpenAI API Keys 页面](https://platform.openai.com/api-keys)，创建并复制 Secret key。 | `OPENAI_API_KEY` | `audio/tts-config.openai.example.json` |
 | ElevenLabs | 登录 [ElevenLabs API Keys 页面](https://elevenlabs.io/app/developers/api-keys)，创建 Key；若使用受限 Key，开启 Text to Speech 权限。 | `ELEVENLABS_API_KEY` | `audio/tts-config.elevenlabs.example.json` |
 | 阿里百炼 | 按[阿里云百炼获取 API Key 指南](https://help.aliyun.com/zh/model-studio/get-api-key/)进入 [API Key 控制台](https://bailian.console.aliyun.com/cn-beijing/model/settings/api-key)，选择**华北 2（北京）**地域并创建 Key。 | `DASHSCOPE_API_KEY` | `audio/tts-config.aliyun.example.json` |
@@ -300,19 +300,20 @@ npm run prepare:script-handoff -- projects/my-video --mode review
 cp projects/my-video/audio/tts-config.openai.example.json projects/my-video/audio/tts-config.json
 ```
 
-如果是初始化功能加入前创建的旧项目，可从仓库样例复制，例如 `cp examples/tts-profiles/openai.json projects/my-video/audio/tts-config.json`；换服务时将 `openai` 换成 `doubao`、`elevenlabs` 或 `aliyun`。编辑 `projects/my-video/audio/tts-config.json`，将 `"enabled": false` 改为 `"enabled": true`。`apiKeyEnv`、`resourceIdEnv` 填的是**环境变量名**，不要替换成真实密钥。豆包还必须把 `voiceType` 的占位值换成已开通的音色 ID，并使 `DOUBAO_TTS_RESOURCE_ID` 与该音色对应。其他三份样例已有初始模型和音色，需要时可在该文件中改 `model`、`voiceType`。
+如果是初始化功能加入前创建的旧项目，可从仓库样例复制，例如 `cp examples/tts-profiles/openai.json projects/my-video/audio/tts-config.json`；换服务时将 `openai` 换成 `doubao`、`elevenlabs` 或 `aliyun`。编辑 `projects/my-video/audio/tts-config.json`，将 `"enabled": false` 改为 `"enabled": true`。`apiKeyEnv`、`resourceIdEnv` 和 `voiceTypeEnv` 填的是**环境变量名**，不要替换成真实密钥。豆包样例从 `VOLC_TTS_SPEAKER` 读取音色，并要求它与 `VOLC_TTS_RESOURCE_ID` 对应；其他三份样例已有初始模型和音色，需要时可在该文件中改 `model`、`voiceType`。旧项目中写死的 `voiceType` 仍可继续使用。
 
 在**运行 FrameLoom 命令的同一个终端**设置环境变量。macOS/Linux 用 `export`，下列命令只执行所选服务对应的行，将尖括号占位值换成自己的凭据：
 
 ```bash
-export DOUBAO_TTS_API_KEY='<豆包 API Key>'
-export DOUBAO_TTS_RESOURCE_ID='<豆包音色对应的 Resource ID>'
+export VOLC_TTS_API_KEY='<豆包 API Key>'
+export VOLC_TTS_RESOURCE_ID='<豆包音色对应的 Resource ID>'
+export VOLC_TTS_SPEAKER='<已开通的豆包音色 ID>'
 export OPENAI_API_KEY='<OpenAI Secret key>'
 export ELEVENLABS_API_KEY='<ElevenLabs API Key>'
 export DASHSCOPE_API_KEY='<北京地域的百炼 API Key>'
 ```
 
-Windows PowerShell 对应写法如 `$env:OPENAI_API_KEY = '<OpenAI Secret key>'`，其他服务替换变量名即可。这些变量只对当前终端会话有效；如果从 IDE、Agent 或另一个终端启动命令，也要确保那个进程能读到相同的环境变量。FrameLoom **不会自动读取 `.env` 文件**；不要把真实 Key 写入 `tts-config.json`、样例文件或提交到 Git。豆包 API Key 方式不需要另外填写 `DOUBAO_TTS_APP_ID` 和 `DOUBAO_TTS_ACCESS_TOKEN`。阿里样例使用北京接入域名，北京 Key 不能与其他地域域名混用；改用新加坡时还需把配置文件里的 `endpoint` 主机改为 `dashscope-intl.aliyuncs.com`，并使用新加坡地域的 Key。
+Windows PowerShell 对应写法如 `$env:OPENAI_API_KEY = '<OpenAI Secret key>'`，其他服务替换变量名即可。这些变量只对当前终端会话有效；如果从 IDE、Agent 或另一个终端启动命令，也要确保那个进程能读到相同的环境变量。FrameLoom **不会自动读取 `.env` 文件**；不要把真实 Key 写入 `tts-config.json`、样例文件或提交到 Git。豆包 API Key 方式不需要另外填写 App ID 和 Access Token。旧项目如已使用 `DOUBAO_TTS_*` 环境变量，可继续按其现有 `apiKeyEnv`、`resourceIdEnv` 配置使用。阿里样例使用北京接入域名，北京 Key 不能与其他地域域名混用；改用新加坡时还需把配置文件里的 `endpoint` 主机改为 `dashscope-intl.aliyuncs.com`，并使用新加坡地域的 Key。
 
 运行 `npm run list:tts-profiles -- projects/my-video` 可查看已启用且通过格式校验的配置摘要，不显示密钥；该命令不会验证 Key 是否有效。一个有效配置可以默认选用；多个有效配置必须通过 `--tts-config` 指定其中一个，并在运行记录中保留所选音色。内置 TTS 只向对应服务商的官方 HTTPS 域名发送凭据，不接受自定义代理地址或跳转；需要代理时先在外部生成音频，再走外部配音路线。自动测试使用模拟服务响应，不能证明真实账号、音色和权限已可用；首次使用所选服务时，应在自己的项目中实际合成一小段并检查输出。实际合成会向服务商发起请求，可能产生费用；更多服务限制见[音频接入说明](references/audio-integration.md)。
 

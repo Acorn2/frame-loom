@@ -69,6 +69,10 @@ npm run qa:storyboard -- <storyboard.json> <preview.mp4> [output-dir]
 - [ ] An illustrative object is labelled as a diagram; real product evidence is identified separately.
 - [ ] The final claim remains stable for the declared `outro.holdFrames` before fade.
 - [ ] Titles, captions and content stay readable on the target canvas.
+- [ ] Captions use transparent backgrounds in every Style Pack; no colored or translucent subtitle panel covers the picture.
+- [ ] Caption text uses the Style Pack's distinct `captionInk` color and remains readable against the canvas.
+- [ ] Bottom narration captions appear as short, single-line phrases; they change during speech, and the shot changes promptly when narration ends.
+- [ ] Every bottom narration cue omits pause punctuation at its start and end; punctuation inside one cue remains only where it helps separate clauses, and final question or exclamation marks carry tone.
 - [ ] No text, card or screenshot crosses the visual safe area.
 - [ ] Style differences affect surface, type, layout character and emphasis—not only color.
 - [ ] No scene becomes static for longer than its content requires.

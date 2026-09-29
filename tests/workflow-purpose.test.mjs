@@ -2,14 +2,14 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
-import {afterEach, describe, expect, it} from 'vitest';
+import {afterEach, describe, expect, it, vi} from 'vitest';
 import {loadHandoffConfig, resolveOutputPurpose} from '../scripts/lib/output-purpose.mjs';
 import {listTtsProfiles, selectTtsProfile} from '../scripts/lib/tts-profiles.mjs';
 import {approveStoryboard} from '../scripts/approve-storyboard.mjs';
 import {assertStoryboardApproval, storyboardApprovalFingerprint} from '../scripts/lib/storyboard-approval.mjs';
 import {prepareScriptHandoff} from '../scripts/prepare-script-handoff.mjs';
 import {checkVisualHandoffEligibility} from '../scripts/approve-visual-handoff.mjs';
-import {fingerprintFiles, fingerprintProjectInputs} from '../scripts/lib/input-fingerprint.mjs';
+import {fingerprintFiles, fingerprintProjectInputs, fingerprintTtsConfig} from '../scripts/lib/input-fingerprint.mjs';
 import {runProduction} from '../scripts/produce.mjs';
 
 const directories = [];
@@ -33,6 +33,7 @@ function projectFixture() {
 }
 
 afterEach(() => {
+  vi.unstubAllEnvs();
   for (const directory of directories.splice(0)) fs.rmSync(directory, {recursive: true, force: true});
 });
 
@@ -145,6 +146,25 @@ describe('video production purposes', () => {
     expect(selectTtsProfile(project, path.join(project, 'audio', 'tts-config.alt.json')).voiceType).toBe('voice-b');
   });
 
+  it('tracks a TTS speaker supplied by an environment variable in reuse fingerprints', () => {
+    const {project} = projectFixture();
+    const configPath = path.join(project, 'audio', 'tts-config.json');
+    fs.writeFileSync(configPath, JSON.stringify({schemaVersion: '1.0', enabled: true, provider: 'doubao', voiceTypeEnv: 'VOLC_TTS_SPEAKER'}));
+    vi.stubEnv('VOLC_TTS_SPEAKER', 'voice-a');
+    expect(selectTtsProfile(project).voiceType).toBe('voice-a');
+    const configFingerprint = fingerprintTtsConfig(configPath, project);
+    const projectFingerprint = fingerprintProjectInputs(project, path.resolve('styles'), undefined, configPath);
+
+    vi.stubEnv('VOLC_TTS_SPEAKER', 'voice-b');
+    expect(selectTtsProfile(project).voiceType).toBe('voice-b');
+    expect(fingerprintTtsConfig(configPath, project)).not.toBe(configFingerprint);
+    expect(fingerprintProjectInputs(project, path.resolve('styles'), undefined, configPath)).not.toBe(projectFingerprint);
+
+    vi.stubEnv('VOLC_TTS_SPEAKER', '');
+    expect(() => selectTtsProfile(project)).toThrow(/VOLC_TTS_SPEAKER/);
+    expect(() => selectTtsProfile(project, configPath)).toThrow(/VOLC_TTS_SPEAKER/);
+  });
+
   it('requires clean output QA and a complete visual review before handoff', () => {
     const run = {status: 'completed', deliveryStatus: 'visual-handoff-pending', outputPurpose: 'visual-master', stages: {qa: 'completed'}};
     const qa = {automatedPassed: true, mode: 'visual-master', checks: {output: {passed: true, audioStreams: 0}, visualMasterProfile: {passed: true}}};
@@ -205,10 +225,11 @@ describe('video production purposes', () => {
     storyboard.scenes[0].narration = '测试旁白。';
     fs.writeFileSync(path.join(project, 'storyboard.json'), JSON.stringify(storyboard));
     fs.writeFileSync(path.join(project, 'script.md'), '# Script\n\n## opening\n\n测试旁白。\n');
-    fs.writeFileSync(path.join(project, 'audio', 'tts-config.json'), JSON.stringify({schemaVersion: '1.0', enabled: true, provider: 'mock', voiceType: 'test-tone'}));
-    const command = (extra = []) => spawnSync(process.execPath, ['--import', 'tsx/esm', 'scripts/synthesize-voiceover.mjs', project, ...extra], {cwd: process.cwd(), encoding: 'utf8'});
+    fs.writeFileSync(path.join(project, 'audio', 'tts-config.json'), JSON.stringify({schemaVersion: '1.0', enabled: true, provider: 'mock', voiceTypeEnv: 'TEST_TTS_SPEAKER'}));
+    const command = (extra = [], speaker = 'test-tone') => spawnSync(process.execPath, ['--import', 'tsx/esm', 'scripts/synthesize-voiceover.mjs', project, ...extra], {cwd: process.cwd(), encoding: 'utf8', env: {...process.env, TEST_TTS_SPEAKER: speaker}});
     expect(command().status).toBe(0);
     expect(command(['--reuse']).stdout).toContain('VOICEOVER REUSED');
+    expect(command(['--reuse'], 'different-tone').stderr).toContain('不一致');
     fs.appendFileSync(path.join(project, 'audio', 'generated', 'opening.wav'), 'changed');
     expect(command(['--reuse']).stderr).toContain('不一致');
   });

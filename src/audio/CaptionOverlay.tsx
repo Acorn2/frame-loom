@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {useCurrentFrame, useVideoConfig} from 'remotion';
-import type {CaptionCue} from './captions';
+import {splitCaptionCues, type CaptionCue} from './captions';
+import {captionTextStyle} from './caption-style';
 import type {StyleTokens} from '../styles/style-loader';
 
 export interface CaptionOverlayLayout {
@@ -39,7 +40,8 @@ export function CaptionOverlay({captions, tokens}: {captions: CaptionCue[]; toke
   const frame = useCurrentFrame();
   const {fps, width, height} = useVideoConfig();
   const seconds = frame / fps;
-  const cue = captions.find((item) => seconds >= item.startSec && seconds < item.endSec);
+  const shortCues = useMemo(() => splitCaptionCues(captions), [captions]);
+  const cue = shortCues.find((item) => seconds >= item.startSec && seconds < item.endSec);
   if (!cue) return null;
   const layout = getCaptionOverlayLayout({width, height, safeArea: tokens.safeArea});
   return (
@@ -48,11 +50,10 @@ export function CaptionOverlay({captions, tokens}: {captions: CaptionCue[]; toke
       display: 'flex', justifyContent: 'center', pointerEvents: 'none', zIndex: 100
     }}>
       <div style={{
+        ...captionTextStyle(tokens),
         width: '100%', maxWidth: layout.maxWidth, boxSizing: 'border-box',
         padding: `${layout.paddingY}px ${layout.paddingX}px`,
-        borderRadius: 12, background: 'rgba(0,0,0,0.78)', color: '#fff',
-        fontFamily: tokens.bodyFont, fontSize: layout.fontSize, lineHeight: 1.35,
-        textAlign: 'center', whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', wordBreak: 'break-word'
+        fontSize: layout.fontSize, lineHeight: 1.35
       }}>
         {cue.text}
       </div>

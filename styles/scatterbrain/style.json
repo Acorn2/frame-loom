@@ -4,6 +4,7 @@
   "tokens": {
     "background": "#fffaf0",
     "ink": "#24211f",
+    "captionInk": "#2459A8",
     "muted": "#6f625d",
     "accent": "#ffd84d",
     "accentAlt": "#2e75d4",

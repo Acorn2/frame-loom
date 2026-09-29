@@ -2,6 +2,8 @@ import React from 'react';
 import {AbsoluteFill, Img, useCurrentFrame, useVideoConfig} from 'remotion';
 import type {StoryboardLayer, StoryboardScene} from '../../schemas/storyboard';
 import type {StyleTokens} from '../../styles/style-loader';
+import {captionTextStyle} from '../../audio/caption-style';
+import {splitCaptionWindow} from '../../audio/captions';
 import {ConceptGlyph} from './ConceptGlyph';
 
 interface Props {
@@ -235,7 +237,7 @@ export function SemanticScene({scene, tokens, showSceneCaptions, externalCaption
   if (!visual) return null;
   const portrait = width < height;
   const scale = portrait ? width / 1080 : width / 1920;
-  const caption = showSceneCaptions ? scene.captions.find((item) => frame >= item.start && frame < item.end) : undefined;
+  const caption = showSceneCaptions ? scene.captions.flatMap((item) => splitCaptionWindow(item.text, item.start, item.end)).find((item) => frame >= item.start && frame < item.end) : undefined;
   const captionReserve = ((scene.captions.length > 0 && showSceneCaptions) || externalCaptions) ? (portrait ? 170 : 125) * scale : 0;
   const contentWidth = width - tokens.safeArea.left - tokens.safeArea.right;
   const contentHeight = height - tokens.safeArea.top - tokens.safeArea.bottom - captionReserve;
@@ -262,6 +264,6 @@ export function SemanticScene({scene, tokens, showSceneCaptions, externalCaption
         <div style={{...entranceStyle(claimProgress, tokens, scale), position: 'absolute', left: 0, bottom: 0, borderTop: `2px solid ${tokens.grid}`, paddingTop: 17 * scale, fontSize: 26 * scale, color: tokens.muted}}>{scene.primaryClaim}</div>
       </>}
     </div>
-    {caption ? <div style={{position: 'absolute', left: tokens.safeArea.left, right: tokens.safeArea.right, bottom: tokens.safeArea.bottom + 10 * scale, textAlign: 'center', padding: `${12 * scale}px ${18 * scale}px`, background: tokens.paper, color: tokens.ink, fontSize: (portrait ? 32 : 28) * scale, lineHeight: 1.3}}>{caption.text}</div> : null}
+    {caption ? <div style={{...captionTextStyle(tokens), position: 'absolute', left: tokens.safeArea.left, right: tokens.safeArea.right, bottom: tokens.safeArea.bottom + 10 * scale, padding: `${12 * scale}px ${18 * scale}px`, fontSize: (portrait ? 32 : 28) * scale, lineHeight: 1.3}}>{caption.text}</div> : null}
   </AbsoluteFill>;
 }

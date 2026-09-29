@@ -2,6 +2,8 @@ import React from 'react';
 import {AbsoluteFill, Img, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
 import type {StoryboardCaption, StoryboardLayer, StoryboardScene} from '../../schemas/storyboard';
 import type {StyleTokens} from '../../styles/style-loader';
+import {captionTextStyle} from '../../audio/caption-style';
+import {splitCaptionWindow} from '../../audio/captions';
 import type {TemplateFamilyId as FamilyId} from './family-registry';
 import {BlueprintLayout, CleanEditorialLayout, ProductFrameLayout} from './ProposalLayouts';
 
@@ -315,7 +317,7 @@ export function TemplateFamilyScene({scene, tokens, showSceneCaptions, externalC
   const {width, height} = useVideoConfig();
   const portrait = width < height;
   const family = tokens.id as FamilyId;
-  const activeCaption = showSceneCaptions ? scene.captions.find((caption) => frame >= caption.start && frame < caption.end) : undefined;
+  const activeCaption = showSceneCaptions ? scene.captions.flatMap((caption) => splitCaptionWindow(caption.text, caption.start, caption.end)).find((caption) => frame >= caption.start && frame < caption.end) : undefined;
   const captionReserve = ((scene.captions.length > 0 && showSceneCaptions) || externalCaptions)
     ? (portrait ? 170 : 125)
     : 0;
@@ -333,7 +335,7 @@ export function TemplateFamilyScene({scene, tokens, showSceneCaptions, externalC
       <Layout {...layoutProps} />
     </div>
     {activeCaption ? <div style={{position: 'absolute', left: tokens.safeArea.left, right: tokens.safeArea.right, bottom: tokens.safeArea.bottom + 12 * scale, display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', pointerEvents: 'none'}}>
-      <div style={{maxWidth: portrait ? 850 : 980, color: family === 'scatterbrain' || family === 'studio-frame' || family === 'retro-zine' ? tokens.muted : '#d7e5e4', borderTop: family === 'retro-zine' ? `2px solid ${tokens.grid}` : family === 'scatterbrain' || family === 'studio-frame' ? `4px solid ${tokens.ink}` : undefined, background: family === 'retro-zine' ? `${tokens.paper}dd` : family === 'scatterbrain' ? tokens.paper : family === 'studio-frame' ? '#ffffffee' : '#0a121bd9', fontSize: (portrait ? 29 : 21) * scale, lineHeight: 1.25, padding: `${7 * scale}px ${16 * scale}px`, overflowWrap: 'anywhere'}}>{activeCaption.text}</div>
+      <div style={{...captionTextStyle(tokens), maxWidth: portrait ? 850 : 980, fontSize: (portrait ? 29 : 21) * scale, lineHeight: 1.25, padding: `${7 * scale}px ${16 * scale}px`}}>{activeCaption.text}</div>
     </div> : null}
   </AbsoluteFill>;
 }

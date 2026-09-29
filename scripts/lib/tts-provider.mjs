@@ -3,6 +3,7 @@ import {Buffer} from 'node:buffer';
 import {spawnSync} from 'node:child_process';
 import crypto from 'node:crypto';
 import {URL} from 'node:url';
+import {resolveTtsVoiceType} from './tts-profiles.mjs';
 
 const PROVIDER_HOSTS = {
   openai: new Set(['api.openai.com']),
@@ -166,24 +167,22 @@ async function requestAliyun(text, config) {
 }
 
 async function requestDoubao(text, config) {
-  const configuredEndpoint = config.endpoint ?? envValue('DOUBAO_TTS_ENDPOINT');
+  const configuredEndpoint = config.endpoint ?? process.env.VOLC_TTS_ENDPOINT ?? process.env.DOUBAO_TTS_ENDPOINT;
   if (!configuredEndpoint) {
-    throw new Error('豆包 TTS 缺少 endpoint：请在 tts-config.json 配置 endpoint，或设置 DOUBAO_TTS_ENDPOINT。');
+    throw new Error('豆包 TTS 缺少 endpoint：请在 tts-config.json 配置 endpoint，或设置 VOLC_TTS_ENDPOINT。');
   }
   const endpoint = assertProviderEndpoint(configuredEndpoint, 'doubao');
   const headers = {'content-type': 'application/json'};
-  const apiKey = envValue(config.apiKeyEnv, undefined) ?? process.env.DOUBAO_TTS_API_KEY;
+  const apiKey = config.apiKeyEnv ? process.env[config.apiKeyEnv] : process.env.VOLC_TTS_API_KEY ?? process.env.DOUBAO_TTS_API_KEY;
   const accessToken = envValue(config.accessTokenEnv, undefined) ?? process.env.DOUBAO_TTS_ACCESS_TOKEN;
   const appId = envValue(config.appIdEnv, undefined) ?? process.env.DOUBAO_TTS_APP_ID;
-  const resourceId = envValue(config.resourceIdEnv, undefined) ?? process.env.DOUBAO_TTS_RESOURCE_ID;
+  const resourceId = config.resourceIdEnv ? process.env[config.resourceIdEnv] : process.env.VOLC_TTS_RESOURCE_ID ?? process.env.DOUBAO_TTS_RESOURCE_ID;
   if (config.apiVersion === 'v3') {
     if (!apiKey || !resourceId) {
       throw new Error('豆包 TTS v3 需要 API key 和 resource id；请配置 apiKeyEnv/resourceIdEnv 并设置对应环境变量。');
     }
     headers['X-Api-Key'] = apiKey;
     headers['X-Api-Resource-Id'] = resourceId;
-    if (appId) headers['X-Api-App-Id'] = appId;
-    if (accessToken) headers['X-Api-Access-Key'] = accessToken;
     headers['X-Api-Request-Id'] = crypto.randomUUID();
   } else {
     if (apiKey) headers.authorization = `Bearer ${apiKey}`;
@@ -198,10 +197,10 @@ async function requestDoubao(text, config) {
         ...(config.requestBody?.req_params ?? {}),
         text,
         speaker: config.voiceType,
-        sample_rate: config.sampleRate,
         audio_params: {
           ...(config.requestBody?.req_params?.audio_params ?? {}),
           format: config.format,
+          sample_rate: config.sampleRate,
           speech_rate: Math.round((config.speedRatio - 1) * 100),
           loudness_rate: Math.round((config.volumeRatio - 1) * 100)
         }
@@ -238,7 +237,7 @@ async function requestDoubao(text, config) {
       if (!value || !value.startsWith('{')) continue;
       let event;
       try { event = JSON.parse(value); } catch { throw new Error('豆包 TTS 流式响应包含不可解析的 JSON。'); }
-      if (event.code !== undefined && event.code !== 0 && event.code !== 20000000) {
+      if (event.code !== undefined && event.code !== 0 && event.code !== 20000000 && !(event.code === 3000 && event.data)) {
         throw new Error(`豆包 TTS 合成失败（code: ${event.code}）：${event.message ?? '未知错误'}`);
       }
       if (event.data) chunks.push(readAudioPayload(event.data));
@@ -265,7 +264,7 @@ export async function synthesizeSpeech({text, config, outputPath}) {
   const providers = {doubao: requestDoubao, openai: requestOpenAi, elevenlabs: requestElevenLabs, aliyun: requestAliyun};
   const request = providers[config.provider];
   if (!request) throw new Error(`不支持的 TTS provider：${config.provider}`);
-  const result = await request(text, config);
+  const result = await request(text, {...config, voiceType: resolveTtsVoiceType(config)});
   fs.writeFileSync(outputPath, result.audio);
   return {};
 }
@@ -288,7 +287,7 @@ export function combineAudioSegments(segments, outputPath, durationSec) {
     const delayMs = Math.max(0, Math.round(segment.startSec * 1000));
     filters.push(`[${index}:a]adelay=${delayMs}|${delayMs},apad,atrim=duration=${durationSec.toFixed(3)}[a${index}]`);
   }
-  args.push('-filter_complex', `${filters.join(';')};${segments.map((_, index) => `[a${index}]`).join('')}amix=inputs=${segments.length}:duration=longest:dropout_transition=0,atrim=duration=${durationSec.toFixed(3)}`, '-ac', '1', '-ar', '24000', outputPath);
+  args.push('-filter_complex', `${filters.join(';')};${segments.map((_, index) => `[a${index}]`).join('')}amix=inputs=${segments.length}:duration=longest:dropout_transition=0:normalize=0,atrim=duration=${durationSec.toFixed(3)}`, '-ac', '1', '-ar', '24000', outputPath);
   const result = spawnSync('ffmpeg', args, {encoding: 'utf8'});
   if (result.error?.code === 'ENOENT') throw new Error('找不到 ffmpeg。请安装 FFmpeg，并确保 ffmpeg 在 PATH 中。');
   if (result.status !== 0) throw new Error(`ffmpeg 合并旁白失败：${result.stderr.trim()}`);

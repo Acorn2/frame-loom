@@ -61,12 +61,13 @@ The repository stores the four credential-free presets in
 choose one of its four disabled examples, copy it to
 `audio/tts-config.json`, set `enabled` to `true`, and set the named environment
 variable. Existing projects can copy a preset from the repository. Do not put
-credential values in JSON. The Doubao example leaves
-account-specific voice and resource values for the project owner to fill in.
+credential values in JSON. The Doubao example reads the voice, API key and
+resource ID from three `VOLC_TTS_*` environment variables. The selected voice
+must be available for the selected resource ID.
 
 | Example file under `audio/` | Provider | Required environment variable | Initial voice / format |
 | --- | --- | --- | --- |
-| `tts-config.example.json` | Doubao HTTP v3 SSE | `DOUBAO_TTS_API_KEY`, `DOUBAO_TTS_RESOURCE_ID` | Set your account's voice / MP3 |
+| `tts-config.example.json` | Doubao HTTP v3 SSE | `VOLC_TTS_API_KEY`, `VOLC_TTS_RESOURCE_ID`, `VOLC_TTS_SPEAKER` | Voice from environment / MP3 |
 | `tts-config.openai.example.json` | OpenAI speech | `OPENAI_API_KEY` | `alloy` / MP3 |
 | `tts-config.elevenlabs.example.json` | ElevenLabs | `ELEVENLABS_API_KEY` | `JBFqnCBsd6RMkjVDRZzb` / MP3 |
 | `tts-config.aliyun.example.json` | Alibaba Cloud Qwen3-TTS-Flash | `DASHSCOPE_API_KEY` | `Cherry` / WAV |
@@ -82,6 +83,9 @@ speech speed; its sample-rate, pitch and volume fields are unused. ElevenLabs
 and Alibaba do not map the generic speed/pitch/volume/sample-rate fields.
 Doubao v3 maps `speedRatio` and `volumeRatio` to its speech and loudness rates;
 `pitchRatio` is not mapped by the SSE preset.
+`voiceTypeEnv` selects the environment variable holding the voice ID; a static
+`voiceType` remains supported for existing profiles. When the environment
+voice changes, TTS reuse and project fingerprints change with it.
 Each scene is sent as one request, so keep
 `scene.narration` within the selected model's input limit.
 ElevenLabs currently uses `mp3_44100_128`; Alibaba Qwen currently uses WAV.
@@ -112,8 +116,9 @@ Generated files:
 
 - `audio/generated/<scene-id>.<wav|mp3>`: one measured segment per narrated scene
 - `audio/generated/voiceover.<wav|mp3>`: scene segments placed on the project timeline
-- `audio/generated/captions.srt`: subtitles derived from the same text and
-  measured durations
+- `audio/generated/captions.srt`: short, single-line phrase cues derived from
+  the same text and measured durations. Cue edges omit pause punctuation;
+  punctuation within a cue and tone-bearing final `?`/`!` remain
 - `audio/audio-manifest.json`: text hash, scene mapping, timings and paths
 - `audio/audio-config.tts.json`: renderable audio contract
 
@@ -137,6 +142,8 @@ npm run inspect:audio -- projects/<video-id>/storyboard.json projects/<video-id>
 ```
 
 Voiceover, SFX and captions may not end after the storyboard. Caption cues may not overlap. Background music can be longer because rendering clips it to the composition; short music produces a warning. If narration timing changes, update scene durations and beat windows, revalidate the storyboard, then render again.
+For a scene-keyed TTS audio manifest, automated QA also compares each measured segment to its scene: narration starts with the shot, and a gap longer than 0.5 second after speech fails the alignment check.
+Phrase-level subtitle timing is allocated from measured segment durations and text length; check it against the spoken words during manual playback.
 
 When enabled, `music.ducking` lowers music while the voiceover is active. `volume` is a multiplier applied to the configured music volume; `attackSec` and `releaseSec` smooth the transitions:
 

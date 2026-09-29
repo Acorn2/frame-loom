@@ -22,6 +22,10 @@
           "type": "string",
           "minLength": 1
         },
+        "captionInk": {
+          "type": "string",
+          "minLength": 1
+        },
         "muted": {
           "type": "string",
           "minLength": 1
@@ -81,6 +85,7 @@
       "required": [
         "background",
         "ink",
+        "captionInk",
         "muted",
         "accent",
         "accentAlt",

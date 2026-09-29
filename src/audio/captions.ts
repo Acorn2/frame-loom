@@ -4,6 +4,67 @@ export interface CaptionCue {
   text: string;
 }
 
+const MAX_CAPTION_UNITS = 20;
+
+function captionUnits(value: string): number {
+  return [...value].reduce((total, char) => total + (/\p{Script=Han}/u.test(char) ? 1 : /[A-Za-z0-9]/u.test(char) ? 0.6 : /\s/u.test(char) ? 0.3 : 0.5), 0);
+}
+
+export function splitCaptionText(text: string, maxUnits = MAX_CAPTION_UNITS): string[] {
+  const normalized = text.replace(/\s+/gu, ' ').trim();
+  if (!normalized) return [];
+  const clauses = normalized.match(/[^，。！？；、,.!?;]+[，。！？；、,.!?;]?/gu) ?? [normalized];
+  const chunks: string[] = [];
+  let current = '';
+  for (const clause of clauses) {
+    if (current && captionUnits(current + clause) > maxUnits) {
+      chunks.push(current.trim());
+      current = '';
+    }
+    for (const char of clause) {
+      if (current && captionUnits(current + char) > maxUnits) {
+        if (/[，。！？；、,.!?;]/u.test(char)) {
+          chunks.push((current + char).trim());
+          current = '';
+          continue;
+        }
+        chunks.push(current.trim());
+        current = '';
+      }
+      current += char;
+    }
+  }
+  if (current.trim()) chunks.push(current.trim());
+  return chunks;
+}
+
+// A cue boundary already marks a pause. Keep punctuation within the cue, and
+// retain a final question or exclamation mark when it carries spoken tone.
+export function displayCaptionText(text: string): string {
+  return text
+    .replace(/^[\s，。！？；：、,.!?;:]+/u, '')
+    .replace(/[\s，。；：、,.;:]+$/u, '')
+    .trim();
+}
+
+export function splitCaptionWindow(text: string, start: number, end: number): Array<{start: number; end: number; text: string}> {
+  const chunks = splitCaptionText(text).map(displayCaptionText).filter(Boolean);
+  const weights = chunks.map((chunk) => Math.max(1, captionUnits(chunk)));
+  const total = weights.reduce((sum, weight) => sum + weight, 0);
+  const duration = end - start;
+  const minimum = duration >= chunks.length * 0.8 ? 0.8 : 0;
+  let elapsedWeight = 0;
+  return chunks.map((chunk, index) => {
+    const cueStart = start + index * minimum + (duration - chunks.length * minimum) * elapsedWeight / total;
+    elapsedWeight += weights[index] ?? 0;
+    return {start: cueStart, end: index === chunks.length - 1 ? end : start + (index + 1) * minimum + (duration - chunks.length * minimum) * elapsedWeight / total, text: chunk};
+  });
+}
+
+export function splitCaptionCues(cues: CaptionCue[]): CaptionCue[] {
+  return cues.flatMap((cue) => splitCaptionWindow(cue.text, cue.startSec, cue.endSec).map(({start, end, text}) => ({startSec: start, endSec: end, text})));
+}
+
 function parseTimestamp(value: string): number {
   const match = value.trim().match(/(?:(\d+):)?(\d{2}):(\d{2})[,.](\d{3})/);
   if (!match) throw new Error(`无法解析字幕时间：${value}`);

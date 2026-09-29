@@ -1,4 +1,5 @@
 import {loadStylePack} from './style-catalog.mjs';
+import {splitCaptionWindow} from '../../src/audio/captions.ts';
 
 function glyphWidth(char) {
   if (/\p{Script=Han}|[\u3000-\u303f\uff00-\uffef]/u.test(char)) return 1;
@@ -87,8 +88,12 @@ export function checkTextLayout(storyboard, style = loadStylePack(storyboard.sty
       const captionFont = portrait ? 32 : 28;
       const captionWidth = Math.min(contentWidth, portrait ? 850 : 1160) - (portrait ? 48 : 44);
       for (const caption of scene.captions) {
-        if (estimateTextLines(caption.text, captionFont, captionWidth) > 2) {
-          issues.push({severity: 'error', sceneId: scene.id, target: caption.id, message: '字幕超出两行安全区；请拆分字幕窗口。'});
+        const shortCues = splitCaptionWindow(caption.text, caption.start, caption.end);
+        for (const cue of shortCues) {
+          if (estimateTextLines(cue.text, captionFont, captionWidth) > 1) {
+            issues.push({severity: 'error', sceneId: scene.id, target: caption.id, message: '字幕超出单行安全区；请缩短字幕窗口。'});
+          }
+          if (shortCues.length > 1 && cue.end - cue.start < storyboard.project.fps * 0.8) issues.push({severity: 'error', sceneId: scene.id, target: caption.id, message: '字幕拆分后切换过快；请延长字幕窗口或缩短文字。'});
         }
       }
       continue;
@@ -144,9 +149,13 @@ export function checkTextLayout(storyboard, style = loadStylePack(storyboard.sty
     const captionFont = portrait ? 32 : 28;
     const captionWidth = Math.min(contentWidth, portrait ? 850 : 1160) - (portrait ? 48 : 44);
     for (const caption of scene.captions) {
-      const lines = estimateTextLines(caption.text, captionFont, captionWidth);
-      if (lines > 2) {
-        issues.push({severity: 'error', sceneId: scene.id, target: caption.id, message: `字幕预计占 ${lines} 行，超出两行安全区；请拆分字幕窗口。`});
+      const shortCues = splitCaptionWindow(caption.text, caption.start, caption.end);
+      for (const cue of shortCues) {
+        const lines = estimateTextLines(cue.text, captionFont, captionWidth);
+        if (lines > 1) {
+          issues.push({severity: 'error', sceneId: scene.id, target: caption.id, message: `字幕预计占 ${lines} 行，超出单行安全区；请缩短字幕窗口。`});
+        }
+        if (shortCues.length > 1 && cue.end - cue.start < storyboard.project.fps * 0.8) issues.push({severity: 'error', sceneId: scene.id, target: caption.id, message: '字幕拆分后切换过快；请延长字幕窗口或缩短文字。'});
       }
     }
   }
@@ -161,9 +170,13 @@ export function checkExternalCaptionLayout(storyboard, cues, style = loadStylePa
   const captionWidth = Math.min(contentWidth, portrait ? 860 : 1180) - (portrait ? 48 : 40);
   const fontSize = portrait ? 34 : 30;
   return cues.flatMap((cue, index) => {
-    const lines = estimateTextLines(cue.text, fontSize, captionWidth);
-    return lines > 2
-      ? [{severity: 'error', sceneId: 'external-captions', target: `cue-${index + 1}`, message: `外部字幕预计占 ${lines} 行，超出两行安全区；请拆分字幕 cue。`}]
-      : [];
+    const shortCues = splitCaptionWindow(cue.text, cue.startSec, cue.endSec);
+    return shortCues.flatMap((shortCue) => {
+      const lines = estimateTextLines(shortCue.text, fontSize, captionWidth);
+      const errors = [];
+      if (lines > 1) errors.push({severity: 'error', sceneId: 'external-captions', target: `cue-${index + 1}`, message: `外部字幕预计占 ${lines} 行，超出单行安全区；请缩短字幕 cue。`});
+      if (shortCues.length > 1 && shortCue.end - shortCue.start < 0.8) errors.push({severity: 'error', sceneId: 'external-captions', target: `cue-${index + 1}`, message: '外部字幕拆分后切换过快；请延长 cue 或缩短文字。'});
+      return errors;
+    });
   });
 }

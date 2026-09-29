@@ -70,4 +70,6 @@ styles/<style-id>/motion.json
 styles/<style-id>/renderer-map.json
 ```
 
+Each Style Pack defines `captionInk` separately from body `ink`. Use a readable deep color on light canvases and white on dark canvases; narration captions have no background fill.
+
 Use only templates and actions supported by both the selected pack and `src/renderer/capability-manifest.ts`. The current production-safe templates are `statement`, `graph-explainer`, `metric-grid` and `interaction-flow`.

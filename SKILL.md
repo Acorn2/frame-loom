@@ -72,8 +72,14 @@ window includes a stable final hold; do not append another long hold to every
 scene. Show the first subject promptly, introduce further subjects at roughly
 1–2.5 second intervals when the content supports it, and trim time after the
 last meaningful change. Treat these values as pacing warnings, not fixed
-rules. With TTS or external
-voiceover, measure the audio and align the scene to that recording. Do not add
+rules. With TTS or external voiceover, measure the audio and align the scene
+to that recording. Keep bottom captions to short, single-line phrases. Start
+and end each cue without pause punctuation such as commas, periods, semicolons
+or colons. Keep punctuation within a cue where it separates clauses, and keep
+final question or exclamation marks when they convey tone. Apply this to every
+template and audio source; leave narration and TTS input text intact. Start
+the next scene within 0.5 second of narration ending. Use a separate scene
+for a longer visual hold. Do not add
 bottom narration subtitles to a silent document preview merely to fill time.
 Common entrances should settle quickly; visible structure must remain long
 enough to read. Review entrance midpoint, complete state, pre-cut state,
@@ -90,8 +96,8 @@ voiceover and facecam editing may finish outside FrameLoom. An
 playback review recorded with `approve:delivery`. Audio routes are `silent`,
 configured TTS, or externally produced audio.
 TTS uses `scene.narration` as its only text source, generates one segment per
-scene, measures each segment with `ffprobe`, and derives SRT cues from those
-measured durations. External audio keeps the user's audio and subtitle files
+scene, measures each segment with `ffprobe`, and derives short, single-line SRT
+cues from those measured durations. External audio keeps the user's audio and subtitle files
 as-is and requires an `audio-config.json` contract. Neither route is
 release-ready until manual playback review is complete.
 

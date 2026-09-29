@@ -5,6 +5,8 @@ import {StoryboardSchema} from '../src/schemas/storyboard.ts';
 import {getSceneTimeline} from '../src/timeline/scene-timeline.ts';
 import {getNodeState} from '../src/renderer/node-state.ts';
 import {AudioConfigSchema} from '../src/schemas/audio-config.ts';
+import {AudioManifestSchema} from '../src/schemas/audio-manifest.ts';
+import {analyzeSceneAudioAlignment} from '../src/audio/timing.ts';
 import {extractReviewFrames} from './extract-review-frames.mjs';
 import {inspectOutput} from './inspect-output.mjs';
 import {checkAssetInput, checkAudioInput, checkStoryboardInput, checkVisualInput} from './lib/preflight.mjs';
@@ -184,6 +186,19 @@ export function runQa(options) {
         const audio = checkAudioInput(resolvedStoryboard, options.audioConfigPath);
         checks.audio = {passed: !audio.needsRetiming, ...audio};
         if (!checks.audio.passed) errors.push('audio timing failed');
+        const audioConfigPath = path.resolve(options.audioConfigPath);
+        const manifestPath = path.join(path.dirname(audioConfigPath), 'audio-manifest.json');
+        if (fs.existsSync(manifestPath)) {
+          const manifest = AudioManifestSchema.parse(JSON.parse(fs.readFileSync(manifestPath, 'utf8')));
+          const projectPath = path.dirname(resolvedStoryboard);
+          if (path.resolve(projectPath, manifest.storyboardPath) === resolvedStoryboard && path.resolve(projectPath, manifest.audioConfigPath) === audioConfigPath) {
+            const narratedScenes = getSceneTimeline(storyboard)
+              .filter(({scene}) => scene.narration.trim())
+              .map(({scene, startFrame, endFrame}) => ({sceneId: scene.id, startSec: startFrame / storyboard.project.fps, endSec: endFrame / storyboard.project.fps}));
+            checks.sceneAudioAlignment = analyzeSceneAudioAlignment(narratedScenes, manifest.segments);
+            if (!checks.sceneAudioAlignment.passed) errors.push('scene audio alignment failed');
+          }
+        }
       } catch (error) {
         checks.audio = {passed: false, error: error instanceof Error ? error.message : String(error)};
         errors.push(`audio: ${checks.audio.error}`);

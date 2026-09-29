@@ -2,6 +2,8 @@ import React, {type ReactNode} from 'react';
 import {AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
 import type {StoryboardScene} from '../../schemas/storyboard';
 import type {StyleTokens} from '../../styles/style-loader';
+import {captionTextStyle} from '../../audio/caption-style';
+import {splitCaptionWindow} from '../../audio/captions';
 
 interface TemplateShellProps {
   scene: StoryboardScene;
@@ -48,7 +50,7 @@ export function TemplateShell({
           ? {transform: `translateY(${-20 * outroProgress}px)`, opacity: 1 - outroProgress * 0.35}
           : {opacity: 1 - outroProgress};
   const activeCaption = showSceneCaptions
-    ? scene.captions.find((caption) => frame >= caption.start && frame < caption.end)
+    ? scene.captions.flatMap((caption) => splitCaptionWindow(caption.text, caption.start, caption.end)).find((caption) => frame >= caption.start && frame < caption.end)
     : undefined;
 
   return (
@@ -105,10 +107,9 @@ export function TemplateShell({
           bottom: tokens.safeArea.bottom + 16, display: 'flex', justifyContent: 'center'
         }}>
           <div style={{
+            ...captionTextStyle(tokens),
             maxWidth: portrait ? 850 : 1160, padding: portrait ? '18px 24px' : '14px 22px',
-            background: 'rgba(24, 33, 29, 0.84)', color: '#fff', borderRadius: 10,
-            fontSize: portrait ? 32 : 28, lineHeight: 1.3, textAlign: 'center',
-            whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', wordBreak: 'break-word'
+            fontSize: portrait ? 32 : 28, lineHeight: 1.3
           }}>{activeCaption.text}</div>
         </div>
       ) : null}

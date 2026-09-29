@@ -1,6 +1,6 @@
 import {z} from 'zod';
 
-export const TtsConfigSchema = z.object({
+const TtsConfigBaseSchema = z.object({
   schemaVersion: z.literal('1.0'),
   enabled: z.boolean(),
   provider: z.enum(['doubao', 'openai', 'elevenlabs', 'aliyun', 'mock']),
@@ -12,7 +12,6 @@ export const TtsConfigSchema = z.object({
   resourceIdEnv: z.string().min(1).optional(),
   userId: z.string().min(1).optional(),
   model: z.string().min(1).optional(),
-  voiceType: z.string().min(1),
   format: z.enum(['wav', 'mp3']).default('wav'),
   sampleRate: z.number().int().positive().default(24000),
   speedRatio: z.number().positive().default(1),
@@ -22,5 +21,10 @@ export const TtsConfigSchema = z.object({
   timeoutMs: z.number().int().positive().default(30000),
   requestBody: z.record(z.string(), z.unknown()).optional()
 }).strict();
+
+export const TtsConfigSchema = z.union([
+  TtsConfigBaseSchema.extend({voiceType: z.string().min(1), voiceTypeEnv: z.string().min(1).optional()}),
+  TtsConfigBaseSchema.extend({voiceType: z.string().min(1).optional(), voiceTypeEnv: z.string().min(1)})
+]);
 
 export type TtsConfig = z.infer<typeof TtsConfigSchema>;
