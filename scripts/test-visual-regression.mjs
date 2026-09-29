@@ -70,7 +70,9 @@ try {
       'tsx/esm',
       'scripts/render-storyboard.mjs',
       storyboardPath,
-      outputPath
+      outputPath,
+      '--mode',
+      'fast'
     ]);
 
     const qa = runQa({storyboardPath, videoPath: outputPath, reviewDir});

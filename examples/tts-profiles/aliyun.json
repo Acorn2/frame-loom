@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0",
+  "enabled": false,
+  "provider": "aliyun",
+  "endpoint": "https://dashscope.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation",
+  "apiKeyEnv": "DASHSCOPE_API_KEY",
+  "model": "qwen3-tts-flash",
+  "voiceType": "Cherry",
+  "format": "wav"
+}

@@ -104,27 +104,11 @@ export function initProject(args = process.argv.slice(2), {now = new Date()} = {
     },
     sfx: []
   }, null, 2)}\n`);
-  write(path.join(target, 'audio/tts-config.example.json'), `${JSON.stringify({
-    schemaVersion: '1.0',
-    enabled: false,
-    provider: 'doubao',
-    apiVersion: 'v3',
-    endpoint: 'https://openspeech.bytedance.com/api/v3/tts/unidirectional',
-    apiKeyEnv: 'DOUBAO_TTS_API_KEY',
-    appIdEnv: 'DOUBAO_TTS_APP_ID',
-    accessTokenEnv: 'DOUBAO_TTS_ACCESS_TOKEN',
-    resourceIdEnv: 'DOUBAO_TTS_RESOURCE_ID',
-    userId: 'frame-loom',
-    model: 'replace-with-model',
-    voiceType: 'replace-with-voice-type',
-    format: 'wav',
-    sampleRate: 24000,
-    speedRatio: 1,
-    volumeRatio: 1,
-    pitchRatio: 1,
-    outputDirectory: 'audio/generated',
-    timeoutMs: 30000
-  }, null, 2)}\n`);
+  for (const name of ['doubao', 'openai', 'elevenlabs', 'aliyun']) {
+    const sourcePath = path.join(projectRoot, 'examples', 'tts-profiles', `${name}.json`);
+    const targetName = name === 'doubao' ? 'tts-config.example.json' : `tts-config.${name}.example.json`;
+    write(path.join(target, 'audio', targetName), fs.readFileSync(sourcePath));
+  }
   write(path.join(target, 'assets/.gitkeep'), '');
   write(path.join(target, 'output/.gitkeep'), '');
   write(path.join(target, 'storyboard.draft.json'), `${JSON.stringify({

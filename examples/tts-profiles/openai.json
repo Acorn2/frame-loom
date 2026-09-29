@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0",
+  "enabled": false,
+  "provider": "openai",
+  "endpoint": "https://api.openai.com/v1/audio/speech",
+  "apiKeyEnv": "OPENAI_API_KEY",
+  "model": "gpt-4o-mini-tts",
+  "voiceType": "alloy",
+  "format": "mp3"
+}

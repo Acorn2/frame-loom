@@ -100,7 +100,7 @@ export const SceneVisualSchema = z.object({
 }).strict();
 
 export const StoryboardSceneSchema = z.object({
-  id: z.string().min(1),
+  id: z.string().min(1).max(120).regex(/^[A-Za-z0-9][A-Za-z0-9_-]*$/, 'scene id 只能包含字母、数字、下划线和连字符，且不能作为路径。'),
   template: TemplateIdSchema,
   purpose: ScenePurposeSchema.optional(),
   title: z.string(),

@@ -3,7 +3,7 @@ import {z} from 'zod';
 export const TtsConfigSchema = z.object({
   schemaVersion: z.literal('1.0'),
   enabled: z.boolean(),
-  provider: z.enum(['doubao', 'mock']),
+  provider: z.enum(['doubao', 'openai', 'elevenlabs', 'aliyun', 'mock']),
   apiVersion: z.enum(['generic', 'v3']).default('generic'),
   endpoint: z.string().url().optional(),
   apiKeyEnv: z.string().min(1).optional(),

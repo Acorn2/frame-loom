@@ -113,6 +113,12 @@ describe('validateStoryboard', () => {
     expect(issues.some((item) => item.path === 'project.status')).toBe(true);
   });
 
+  it('rejects scene IDs that could become filesystem paths during TTS synthesis', () => {
+    const invalid = structuredClone(semanticExample);
+    invalid.scenes[0]!.id = '../../../../outside';
+    expect(validateStoryboard(invalid).some((item) => item.path === '$.scenes.0.id')).toBe(true);
+  });
+
   it('accepts generated and validated storyboard states only in fast mode', () => {
     const generated = structuredClone(example);
     generated.project.status = 'generated';

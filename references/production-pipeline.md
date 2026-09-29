@@ -154,10 +154,13 @@ cp projects/<video-id>/audio/tts-config.example.json projects/<video-id>/audio/t
 npm run synthesize:voiceover -- projects/<video-id>
 ```
 
-The first adapter is configuration-based Doubao HTTP TTS. The endpoint,
-resource identifiers and credentials stay in configuration/environment
-variables; no credential is committed. `mock` is available for deterministic
-tests and local pipeline checks.
+Built-in adapters support Doubao HTTP TTS, OpenAI, ElevenLabs and Alibaba
+Cloud Qwen3 TTS. Choose the corresponding disabled config example generated
+under `audio/`, copy it to `tts-config.json`, and set `enabled=true`. Endpoint
+and voice/model choices stay in the config; credentials stay in environment
+variables and must not be committed. `mock` is for deterministic tests and
+local pipeline checks. See [Audio Integration](audio-integration.md) for each
+provider's example and environment variable.
 
 For external audio:
 

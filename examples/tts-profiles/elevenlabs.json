@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1.0",
+  "enabled": false,
+  "provider": "elevenlabs",
+  "endpoint": "https://api.elevenlabs.io/v1/text-to-speech",
+  "apiKeyEnv": "ELEVENLABS_API_KEY",
+  "model": "eleven_multilingual_v2",
+  "voiceType": "JBFqnCBsd6RMkjVDRZzb",
+  "format": "mp3"
+}

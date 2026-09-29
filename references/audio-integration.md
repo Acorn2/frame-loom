@@ -3,8 +3,8 @@
 FrameLoom supports three audio routes:
 
 1. `silent`: render either an inspection preview or a clean visual master for external editing, chosen with `--output-purpose`.
-2. `tts`: generate narration before rendering. The first adapter is
-   configuration-based Doubao HTTP TTS, with `mock` for deterministic tests.
+2. `tts`: generate narration before rendering with Doubao, OpenAI,
+   ElevenLabs or Alibaba Cloud Model Studio. `mock` is for deterministic tests.
 3. `external`: consume any locally produced voiceover, including recording,
    voice cloning, third-party TTS or manually edited audio.
 
@@ -56,11 +56,44 @@ Copy `audio/audio-config.example.json` to `audio/audio-config.json`, then enable
 
 ## Built-in TTS Contract
 
-Initialize a project with `audio/tts-config.example.json`, copy it to
-`audio/tts-config.json`, set `enabled` to `true`, and provide the credentials
-through the configured environment variable names. The default example uses
-the Doubao HTTP v3 endpoint but intentionally leaves provider-specific voice
-and resource values for the project owner to fill in.
+The repository stores the four credential-free presets in
+[`examples/tts-profiles/`](../examples/tts-profiles/). Initialize a project,
+choose one of its four disabled examples, copy it to
+`audio/tts-config.json`, set `enabled` to `true`, and set the named environment
+variable. Existing projects can copy a preset from the repository. Do not put
+credential values in JSON. The Doubao example leaves
+account-specific voice and resource values for the project owner to fill in.
+
+| Example file under `audio/` | Provider | Required environment variable | Initial voice / format |
+| --- | --- | --- | --- |
+| `tts-config.example.json` | Doubao HTTP v3 SSE | `DOUBAO_TTS_API_KEY`, `DOUBAO_TTS_RESOURCE_ID` | Set your account's voice / MP3 |
+| `tts-config.openai.example.json` | OpenAI speech | `OPENAI_API_KEY` | `alloy` / MP3 |
+| `tts-config.elevenlabs.example.json` | ElevenLabs | `ELEVENLABS_API_KEY` | `JBFqnCBsd6RMkjVDRZzb` / MP3 |
+| `tts-config.aliyun.example.json` | Alibaba Cloud Qwen3-TTS-Flash | `DASHSCOPE_API_KEY` | `Cherry` / WAV |
+
+The Alibaba example uses the Beijing Qwen non-streaming endpoint and requires
+a Beijing API key. For Singapore, change the host to
+`dashscope-intl.aliyuncs.com` and use a Singapore key. Its temporary audio URL
+is downloaded into the project immediately. If DashScope returns an HTTP-scheme
+signed OSS URL, FrameLoom upgrades that same Alibaba Cloud host and signature
+to HTTPS before downloading; it never downloads over HTTP. `voiceType` is the provider's voice
+name or ID, and `model` selects the model. OpenAI maps `speedRatio` to its
+speech speed; its sample-rate, pitch and volume fields are unused. ElevenLabs
+and Alibaba do not map the generic speed/pitch/volume/sample-rate fields.
+Doubao v3 maps `speedRatio` and `volumeRatio` to its speech and loudness rates;
+`pitchRatio` is not mapped by the SSE preset.
+Each scene is sent as one request, so keep
+`scene.narration` within the selected model's input limit.
+ElevenLabs currently uses `mp3_44100_128`; Alibaba Qwen currently uses WAV.
+Built-in TTS sends credentials only to the selected provider's official HTTPS
+host and rejects redirects. Alibaba audio downloads require an Alibaba Cloud
+HTTPS host. Use the external-audio route for a custom proxy or self-hosted
+endpoint. `outputDirectory` must stay inside the project's `audio/` directory,
+and scene IDs may contain only safe filename characters.
+See the [OpenAI speech API](https://platform.openai.com/docs/api-reference/audio/createSpeech),
+[ElevenLabs conversion API](https://elevenlabs.io/docs/api-reference/text-to-speech/convert),
+and [Alibaba Cloud non-real-time TTS guide](https://help.aliyun.com/zh/model-studio/non-realtime-tts-user-guide)
+when changing models or voices.
 
 Profiles may also live in `audio/tts-config.<name>.json` or
 `audio/tts-profiles/<name>.json`. Run `npm run list:tts-profiles --
@@ -69,14 +102,16 @@ profile, pass `--tts-config <selected-file>` to `produce`; it will not choose a
 voice silently. The selected provider and voice are recorded in `run.json`.
 
 ```bash
-cp projects/<video-id>/audio/tts-config.example.json projects/<video-id>/audio/tts-config.json
+cp examples/tts-profiles/openai.json projects/<video-id>/audio/tts-config.json
+# Edit audio/tts-config.json: set enabled=true, then export the named API key.
+npm run list:tts-profiles -- projects/<video-id>
 npm run synthesize:voiceover -- projects/<video-id>
 ```
 
 Generated files:
 
-- `audio/generated/<scene-id>.wav`: one measured segment per narrated scene
-- `audio/generated/voiceover.wav`: scene segments placed on the project timeline
+- `audio/generated/<scene-id>.<wav|mp3>`: one measured segment per narrated scene
+- `audio/generated/voiceover.<wav|mp3>`: scene segments placed on the project timeline
 - `audio/generated/captions.srt`: subtitles derived from the same text and
   measured durations
 - `audio/audio-manifest.json`: text hash, scene mapping, timings and paths

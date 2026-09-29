@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {fingerprintFiles} from './input-fingerprint.mjs';
+import {collectManifestAssetFiles, fingerprintFiles} from './input-fingerprint.mjs';
 
 function collectFiles(directory) {
   if (!fs.existsSync(directory)) return [];
@@ -14,6 +14,7 @@ function collectFiles(directory) {
 export function storyboardApprovalFingerprint(projectPath) {
   const files = ['storyboard.json', 'script.md', 'asset-manifest.json'].map((name) => path.join(projectPath, name));
   files.push(...collectFiles(path.join(projectPath, 'assets')));
+  files.push(...collectManifestAssetFiles(projectPath));
   const handoffPath = path.join(projectPath, 'visual-handoff.json');
   if (fs.existsSync(handoffPath)) files.push(handoffPath);
   try {

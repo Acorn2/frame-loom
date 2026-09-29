@@ -58,6 +58,39 @@ function assertOutputAvailable(filePath, force) {
   }
 }
 
+function isInside(directory, candidate) {
+  const relative = path.relative(directory, candidate);
+  return relative !== '' && relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative);
+}
+
+function resolveOutputDirectory(projectPath, configuredPath) {
+  const audioDirectory = path.join(projectPath, 'audio');
+  const outputDirectory = path.resolve(projectPath, configuredPath);
+  if (!isInside(audioDirectory, outputDirectory)) {
+    throw new Error('TTS outputDirectory 必须位于项目的 audio/ 目录内。');
+  }
+  const realProject = fs.realpathSync(projectPath);
+  const realAudio = fs.realpathSync(audioDirectory);
+  if (!isInside(realProject, realAudio)) {
+    throw new Error('项目的 audio/ 目录不能指向项目外。');
+  }
+  let existing = outputDirectory;
+  while (true) {
+    try {
+      fs.lstatSync(existing);
+      break;
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+      existing = path.dirname(existing);
+    }
+  }
+  const realOutput = path.resolve(fs.realpathSync(existing), path.relative(existing, outputDirectory));
+  if (!isInside(realAudio, realOutput)) {
+    throw new Error('TTS outputDirectory 不能通过符号链接指向 audio/ 目录外。');
+  }
+  return outputDirectory;
+}
+
 function createAudioConfig(projectPath, outputDirectory, format) {
   const audioDirectory = path.join(projectPath, 'audio');
   const generatedDirectory = path.relative(audioDirectory, outputDirectory);
@@ -100,7 +133,7 @@ async function main(options) {
   const config = ttsResult.data;
   if (!config.enabled) throw new Error('tts-config.json 的 enabled 为 false，不能运行 TTS 合成。');
 
-  const outputDirectory = path.resolve(projectPath, config.outputDirectory);
+  const outputDirectory = resolveOutputDirectory(projectPath, config.outputDirectory);
   const extension = config.format === 'mp3' ? 'mp3' : 'wav';
   const fullAudioPath = path.join(outputDirectory, `voiceover.${extension}`);
   const captionsPath = path.join(outputDirectory, 'captions.srt');
@@ -108,14 +141,20 @@ async function main(options) {
   const manifestPath = path.join(projectPath, 'audio', 'audio-manifest.json');
   const timeline = getSceneTimeline(storyboardResult.data);
   const configFingerprint = fingerprintFiles([ttsConfigPath], projectPath);
-  const segmentPaths = timeline.filter(({scene}) => scene.narration.trim()).map(({scene}) => path.join(outputDirectory, `${scene.id}.${extension}`));
-  if (segmentPaths.includes(fullAudioPath)) throw new Error('scene id 不能是 voiceover：它与合成后的旁白文件名冲突。');
+  const narratedScenes = timeline.filter(({scene}) => scene.narration.trim());
+  const segmentNames = narratedScenes.map(({scene}) => scene.id.toLowerCase());
+  if (segmentNames.includes('voiceover')) throw new Error('scene id 不能是 voiceover：它与合成后的旁白文件名冲突。');
+  if (new Set(segmentNames).size !== segmentNames.length) throw new Error('有旁白的 scene id 不能仅以大小写区分：它们会在部分文件系统中生成同名音频文件。');
+  const segmentPaths = narratedScenes.map(({scene}) => path.join(outputDirectory, `${scene.id}.${extension}`));
   if (options.reuse && !options.force && fs.existsSync(manifestPath)) {
     const manifest = AudioManifestSchema.parse(readJson(manifestPath));
-    const expected = timeline.filter(({scene}) => scene.narration.trim());
+    const expected = narratedScenes;
     const sameTextAndTiming = manifest.segments.length === expected.length && manifest.segments.every((segment, index) => {
       const timing = expected[index];
-      return timing && segment.sceneId === timing.scene.id && segment.textHash === hashNarration(timing.scene.narration.trim()) && Math.abs(segment.startSec - timing.startFrame / storyboardResult.data.project.fps) < 0.001;
+      return timing && segment.sceneId === timing.scene.id && segment.textHash === hashNarration(timing.scene.narration.trim())
+        && Math.abs(segment.startSec - timing.startFrame / storyboardResult.data.project.fps) < 0.001
+        && Math.abs(segment.endSec - segment.startSec - segment.durationSec) < 0.001
+        && segment.endSec <= timing.endFrame / storyboardResult.data.project.fps + 0.08;
     });
     if (manifest.ttsConfigFingerprint !== configFingerprint || manifest.projectDurationSec !== storyboardResult.data.project.durationFrames / storyboardResult.data.project.fps || !sameTextAndTiming || ![...segmentPaths, fullAudioPath, captionsPath, audioConfigPath].every((filePath) => fs.existsSync(filePath) && fs.statSync(filePath).size > 0) || manifest.artifactFingerprint !== fingerprintFiles([...segmentPaths, fullAudioPath, captionsPath], projectPath)) {
       throw new Error('已有 TTS 音频包与当前讲稿、时间轴或配置不一致；请核对后使用 --force 重新合成。');

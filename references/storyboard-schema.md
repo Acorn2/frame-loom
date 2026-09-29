@@ -58,18 +58,21 @@ New project input selection is stored separately in `project-input.json` (schema
 - `durationFrames` must equal `durationSec × fps`.
 - With no overlap transitions, scene durations sum to `project.durationFrames`. An incoming scene's `transitionIn.durationFrames` subtracts that many frames from the total; the shared scene timeline determines render and QA timestamps.
 - `project.status` is `draft`, `generated`, `validated`, `reviewed` or `approved`.
-  Standalone review rendering accepts only `reviewed` and `approved`; the
-  explicit fast execution policy may render `generated` or `validated`.
-  The unified `produce --mode review` additionally requires a current
-  `storyboard-approval.json` bound to the script, storyboard and visual handoff
-  config. A draft stays in `storyboard.draft.json`.
+  Standalone review rendering and `produce --mode review` both require a
+  current `storyboard-approval.json` bound to the script, storyboard and visual
+  handoff config. A direct review render accepts only that project's
+  `storyboard.json`; public fixtures without approval use `--mode fast`; a draft
+  stays in `storyboard.draft.json`.
+- The approval fingerprint includes bytes of files listed in
+  `asset-manifest.json`, including assets supplied by absolute path outside the
+  project. Changing one requires another review before rendering.
 - Style ID and version must match `styles/style-index.json` and the selected `style.json`.
 
 ## Scene
 
 Every scene requires:
 
-- stable `id`, semantic `title` and source-faithful `narration`;
+- stable `id`, semantic `title` and source-faithful `narration`; scene IDs use at most 120 ASCII letters, digits, underscores or hyphens, and start with a letter or digit. Narrated scene IDs must also be distinct when case is ignored, and cannot be `voiceover` in any capitalization because TTS uses IDs as audio filenames;
 - `durationFrames`;
 - explicit `template`, `layers`, `connections`, `beats` and `captions`;
 - optional `primaryClaim` and `attentionTarget` for review and a deterministic focus target;

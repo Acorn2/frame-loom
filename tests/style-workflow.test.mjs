@@ -22,6 +22,8 @@ import {buildStyleGallery} from '../scripts/preview-styles.mjs';
 import {CAPABILITY_MANIFEST} from '../src/renderer/capability-manifest.ts';
 import {createStyleTokens} from '../src/styles/style-loader.ts';
 import {AudioConfigSchema} from '../src/schemas/audio-config.ts';
+import {TtsConfigSchema} from '../src/schemas/tts-config.ts';
+import {listTtsProfiles} from '../scripts/lib/tts-profiles.mjs';
 import {promoteDraftStoryboard} from '../scripts/produce.mjs';
 import {runProduction} from '../scripts/produce.mjs';
 import {fingerprintFiles, fingerprintProjectInputs} from '../scripts/lib/input-fingerprint.mjs';
@@ -109,6 +111,15 @@ describe('Style Pack workflow', () => {
     expect(fs.existsSync(path.join(project, 'visual-sources.md'))).toBe(false);
     const audioExample = JSON.parse(fs.readFileSync(path.join(project, 'audio/audio-config.example.json'), 'utf8'));
     expect(AudioConfigSchema.safeParse(audioExample).success).toBe(true);
+    for (const name of ['', '.openai', '.elevenlabs', '.aliyun']) {
+      const example = JSON.parse(fs.readFileSync(path.join(project, `audio/tts-config${name}.example.json`), 'utf8'));
+      expect(TtsConfigSchema.safeParse(example).success).toBe(true);
+      expect(example.enabled).toBe(false);
+    }
+    expect(listTtsProfiles(project)).toEqual([]);
+    const openaiExample = JSON.parse(fs.readFileSync(path.join(project, 'audio/tts-config.openai.example.json'), 'utf8'));
+    fs.writeFileSync(path.join(project, 'audio/tts-config.json'), JSON.stringify({...openaiExample, enabled: true}));
+    expect(listTtsProfiles(project).map(({provider}) => provider)).toEqual(['openai']);
     expect(() => initProject(['demo-project', '--projects-dir', temp])).toThrow(/已存在/);
   });
 
@@ -328,7 +339,7 @@ describe('Style Pack workflow', () => {
     const storyboardPath = path.join(temp, 'storyboard.json');
     fs.writeFileSync(storyboardPath, JSON.stringify(articleStoryboard));
     const outputPath = path.join(temp, 'preview.mp4');
-    const result = spawnSync(process.execPath, ['--import', 'tsx/esm', 'scripts/render-storyboard.mjs', storyboardPath, outputPath], {cwd: process.cwd(), encoding: 'utf8'});
+    const result = spawnSync(process.execPath, ['--import', 'tsx/esm', 'scripts/render-storyboard.mjs', storyboardPath, outputPath, '--mode', 'fast'], {cwd: process.cwd(), encoding: 'utf8'});
     expect(result.status).toBe(1);
     expect(result.stderr).toContain('asset-manifest');
     expect(fs.existsSync(outputPath)).toBe(false);
@@ -371,6 +382,24 @@ describe('Style Pack workflow', () => {
     expect(validateAssets(path.join(project, 'storyboard.json')).some((item) => item.includes('逃出项目目录'))).toBe(true);
 
     writeManifest({...manifestAsset, path: path.join(assets, 'screen.svg')});
+    expect(validateAssets(path.join(project, 'storyboard.json'))).toEqual([]);
+
+    fs.writeFileSync(path.join(assets, 'inside.svg'), '<svg />');
+    fs.unlinkSync(path.join(assets, 'screen.svg'));
+    fs.symlinkSync('inside.svg', path.join(assets, 'screen.svg'));
+    writeManifest(manifestAsset);
+    expect(validateAssets(path.join(project, 'storyboard.json'))).toEqual([]);
+
+    const outsidePath = path.join(directory, 'outside.svg');
+    fs.writeFileSync(outsidePath, '<svg />');
+    fs.unlinkSync(path.join(assets, 'screen.svg'));
+    fs.symlinkSync(outsidePath, path.join(assets, 'screen.svg'));
+    expect(validateAssets(path.join(project, 'storyboard.json')).some((item) => item.includes('逃出项目目录'))).toBe(true);
+
+    writeManifest({...manifestAsset, path: outsidePath});
+    const storyboard = JSON.parse(fs.readFileSync(path.join(project, 'storyboard.json'), 'utf8'));
+    storyboard.scenes[0].layers[0].asset = outsidePath;
+    fs.writeFileSync(path.join(project, 'storyboard.json'), JSON.stringify(storyboard));
     expect(validateAssets(path.join(project, 'storyboard.json'))).toEqual([]);
   });
 

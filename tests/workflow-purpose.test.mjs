@@ -6,7 +6,7 @@ import {afterEach, describe, expect, it} from 'vitest';
 import {loadHandoffConfig, resolveOutputPurpose} from '../scripts/lib/output-purpose.mjs';
 import {listTtsProfiles, selectTtsProfile} from '../scripts/lib/tts-profiles.mjs';
 import {approveStoryboard} from '../scripts/approve-storyboard.mjs';
-import {assertStoryboardApproval} from '../scripts/lib/storyboard-approval.mjs';
+import {assertStoryboardApproval, storyboardApprovalFingerprint} from '../scripts/lib/storyboard-approval.mjs';
 import {prepareScriptHandoff} from '../scripts/prepare-script-handoff.mjs';
 import {checkVisualHandoffEligibility} from '../scripts/approve-visual-handoff.mjs';
 import {fingerprintFiles, fingerprintProjectInputs} from '../scripts/lib/input-fingerprint.mjs';
@@ -82,6 +82,59 @@ describe('video production purposes', () => {
     expect(() => assertStoryboardApproval(project)).toThrow(/已变化/);
   });
 
+  it('invalidates approval and delivery inputs when an external manifest asset changes', () => {
+    const {project, storyboard} = projectFixture();
+    const external = fs.mkdtempSync(path.join(os.tmpdir(), 'frame-loom-asset-'));
+    directories.push(external);
+    const assetPath = path.join(external, 'visual.svg');
+    fs.writeFileSync(assetPath, '<svg xmlns="http://www.w3.org/2000/svg"/>');
+    fs.writeFileSync(path.join(project, 'asset-manifest.json'), JSON.stringify({schemaVersion: '1.0', assets: [{id: 'visual', path: assetPath, type: 'image', source: 'test fixture', license: 'MIT', intendedUse: 'review fingerprint'}]}));
+    storyboard.project.status = 'reviewed';
+    fs.writeFileSync(path.join(project, 'storyboard.json'), JSON.stringify(storyboard));
+    const reviewPath = path.join(project, 'review.json');
+    fs.writeFileSync(reviewPath, JSON.stringify({reviewer: 'creator', notes: 'Reviewed the referenced image.'}));
+    approveStoryboard(project, reviewPath);
+    expect(() => assertStoryboardApproval(project)).not.toThrow();
+    const fingerprint = fingerprintProjectInputs(project, path.resolve('styles'), undefined, undefined, {includeAudio: false});
+    fs.writeFileSync(assetPath, '<svg xmlns="http://www.w3.org/2000/svg"><rect/></svg>');
+    expect(() => assertStoryboardApproval(project)).toThrow(/已变化/);
+    expect(fingerprintProjectInputs(project, path.resolve('styles'), undefined, undefined, {includeAudio: false})).not.toBe(fingerprint);
+  });
+
+  it('rejects a non-file manifest asset before fingerprinting it', () => {
+    const {project} = projectFixture();
+    const external = fs.mkdtempSync(path.join(os.tmpdir(), 'frame-loom-invalid-asset-'));
+    directories.push(external);
+    fs.writeFileSync(path.join(project, 'asset-manifest.json'), JSON.stringify({schemaVersion: '1.0', assets: [{id: 'invalid', path: external, type: 'image', source: 'test fixture', license: 'MIT', intendedUse: 'invalid asset'}]}));
+    expect(() => storyboardApprovalFingerprint(project)).toThrow(/指纹输入必须是普通文件/);
+  });
+
+  it('requires the same approval for a direct review render', () => {
+    const {project, storyboard} = projectFixture();
+    storyboard.project.status = 'reviewed';
+    fs.writeFileSync(path.join(project, 'storyboard.json'), JSON.stringify(storyboard));
+    const result = spawnSync(process.execPath, ['--import', 'tsx/esm', 'scripts/render-storyboard.mjs', path.join(project, 'storyboard.json'), path.join(project, 'output', 'preview.mp4'), '--mode', 'review'], {cwd: process.cwd(), encoding: 'utf8'});
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('storyboard-approval.json');
+    expect(result.stdout).not.toContain('Bundling');
+  });
+
+  it('does not apply a project approval to a different storyboard file', () => {
+    const {project, storyboard} = projectFixture();
+    storyboard.project.status = 'reviewed';
+    fs.writeFileSync(path.join(project, 'storyboard.json'), JSON.stringify(storyboard));
+    const reviewPath = path.join(project, 'review.json');
+    fs.writeFileSync(reviewPath, JSON.stringify({reviewer: 'creator', notes: 'Reviewed storyboard.json.'}));
+    approveStoryboard(project, reviewPath);
+    storyboard.project.title = 'Unreviewed alternate';
+    const alternatePath = path.join(project, 'storyboard-alternate.json');
+    fs.writeFileSync(alternatePath, JSON.stringify(storyboard));
+    const result = spawnSync(process.execPath, ['--import', 'tsx/esm', 'scripts/render-storyboard.mjs', alternatePath, path.join(project, 'output', 'preview.mp4'), '--mode', 'review'], {cwd: process.cwd(), encoding: 'utf8'});
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('只能渲染当前项目已审核的 storyboard.json');
+    expect(result.stdout).not.toContain('Bundling');
+  });
+
   it('lists safe TTS summaries and requires a choice when more than one is enabled', () => {
     const {project} = projectFixture();
     const config = {schemaVersion: '1.0', enabled: true, provider: 'mock', voiceType: 'voice-a'};
@@ -114,6 +167,39 @@ describe('video production purposes', () => {
     expect(fs.readdirSync(path.join(project, 'audio', 'generated'))).toEqual([]);
   });
 
+  it('rejects TTS output paths outside audio, including symlink escapes', () => {
+    const {project, storyboard} = projectFixture();
+    storyboard.scenes[0].narration = '测试旁白。';
+    fs.writeFileSync(path.join(project, 'storyboard.json'), JSON.stringify(storyboard));
+    const configPath = path.join(project, 'audio', 'tts-config.json');
+    const command = () => spawnSync(process.execPath, ['--import', 'tsx/esm', 'scripts/synthesize-voiceover.mjs', project], {cwd: process.cwd(), encoding: 'utf8'});
+    fs.writeFileSync(configPath, JSON.stringify({schemaVersion: '1.0', enabled: true, provider: 'mock', voiceType: 'test-tone', outputDirectory: '../outside'}));
+    expect(command().stderr).toContain('必须位于项目的 audio/ 目录内');
+    const outside = fs.mkdtempSync(path.join(os.tmpdir(), 'frame-loom-outside-'));
+    directories.push(outside);
+    fs.symlinkSync(outside, path.join(project, 'audio', 'generated'));
+    fs.writeFileSync(configPath, JSON.stringify({schemaVersion: '1.0', enabled: true, provider: 'mock', voiceType: 'test-tone'}));
+    expect(command().stderr).toContain('符号链接');
+    expect(fs.readdirSync(outside)).toEqual([]);
+  });
+
+  it('rejects TTS audio filenames that collide on case-insensitive file systems', () => {
+    const {project, storyboard} = projectFixture();
+    const configPath = path.join(project, 'audio', 'tts-config.json');
+    fs.writeFileSync(configPath, JSON.stringify({schemaVersion: '1.0', enabled: true, provider: 'mock', voiceType: 'test-tone'}));
+    const command = () => spawnSync(process.execPath, ['--import', 'tsx/esm', 'scripts/synthesize-voiceover.mjs', project], {cwd: process.cwd(), encoding: 'utf8'});
+    storyboard.scenes[0].id = 'Voiceover';
+    fs.writeFileSync(path.join(project, 'storyboard.json'), JSON.stringify(storyboard));
+    expect(command().stderr).toContain('不能是 voiceover');
+    storyboard.scenes[0].id = 'Opening';
+    storyboard.scenes.push({...structuredClone(storyboard.scenes[0]), id: 'opening'});
+    storyboard.project.durationFrames *= 2;
+    storyboard.project.durationSec *= 2;
+    fs.writeFileSync(path.join(project, 'storyboard.json'), JSON.stringify(storyboard));
+    expect(command().stderr).toContain('不能仅以大小写区分');
+    expect(fs.existsSync(path.join(project, 'audio', 'generated'))).toBe(false);
+  });
+
   it('reuses only a complete TTS package for the same script, config and bytes', () => {
     const {project, storyboard} = projectFixture();
     storyboard.scenes[0].narration = '测试旁白。';
@@ -124,6 +210,23 @@ describe('video production purposes', () => {
     expect(command().status).toBe(0);
     expect(command(['--reuse']).stdout).toContain('VOICEOVER REUSED');
     fs.appendFileSync(path.join(project, 'audio', 'generated', 'opening.wav'), 'changed');
+    expect(command(['--reuse']).stderr).toContain('不一致');
+  });
+
+  it('rejects reused speech when a scene shrinks without moving its start time', () => {
+    const {project, storyboard} = projectFixture();
+    storyboard.scenes[0].narration = '测试旁白测试旁白。';
+    storyboard.scenes.push({...structuredClone(sourceStoryboard.scenes[1]), narration: '', transitionIn: {type: 'overlap-fade', durationFrames: 120}});
+    storyboard.project.durationFrames = 195;
+    storyboard.project.durationSec = 195 / storyboard.project.fps;
+    const storyboardPath = path.join(project, 'storyboard.json');
+    fs.writeFileSync(storyboardPath, JSON.stringify(storyboard));
+    fs.writeFileSync(path.join(project, 'audio', 'tts-config.json'), JSON.stringify({schemaVersion: '1.0', enabled: true, provider: 'mock', voiceType: 'test-tone'}));
+    const command = (extra = []) => spawnSync(process.execPath, ['--import', 'tsx/esm', 'scripts/synthesize-voiceover.mjs', project, ...extra], {cwd: process.cwd(), encoding: 'utf8'});
+    expect(command().status).toBe(0);
+    storyboard.scenes[0].durationFrames = 45;
+    storyboard.scenes[1].transitionIn.durationFrames = 30;
+    fs.writeFileSync(storyboardPath, JSON.stringify(storyboard));
     expect(command(['--reuse']).stderr).toContain('不一致');
   });
 

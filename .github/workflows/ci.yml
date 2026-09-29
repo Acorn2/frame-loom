@@ -24,10 +24,14 @@ jobs:
       - run: npm run validate:storyboard -- examples/article-video/storyboard.json
       - run: npm run validate:storyboard -- examples/product-demo/storyboard.json
       - run: npm run validate:storyboard -- examples/data-explainer/storyboard.json
+      - run: npm run validate:storyboard -- examples/semantic-visuals/storyboard.json --mode fast
       - run: npm run validate:assets -- examples/product-demo/storyboard.json
+      - run: npm run validate:assets -- examples/semantic-visuals/storyboard.json
       - run: npm run check:safe-area -- examples/data-explainer/storyboard.json
       - run: npm run build
-      - run: npm run render:storyboard -- examples/article-video/storyboard.json /tmp/frame-loom-ci.mp4
-      - run: npm run qa:storyboard -- examples/article-video/storyboard.json /tmp/frame-loom-ci.mp4 /tmp/frame-loom-ci-review
+      - run: npm run render:storyboard -- examples/article-video/storyboard.json /tmp/frame-loom-ci.mp4 --mode fast
+      - run: npm run qa:storyboard -- examples/article-video/storyboard.json /tmp/frame-loom-ci.mp4 /tmp/frame-loom-ci-review --mode fast
+      - run: npm run render:storyboard -- examples/semantic-visuals/storyboard.json /tmp/frame-loom-semantic-ci.mp4 --mode fast
+      - run: npm run qa:storyboard -- examples/semantic-visuals/storyboard.json /tmp/frame-loom-semantic-ci.mp4 /tmp/frame-loom-semantic-ci-review --mode fast
       - run: npm run test:audio-pilot
       - run: npm run test:visual-regression

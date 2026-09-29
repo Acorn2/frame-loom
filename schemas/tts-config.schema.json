@@ -14,6 +14,9 @@
       "type": "string",
       "enum": [
         "doubao",
+        "openai",
+        "elevenlabs",
+        "aliyun",
         "mock"
       ]
     },

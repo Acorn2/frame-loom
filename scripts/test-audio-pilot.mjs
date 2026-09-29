@@ -101,6 +101,8 @@ try {
       'scripts/render-storyboard.mjs',
       fixture.storyboardPath,
       outputPath,
+      '--mode',
+      'fast',
       '--audio-config',
       audioConfigPath
     ]);

@@ -239,7 +239,7 @@ npm run approve:visual-handoff -- projects/my-video projects/my-video/output/vis
 npm run validate:storyboard -- examples/article-video/storyboard.json
 npm run validate:assets -- examples/article-video/storyboard.json
 npm run check:safe-area -- examples/article-video/storyboard.json
-npm run render:storyboard -- examples/article-video/storyboard.json /tmp/frame-loom-preview.mp4
+npm run render:storyboard -- examples/article-video/storyboard.json /tmp/frame-loom-preview.mp4 --mode fast
 npm run qa:storyboard -- examples/article-video/storyboard.json /tmp/frame-loom-preview.mp4 /tmp/frame-loom-review
 ```
 
@@ -281,8 +281,9 @@ schema, capability manifest, validator fixtures and renderer together.
 ## Known Boundaries
 
 - No online editor, cloud rendering, account system or automatic publishing.
-- No voice cloning, mastering or universal vendor SDK. The first built-in TTS
-  adapter is configuration-based Doubao HTTP TTS; credentials remain in
-  environment variables and other providers use the external-audio route.
+- No voice cloning, mastering or universal vendor SDK. Built-in HTTP TTS
+  adapters support Doubao, OpenAI, ElevenLabs and Alibaba Cloud Qwen3 TTS;
+  credentials remain in environment variables. Other providers use the
+  external-audio route.
 - Webpage screenshots are captured by the Agent before rendering; the CLI and renderer do not fetch URLs or discover images automatically.
 - Automated QA does not replace complete human playback review.

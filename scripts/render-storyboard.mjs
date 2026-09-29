@@ -10,6 +10,7 @@ import {createStyleTokens} from '../src/styles/style-loader.ts';
 import {inspectOutput} from './inspect-output.mjs';
 import {checkAssetInput, checkAudioInput, checkStoryboardInput, checkVisualInput} from './lib/preflight.mjs';
 import {loadHandoffConfig, OUTPUT_PURPOSES} from './lib/output-purpose.mjs';
+import {assertStoryboardApproval} from './lib/storyboard-approval.mjs';
 
 const args = process.argv.slice(2);
 let force = false;
@@ -68,6 +69,18 @@ if (outputPurpose === 'in-project-video' && !audioConfigPath) {
 if (resolvedInput.endsWith('storyboard.draft.json')) {
   console.error('禁止直接渲染 storyboard.draft.json，请先完成人工审核并输出 storyboard.json。');
   process.exit(1);
+}
+if (executionMode === 'review') {
+  if (path.basename(resolvedInput) !== 'storyboard.json') {
+    console.error('review 模式只能渲染当前项目已审核的 storyboard.json。');
+    process.exit(1);
+  }
+  try {
+    assertStoryboardApproval(path.dirname(resolvedInput));
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exit(1);
+  }
 }
 if (resolvedInput === resolvedOutput) {
   console.error('输入 storyboard 与输出文件不能是同一路径。');

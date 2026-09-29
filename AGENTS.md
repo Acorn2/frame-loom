@@ -22,7 +22,7 @@ npm run typecheck
 npm run lint
 npm run test:storyboard
 npm run validate:storyboard -- examples/article-video/storyboard.json
-npm run render:storyboard -- examples/article-video/storyboard.json /tmp/frame-loom-preview.mp4
+npm run render:storyboard -- examples/article-video/storyboard.json /tmp/frame-loom-preview.mp4 --mode fast
 npm run inspect:output -- /tmp/frame-loom-preview.mp4 examples/article-video/storyboard.json
 ```
 

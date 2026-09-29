@@ -5,6 +5,11 @@ import {AssetManifestSchema} from '../src/schemas/asset-manifest.ts';
 import {ProjectInputSchema} from '../src/schemas/project-input.ts';
 import {StoryboardSchema} from '../src/schemas/storyboard.ts';
 
+function isInsideDirectory(directory, candidate) {
+  const relative = path.relative(directory, candidate);
+  return relative !== '' && relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative);
+}
+
 export function validateAssets(storyboardPath, manifestPath) {
   const resolvedStoryboard = path.resolve(storyboardPath);
   const resolvedManifest = path.resolve(manifestPath ?? path.join(path.dirname(resolvedStoryboard), 'asset-manifest.json'));
@@ -52,19 +57,29 @@ export function validateAssets(storyboardPath, manifestPath) {
 
   const ids = new Set();
   const assetsByPath = new Map();
+  const manifestDirectory = path.dirname(resolvedManifest);
+  const realManifestDirectory = fs.realpathSync(manifestDirectory);
   for (const asset of manifest.assets) {
     if (ids.has(asset.id)) issues.push(`重复 asset id：${asset.id}`);
     ids.add(asset.id);
-    const normalized = path.normalize(path.isAbsolute(asset.path)
+    const isRelative = !path.isAbsolute(asset.path);
+    const normalized = path.normalize(!isRelative
       ? path.resolve(asset.path)
-      : path.resolve(path.dirname(resolvedManifest), asset.path));
+      : path.resolve(manifestDirectory, asset.path));
     if (assetsByPath.has(normalized)) issues.push(`重复 asset path：${asset.path}`);
     assetsByPath.set(normalized, asset);
-    if (!path.isAbsolute(asset.path) && !normalized.startsWith(`${path.dirname(resolvedManifest)}${path.sep}`)) {
+    if (isRelative && !isInsideDirectory(manifestDirectory, normalized)) {
       issues.push(`manifest asset 相对路径不能逃出项目目录：${asset.path}`);
+      continue;
     }
-    const assetPath = normalized;
-    if (!fs.existsSync(assetPath) || !fs.statSync(assetPath).isFile() || fs.statSync(assetPath).size === 0) {
+    try {
+      if (isRelative && !isInsideDirectory(realManifestDirectory, fs.realpathSync(normalized))) {
+        issues.push(`manifest asset 相对路径不能逃出项目目录：${asset.path}`);
+        continue;
+      }
+      const stat = fs.statSync(normalized);
+      if (!stat.isFile() || stat.size === 0) issues.push(`manifest asset 不存在或为空：${asset.path}`);
+    } catch {
       issues.push(`manifest asset 不存在或为空：${asset.path}`);
     }
   }

@@ -11,12 +11,31 @@ function collectFiles(directory) {
   });
 }
 
+export function collectManifestAssetFiles(projectPath) {
+  const manifestPath = path.join(projectPath, 'asset-manifest.json');
+  if (!fs.existsSync(manifestPath)) return [];
+  try {
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    if (!Array.isArray(manifest.assets)) return [];
+    return manifest.assets
+      .filter((asset) => typeof asset?.path === 'string' && asset.path.length > 0)
+      .map((asset) => path.resolve(projectPath, asset.path));
+  } catch {
+    // The asset manifest validator reports malformed JSON separately.
+    return [];
+  }
+}
+
 export function fingerprintFiles(files, basePath) {
   const hash = createHash('sha256');
   for (const filePath of [...new Set(files)].sort()) {
     hash.update(path.relative(basePath, filePath));
     hash.update('\0');
-    hash.update(fs.existsSync(filePath) ? fs.readFileSync(filePath) : '<missing>');
+    const exists = fs.existsSync(filePath);
+    if (exists && !fs.statSync(filePath).isFile()) {
+      throw new Error(`指纹输入必须是普通文件：${filePath}`);
+    }
+    hash.update(exists ? fs.readFileSync(filePath) : '<missing>');
     hash.update('\0');
   }
   return hash.digest('hex');
@@ -32,6 +51,7 @@ export function fingerprintProjectInputs(projectPath, styleRoot, audioConfigPath
   for (const directory of includeAudio ? ['source', 'assets', 'audio'] : ['source', 'assets']) {
     files.push(...collectFiles(path.join(projectPath, directory)));
   }
+  files.push(...collectManifestAssetFiles(projectPath));
   const configuredAudio = audioConfigPath ? path.resolve(audioConfigPath) : path.join(projectPath, 'audio', 'audio-config.json');
   if (includeAudio && fs.existsSync(configuredAudio)) {
     files.push(configuredAudio);
