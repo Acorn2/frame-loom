@@ -20,6 +20,8 @@ const MusicDuckingSchema = z.object({
 }).strict();
 
 const MusicFileSchema = AudioFileSchema.extend({
+  fadeInSec: z.number().nonnegative().optional(),
+  fadeOutSec: z.number().nonnegative().optional(),
   ducking: MusicDuckingSchema.optional()
 }).strict();
 

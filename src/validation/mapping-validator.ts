@@ -18,6 +18,9 @@ function validateSemanticScene(scene: StoryboardScene): MappingIssue[] {
   const issues: MappingIssue[] = [];
   const visual = scene.visual;
   if (!visual) return [mappingIssue(scene, 'Storyboard 2.3 需要 visual：先定义画面解释的关系，再选择风格。', 'error')];
+  if (visual.networkDirection && visual.kind !== 'network') issues.push(mappingIssue(scene, 'networkDirection 仅适用于 network。', 'error'));
+  if (visual.changeMode && visual.kind !== 'change') issues.push(mappingIssue(scene, 'changeMode 仅适用于 change。', 'error'));
+  if (visual.mediaFocus && (visual.kind !== 'media' || visual.mediaFocus.start + visual.mediaFocus.duration > scene.durationFrames)) issues.push(mappingIssue(scene, 'mediaFocus 仅适用于 media，且聚焦动作必须位于镜头内。', 'error'));
   const primary = scene.layers.filter((layer) => SEMANTIC_CONTENT_TYPES.has(layer.type));
   const nodes = primary.filter((layer) => layer.type === 'node' || layer.type === 'card');
   const metrics = primary.filter((layer) => layer.type === 'metric');
@@ -53,13 +56,14 @@ function validateSemanticScene(scene: StoryboardScene): MappingIssue[] {
   if (visual.kind === 'network') {
     if (nodes.length < 3 || nodes.length > 6 || !visual.anchorId || !nodes.some((node) => node.id === visual.anchorId)) issues.push(mappingIssue(scene, 'network 需要 3–6 个主体及存在的 anchorId。', 'error'));
     const branches = nodes.filter((node) => node.id !== visual.anchorId).map((node) => node.id);
-    if (scene.connections.length !== branches.length || branches.some((id) => scene.connections.filter((link) => link.from === visual.anchorId && link.to === id).length !== 1)) issues.push(mappingIssue(scene, 'network 的连接必须由中心主体分别指向每个分支，且不重复。', 'error'));
+    if (scene.connections.length !== branches.length || branches.some((id) => scene.connections.filter((link) => (visual.networkDirection === 'inward' ? link.from === id && link.to === visual.anchorId : link.from === visual.anchorId && link.to === id)).length !== 1)) issues.push(mappingIssue(scene, 'network 的连接必须符合 networkDirection：outward 中心向外，inward 各分支汇聚中心；每个分支恰好一条。', 'error'));
   }
   if (visual.kind === 'change') {
     if (nodes.length !== 2 || !visual.beforeId || !visual.afterId || visual.beforeId === visual.afterId
       || !nodes.some((node) => node.id === visual.beforeId) || !nodes.some((node) => node.id === visual.afterId)
       || scene.connections.length > 0) issues.push(mappingIssue(scene, 'change 需要两个明确的前后状态，不用顺序连线代替状态变化。', 'error'));
   }
+  if (visual.changeMode === 'replace' && nodes[0]?.glyph !== nodes[1]?.glyph) issues.push(mappingIssue(scene, '同一对象状态变化需要保持相同 glyph。', 'error'));
   if (visual.kind === 'change' && nodes.some((layer) => !layer.label?.trim() || !layer.text?.trim())) issues.push(mappingIssue(scene, 'change 的前后状态都需要可见描述，说明实际发生了什么变化。', 'error'));
   if (visual.kind === 'metric' && (metrics.length < 1 || metrics.length > 4 || metrics.some((layer) => typeof layer.value !== 'number' || layer.value < 0 || !layer.label) || (metrics.length > 1 && !visual.unit))) issues.push(mappingIssue(scene, 'metric 需要 1–4 个有来源的非负数字及标签；多值比较需标明共同单位。', 'error'));
   if (visual.kind === 'metric' && !visual.source?.trim()) issues.push(mappingIssue(scene, 'metric 必须用 visual.source 记录数字来源位置。', 'error'));
@@ -95,6 +99,7 @@ function overlaps(start: number, end: number, otherStart: number, otherEnd: numb
 export function validateContentMapping(storyboard: Storyboard): MappingIssue[] {
   const issues: MappingIssue[] = [];
   for (const scene of storyboard.scenes) {
+    if (storyboard.schemaVersion !== '2.3' && scene.visual && (scene.visual.networkDirection || scene.visual.changeMode || scene.visual.mediaFocus)) issues.push(mappingIssue(scene, '语义扩展只支持 Storyboard 2.3。', 'error'));
     if (storyboard.schemaVersion === '2.3') {
       issues.push(...validateSemanticScene(scene));
       continue;

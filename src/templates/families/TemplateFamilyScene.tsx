@@ -6,6 +6,9 @@ import {captionTextStyle} from '../../audio/caption-style';
 import {splitCaptionWindow} from '../../audio/captions';
 import type {TemplateFamilyId as FamilyId} from './family-registry';
 import {BlueprintLayout, CleanEditorialLayout, ProductFrameLayout} from './ProposalLayouts';
+import {overlapHandoffOpacity} from '../../timeline/overlap-handoff';
+import {getAttentionOpacity} from '../../timeline/attention';
+import {entranceProgress} from '../../timeline/motion-progress';
 
 interface Props {
   scene: StoryboardScene;
@@ -39,11 +42,10 @@ function entry(scene: StoryboardScene, layer: StoryboardLayer | undefined, index
   const editorial = family === 'retro-zine' || family === 'archive-grid';
   const start = beat?.start ?? 4 + index * (playful ? 16 : 10);
   const duration = beat?.duration ?? tokens.motionRules.enter.durationFrames;
-  const raw = clamp((frame - start) / Math.max(1, duration));
-  const eased = 1 - Math.pow(1 - raw, playful ? 3 : 2);
+  const eased = entranceProgress({frame, start, duration, tokens, easing: beat?.action === 'reveal' ? tokens.motionRules.reveal.easing : beat?.action === 'count' ? 'linear' : undefined});
   const translate = (1 - eased) * tokens.motion.enterOffset * (playful ? 1.25 : editorial ? 1.5 : 1);
   return {
-    opacity: eased,
+    opacity: clamp(eased) * (layer && ['node', 'card', 'metric'].includes(layer.type) ? getAttentionOpacity(scene, layer.id, frame) : 1),
     transform: editorial
       ? `translateX(${-translate}px)`
       : playful
@@ -62,14 +64,15 @@ function rootTransition(scene: StoryboardScene, frame: number, overlapOutFrames:
   const incoming = scene.transitionIn;
   const entering = incoming ? clamp(frame / incoming.durationFrames) : 1;
   return {
-    opacity: (1 - out) * (incoming?.type === 'overlap-slide' ? 1 : entering),
-    clipPath: incoming?.type === 'overlap-slide'
-      ? `inset(0 ${(1 - entering) * 100}% 0 0)`
-      : scene.transitionOut === 'paper-wipe' && overlapOutFrames === 0
+    opacity: overlapHandoffOpacity({
+      frame, durationFrames: scene.durationFrames,
+      overlapInFrames: incoming?.durationFrames ?? 0, overlapOutFrames
+    }) * (overlapOutFrames > 0 ? 1 : 1 - out),
+    clipPath: scene.transitionOut === 'paper-wipe' && overlapOutFrames === 0
         ? `inset(0 ${out * 100}% 0 0)`
         : undefined,
-    transform: incoming?.type === 'overlap-carry'
-      ? `translateY(${(1 - entering) * 24}px)`
+    transform: incoming?.type === 'overlap-slide' || incoming?.type === 'overlap-carry'
+      ? `translateY(${(1 - entering) * (incoming.type === 'overlap-slide' ? 28 : 24)}px)`
       : scene.transitionOut === 'slide'
         ? `translateX(${-8 * out}%)`
         : scene.transitionOut === 'carry'

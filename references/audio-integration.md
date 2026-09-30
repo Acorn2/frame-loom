@@ -47,6 +47,8 @@ Copy `audio/audio-config.example.json` to `audio/audio-config.json`, then enable
     "enabled": false,
     "path": "music.mp3",
     "volume": 0.16,
+    "fadeInSec": 1,
+    "fadeOutSec": 2,
     "source": "replace-with-source",
     "license": "replace-with-license"
   },
@@ -147,6 +149,8 @@ Phrase-level subtitle timing is allocated from measured segment durations and te
 
 When enabled, `music.ducking` lowers music while the voiceover is active. `volume` is a multiplier applied to the configured music volume; `attackSec` and `releaseSec` smooth the transitions:
 
+An enabled music track fades in over 1 second and out over 2 seconds by default. `music.fadeInSec` and `music.fadeOutSec` override those durations; `0` disables that edge's fade. TTS projects use the measured end of the last speech segment for ducking release, so a silent end card can retain music. Music is optional and must have a documented source and license; never add an arbitrary bundled track to every video. Rendered narrated QA flags more than 2 seconds of trailing silence as a warning for listening review.
+
 ```json
 "ducking": {
   "enabled": true,
@@ -169,3 +173,7 @@ An audio pilot is still not automatically release-ready. Listen to the full
 output, verify that narration matches the visible scene and generated/external
 captions, check pronunciation and loudness, inspect subtitle readability, and
 confirm every asset's permission.
+
+## Measured timing and corrected captions
+
+See [quality production](quality-production.md) for segment caching, `--plan-timing`, explicit voice refresh and scene-local manual cues. The audio manifest labels caption timing as estimated or manual; generated segment duration alone is not evidence of word alignment. Final narrated candidates suppress the review marker before QA and require a matching `.render.json` receipt for approval.

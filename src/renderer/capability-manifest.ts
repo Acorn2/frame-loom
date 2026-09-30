@@ -1,6 +1,7 @@
 import type {ActionId, LayerType, TemplateId, TransitionId, SceneVisual} from '../schemas/storyboard';
 
 export const CAPABILITY_MANIFEST = {
+  semanticExtensions: {networkDirection: ['outward', 'inward'], changeMode: ['compare', 'replace'], mediaFocus: true},
   purposes: ['opening', 'claim', 'process', 'evidence', 'media', 'closing'],
   templates: ['statement', 'graph-explainer', 'metric-grid', 'interaction-flow'] as TemplateId[],
   visualKinds: ['statement', 'compare', 'sequence', 'network', 'change', 'metric', 'media'] as SceneVisual['kind'][],

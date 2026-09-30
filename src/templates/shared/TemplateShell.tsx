@@ -4,6 +4,7 @@ import type {StoryboardScene} from '../../schemas/storyboard';
 import type {StyleTokens} from '../../styles/style-loader';
 import {captionTextStyle} from '../../audio/caption-style';
 import {splitCaptionWindow} from '../../audio/captions';
+import {overlapHandoffOpacity} from '../../timeline/overlap-handoff';
 
 interface TemplateShellProps {
   scene: StoryboardScene;
@@ -34,14 +35,12 @@ export function TemplateShell({
   const enterProgress = entering ? interpolate(frame, [0, entering.durationFrames], [0, 1], {
     extrapolateLeft: 'clamp', extrapolateRight: 'clamp'
   }) : 1;
-  const titleEnterOpacity = entering
-    ? entering.type === 'overlap-slide'
-      ? Math.max(0, Math.min(1, (enterProgress - 0.85) / 0.15))
-      : Math.max(0, Math.min(1, (enterProgress - 0.6) / 0.4))
-    : 1;
-  const titleExitOpacity = overlapOutFrames > 0 ? Math.max(0, 1 - outroProgress * 2) : 1;
+  const handoffOpacity = overlapHandoffOpacity({
+    frame, durationFrames: scene.durationFrames,
+    overlapInFrames: entering?.durationFrames ?? 0, overlapOutFrames
+  });
   const transitionStyle: React.CSSProperties = overlapOutFrames > 0
-    ? {opacity: 1 - outroProgress, transform: scene.transitionOut === 'slide' ? `translateX(${-5 * outroProgress}%)` : undefined}
+    ? {opacity: handoffOpacity, transform: scene.transitionOut === 'slide' ? `translateX(${-5 * outroProgress}%)` : undefined}
     : scene.transitionOut === 'slide'
       ? {transform: `translateX(${-8 * outroProgress}%)`, opacity: 1 - outroProgress * 0.18}
       : scene.transitionOut === 'paper-wipe'
@@ -57,10 +56,10 @@ export function TemplateShell({
     <AbsoluteFill style={{
       backgroundColor: tokens.background, color: tokens.ink, fontFamily: tokens.bodyFont,
       ...transitionStyle,
-      opacity: (typeof transitionStyle.opacity === 'number' ? transitionStyle.opacity : 1) * (entering?.type === 'overlap-slide' ? 1 : enterProgress),
-      clipPath: entering?.type === 'overlap-slide' ? `inset(0 ${(1 - enterProgress) * 100}% 0 0)` : transitionStyle.clipPath,
-      transform: entering?.type === 'overlap-carry'
-          ? `translateY(${(1 - enterProgress) * 24}px)`
+      opacity: overlapOutFrames > 0 ? handoffOpacity : (typeof transitionStyle.opacity === 'number' ? transitionStyle.opacity : 1) * handoffOpacity,
+      clipPath: transitionStyle.clipPath,
+      transform: entering?.type === 'overlap-carry' || entering?.type === 'overlap-slide'
+          ? `translateY(${(1 - enterProgress) * (entering.type === 'overlap-slide' ? 28 : 24)}px)`
           : transitionStyle.transform,
       overflow: 'hidden'
     }}>
@@ -86,7 +85,6 @@ export function TemplateShell({
           textAlign: 'right', overflowWrap: 'anywhere',
           fontSize: portrait ? 16 : 18, lineHeight: 1.25,
           letterSpacing: 2, color: tokens.muted, textTransform: 'uppercase',
-          opacity: titleEnterOpacity * titleExitOpacity
         }}>
           {sectionLabel}
         </div>
@@ -95,7 +93,7 @@ export function TemplateShell({
           maxWidth: portrait ? Math.max(520, width - tokens.safeArea.left - tokens.safeArea.right) : 1120,
           margin: 0, fontFamily: tokens.displayFont,
           fontSize: portrait ? Math.min(tokens.titleFontSize, 88) : tokens.titleFontSize,
-          lineHeight: 0.98, opacity: titleEnterOpacity * titleExitOpacity
+          lineHeight: 0.98
         }}>
           {scene.title}
         </h1>

@@ -8,6 +8,7 @@ import {fingerprintFiles, fingerprintProjectInputs} from '../scripts/lib/input-f
 import {synthesizeSpeech} from '../scripts/lib/tts-provider.mjs';
 import {inspectAudio} from '../scripts/inspect-audio.mjs';
 import {runQa} from '../scripts/qa-storyboard.mjs';
+import {writeRenderReceipt} from '../scripts/lib/render-receipt.mjs';
 
 const temporaryDirectories = [];
 const styleRoot = path.resolve('styles');
@@ -62,6 +63,7 @@ describe('delivery gate', () => {
       '-shortest', '-c:v', 'libx264', '-c:a', 'aac', videoPath
     ], {encoding: 'utf8'});
     expect(rendered.status, rendered.stderr).toBe(0);
+    writeRenderReceipt(videoPath, {purpose: 'in-project-video', showReviewMarker: false});
     const originalVideo = fs.readFileSync(videoPath);
     writeJson(path.join(project, 'storyboard.json'), {project: {width: 320, height: 180, fps: 30, durationFrames: 30}});
     const audioConfig = {schemaVersion: '1.0', voiceover: {enabled: true, path: 'voiceover.wav', volume: 1, source: 'test fixture', license: 'user-owned'}};
@@ -73,7 +75,7 @@ describe('delivery gate', () => {
       automatedPassed: true,
       releaseReady: false,
       mode: 'audio-pilot',
-      checks: {output: {passed: true, audioStreams: 1}, audio: {passed: true}}
+      checks: {output: {passed: true, audioStreams: 1}, audio: {passed: true}, narratedRenderProfile: {passed: true}}
     });
     writeJson(path.join(project, 'run.json'), {
       status: 'completed',

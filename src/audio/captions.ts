@@ -13,7 +13,8 @@ function captionUnits(value: string): number {
 export function splitCaptionText(text: string, maxUnits = MAX_CAPTION_UNITS): string[] {
   const normalized = text.replace(/\s+/gu, ' ').trim();
   if (!normalized) return [];
-  const clauses = normalized.match(/[^，。！？；、,.!?;]+[，。！？；、,.!?;]?/gu) ?? [normalized];
+  // Keep words, version numbers and decimals intact; prefer clause boundaries.
+  const clauses = normalized.match(/[^，。！？；、,!?;]+[，。！？；、,!?;]?/gu) ?? [normalized];
   const chunks: string[] = [];
   let current = '';
   for (const clause of clauses) {
@@ -21,17 +22,19 @@ export function splitCaptionText(text: string, maxUnits = MAX_CAPTION_UNITS): st
       chunks.push(current.trim());
       current = '';
     }
-    for (const char of clause) {
-      if (current && captionUnits(current + char) > maxUnits) {
-        if (/[，。！？；、,.!?;]/u.test(char)) {
-          chunks.push((current + char).trim());
+    const tokens = clause.match(/[A-Za-z0-9]+(?:[._+:/@#-][A-Za-z0-9]+)*|[^A-Za-z0-9]/gu) ?? [];
+    for (const token of tokens) {
+      if (captionUnits(token) > maxUnits) throw new Error(`字幕完整词超出可读宽度：${token}；请提供经审阅的短称或拆解说明。`);
+      if (current && captionUnits(current + token) > maxUnits) {
+        if (/^[，。！？；、,.!?;]$/u.test(token)) {
+          chunks.push((current + token).trim());
           current = '';
           continue;
         }
         chunks.push(current.trim());
         current = '';
       }
-      current += char;
+      current += token;
     }
   }
   if (current.trim()) chunks.push(current.trim());

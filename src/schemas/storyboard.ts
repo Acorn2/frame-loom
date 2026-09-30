@@ -92,6 +92,14 @@ export const SceneVisualSchema = z.object({
   kind: VisualKindSchema,
   explanation: z.string().min(1),
   representation: z.enum(['diagram', 'source-media']),
+  networkDirection: z.enum(['outward', 'inward']).optional(),
+  changeMode: z.enum(['compare', 'replace']).optional(),
+  mediaFocus: z.object({
+    x: z.number().min(0).max(1), y: z.number().min(0).max(1),
+    width: z.number().min(0.25).max(1), height: z.number().min(0.25).max(1),
+    start: z.number().nonnegative(), duration: z.number().positive(),
+    label: z.string().min(1).max(40)
+  }).strict().refine((focus) => focus.x + focus.width <= 1 && focus.y + focus.height <= 1, '聚焦区域不能超出图片。').optional(),
   anchorId: z.string().min(1).optional(),
   beforeId: z.string().min(1).optional(),
   afterId: z.string().min(1).optional(),

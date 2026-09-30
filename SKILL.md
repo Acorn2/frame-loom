@@ -86,6 +86,10 @@ enough to read. Review entrance midpoint, complete state, pre-cut state,
 transition midpoint and the whole video at normal speed. Background motion
 and BGM are optional; add them only when they help this particular video.
 
+Use the Style Pack's entrance rule rather than forcing a spring onto every visual. The newest entered or focused subject gets the visual emphasis; earlier subjects stay readable at lower priority. For overlapping visual transitions, inspect the midpoint and both titles; old information fades away before new information appears. A TTS timing proposal keeps narrated scenes separate because narration begins with its shot. After rendering a narrated ending, inspect `checks.audioTail` in QA; more than two seconds of low-level audio is a listening prompt, not an automatic failure. If licensed BGM is enabled, review its default one-second entrance, two-second exit and ducking release against the actual last spoken word.
+
+At storyboard review, decide the handoff at each boundary from the content: a hard cut is valid for a clear new topic, while a silent visual sequence may use a short overlap when two scenes share a visual thread. Do not add overlap to narrated shots merely to satisfy a style checklist. Plan the final card's spoken or musical ending before rendering; if it intentionally ends in silence, record that choice in the review notes. Never add motion behind text just to clear a static-hold warning.
+
 Output purpose is independent of `--audio-mode`. A silent `visual-preview` is
 for checking pictures. A silent `visual-master` is a clean picture deliverable
 for an external editor: no narration captions or preview marker, optional
@@ -174,7 +178,7 @@ content purpose, input-mode code, template ID, TTS setup or audio file:
    20-second placeholder. Keep the draft's status `draft` and never render the
    empty scaffold.
 4. For a nontrivial 2.3 storyboard, first promote the source-checked draft to a separate `storyboard.json` with `project.status: generated`. Run `npm run preview:shot -- projects/<id>/storyboard.json <representative-scene-id> projects/<id>/output/shot-preview.mp4` and inspect its entry midpoint, complete state, pre-cut frame and short clip. Revise the storyboard if the picture still reads like a text slide; do not change the source document. Then run `npm run produce -- projects/<id> --mode fast --audio-mode silent --output-purpose visual-preview`.
-   Inspect `run.json`, the QA report and representative frames. Resolve actual
+   Inspect `run.json`, the QA report and representative frames. For a long 2.3 video, inspect every contact-sheet page listed in `review-frames.json.pages` and use its frame range to check each scene's complete and pre-cut state. Resolve actual
    validation/QA failures before calling the preview complete. Do not use
    `--audio-mode auto` for an explicit silent-preview request.
 5. Give the creator a directly openable `output/preview-silent.mp4` link,
@@ -293,3 +297,9 @@ schema, capability manifest, validator fixtures and renderer together.
   external-audio route.
 - Webpage screenshots are captured by the Agent before rendering; the CLI and renderer do not fetch URLs or discover images automatically.
 - Automated QA does not replace complete human playback review.
+
+## Quality production updates
+
+Read [quality-production](references/quality-production.md) when producing narrated work or using the opt-in 2.3 semantic extensions. For TTS, use `synthesize:voiceover -- <project> --plan-timing <new-storyboard.json>` after narration and provider use are authorized; inspect and explicitly adopt the proposal, then reapprove in review mode. The proposal measures speech and reuses cached takes; it does not guarantee semantic beat alignment. Never claim estimated subtitles are speech-aligned. Manual cues must retain the original narration.
+
+Use inward network connections for convergence, changeMode replace for a single object's state, and mediaFocus for a sourced image region only when the content needs them. Verify both entry and complete states. A voiced representative clip can use `preview:shot -- ... --audio-config <config>`; inspect its adjacent handoff and actual audio. Final narrated candidates are clean before review; keep their `.render.json` receipt and never fabricate one for an old video. Approval does not remove a marker or change the file.

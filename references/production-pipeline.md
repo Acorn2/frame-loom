@@ -38,8 +38,15 @@ After a failed run, `--from validation|assets|safeArea|render|qa` reuses only
 the successfully completed stages recorded by the previous `run.json`. A
 resume also compares fingerprints of project inputs and the rendered video;
 changed inputs require an updated `storyboard.json` when content changed, then
-a new run from `storyboard`. A render resume still
-respects the explicit output overwrite guard. `init:project` creates an empty
+a new run from `storyboard`. A render resume still respects the explicit
+output overwrite guard. Rendering and media inspection happen in a staging
+directory beside the final MP4; only a verified video and matching receipt
+are published. An explicit `--force` rerender temporarily retains the prior
+video and receipt for rollback. The next run recovers interrupted staging
+files; if another process changed the output, it stops and preserves the
+backup for inspection. `--from qa` reuses a fingerprint-matched video and
+rebuilds the review frames and contact-sheet pages without rendering again.
+Long renders print coarse progress updates near ten-percent milestones. `init:project` creates an empty
 draft scaffold; the Agent must first turn source material into a valid draft.
 
 ## Stage 01 — Intake and route

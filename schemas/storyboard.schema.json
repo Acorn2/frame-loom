@@ -144,6 +144,68 @@
                   "source-media"
                 ]
               },
+              "networkDirection": {
+                "type": "string",
+                "enum": [
+                  "outward",
+                  "inward"
+                ]
+              },
+              "changeMode": {
+                "type": "string",
+                "enum": [
+                  "compare",
+                  "replace"
+                ]
+              },
+              "mediaFocus": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "y": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "width": {
+                    "type": "number",
+                    "minimum": 0.25,
+                    "maximum": 1
+                  },
+                  "height": {
+                    "type": "number",
+                    "minimum": 0.25,
+                    "maximum": 1
+                  },
+                  "start": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "duration": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  }
+                },
+                "required": [
+                  "x",
+                  "y",
+                  "width",
+                  "height",
+                  "start",
+                  "duration",
+                  "label"
+                ],
+                "additionalProperties": false
+              },
               "anchorId": {
                 "type": "string",
                 "minLength": 1

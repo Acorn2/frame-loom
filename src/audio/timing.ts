@@ -35,6 +35,19 @@ export function analyzeSceneAudioAlignment(
   maxTrailingGapSec = 0.5
 ) {
   const issues: string[] = [];
+  const ordered = [...segments].sort((a, b) => a.startSec - b.startSec);
+  let previous: typeof ordered[number] | undefined;
+  const ids = new Set<string>();
+  for (const segment of ordered) {
+    if (ids.has(segment.sceneId)) issues.push(`${segment.sceneId}: 重复旁白片段。`);
+    ids.add(segment.sceneId);
+    if (!Number.isFinite(segment.startSec) || !Number.isFinite(segment.endSec) || segment.startSec < 0 || segment.endSec <= segment.startSec) {
+      issues.push(`${segment.sceneId}: 无效旁白时间区间。`);
+    }
+    if (!scenes.some((scene) => scene.sceneId === segment.sceneId)) issues.push(`${segment.sceneId}: 旁白没有对应镜头。`);
+    if (previous && segment.startSec < previous.endSec - 0.001) issues.push(`${previous.sceneId} / ${segment.sceneId}: 相邻旁白重叠 ${(previous.endSec - segment.startSec).toFixed(3)}s。`);
+    if (!previous || segment.endSec > previous.endSec) previous = segment;
+  }
   const measurements = scenes.map((scene) => {
     const segment = segments.find((item) => item.sceneId === scene.sceneId);
     if (!segment) {

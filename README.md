@@ -2,7 +2,7 @@
 
 FrameLoom 是一个以 Codex 为主要入口、兼容 Claude Code、Kimi Code、OpenCode 等 Coding Agent 的结构化视频生产 Skill。Agent 负责从文档提炼内容并编写分镜，Remotion 负责校验、渲染和 QA。
 
-当前 `v0.5` 已跑通“文档 → 分镜 → 渲染 → QA”的本地闭环。`fast` / `review` 控制分镜审核；交付用途可选审片预览、供外部剪辑的干净画面底片或项目内有声视频。音频可来自内置 TTS 或用户提供的录音。
+当前为 **v0.5 公开测试阶段**，已跑通“文档 → 分镜 → 渲染 → QA”的本地闭环。`fast` / `review` 控制分镜审核；交付用途可选审片预览、供外部剪辑的干净画面底片或项目内有声视频。音频可来自内置 TTS 或用户提供的录音。
 
 从**已有文档**（文章、讲稿或产品说明）开始即可。首次体验默认使用纯文档、横屏和静音预览；有本地图片或指定网页截图时可选择“文档＋图片”。主张提炼、画面路线和内容缺口由 Agent 判断，仍需创作者审阅；CLI 不会自动理解一篇文章。
 
@@ -12,9 +12,13 @@ source document + selected image mode → claims and visible relationships → s
 
 **静音 MP4 有两种不同用途。**`preview-silent.mp4` 是带审片标记的画面预览；纯文档静音预览不会为了填充时间自动增加底部旁白字幕。`visual-master-vNNN.mp4` 是无音轨、无旁白字幕和审片标记的干净画面底片，可供创作者在剪辑软件里配音、叠加出镜画面和字幕。底片经完整视觉检查后可以完成 FrameLoom 的**画面交付**；外部剪辑完成的视频由外部流程验收。若要在 FrameLoom 内完成有声讲解视频，则必须接入匹配的旁白，完成音频与画面 QA，再完整播放人工复核。
 
+当前已知限制及实测时间提案、字幕修订、镜头扩展用法见[质量生产说明](references/quality-production.md)。发布状态与验证缺口见[发布检查记录](references/release-readiness.md)。
+
+较长的 2.3 视频会按每页最多 48 帧生成审片接触表，`review-frames.json.pages` 可定位每页的帧号与时间范围。渲染会先在隔离目录完成媒体检查，失败后可根据 `run.json` 从 `render` 或 `qa` 阶段恢复；人工全片播放仍是交付前提。
+
 ## 第一次使用：给一篇文档，先看画面
 
-准备 Node.js 20+ 和 FFmpeg，在仓库根目录运行 `npm install`，然后在这个仓库打开支持 Skill 的 Coding Agent。Codex 会从 [Skill 入口](.agents/skills/frame-loom/SKILL.md)加载共享流程；其他 Agent 可先读取根目录的 [SKILL.md](SKILL.md)。把下面一句中的路径换成**现有 Markdown 或纯文本文档的绝对路径**：
+准备 Node.js 20+ 和 FFmpeg，在仓库根目录运行 `npm ci`，然后在这个仓库打开支持 Skill 的 Coding Agent。Codex 会从 [Skill 入口](.agents/skills/frame-loom/SKILL.md)加载共享流程；其他 Agent 可先读取根目录的 [SKILL.md](SKILL.md)。把下面一句中的路径换成**现有 Markdown 或纯文本文档的绝对路径**：
 
 ```text
 请使用 frame-loom Skill，读取 <文档绝对路径>，先用 fast 模式制作静音视频预览，我想看看画面效果。
@@ -26,6 +30,16 @@ source document + selected image mode → claims and visible relationships → s
 成功后应直接收到**你这篇文档的** `preview-silent.mp4`、代表帧、实际时长及简短 QA 结论。它只供检查画面。后续可在同一项目导出干净底片、使用 TTS 或接入外部配音，无需重新输入文档。若明确要审分镜，把提示词中的“fast 模式”改为“先给我审核分镜，确认后再渲染”。只说“制作视频”而未表明目标时，Agent 会问一次：先看画面、交底片给后期，还是在项目内完成有声版。
 
 有图片时也只需说出文档和素材，例如：“请读取 `<文档路径>`，结合 `<图片路径>` 做一版静音视频预览。”网页截图请给准确网址；截图失败时 Agent 会说明原因，不会伪造画面。需要比较模板、手动运行 CLI 或接入音频时，再阅读下文。
+
+如果想先检查本机是否具备渲染能力，可在 `npm ci` 后用仓库自带的公开示例运行下面三条命令。它会生成 20 秒静音样片 `frame-loom-smoke.mp4`；这只验证本机环境与渲染链路，不代表已将你的文档制作成视频。
+
+```bash
+npm run validate:storyboard -- examples/article-video/storyboard.json
+npm run render:storyboard -- examples/article-video/storyboard.json frame-loom-smoke.mp4 --mode fast
+npm run inspect:output -- frame-loom-smoke.mp4 examples/article-video/storyboard.json
+```
+
+渲染需要可运行的 FFmpeg；首次渲染还可能下载 Remotion 使用的浏览器。安装或渲染出错时，请保留命令输出、Node.js 版本和操作系统信息，按 [贡献说明](CONTRIBUTING.md)中的本地检查缩小问题范围。
 
 ## 选择模板、模式和交付目标
 
@@ -188,7 +202,7 @@ FrameLoom 的视频模板是 Style Pack：它决定标题、图解、卡片、�
 
 ## 进阶：选择素材、模板与命令行
 
-需要 Node.js 20+。首次在仓库根目录运行 `npm install`。Skill 负责读文档、拆主张、设计画面路线和编写分镜；命令行负责校验、渲染与 QA。`init:project` 只生成占位草稿，不能直接出片。
+需要 Node.js 20+。首次在仓库根目录运行 `npm ci`。Skill 负责读文档、拆主张、设计画面路线和编写分镜；命令行负责校验、渲染与 QA。`init:project` 只生成占位草稿，不能直接出片。
 
 ### 1. 让 Agent 加载 Skill
 
@@ -345,7 +359,7 @@ npm run produce -- projects/my-video --mode fast --audio-mode external --output-
 }
 ```
 
-确认记录真实、各项均通过后运行 `npm run approve:delivery -- projects/my-video projects/my-video/output/manual-review.json`。命令会再次核对音频流、自动 QA 以及输入和视频指纹，然后标记 `deliveryStatus=release-ready`；静音 MP4 和用于测试的 mock TTS 不能通过。音频路线不绑定内置 TTS 服务；外部音频也可通过下列独立命令先测量时间轴和响度，再渲染：
+确认记录真实、各项均通过后运行 `npm run approve:delivery -- projects/my-video projects/my-video/output/manual-review.json`。有声候选文件已保留声音和字幕并移除审片标记，文件名暂沿用 `pilot-audio.mp4`。命令会再次核对音频流、自动 QA、渲染记录以及输入和视频指纹，然后标记 `deliveryStatus=release-ready`；静音 MP4 和用于测试的 mock TTS 不能通过。音频路线不绑定内置 TTS 服务；外部音频也可通过下列独立命令先测量时间轴和响度，再渲染：
 
 ```bash
 npm run inspect:audio -- projects/my-video/storyboard.json projects/my-video/audio/audio-config.json
@@ -366,6 +380,8 @@ npm run qa:storyboard -- projects/my-video/storyboard.json projects/my-video/out
 
 视频质量契约支持场景主结论与焦点目标、节点的当前/完成状态、带来源声明的观察对象和局部放大框、显式重叠转场与结尾停留。QA 报告记录场景时间线、稳定停留帧数和焦点数量，并抽取关键动作与交接代表帧。旧 storyboard 未使用新字段时保留原有时长与转场行为；新字段与示例见 [`references/storyboard-schema.md`](references/storyboard-schema.md)。
 
+各模板的重叠镜头统一采用旧信息先退、新信息后入的淡入交接，Style Pack 的入场曲线用于主体动效，已看过的主体降低视觉权重。配乐仍需创作者提供来源与许可；启用后默认首尾淡入淡出，成片 QA 会提示超过两秒的片尾静音。静态背景和硬切仍可用于需要稳定阅读或明确换题的镜头。
+
 维护者可以运行 `npm run test:audio-pilot`，使用临时生成的测试音频和字幕验证完整的 audio pilot 渲染与 QA 闭环；测试不会把音频文件写入仓库。
 
 维护者可以运行 `npm run test:visual-regression`，用三个历史示例检查 `retro-zine`、`retro-windows`、`scatterbrain`、四类底层场景及横屏／竖屏覆盖；六套当前模板可用上文的 `preview:templates -- --styles ...` 生成代表帧或静音短视频。输出 contact sheet 供人工复核，不使用像素快照替代完整播放。
@@ -378,4 +394,6 @@ FrameLoom 适合知识讲解、产品说明、报告摘要、数据解释和文�
 
 ## 许可证
 
-MIT。Remotion 的使用和商业条款请在部署前按所安装版本核对官方许可说明。
+FrameLoom 自有代码采用 [MIT](LICENSE)。Remotion 是独立许可的依赖；使用前请按安装版本核对 [Remotion 官方许可](https://www.remotion.dev/license)，其免费使用存在适用条件，不能由本项目的 MIT 推断所有使用场景均免费。字体、图片、配乐和 TTS 输出仍按各自来源条款使用。
+
+参与开发见 [CONTRIBUTING.md](CONTRIBUTING.md)，变更见 [CHANGELOG.md](CHANGELOG.md)，漏洞反馈见 [SECURITY.md](SECURITY.md)。

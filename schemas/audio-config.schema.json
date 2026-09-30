@@ -95,6 +95,14 @@
           "type": "string",
           "minLength": 1
         },
+        "fadeInSec": {
+          "type": "number",
+          "minimum": 0
+        },
+        "fadeOutSec": {
+          "type": "number",
+          "minimum": 0
+        },
         "ducking": {
           "type": "object",
           "properties": {

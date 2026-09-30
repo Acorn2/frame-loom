@@ -48,11 +48,11 @@ function writeFixtureFiles() {
   fs.writeFileSync(captionsPath, [
     '1',
     '00:00:01,000 --> 00:00:03,000',
-    '这是一条较长的外部字幕，用于验证横屏画布中的安全区、换行和字幕背景宽度。',
+    '检查横屏字幕的安全区。',
     '',
     '2',
     '00:00:07,000 --> 00:00:10,000',
-    'External caption two with a deliberately long sentence for wrapping checks.',
+    'Check caption timing and contrast.',
     '',
     '3',
     '00:00:14,000 --> 00:00:17,000',

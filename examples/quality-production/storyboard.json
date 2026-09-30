@@ -1,0 +1,200 @@
+{
+  "schemaVersion": "2.3",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "project": {
+    "title": "质量能力公开样例",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 24,
+    "durationFrames": 720,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "converge",
+      "template": "graph-explainer",
+      "title": "两路材料汇成一份讲稿",
+      "primaryClaim": "文字与证据共同支持结论。",
+      "visual": {
+        "kind": "network",
+        "explanation": "文字与证据共同支持结论。",
+        "representation": "diagram",
+        "anchorId": "script",
+        "networkDirection": "inward"
+      },
+      "narration": "文字给出主张，证据补上依据，两路材料汇成一份可以审阅的讲稿。",
+      "durationFrames": 240,
+      "layers": [
+        {
+          "id": "text",
+          "type": "node",
+          "label": "文字",
+          "text": "主张",
+          "glyph": "document"
+        },
+        {
+          "id": "evidence",
+          "type": "node",
+          "label": "证据",
+          "text": "依据",
+          "glyph": "search"
+        },
+        {
+          "id": "script",
+          "type": "node",
+          "label": "讲稿",
+          "text": "可审阅",
+          "glyph": "list"
+        }
+      ],
+      "connections": [
+        {
+          "id": "text-link",
+          "from": "text",
+          "to": "script"
+        },
+        {
+          "id": "evidence-link",
+          "from": "evidence",
+          "to": "script"
+        }
+      ],
+      "beats": [
+        {
+          "id": "script-enter",
+          "target": "script",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "text-enter",
+          "target": "text",
+          "action": "enter",
+          "start": 25,
+          "duration": 18
+        },
+        {
+          "id": "evidence-enter",
+          "target": "evidence",
+          "action": "enter",
+          "start": 70,
+          "duration": 18
+        },
+        {
+          "id": "text-link-draw",
+          "target": "text-link",
+          "action": "draw",
+          "start": 110,
+          "duration": 18
+        },
+        {
+          "id": "evidence-link-draw",
+          "target": "evidence-link",
+          "action": "draw",
+          "start": 150,
+          "duration": 18
+        }
+      ],
+      "captions": [],
+      "purpose": "process"
+    },
+    {
+      "id": "state",
+      "template": "interaction-flow",
+      "title": "审核改变同一份讲稿的状态",
+      "primaryClaim": "对象不变，审核状态发生变化。",
+      "visual": {
+        "kind": "change",
+        "explanation": "对象不变，审核状态发生变化。",
+        "representation": "diagram",
+        "beforeId": "before",
+        "afterId": "after",
+        "changeMode": "replace"
+      },
+      "narration": "讲稿还是同一份。核对内容和来源以后，它的状态从待审变成通过。",
+      "durationFrames": 240,
+      "layers": [
+        {
+          "id": "before",
+          "type": "node",
+          "label": "待审讲稿",
+          "text": "内容与来源尚待核对",
+          "glyph": "document"
+        },
+        {
+          "id": "after",
+          "type": "node",
+          "label": "审核通过",
+          "text": "内容与来源完成核对",
+          "glyph": "document"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "before-enter",
+          "target": "before",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "after-reveal",
+          "target": "after",
+          "action": "reveal",
+          "start": 110,
+          "duration": 30
+        }
+      ],
+      "captions": [],
+      "purpose": "process"
+    },
+    {
+      "id": "focus",
+      "template": "interaction-flow",
+      "title": "把注意力移到检查结果",
+      "primaryClaim": "演示界面：先看全景，再看右侧检查项。",
+      "visual": {
+        "kind": "media",
+        "explanation": "演示界面：先看全景，再看右侧检查项。",
+        "representation": "source-media",
+        "mediaFocus": {
+          "x": 0.48,
+          "y": 0.22,
+          "width": 0.47,
+          "height": 0.7,
+          "start": 80,
+          "duration": 60,
+          "label": "右侧检查项 · 演示界面"
+        }
+      },
+      "narration": "先看演示页面的整体结构，再聚焦右侧检查结果，确认声音、字幕和画面。",
+      "durationFrames": 240,
+      "layers": [
+        {
+          "id": "page",
+          "type": "object",
+          "asset": "assets/review.svg",
+          "fit": "contain"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "page-enter",
+          "target": "page",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        }
+      ],
+      "captions": [],
+      "purpose": "media"
+    }
+  ]
+}

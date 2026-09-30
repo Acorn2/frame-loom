@@ -6,14 +6,24 @@ import {getCompositions, renderMedia, renderStill} from '@remotion/renderer';
 import {MotionPackSchema, StylePackSchema} from '../src/schemas/style-pack.ts';
 import {createStyleTokens} from '../src/styles/style-loader.ts';
 import {getSceneTimeline} from '../src/timeline/scene-timeline.ts';
-import {checkAssetInput, checkStoryboardInput, checkVisualInput} from './lib/preflight.mjs';
+import {checkAssetInput, checkAudioInput, checkStoryboardInput, checkVisualInput} from './lib/preflight.mjs';
+
+import {loadAudioRuntime} from './lib/audio-runtime.mjs';
+import {assertStoryboardApproval} from './lib/storyboard-approval.mjs';
 
 const args = process.argv.slice(2);
-const modeIndex = args.indexOf('--mode');
-const executionMode = modeIndex < 0 ? 'fast' : args[modeIndex + 1];
-const positional = args.filter((_value, index) => modeIndex < 0 || (index !== modeIndex && index !== modeIndex + 1));
+let executionMode = 'fast';
+let audioConfigPath;
+const positional = [];
+for (let i = 0; i < args.length; i += 1) {
+  if (args[i] === '--mode') executionMode = args[++i];
+  else if (args[i] === '--audio-config') {
+    audioConfigPath = args[++i];
+    if (!audioConfigPath) throw new Error('--audio-config 需要路径。');
+  } else positional.push(args[i]);
+}
 if (positional.length !== 3 || !['fast', 'review'].includes(executionMode)) {
-  throw new Error('Usage: npm run preview:shot -- <storyboard.json> <scene-id> <new-output.mp4> [--mode fast|review]');
+  throw new Error('Usage: npm run preview:shot -- <storyboard.json> <scene-id> <new-output.mp4> [--mode fast|review] [--audio-config <audio-config.json>]');
 }
 const [input, sceneId, output] = positional;
 const storyboardPath = path.resolve(input);
@@ -24,6 +34,7 @@ const reviewDir = path.join(path.dirname(outputPath), `${path.parse(outputPath).
 if (fs.existsSync(reviewDir)) throw new Error(`代表帧目录已存在，未覆盖：${reviewDir}`);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const styleRoot = path.join(root, 'styles');
+if (executionMode === 'review') assertStoryboardApproval(path.dirname(storyboardPath));
 const storyboard = JSON.parse(fs.readFileSync(storyboardPath, 'utf8'));
 const issues = checkStoryboardInput(storyboard, {storyboardPath, styleRoot, executionMode});
 const assets = checkAssetInput(storyboardPath);
@@ -45,15 +56,19 @@ for (const scene of hydrated.scenes) {
     layer.assetDataUri = `data:${mime};base64,${fs.readFileSync(file).toString('base64')}`;
   }
 }
-const inputProps = {storyboard: hydrated, styleTokens: createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height), renderProfile: {purpose: 'visual-preview'}};
+const audioTiming = audioConfigPath ? checkAudioInput(storyboardPath, audioConfigPath) : undefined;
+const audioRuntime = loadAudioRuntime(audioConfigPath, audioTiming);
+const hasAudio = Boolean(audioRuntime?.voiceoverDataUri || audioRuntime?.musicDataUri || audioRuntime?.sfx?.length);
+const inputProps = {storyboard: hydrated, audioRuntime, styleTokens: createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height), renderProfile: {purpose: 'visual-preview'}};
 console.log('Bundling Remotion composition...');
 const serveUrl = await bundle({entryPoint: path.join(root, 'src/index.ts')});
 const composition = (await getCompositions(serveUrl, {inputProps})).find((item) => item.id === 'StoryboardV2');
 if (!composition) throw new Error('找不到 StoryboardV2 composition。');
 fs.mkdirSync(path.dirname(outputPath), {recursive: true});
-const start = timing.startFrame;
-const end = start + timing.scene.durationFrames - 1;
-await renderMedia({composition, serveUrl, inputProps, codec: 'h264', outputLocation: outputPath, audioCodec: null, muted: true, frameRange: [start, end]});
+const context = hasAudio ? Math.round(storyboard.project.fps * 0.5) : 0;
+const start = Math.max(0, timing.startFrame - context);
+const end = Math.min(storyboard.project.durationFrames - 1, timing.endFrame + context - 1);
+await renderMedia({composition, serveUrl, inputProps, codec: 'h264', outputLocation: outputPath, audioCodec: hasAudio ? 'aac' : null, muted: !hasAudio, enforceAudioTrack: hasAudio, frameRange: [start, end]});
 fs.mkdirSync(reviewDir, {recursive: true});
 const firstAction = timing.scene.beats.find((beat) => beat.action !== 'set-state');
 const lastActionEnd = Math.max(0, ...timing.scene.beats.map((beat) => beat.start + beat.duration));
@@ -64,8 +79,9 @@ const frames = [
   {name: 'before-cut', local: timing.scene.durationFrames - timing.overlapOutFrames - fadeFrames - 2}
 ];
 for (const item of frames) {
-  const frame = start + Math.max(0, Math.min(timing.scene.durationFrames - 1, item.local));
+  const frame = timing.startFrame + Math.max(0, Math.min(timing.scene.durationFrames - 1, item.local));
   await renderStill({composition, serveUrl, inputProps, frame, output: path.join(reviewDir, `${item.name}.png`), imageFormat: 'png'});
 }
+fs.writeFileSync(path.join(reviewDir, 'clip-timing.json'), JSON.stringify({sceneId, sourceStartFrame: start, sourceEndFrameInclusive: end, fps: storyboard.project.fps, hasAudio, reviewOnly: true}, null, 2));
 console.log(`SHOT PREVIEW ${outputPath} (${timing.scene.durationFrames / storyboard.project.fps}s)`);
 console.log(`REVIEW FRAMES ${reviewDir}`);

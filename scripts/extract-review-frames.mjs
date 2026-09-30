@@ -1,5 +1,4 @@
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {pathToFileURL} from 'node:url';
@@ -21,9 +20,8 @@ function uniqueCandidates(candidates, durationSec) {
     .sort((a, b) => a.timeSec - b.timeSec);
   const result = [];
   for (const candidate of clamped) {
-    if (!result.some((item) => Math.abs(item.timeSec - candidate.timeSec) < 0.2)) {
-      result.push(candidate);
-    }
+    const same = result.find((item) => Math.abs(item.timeSec - candidate.timeSec) < 0.2 && !item.required && !candidate.required);
+    if (!same) result.push(candidate);
   }
   return result;
 }
@@ -46,10 +44,10 @@ export function selectReviewFrames(storyboard) {
       candidates.push({label: `${scene.id}-first-action`, timeSec: (startFrame + firstAction.start + firstAction.duration) / fps});
     }
     if (storyboard.schemaVersion === '2.3') {
-      const lastActionEnd = Math.max(0, ...scene.beats.map((beat) => beat.start + beat.duration));
-      if (lastActionEnd > 0) candidates.push({label: `${scene.id}-complete`, timeSec: (startFrame + Math.min(scene.durationFrames - 1, lastActionEnd + 2)) / fps});
+      const lastActionEnd = Math.max(0, ...scene.beats.map((beat) => beat.start + beat.duration), scene.visual?.mediaFocus ? scene.visual.mediaFocus.start + scene.visual.mediaFocus.duration : 0);
+      candidates.push({label: `${scene.id}-complete`, required: true, timeSec: (startFrame + Math.min(scene.durationFrames - 1, lastActionEnd + 2)) / fps});
       const fadeFrames = scene.outro?.fadeFrames ?? (overlapOutFrames === 0 && scene.transitionOut ? 12 : 0);
-      candidates.push({label: `${scene.id}-before-handoff`, timeSec: (endFrame - overlapOutFrames - fadeFrames - 2) / fps});
+      candidates.push({label: `${scene.id}-before-handoff`, required: true, timeSec: (endFrame - overlapOutFrames - fadeFrames - 2) / fps});
     }
     for (const stateSwitch of scene.beats.filter((beat) => beat.action === 'set-state' && beat.state === 'current')) {
       candidates.push({label: `${scene.id}-${stateSwitch.target}-current`, timeSec: (startFrame + stateSwitch.start + 1) / fps});
@@ -73,11 +71,11 @@ export function selectReviewFrames(storyboard) {
   const unique = uniqueCandidates(candidates, durationSec);
   const limit = storyboard.schemaVersion === '2.3' ? 48 : 24;
   if (unique.length <= limit) return unique;
-  const sampled = [];
-  for (let index = 0; index < limit; index += 1) {
-    sampled.push(unique[Math.round(index * (unique.length - 1) / (limit - 1))]);
-  }
-  return sampled;
+  const sampled = unique.filter((item) => item.required);
+  const optional = unique.filter((item) => !item.required);
+  const count = Math.min(optional.length, Math.max(2, limit - sampled.length));
+  for (let index = 0; index < count; index += 1) sampled.push(optional[Math.round(index * (optional.length - 1) / Math.max(1, count - 1))]);
+  return sampled.sort((a, b) => a.timeSec - b.timeSec);
 }
 
 export function extractReviewFrames(videoPath, storyboardPath, outputDir) {
@@ -88,34 +86,48 @@ export function extractReviewFrames(videoPath, storyboardPath, outputDir) {
   const frames = selectReviewFrames(storyboard);
   const resolvedOutput = path.resolve(outputDir ?? path.join(path.dirname(resolvedVideo), 'review-frames'));
   fs.mkdirSync(resolvedOutput, {recursive: true});
-  const stagingDir = fs.mkdtempSync(path.join(os.tmpdir(), 'frame-loom-contact-'));
+  const stagingDir = fs.mkdtempSync(path.join(resolvedOutput, '.review-frames-'));
 
   const manifest = [];
+  const contactSheets = [];
+  const pages = [];
   const contactSheet = path.join(resolvedOutput, 'contact-sheet.png');
   try {
     frames.forEach((frame, index) => {
       const fileName = `frame-${String(index + 1).padStart(2, '0')}.png`;
       const stagedFramePath = path.join(stagingDir, fileName);
       run('ffmpeg', ['-v', 'error', '-y', '-ss', frame.timeSec.toFixed(3), '-i', resolvedVideo, '-frames:v', '1', '-q:v', '2', stagedFramePath]);
-      fs.copyFileSync(stagedFramePath, path.join(resolvedOutput, fileName));
+      if (!fs.existsSync(stagedFramePath)) throw new Error(`无法从视频抽取 ${frame.label}：${frame.timeSec.toFixed(3)} 秒`);
       manifest.push({...frame, file: fileName});
     });
 
-    const columns = Math.min(3, frames.length);
-    const rows = Math.ceil(frames.length / columns);
-    run('ffmpeg', [
-      '-v', 'error', '-y', '-framerate', '1', '-start_number', '1',
-      '-i', path.join(stagingDir, 'frame-%02d.png'),
-      '-vf', `scale=480:-2,tile=${columns}x${rows}:padding=16:margin=16:color=#111111`,
-      '-frames:v', '1', contactSheet
-    ]);
+    for (let offset = 0; offset < frames.length; offset += 48) {
+      const count = Math.min(48, frames.length - offset);
+      const columns = Math.min(3, count);
+      const rows = Math.ceil(count / columns);
+      const sheetName = offset === 0 ? 'contact-sheet.png' : `contact-sheet-${offset / 48 + 1}.png`;
+      const sheet = path.join(stagingDir, sheetName);
+      contactSheets.push(sheetName);
+      pages.push({file: sheetName, firstFrame: offset + 1, lastFrame: offset + count, startSec: frames[offset].timeSec, endSec: frames[offset + count - 1].timeSec});
+      run('ffmpeg', [
+        '-v', 'error', '-y', '-framerate', '1', '-start_number', String(offset + 1),
+        '-i', path.join(stagingDir, 'frame-%02d.png'),
+        '-vf', `scale=480:-2,tile=${columns}x${rows}:nb_frames=${count}:padding=16:margin=16:color=#111111`,
+        '-frames:v', '1', sheet
+      ]);
+      if (!fs.existsSync(sheet) || fs.statSync(sheet).size === 0) throw new Error(`无法生成审片分页：${sheetName}`);
+    }
+    const manifestName = 'review-frames.json';
+    fs.writeFileSync(path.join(stagingDir, manifestName), `${JSON.stringify({video: resolvedVideo, storyboard: resolvedStoryboard, frames: manifest, contactSheet: 'contact-sheet.png', contactSheets, pages}, null, 2)}\n`);
+    for (const name of [...manifest.map((item) => item.file), ...contactSheets, manifestName]) {
+      fs.renameSync(path.join(stagingDir, name), path.join(resolvedOutput, name));
+    }
   } finally {
     fs.rmSync(stagingDir, {recursive: true, force: true});
   }
-  fs.writeFileSync(path.join(resolvedOutput, 'review-frames.json'), `${JSON.stringify({video: resolvedVideo, storyboard: resolvedStoryboard, frames: manifest, contactSheet: 'contact-sheet.png'}, null, 2)}\n`);
   console.log(`REVIEW FRAMES ${resolvedOutput} (${manifest.length} frames)`);
   console.log(`CONTACT SHEET ${contactSheet}`);
-  return {outputDir: resolvedOutput, frames: manifest, contactSheet};
+  return {outputDir: resolvedOutput, frames: manifest, contactSheet, contactSheets, pages};
 }
 
 const invokedPath = process.argv[1] ? pathToFileURL(path.resolve(process.argv[1])).href : null;

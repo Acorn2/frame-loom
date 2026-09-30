@@ -205,7 +205,7 @@ function validateScene(scene: StoryboardScene, issues: ValidationIssue[], storyb
     }
   }
   if (scene.outro) {
-    const lastBeatEnd = Math.max(0, ...scene.beats.map((beat) => beat.start + beat.duration));
+    const lastBeatEnd = Math.max(0, ...scene.beats.map((beat) => beat.start + beat.duration), scene.visual?.mediaFocus ? scene.visual.mediaFocus.start + scene.visual.mediaFocus.duration : 0);
     const stableEnd = scene.durationFrames - scene.outro.fadeFrames;
     if (lastBeatEnd > stableEnd - scene.outro.holdFrames) {
       issues.push(issue(`scene ${scene.id}.outro`, `最后动作结束于 ${lastBeatEnd} 帧，留给稳定画面的时间不足 ${scene.outro.holdFrames} 帧。`));
@@ -281,7 +281,7 @@ export function validateStoryboard(value: unknown, options: ValidationOptions = 
     validateScene(scene, issues, options.storyboardPath, storyboard.schemaVersion, storyboard.project.fps, style);
     if (scene.primaryClaim && !scene.outro) {
       const overlapOut = storyboard.scenes[index + 1]?.transitionIn?.durationFrames ?? (storyboard.schemaVersion === '2.3' ? 0 : 24);
-      const lastBeatEnd = Math.max(0, ...scene.beats.map((beat) => beat.start + beat.duration));
+      const lastBeatEnd = Math.max(0, ...scene.beats.map((beat) => beat.start + beat.duration), scene.visual?.mediaFocus ? scene.visual.mediaFocus.start + scene.visual.mediaFocus.duration : 0);
       const requiredHold = storyboard.schemaVersion === '2.3' ? Math.ceil(storyboard.project.fps * 0.8) : 24;
       if (scene.durationFrames - overlapOut - lastBeatEnd < requiredHold) {
         issues.push(issue(`scene ${scene.id}.beats`, `关键动作后不足 ${requiredHold} 帧稳定停留，可能在观众读完前进入转场。`, 'warning'));

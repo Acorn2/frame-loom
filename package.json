@@ -13,9 +13,10 @@
     "build": "remotion bundle src/index.ts --out-dir dist",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "vitest run",
-    "test:storyboard": "vitest run tests/storyboard-validator.test.ts",
-    "test:styles": "vitest run tests/style-workflow.test.mjs",
+    "check:docs": "node scripts/check-doc-links.mjs",
+    "test": "vitest run --dir tests",
+    "test:storyboard": "vitest run --dir tests storyboard-validator.test.ts",
+    "test:styles": "vitest run --dir tests style-workflow.test.mjs",
     "generate:schemas": "node --import tsx/esm scripts/generate-schemas.mjs",
     "validate:styles": "node --import tsx/esm scripts/validate-styles.mjs",
     "validate:assets": "node --import tsx/esm scripts/validate-assets.mjs",
@@ -58,6 +59,6 @@
     "eslint": "9.39.4",
     "tsx": "4.22.4",
     "typescript": "5.9.3",
-    "vitest": "4.1.10"
+    "vitest": "4.1.11"
   }
 }

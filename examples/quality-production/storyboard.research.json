@@ -1,0 +1,200 @@
+{
+  "schemaVersion": "2.3",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "project": {
+    "title": "研究笔记公开样例",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 24,
+    "durationFrames": 720,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "converge",
+      "template": "graph-explainer",
+      "title": "观察与资料汇成研究笔记",
+      "primaryClaim": "两类依据汇聚成可追溯的记录。",
+      "visual": {
+        "kind": "network",
+        "explanation": "两类依据汇聚成可追溯的记录。",
+        "representation": "diagram",
+        "anchorId": "script",
+        "networkDirection": "inward"
+      },
+      "narration": "观察留下现场记录，资料补充背景，两类依据汇聚成研究笔记。",
+      "durationFrames": 240,
+      "layers": [
+        {
+          "id": "text",
+          "type": "node",
+          "label": "观察",
+          "text": "现场记录",
+          "glyph": "document"
+        },
+        {
+          "id": "evidence",
+          "type": "node",
+          "label": "资料",
+          "text": "背景依据",
+          "glyph": "search"
+        },
+        {
+          "id": "script",
+          "type": "node",
+          "label": "笔记",
+          "text": "可追溯",
+          "glyph": "list"
+        }
+      ],
+      "connections": [
+        {
+          "id": "text-link",
+          "from": "text",
+          "to": "script"
+        },
+        {
+          "id": "evidence-link",
+          "from": "evidence",
+          "to": "script"
+        }
+      ],
+      "beats": [
+        {
+          "id": "script-enter",
+          "target": "script",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "text-enter",
+          "target": "text",
+          "action": "enter",
+          "start": 25,
+          "duration": 18
+        },
+        {
+          "id": "evidence-enter",
+          "target": "evidence",
+          "action": "enter",
+          "start": 70,
+          "duration": 18
+        },
+        {
+          "id": "text-link-draw",
+          "target": "text-link",
+          "action": "draw",
+          "start": 110,
+          "duration": 18
+        },
+        {
+          "id": "evidence-link-draw",
+          "target": "evidence-link",
+          "action": "draw",
+          "start": 150,
+          "duration": 18
+        }
+      ],
+      "captions": [],
+      "purpose": "process"
+    },
+    {
+      "id": "state",
+      "template": "interaction-flow",
+      "title": "同一份笔记从草稿到核实",
+      "primaryClaim": "核实来源后更新记录状态。",
+      "visual": {
+        "kind": "change",
+        "explanation": "核实来源后更新记录状态。",
+        "representation": "diagram",
+        "beforeId": "before",
+        "afterId": "after",
+        "changeMode": "replace"
+      },
+      "narration": "这份笔记先是草稿。逐项核实来源以后，同一份记录变成已经核实的版本。",
+      "durationFrames": 240,
+      "layers": [
+        {
+          "id": "before",
+          "type": "node",
+          "label": "笔记草稿",
+          "text": "来源有待核实",
+          "glyph": "document"
+        },
+        {
+          "id": "after",
+          "type": "node",
+          "label": "已经核实",
+          "text": "来源完成核对",
+          "glyph": "document"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "before-enter",
+          "target": "before",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "after-reveal",
+          "target": "after",
+          "action": "reveal",
+          "start": 110,
+          "duration": 30
+        }
+      ],
+      "captions": [],
+      "purpose": "process"
+    },
+    {
+      "id": "focus",
+      "template": "interaction-flow",
+      "title": "聚焦演示页面的资料区",
+      "primaryClaim": "左侧资料区是本镜头的阅读重点。",
+      "visual": {
+        "kind": "media",
+        "explanation": "左侧资料区是本镜头的阅读重点。",
+        "representation": "source-media",
+        "mediaFocus": {
+          "x": 0.05,
+          "y": 0.22,
+          "width": 0.42,
+          "height": 0.7,
+          "start": 80,
+          "duration": 60,
+          "label": "左侧资料区 · 演示界面"
+        }
+      },
+      "narration": "同一张演示图也可以选择不同的阅读区域。这一次，把注意力放在左侧资料区。",
+      "durationFrames": 240,
+      "layers": [
+        {
+          "id": "page",
+          "type": "object",
+          "asset": "assets/review.svg",
+          "fit": "contain"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "page-enter",
+          "target": "page",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        }
+      ],
+      "captions": [],
+      "purpose": "media"
+    }
+  ]
+}

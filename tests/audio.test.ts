@@ -11,7 +11,8 @@ describe('audio timing', () => {
     expect(getMusicVolumeAtFrame({frame: 0, fps: 30, baseVolume: 0.5, voiceoverDurationSec: 10, ducking})).toBeCloseTo(0.5);
     expect(getMusicVolumeAtFrame({frame: 15, fps: 30, baseVolume: 0.5, voiceoverDurationSec: 10, ducking})).toBeCloseTo(0.1);
     expect(getMusicVolumeAtFrame({frame: 285, fps: 30, baseVolume: 0.5, voiceoverDurationSec: 10, ducking})).toBeCloseTo(0.1);
-    expect(getMusicVolumeAtFrame({frame: 300, fps: 30, baseVolume: 0.5, voiceoverDurationSec: 10, ducking})).toBeCloseTo(0.5);
+    expect(getMusicVolumeAtFrame({frame: 300, fps: 30, baseVolume: 0.5, voiceoverDurationSec: 10, ducking})).toBeCloseTo(0.1);
+    expect(getMusicVolumeAtFrame({frame: 315, fps: 30, baseVolume: 0.5, voiceoverDurationSec: 10, ducking})).toBeCloseTo(0.5);
   });
 
   it('keeps music volume unchanged when ducking is disabled or voiceover is absent', () => {
@@ -23,6 +24,20 @@ describe('audio timing', () => {
       voiceoverDurationSec: 10,
       ducking: {enabled: false, volume: 0.2, attackSec: 0, releaseSec: 0}
     })).toBe(0.5);
+  });
+
+  it('fades optional music at both ends while keeping voiceover ducking', () => {
+    const settings = {
+      fps: 30, baseVolume: 0.2, videoDurationSec: 10, voiceoverDurationSec: 8,
+      ducking: {enabled: true, volume: 0.5, attackSec: 0.4, releaseSec: 0.4}
+    };
+    expect(getMusicVolumeAtFrame({...settings, frame: 0})).toBe(0);
+    expect(getMusicVolumeAtFrame({...settings, frame: 15})).toBeCloseTo(0.05);
+    expect(getMusicVolumeAtFrame({...settings, frame: 30})).toBeCloseTo(0.1);
+    expect(getMusicVolumeAtFrame({...settings, frame: 240})).toBeCloseTo(0.1);
+    expect(getMusicVolumeAtFrame({...settings, frame: 255})).toBeCloseTo(0.15);
+    expect(getMusicVolumeAtFrame({...settings, frame: 300})).toBe(0);
+    expect(getMusicVolumeAtFrame({...settings, frame: 0, fadeInSec: 0, fadeOutSec: 0})).toBeCloseTo(0.2);
   });
 
   it('places captions inside the selected orientation safe area', () => {

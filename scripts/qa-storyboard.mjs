@@ -12,6 +12,8 @@ import {inspectOutput} from './inspect-output.mjs';
 import {checkAssetInput, checkAudioInput, checkStoryboardInput, checkVisualInput} from './lib/preflight.mjs';
 import {loadHandoffConfig, OUTPUT_PURPOSES} from './lib/output-purpose.mjs';
 import {fingerprintFiles} from './lib/input-fingerprint.mjs';
+import {inspectCleanNarratedRender} from './lib/render-receipt.mjs';
+import {inspectTrailingSilence} from './lib/audio-tail.mjs';
 
 function parseArgs(args) {
   const options = {expectAudio: false, executionMode: 'review'};
@@ -106,7 +108,7 @@ export function runQa(options) {
     checks.timeline = {
       passed: true,
       scenes: getSceneTimeline(storyboard).map(({scene, startFrame, endFrame, overlapInFrames, overlapOutFrames}) => {
-        const lastActionEnd = Math.max(0, ...scene.beats.map((beat) => beat.start + beat.duration));
+        const lastActionEnd = Math.max(0, ...scene.beats.map((beat) => beat.start + beat.duration), scene.visual?.mediaFocus ? scene.visual.mediaFocus.start + scene.visual.mediaFocus.duration : 0);
         const stateFrames = [0, ...scene.beats.filter((beat) => beat.action === 'set-state').map((beat) => beat.start)];
         const peakCurrentNodes = Math.max(0, ...stateFrames.map((frame) => scene.layers.filter((layer) => getNodeState(layer, scene, frame) === 'current').length));
         return {
@@ -174,6 +176,15 @@ export function runQa(options) {
       }
     }
 
+    if (outputPurpose === 'in-project-video') {
+      try {
+        checks.narratedRenderProfile = inspectCleanNarratedRender(resolvedVideo);
+      } catch (error) {
+        checks.narratedRenderProfile = {passed: false, error: error.message};
+        errors.push(`narrated render profile: ${error.message}`);
+      }
+    }
+
     try {
       checks.output = {passed: true, ...inspectOutput(resolvedVideo, storyboard, {expectAudio})};
     } catch (error) {
@@ -208,10 +219,40 @@ export function runQa(options) {
       if (!checks.audio.passed) errors.push('audio config missing');
     }
 
+    if (outputPurpose === 'in-project-video' && checks.output?.passed && checks.output.audioStreams > 0) {
+      try {
+        const tail = inspectTrailingSilence(resolvedVideo, checks.output.durationSec);
+        checks.audioTail = {
+          passed: true,
+          ...tail,
+          issues: tail.durationSec > 2 ? [{
+            severity: 'warning',
+            path: 'audioTail',
+            message: `片尾约 ${tail.durationSec.toFixed(2)} 秒低于 ${tail.noiseThresholdDb} dB；检查结束卡是否需要旁白或有来源的配乐收束。`
+          }] : []
+        };
+      } catch (error) {
+        checks.audioTail = {passed: false, error: error instanceof Error ? error.message : String(error)};
+        errors.push(`audio tail: ${checks.audioTail.error}`);
+      }
+    }
+
     if (checks.output.passed) {
       try {
         const review = extractReviewFrames(resolvedVideo, resolvedStoryboard, resolvedReviewDir);
-        checks.reviewFrames = {passed: review.frames.length >= (storyboard.project.durationSec >= 20 ? 6 : 1), count: review.frames.length, contactSheet: review.contactSheet};
+        const requiredLabels = storyboard.schemaVersion === '2.3'
+          ? storyboard.scenes.flatMap((scene) => [`${scene.id}-complete`, `${scene.id}-before-handoff`]) : [];
+        const extractedLabels = new Set(review.frames.map((frame) => frame.label));
+        const missingRequired = requiredLabels.filter((label) => !extractedLabels.has(label));
+        checks.reviewFrames = {
+          passed: review.frames.length >= (storyboard.project.durationSec >= 20 ? 6 : 1)
+            && missingRequired.length === 0 && review.pages.length === Math.ceil(review.frames.length / 48),
+          count: review.frames.length,
+          missingRequired,
+          contactSheet: review.contactSheet,
+          contactSheets: review.contactSheets,
+          pages: review.pages
+        };
         if (!checks.reviewFrames.passed) errors.push('insufficient review frames');
       } catch (error) {
         checks.reviewFrames = {passed: false, error: error instanceof Error ? error.message : String(error)};

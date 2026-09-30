@@ -14,6 +14,8 @@ export interface AudioRuntime {
   musicDataUri?: string;
   musicVolume?: number;
   musicDucking?: MusicDucking;
+  musicFadeInSec?: number;
+  musicFadeOutSec?: number;
   voiceoverDurationSec?: number;
   captions?: CaptionCue[];
   sfx?: Array<{dataUri: string; volume: number; startSec: number}>;
@@ -25,6 +27,7 @@ export interface DataDrivenVideoProps extends Record<string, unknown> {
   audioRuntime?: AudioRuntime;
   renderProfile?: {
     purpose: 'visual-preview' | 'visual-master' | 'in-project-video';
+    showReviewMarker?: boolean;
     facecamRightFraction?: number;
     subtitleBottomFraction?: number;
   };
@@ -32,6 +35,10 @@ export interface DataDrivenVideoProps extends Record<string, unknown> {
 
 export function shouldRenderSceneCaptions(audioRuntime?: AudioRuntime): boolean {
   return !(audioRuntime?.captions && audioRuntime.captions.length > 0);
+}
+
+export function shouldRenderReviewMarker(profile?: DataDrivenVideoProps['renderProfile']): boolean {
+  return profile?.purpose === 'visual-master' ? false : profile?.showReviewMarker ?? profile?.purpose !== 'in-project-video';
 }
 
 export function DataDrivenVideo({storyboard, styleTokens, audioRuntime, renderProfile}: DataDrivenVideoProps) {
@@ -56,7 +63,10 @@ export function DataDrivenVideo({storyboard, styleTokens, audioRuntime, renderPr
             fps: storyboard.project.fps,
             baseVolume: musicVolume,
             voiceoverDurationSec: audioRuntime.voiceoverDurationSec,
-            ducking: audioRuntime.musicDucking
+            ducking: audioRuntime.musicDucking,
+            videoDurationSec: storyboard.project.durationFrames / storyboard.project.fps,
+            fadeInSec: audioRuntime.musicFadeInSec,
+            fadeOutSec: audioRuntime.musicFadeOutSec
           })}
         />
       ) : null}
@@ -74,7 +84,7 @@ export function DataDrivenVideo({storyboard, styleTokens, audioRuntime, renderPr
           </Sequence>
         );
       })}
-      {!cleanMaster ? <div style={{
+      {shouldRenderReviewMarker(renderProfile) ? <div style={{
         position: 'absolute',
         right: 32,
         top: 26,

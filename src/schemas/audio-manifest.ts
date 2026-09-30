@@ -25,6 +25,8 @@ export const AudioManifestSchema = z.object({
   captionsPath: z.string().min(1),
   audioConfigPath: z.string().min(1),
   projectDurationSec: z.number().positive(),
+  captionInputFingerprint: z.string().regex(/^[a-f0-9]{64}$/).optional(),
+  captionTimingSource: z.enum(['estimated', 'manual']).optional(),
   notes: z.array(z.string()).default([])
 }).strict();
 

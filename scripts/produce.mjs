@@ -516,6 +516,7 @@ export function runProduction(options) {
         outputPurpose: run.outputPurpose
       });
       run.artifacts.qaReport = path.relative(projectPath, qa.reportPath);
+      addWarnings(run, qa.report.checks.audioTail?.issues ?? []);
       if (!qa.report.automatedPassed) {
         run.errors.push(...qa.report.errors);
         setStage(run, 'qa', 'blocked');

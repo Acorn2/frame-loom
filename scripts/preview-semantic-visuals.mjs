@@ -6,7 +6,7 @@ import {getCompositions, renderStill} from '@remotion/renderer';
 import {MotionPackSchema, StylePackSchema} from '../src/schemas/style-pack.ts';
 import {createStyleTokens} from '../src/styles/style-loader.ts';
 import {getSceneTimeline} from '../src/timeline/scene-timeline.ts';
-import {checkStoryboardInput, checkVisualInput} from './lib/preflight.mjs';
+import {checkAssetInput, checkStoryboardInput, checkVisualInput} from './lib/preflight.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
@@ -18,7 +18,7 @@ const output = option('--output');
 const portrait = args.includes('--portrait');
 const chosen = option('--styles');
 if (!output || (args.includes('--styles') && !chosen)) {
-  throw new Error('Usage: npm run preview:semantic -- --output <new-directory> [--styles id,id] [--portrait]');
+  throw new Error('Usage: npm run preview:semantic -- --output <new-directory> [--styles id,id] [--portrait] [--storyboard path]');
 }
 const outputRoot = path.resolve(output);
 if (fs.existsSync(outputRoot)) throw new Error(`输出目录已存在，未覆盖：${outputRoot}`);
@@ -26,7 +26,10 @@ const styleRoot = path.join(root, 'styles');
 const index = JSON.parse(fs.readFileSync(path.join(styleRoot, 'style-index.json'), 'utf8'));
 const styleIds = chosen ? chosen.split(',').map((id) => id.trim()).filter(Boolean) : index.styles.map((style) => style.id);
 if (styleIds.length === 0 || new Set(styleIds).size !== styleIds.length) throw new Error('Style Pack id 不能为空或重复。');
-const source = JSON.parse(fs.readFileSync(path.join(root, 'examples/semantic-visuals/storyboard.json'), 'utf8'));
+const sourcePath = path.resolve(option('--storyboard') ?? path.join(root, 'examples/semantic-visuals/storyboard.json'));
+const source = JSON.parse(fs.readFileSync(sourcePath, 'utf8'));
+const assetIssues = checkAssetInput(sourcePath);
+if (assetIssues.length) throw new Error(assetIssues.join('; '));
 const plans = styleIds.map((id) => {
   const style = StylePackSchema.parse(JSON.parse(fs.readFileSync(path.join(styleRoot, id, 'style.json'), 'utf8')));
   const motion = MotionPackSchema.parse(JSON.parse(fs.readFileSync(path.join(styleRoot, id, 'motion.json'), 'utf8')));
@@ -37,6 +40,15 @@ const plans = styleIds.map((id) => {
   const issues = [...checkStoryboardInput(storyboard, {styleRoot, executionMode: 'fast'}), ...visualIssues.safeArea.issues, ...visualIssues.textLayout];
   const errors = issues.filter((item) => item.severity === 'error');
   if (errors.length) throw new Error(`${id} 未通过校验：${errors.map((item) => item.message).join('；')}`);
+  for (const scene of storyboard.scenes) {
+    for (const layer of scene.layers) {
+      if (!layer.asset) continue;
+      const file = path.resolve(path.dirname(sourcePath), layer.asset);
+      const mime = {'.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp'}[path.extname(file).toLowerCase()];
+      if (!mime) throw new Error(`不支持素材类型：${file}`);
+      layer.assetDataUri = `data:${mime};base64,${fs.readFileSync(file).toString('base64')}`;
+    }
+  }
   return {id, storyboard, styleTokens: createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height)};
 });
 fs.mkdirSync(outputRoot, {recursive: true});
@@ -50,7 +62,7 @@ for (const plan of plans) {
   if (!composition) throw new Error('找不到 StoryboardV2 composition。');
   const files = [];
   for (const timing of getSceneTimeline(plan.storyboard)) {
-    const frame = timing.startFrame + Math.min(timing.scene.durationFrames - 2, Math.max(90, ...timing.scene.beats.map((beat) => beat.start + beat.duration + 30)));
+    const frame = timing.startFrame + Math.min(timing.scene.durationFrames - 2, Math.max(90, ...timing.scene.beats.map((beat) => beat.start + beat.duration + 30), timing.scene.visual?.mediaFocus ? timing.scene.visual.mediaFocus.start + timing.scene.visual.mediaFocus.duration + 30 : 0));
     const file = `${plan.id}-${timing.scene.id}.png`;
     await renderStill({composition, serveUrl, inputProps, frame, output: path.join(outputRoot, file), imageFormat: 'png'});
     files.push({file, scene: timing.scene});

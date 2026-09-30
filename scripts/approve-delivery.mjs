@@ -4,6 +4,7 @@ import {fileURLToPath, pathToFileURL} from 'node:url';
 import {fingerprintFiles, fingerprintProjectInputs} from './lib/input-fingerprint.mjs';
 import {inspectOutput} from './inspect-output.mjs';
 import {AudioConfigSchema} from '../src/schemas/audio-config.ts';
+import {inspectCleanNarratedRender} from './lib/render-receipt.mjs';
 
 const REQUIRED_REVIEW_CHECKS = [
   'fullPlaybackPassed',
@@ -28,6 +29,7 @@ export function checkDeliveryEligibility(run, qa, review) {
   if (run.status !== 'completed' || run.stages?.qa !== 'completed') issues.push('生产流程和自动 QA 必须先完成。');
   if (!['tts', 'external'].includes(run.audioModeResolved)) issues.push('静音预览不能作为可交付视频。');
   if (run.outputPurpose && run.outputPurpose !== 'in-project-video') issues.push('只有项目内有声视频可以通过有声交付审核。');
+  if (qa.checks?.narratedRenderProfile?.passed !== true) issues.push('干净有声候选文件必须通过渲染配置 QA。');
   if (!qa.automatedPassed || qa.mode !== 'audio-pilot' || qa.checks?.output?.passed !== true || !(qa.checks.output.audioStreams >= 1) || qa.checks?.audio?.passed !== true) {
     issues.push('带音频 MP4 必须通过输出和音频 QA。');
   }
@@ -57,6 +59,7 @@ export function approveDelivery(projectDirectory, reviewFilePath) {
   const audioConfig = AudioConfigSchema.parse(readJson(audioConfigPath));
   if (!audioConfig.voiceover?.enabled) throw new Error('只有配乐或音效的输出不能作为讲解视频交付。');
   if (run.outputFingerprint !== fingerprintFiles([videoPath], projectPath)) throw new Error('视频已在 QA 后变化，请重新渲染和复核。');
+  inspectCleanNarratedRender(videoPath);
   const styleRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'styles');
   const currentInputs = fingerprintProjectInputs(projectPath, styleRoot, run.audioConfigPath, run.ttsConfigPath);
   if (run.inputFingerprint !== currentInputs) throw new Error('项目输入已在 QA 后变化，请重新运行 produce。');

@@ -7,6 +7,7 @@ FrameLoom favors small, deterministic changes that keep the storyboard contract,
 ```bash
 npm ci
 npm run generate:schemas
+npm run check:docs
 npm run validate:styles
 npm run typecheck
 npm run lint

@@ -97,6 +97,8 @@ export function initProject(args = process.argv.slice(2), {now = new Date()} = {
     music: {
       enabled: false,
       path: 'music.mp3',
+      fadeInSec: 1,
+      fadeOutSec: 2,
       volume: 0.16,
       source: 'replace-with-source',
       license: 'replace-with-license',

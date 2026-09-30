@@ -18,6 +18,7 @@ Use this checklist after the storyboard is reviewed and again after rendering. A
 - [ ] Reading order is clear without narration.
 - [ ] Beat and caption timing stays inside each scene.
 - [ ] The last important beat leaves a visible hold before the transition.
+- [ ] Every scene boundary has an intentional hard cut or a timed handoff; a repeated hard-cut pattern is checked at normal speed rather than assumed acceptable.
 - [ ] No scene has two competing `current` nodes; completed steps remain traceable.
 - [ ] Only renderer-supported templates and actions are used.
 - [ ] `storyboard.draft.json` remains separate from reviewed `storyboard.json`.
@@ -51,6 +52,7 @@ npm run qa:storyboard -- <storyboard.json> <preview.mp4> [output-dir]
 - [ ] Resolution, fps and duration match the storyboard.
 - [ ] Silent preview or visual master contains exactly one H.264 video stream and no audio stream.
 - [ ] A video of at least 20 seconds produces at least six review frames.
+- [ ] For a 2.3 long video, every scene has a completed-state and pre-cut frame; `review-frames.json.pages` covers every numbered frame, with at most 48 frames per contact-sheet page.
 - [ ] `qa-report.json` records automated checks and leaves manual review pending.
 
 ## Audio QA when enabled
@@ -59,13 +61,15 @@ npm run qa:storyboard -- <storyboard.json> <preview.mp4> [output-dir]
 - [ ] `inspect:audio` reports no voiceover, SFX or subtitle overflow.
 - [ ] Narration pronunciation and pacing were checked by listening to the full video.
 - [ ] Music and SFX do not mask narration.
+- [ ] If the ending contains a long silent card, decide whether a spoken close, licensed music tail or shorter hold makes the finish clearer; review any `audioTail` warning.
+- [ ] If music is enabled, listen through its intro, ducking release and final fade on headphones and phone speakers.
 - [ ] Subtitle timing, line length and safe-area readability were reviewed.
 
 ## Visual QA
 
 - [ ] Contact sheet includes opening, content, transitions and ending.
 - [ ] Review each scene's entrance midpoint, completed state and frame before the cut; check that relationships are visible after all elements enter.
-- [ ] Overlap handoffs show the incoming subject before the old scene disappears, without unreadable double titles.
+- [ ] Overlap handoffs fade the old information out, then fade and move the new information in; no frame shows competing titles. For narrated scenes, check speech begins when the new shot is visible.
 - [ ] An illustrative object is labelled as a diagram; real product evidence is identified separately.
 - [ ] The final claim remains stable for the declared `outro.holdFrames` before fade.
 - [ ] Titles, captions and content stay readable on the target canvas.

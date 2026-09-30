@@ -78,6 +78,8 @@ Every scene requires:
 - optional `primaryClaim` and `attentionTarget` for review and a deterministic focus target;
 - optional `transitionIn` (`overlap-fade`, `overlap-slide`, `overlap-carry`) with `durationFrames`, legacy `transitionOut`, and `outro` with `holdFrames` and `fadeFrames`.
 
+An overlap declaration uses the shared timeline in every renderer family. The old information fades against the Style Pack background in the first half; the new information fades in during the second half. `overlap-slide` also moves the incoming shot upward 28px. This avoids double titles but briefly exposes the background at the midpoint. Do not add overlaps to TTS shots without retiming the speech and visible handoff; the TTS timing proposal deliberately uses separate shots.
+
 Current production-safe capability:
 
 - templates: `statement`, `graph-explainer`, `metric-grid`, `interaction-flow`;
@@ -111,3 +113,7 @@ Scenes with captions reserve another 120px (landscape) or 160px (portrait) at th
 Screenshot and object `asset` paths resolve relative to the storyboard and must also be registered in `asset-manifest.json` as `type: "screenshot"` and `type: "image"`, respectively. Relative manifest paths must stay inside the project directory; absolute paths are allowed for explicitly supplied external assets. Duplicate manifest paths are rejected. `visibleFrom` and `visibleUntil` are scene-relative frame numbers and allow deterministic state replacement.
 
 Free-text motion instructions are documentation only. They cannot introduce an action absent from the capability manifest. The checked-in JSON Schema is generated from Zod with `npm run generate:schemas`; edit the TypeScript source, not the generated file.
+
+## Opt-in 2.3 quality extensions
+
+`visual.networkDirection` defaults to outward; inward requires one edge from each branch to anchorId. `visual.changeMode` defaults to compare; replace requires beforeId/afterId with the same glyph and changes one on-screen object. `visual.mediaFocus` specifies a normalized source-image rectangle (x/y/width/height), local-frame start/duration and a label. Width/height are 0.25–1, the rectangle must fit inside the image, and the animation must finish inside the scene. These options are declared in the capability manifest and rejected on unrelated visual kinds. See [quality production](quality-production.md) and the [public fixtures](../examples/quality-production/README.md).

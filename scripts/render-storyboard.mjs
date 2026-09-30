@@ -3,14 +3,14 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {bundle} from '@remotion/bundler';
 import {getCompositions, renderMedia} from '@remotion/renderer';
-import {parseCaptions} from '../src/audio/captions.ts';
-import {AudioConfigSchema} from '../src/schemas/audio-config.ts';
+import {loadAudioRuntime} from './lib/audio-runtime.mjs';
 import {MotionPackSchema, StylePackSchema} from '../src/schemas/style-pack.ts';
 import {createStyleTokens} from '../src/styles/style-loader.ts';
 import {inspectOutput} from './inspect-output.mjs';
 import {checkAssetInput, checkAudioInput, checkStoryboardInput, checkVisualInput} from './lib/preflight.mjs';
 import {loadHandoffConfig, OUTPUT_PURPOSES} from './lib/output-purpose.mjs';
 import {assertStoryboardApproval} from './lib/storyboard-approval.mjs';
+import {renderToVerifiedOutput} from './lib/verified-render-output.mjs';
 
 const args = process.argv.slice(2);
 let force = false;
@@ -86,7 +86,7 @@ if (resolvedInput === resolvedOutput) {
   console.error('输入 storyboard 与输出文件不能是同一路径。');
   process.exit(1);
 }
-if (fs.existsSync(resolvedOutput) && !force) {
+if ((fs.existsSync(resolvedOutput) || fs.existsSync(`${resolvedOutput}.render.json`)) && !force) {
   console.error(`输出文件已存在，未覆盖：${resolvedOutput}\n确认目标后使用 --force 显式覆盖。`);
   process.exit(1);
 }
@@ -125,50 +125,6 @@ function assetMime(filePath) {
   return ({'.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.gif': 'image/gif', '.svg': 'image/svg+xml'})[extension] ?? 'application/octet-stream';
 }
 
-function mediaMime(filePath) {
-  const extension = path.extname(filePath).toLowerCase();
-  return ({'.mp3': 'audio/mpeg', '.wav': 'audio/wav', '.m4a': 'audio/mp4', '.aac': 'audio/aac', '.ogg': 'audio/ogg'})[extension] ?? 'application/octet-stream';
-}
-
-function fileDataUri(filePath, mimeResolver) {
-  if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile() || fs.statSync(filePath).size === 0) {
-    throw new Error(`音频或字幕文件不存在或为空：${filePath}`);
-  }
-  return `data:${mimeResolver(filePath)};base64,${fs.readFileSync(filePath).toString('base64')}`;
-}
-
-function loadAudioRuntime(configPath, audioTiming) {
-  if (!configPath) return undefined;
-  const resolvedConfig = path.resolve(process.cwd(), configPath);
-  const config = parseFile(AudioConfigSchema, resolvedConfig, 'audio-config.json');
-  const directory = path.dirname(resolvedConfig);
-  const runtime = {sfx: []};
-  if (config.voiceover?.enabled) {
-    runtime.voiceoverDataUri = fileDataUri(path.resolve(directory, config.voiceover.path), mediaMime);
-    runtime.voiceoverVolume = config.voiceover.volume;
-  }
-  if (config.music?.enabled) {
-    runtime.musicDataUri = fileDataUri(path.resolve(directory, config.music.path), mediaMime);
-    runtime.musicVolume = config.music.volume;
-    runtime.musicDucking = config.music.ducking;
-  }
-  runtime.voiceoverDurationSec = audioTiming?.tracks.find((track) => track.kind === 'voiceover')?.durationSec;
-  if (config.captions?.enabled) {
-    const captionPath = path.resolve(directory, config.captions.path);
-    if (!fs.existsSync(captionPath)) throw new Error(`字幕文件不存在：${captionPath}`);
-    runtime.captions = parseCaptions(fs.readFileSync(captionPath, 'utf8'));
-  }
-  for (const item of config.sfx ?? []) {
-    if (!item.enabled) continue;
-    runtime.sfx.push({
-      dataUri: fileDataUri(path.resolve(directory, item.path), mediaMime),
-      volume: item.volume,
-      startSec: item.startSec ?? 0
-    });
-  }
-  return runtime;
-}
-
 function hydrateStoryboardAssets(value) {
   const hydrated = structuredClone(value);
   for (const scene of hydrated.scenes) {
@@ -193,12 +149,12 @@ if (outputPurpose === 'in-project-video' && !audioRuntime?.voiceoverDataUri) {
 }
 const handoff = outputPurpose === 'visual-master' ? loadHandoffConfig(path.dirname(resolvedInput)) : undefined;
 
-fs.mkdirSync(path.dirname(resolvedOutput), {recursive: true});
 const entryPoint = path.join(projectRoot, 'src/index.ts');
 console.log('Bundling Remotion composition...');
 const bundleLocation = await bundle({entryPoint});
 const inputProps = {storyboard: hydratedStoryboard, styleTokens, audioRuntime, renderProfile: {
   purpose: outputPurpose ?? (hasAudio ? 'in-project-video' : 'visual-preview'),
+  showReviewMarker: !hasAudio && outputPurpose !== 'visual-master',
   facecamRightFraction: handoff?.facecamRightFraction ?? 0,
   subtitleBottomFraction: handoff?.subtitleBottomFraction ?? 0
 }};
@@ -207,9 +163,21 @@ const composition = compositions.find((item) => item.id === 'StoryboardV2');
 if (!composition) throw new Error('找不到 StoryboardV2 composition。');
 
 console.log(`Rendering ${storyboard.project.durationSec}s ${inputProps.renderProfile.purpose}...`);
-await renderMedia({
-  composition, serveUrl: bundleLocation, codec: 'h264', outputLocation: resolvedOutput,
-  inputProps, audioCodec: hasAudio ? 'aac' : null, muted: !hasAudio, enforceAudioTrack: hasAudio, overwrite: force
+let lastProgressBucket = -1;
+await renderToVerifiedOutput({
+  outputPath: resolvedOutput,
+  force,
+  profile: inputProps.renderProfile,
+  render: (stagedVideo) => renderMedia({
+    composition, serveUrl: bundleLocation, codec: 'h264', outputLocation: stagedVideo,
+    inputProps, audioCodec: hasAudio ? 'aac' : null, muted: !hasAudio, enforceAudioTrack: hasAudio,
+    onProgress: ({progress, renderedFrames, encodedFrames}) => {
+      const bucket = Math.floor(progress * 10);
+      if (bucket <= lastProgressBucket) return;
+      lastProgressBucket = bucket;
+      console.log(`RENDER PROGRESS ${Math.min(bucket * 10, 100)}% rendered=${renderedFrames}/${composition.durationInFrames} encoded=${encodedFrames}`);
+    }
+  }),
+  verify: (stagedVideo) => inspectOutput(stagedVideo, storyboard, {expectAudio: hasAudio})
 });
-inspectOutput(resolvedOutput, storyboard, {expectAudio: hasAudio});
 console.log(`Rendered: ${resolvedOutput}`);

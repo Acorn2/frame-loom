@@ -182,6 +182,7 @@ describe('video production purposes', () => {
       expect(result.status).not.toBe(0);
       expect(result.stderr).toContain('超出 scene 可用时长');
       expect(result.stderr).not.toContain('输出文件已存在');
+      if (attempt > 0) expect(result.stdout).toContain('VOICE CACHE HIT');
     }
     expect(fs.existsSync(path.join(project, 'audio', 'audio-config.tts.json'))).toBe(false);
     expect(fs.readdirSync(path.join(project, 'audio', 'generated'))).toEqual([]);

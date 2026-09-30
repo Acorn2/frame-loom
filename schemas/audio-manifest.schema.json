@@ -107,6 +107,17 @@
       "type": "number",
       "exclusiveMinimum": 0
     },
+    "captionInputFingerprint": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "captionTimingSource": {
+      "type": "string",
+      "enum": [
+        "estimated",
+        "manual"
+      ]
+    },
     "notes": {
       "default": [],
       "type": "array",
