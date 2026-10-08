@@ -1,0 +1,155 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "cycle-mechanism",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "把复核做成循环",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 6.933333333333334,
+    "durationFrames": 208,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "cycle-mechanism",
+      "template": "graph-explainer",
+      "purpose": "claim",
+      "title": "把复核做成循环",
+      "primaryClaim": "对象转入循环机制",
+      "visual": {
+        "kind": "network",
+        "explanation": "FrameLoom 自写公开示意资料，不代表真实产品、用户或研究结果",
+        "representation": "diagram",
+        "source": "source.md",
+        "anchorId": "item1",
+        "networkDirection": "outward"
+      },
+      "shot": {
+        "id": "cycle-mechanism",
+        "version": "1.2.0",
+        "slots": {
+          "subject": "item1",
+          "items": [
+            "item2",
+            "item3",
+            "item4"
+          ]
+        }
+      },
+      "narration": "对象转入循环机制",
+      "durationFrames": 208,
+      "layers": [
+        {
+          "id": "item1",
+          "type": "card",
+          "label": "复核循环",
+          "text": "同一主体经历连续复核"
+        },
+        {
+          "id": "item2",
+          "type": "card",
+          "label": "观察",
+          "text": "记录现象"
+        },
+        {
+          "id": "item3",
+          "type": "card",
+          "label": "尝试",
+          "text": "形成可验证操作"
+        },
+        {
+          "id": "item4",
+          "type": "card",
+          "label": "反馈",
+          "text": "反馈进入下一轮观察"
+        }
+      ],
+      "connections": [
+        {
+          "id": "link1",
+          "from": "item2",
+          "to": "item3"
+        },
+        {
+          "id": "link2",
+          "from": "item3",
+          "to": "item4"
+        },
+        {
+          "id": "link3",
+          "from": "item4",
+          "to": "item2"
+        }
+      ],
+      "beats": [
+        {
+          "id": "item1-enter",
+          "target": "item1",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item2-enter",
+          "target": "item2",
+          "action": "enter",
+          "start": 90,
+          "duration": 24
+        },
+        {
+          "id": "item3-enter",
+          "target": "item3",
+          "action": "enter",
+          "start": 96,
+          "duration": 24
+        },
+        {
+          "id": "item4-enter",
+          "target": "item4",
+          "action": "enter",
+          "start": 102,
+          "duration": 24
+        },
+        {
+          "id": "item1-focus",
+          "target": "item1",
+          "action": "focus",
+          "start": 48,
+          "duration": 36
+        },
+        {
+          "id": "link1-draw",
+          "target": "link1",
+          "action": "draw",
+          "start": 136,
+          "duration": 24
+        },
+        {
+          "id": "link2-draw",
+          "target": "link2",
+          "action": "draw",
+          "start": 136,
+          "duration": 24
+        },
+        {
+          "id": "link3-draw",
+          "target": "link3",
+          "action": "draw",
+          "start": 136,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

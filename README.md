@@ -7,47 +7,95 @@ FrameLoom 是一个以 Codex 为主要入口、兼容 Claude Code、Kimi Code、
 从**已有文档**（文章、讲稿或产品说明）开始即可。首次体验默认使用纯文档、横屏和静音预览；有本地图片或指定网页截图时可选择“文档＋图片”。主张提炼、画面路线和内容缺口由 Agent 判断，仍需创作者审阅；CLI 不会自动理解一篇文章。
 
 ```text
-source document + selected image mode → claims and visible relationships → semantic storyboard → Style Pack → validation → preview / visual master / narrated video → QA report
+source document + video style + selected shot recipes → claims and shot planning → Storyboard 2.4 → validation → preview / visual master / narrated video → QA report
 ```
 
 **静音 MP4 有两种不同用途。**`preview-silent.mp4` 是带审片标记的画面预览；纯文档静音预览不会为了填充时间自动增加底部旁白字幕。`visual-master-vNNN.mp4` 是无音轨、无旁白字幕和审片标记的干净画面底片，可供创作者在剪辑软件里配音、叠加出镜画面和字幕。底片经完整视觉检查后可以完成 FrameLoom 的**画面交付**；外部剪辑完成的视频由外部流程验收。若要在 FrameLoom 内完成有声讲解视频，则必须接入匹配的旁白，完成音频与画面 QA，再完整播放人工复核。
 
 当前已知限制及实测时间提案、字幕修订、镜头扩展用法见[质量生产说明](references/quality-production.md)。发布状态与验证缺口见[发布检查记录](references/release-readiness.md)。
 
+历史 Storyboard 2.3 可选用文档镜头试点 `document-conclusion-deal`：保留来源摘录，并随旁白逐条呈现三条有连接的结论；使用方式和输入约束见[分镜契约](references/storyboard-schema.md#opt-in-23-quality-extensions)。
+
 较长的 2.3 视频会按每页最多 48 帧生成审片接触表，`review-frames.json.pages` 可定位每页的帧号与时间范围。渲染会先在隔离目录完成媒体检查，失败后可根据 `run.json` 从 `render` 或 `qa` 阶段恢复；人工全片播放仍是交付前提。
 
 ## 第一次使用：给一篇文档，先看画面
 
-准备 Node.js 20+ 和 FFmpeg，在仓库根目录运行 `npm ci`，然后在这个仓库打开支持 Skill 的 Coding Agent。Codex 会从 [Skill 入口](.agents/skills/frame-loom/SKILL.md)加载共享流程；其他 Agent 可先读取根目录的 [SKILL.md](SKILL.md)。把下面一句中的路径换成**现有 Markdown 或纯文本文档的绝对路径**：
+准备 Node.js 24+（推荐 Node.js 24 LTS）和 FFmpeg，在仓库根目录运行 `npm ci`，然后在这个仓库打开支持 Skill 的 Coding Agent。Codex 会从 [Skill 入口](.agents/skills/frame-loom/SKILL.md)加载共享流程；其他 Agent 可先读取根目录的 [SKILL.md](SKILL.md)。把下面一句中的路径换成**现有 Markdown 或纯文本文档的绝对路径**：
 
 ```text
-请使用 frame-loom Skill，读取 <文档绝对路径>，先用 fast 模式制作静音视频预览，我想看看画面效果。
-视频模板：请根据文档自动选择，并告诉我最终使用的模板名称和 ID。
+请使用 frame-loom Skill，将 <文档绝对路径> 制作成 16:9 横屏静音审片预览。
+视频风格：retro-zine
+可用镜头配方：paper-title、document-conclusions、list-reveal、concept-matrix、compare-reveal、semantic-default
+请根据原文选择、重复和排列这些配方，不必全部使用，并说明逐场选择理由。
+使用 fast 模式，保留原文，完成讲稿、Storyboard 2.4、校验、渲染和 QA。
+完成后告诉我实际项目路径、preview-silent.mp4 路径、视频时长和 QA 结果。
 ```
 
-不需要先配置 TTS、准备音频、起项目 ID、创建项目目录、复制文档或填写用途。Agent 会保留原文，按 `YYYYMMDD-内容主题` 创建不覆盖旧项目的新目录，根据内容选画面路线和模板，写讲稿与分镜，再运行 `fast + silent` 的校验、渲染和 QA。未指定图片时默认纯文档；未指定画幅时默认 16:9 横屏。自动选模板时 Agent 应说明实际选用项；片长由文档内容决定，初始草稿的 20 秒只是占位值。
+这段指令是在 Agent 对话框中输入，不是在终端执行。上面的组合是当前可用的入门示例；可替换成[配方库](shots/README.md)中的兼容组合。若希望 Agent 推荐，将风格和配方两行换成“请根据原文推荐兼容的风格和配方集合，并说明选择理由”。
+
+不需要先配置 TTS、准备音频、起项目 ID、创建项目目录、复制文档或填写用途。Agent 会保留原文，按 `YYYYMMDD-内容主题` 创建不覆盖旧项目的新目录，根据内容选画面路线并在指定配方集合内编排，写讲稿与分镜，再运行 `fast + silent` 的校验、渲染和 QA。未指定图片时默认纯文档；未指定画幅时默认 16:9 横屏。自动选择时 Agent 应说明风格和实际配方集合；片长由文档内容决定，初始草稿的 20 秒只是占位值。
 
 成功后应直接收到**你这篇文档的** `preview-silent.mp4`、代表帧、实际时长及简短 QA 结论。它只供检查画面。后续可在同一项目导出干净底片、使用 TTS 或接入外部配音，无需重新输入文档。若明确要审分镜，把提示词中的“fast 模式”改为“先给我审核分镜，确认后再渲染”。只说“制作视频”而未表明目标时，Agent 会问一次：先看画面、交底片给后期，还是在项目内完成有声版。
 
-有图片时也只需说出文档和素材，例如：“请读取 `<文档路径>`，结合 `<图片路径>` 做一版静音视频预览。”网页截图请给准确网址；截图失败时 Agent 会说明原因，不会伪造画面。需要比较模板、手动运行 CLI 或接入音频时，再阅读下文。
+有图片时也只需说出文档和素材，例如：“请读取 `<文档路径>`，结合 `<图片路径>` 做一版静音视频预览。”网页截图请给准确网址；截图失败时 Agent 会说明原因，不会伪造画面。需要比较风格／配方、手动运行 CLI 或接入音频时，再阅读下文。
 
 如果想先检查本机是否具备渲染能力，可在 `npm ci` 后用仓库自带的公开示例运行下面三条命令。它会生成 20 秒静音样片 `frame-loom-smoke.mp4`；这只验证本机环境与渲染链路，不代表已将你的文档制作成视频。
 
 ```bash
-npm run validate:storyboard -- examples/article-video/storyboard.json
+npm run validate:storyboard -- examples/article-video/storyboard.json --mode fast
 npm run render:storyboard -- examples/article-video/storyboard.json frame-loom-smoke.mp4 --mode fast
 npm run inspect:output -- frame-loom-smoke.mp4 examples/article-video/storyboard.json
 ```
 
 渲染需要可运行的 FFmpeg；首次渲染还可能下载 Remotion 使用的浏览器。安装或渲染出错时，请保留命令输出、Node.js 版本和操作系统信息，按 [贡献说明](CONTRIBUTING.md)中的本地检查缩小问题范围。
 
-## 选择模板、模式和交付目标
+## 用页面浏览风格与勾选镜头
+
+在仓库根目录运行：
+
+```bash
+npm run library
+```
+
+打开命令打印的 **http://127.0.0.1:4318**，页面按三个独立入口导航：**视频风格**（`index.html`）比较六套外观与选择画幅；**镜头配方**（`shots.html`）预览、搜索与多选；**制作组合**（`selection.html`）检查选择并导出指令。页面展示 37 个场景配方；九个辅助动作和五个换章转场在独立分类中查看。横屏切换风格保留已选镜头；切换到竖屏时提示并移除尚未适配的专用镜头。已选组合与公开制作选项保存在当前浏览器；文档、音频和密钥在本地 Agent 中处理。
+
+在“制作组合”页选择**带旁白的视频**或**仅画面，供后期剪辑**。带旁白时再选 **TTS 自动配音**或**使用已有旁白**；TTS 可沿用本地已配置服务，或选择豆包、OpenAI、ElevenLabs、阿里百炼四个项目内置预设并查看模型和音色。需要先审讲稿与分镜时，在“制作前的确认”中勾选。最后点击**复制制作指令**，粘贴到 Agent 对话框并附上文档；有图片或已有旁白时一起提供。项目主题与目录名由 Agent 根据文档生成，无需在网页填写路径或英文主题。风格与镜头的网页展示和复制指令只使用名称与 ID，不要求用户了解或指定版本号。
+
+网页仅展示公开 TTS 预设，不扫描本机配置，也不调用配音服务。所选预设会写入指令，由 Agent 在本地核对已启用配置并明确指定 `--tts-config`；无匹配配置时说明缺口，不自动换服务或退回静音。静音审片是过程检查，“仅画面”是供后期剪辑的干净底片，均不能代替有声成片。
+
+六套风格已有同分镜视频，可比较墨白杂志、瑞士蓝、手绘便签、暗场信号、工程蓝图和产品演示的构图、字体与动效，具体见[六套视频风格](#六套视频风格)。风格卡片的封面取自对应实际视频；桌面悬停或键盘聚焦可预览，点击查看完整样片，手机点击进入详情。首次查看镜头动画时，先生成公开配方样片：
+
+```bash
+npm run preview:library
+npm run library
+```
+
+生成前页面显示待生成／待更新状态，并可查看配方说明；生成后重新启动页面服务，或运行 `npm run build:library` 并刷新。样片固定展示实际支持的风格与画幅，不代表成片验收。端口冲突可用 `npm run library -- --port 4319`。使用与构建说明见[配方库页面说明](library/README.md)。
+
+### 通过 GitHub Pages 分享配方库
+
+配方库可以直接由本仓库的 GitHub Pages 托管，浏览者无需安装项目或启动本地服务。启用发布后，当前 `Acorn2/frame-loom` 仓库的默认访问地址为 [https://acorn2.github.io/frame-loom/](https://acorn2.github.io/frame-loom/)；这里是预期发布地址，不代表已上线。视频制作仍在使用者本机进行。
+
+本仓库的 [Library Pages 工作流](.github/workflows/library-pages.yml)会在 `main` 上相关代码更新或手动运行时，校验代码、生成公开动画预览，再构建并发布 `dist/library/`；PR 只构建验证，不发布。构建会检查六套风格及所有已注册配方的图片、动画是否完整且有效，缺失或过期时阻止发布。预览通过输入指纹缓存，生成文件无需提交到 Git。
+
+首次启用时，在仓库 **Settings → Pages → Build and deployment → Source** 中选择 **GitHub Actions**；提交并推送页面、配方和工作流源码后，在 **Actions → Library Pages** 查看结果，必要时选择 `main` 手动运行。默认 `github-pages` 环境如设置了审核门禁，还需完成该环境要求的批准。远端启用和发布需由有权限的维护者操作；本地修改不会自动上线。
+
+本地检查完整发布产物：
+
+```bash
+npm run preview:library
+npm run build:library -- --require-previews
+```
+
+站点只包含页面、公开配方说明及样例媒体，不包含 `projects/`、原文、音频凭据或 TTS 配置。完整流程及故障定位见[Pages 发布说明](library/README.md#github-pages-发布)。
+
+## 选择风格、镜头配方、模式和交付目标
 
 用户只需给出材料和想得到的结果，**不需要知道项目 ID、填写 JSON 或运行 CLI**。先决定交付什么，再决定是否要在渲染前审核分镜；输入是纯文档还是文档＋图片，不影响下面的选择。
 
-**视频模板可以由你指定，也可以让 Agent 推荐。**下文测试输入统一指定 `retro-zine`，这样比较 `fast`、`review` 和音频路线时，画面风格保持一致；把示例中的 ID 换成[六套模板](#六套视频模板)里的其他 ID，即可测试其他风格。想先看候选，可说“先根据文档推荐最多三套视频模板，说明差别，等我选定后再制作”。模板选择与 `fast`／`review`、音频来源、交付目标互不绑定。
+**先选视频风格与全片字体，再选多个兼容的镜头配方。**风格决定配色、形状与基础入场方式，并为基础图解提供各自的标题构图和流程布局。全片字体独立单选，统一应用于标题、正文、图解和旁白字幕；专用配方负责证据驻留、标题降格、要点展开等具体镜头动作。你可以指定集合，也可以让 Agent 根据原文推荐并说明逐场选择。可用组合见[镜头配方库](shots/README.md)，`retro-zine-explainer` 仅是预设组合的快捷入口。风格／配方选择与 `fast`／`review`、音频来源、交付目标互不绑定。
 
-**默认值要分清：**直接运行 `init:project` 且省略 `--style`，代码默认初始化 `retro-zine`；通过 Skill 给文档却不指定模板时，Agent 应按文档内容选一套，并告知实际模板 ID，不能假定一定是 `retro-zine`。`review` 应把选定模板放进分镜审核，`fast` 可按已说明的模板继续运行。
+**默认值要分清：**直接运行 `init:project` 且省略 `--style`，代码默认使用 `retro-zine`；通过 Skill 未指定组合时，Agent 应查可用能力后推荐风格和配方集合。CLI 用 `--style <id> --font <font-id> --shots <id,id,...>` 初始化独立组合；只传 `--style` 的旧 2.3 入口仍保留。`review` 审核组合与逐场编排，`fast` 按已说明的选择继续。
 
 | 分镜模式 | 渲染前的停点 | 适合什么时候使用 |
 | --- | --- | --- |
@@ -69,11 +117,11 @@ npm run inspect:output -- frame-loom-smoke.mp4 examples/article-video/storyboard
 
 ### 先看画面：静音审片预览
 
-首次尝试可用上文的自动选模板输入；若要和 `review` 比较同一模板，`fast` 使用：
+首次尝试可用上文的指定风格与配方输入；若要和 `review` 比较同一组合，`fast` 使用：
 
 ```text
 请使用 frame-loom Skill，读取 <文档绝对路径>，用 fast 模式制作静音视频预览。
-视频模板：retro-zine。
+视频风格：retro-zine；镜头配方：请根据文档推荐兼容集合。
 ```
 
 `review` 使用：
@@ -81,7 +129,7 @@ npm run inspect:output -- frame-loom-smoke.mp4 examples/article-video/storyboard
 ```text
 请使用 frame-loom Skill，读取 <文档绝对路径>，制作静音视频预览。
 使用 review 模式，先给我审核讲稿、分镜和时间安排；我确认后再渲染。
-视频模板：retro-zine。
+视频风格：retro-zine；镜头配方：请根据文档推荐兼容集合。
 ```
 
 预期：`review` 在你确认前**没有 MP4**；确认后与 `fast` 一样得到 `preview-silent.mp4` 和代表帧。它带审片标记，不能当作交给后期的干净底片；只有接入实际旁白或明确提供字幕素材时才制作旁白字幕。审过预览后，可以在**同一项目**提出“导出干净画面底片”或“接入音频做有声版”，无需重新提供文档。
@@ -91,7 +139,7 @@ npm run inspect:output -- frame-loom-smoke.mp4 examples/article-video/storyboard
 ```text
 请使用 frame-loom Skill，读取 <文档绝对路径>，用 fast 模式制作供后期剪辑的干净静音画面底片。
 我会在外部自己配音，并在右上角叠加出镜画面、底部加字幕；请为这些位置留白，交付讲稿和逐镜时间表。
-视频模板：retro-zine。
+视频风格：retro-zine；镜头配方：请根据文档推荐兼容集合。
 ```
 
 `review` 的输入：
@@ -100,7 +148,7 @@ npm run inspect:output -- frame-loom-smoke.mp4 examples/article-video/storyboard
 请使用 frame-loom Skill，读取 <文档绝对路径>，制作供后期剪辑的干净静音画面底片。
 使用 review 模式，先给我审核讲稿、分镜、时间安排和留白区域；我确认后再导出。
 我会在外部自己配音，并在右上角叠加出镜画面、底部加字幕；请为这些位置留白，交付讲稿和逐镜时间表。
-视频模板：retro-zine。
+视频风格：retro-zine；镜头配方：请根据文档推荐兼容集合。
 ```
 
 底片无音轨、无逐句旁白字幕和审片标记，但保留必要的标题、图解和步骤文字。请完整查看底片，确认留白和可读性后再标记为 `visual-handoff-ready`。若后期在剪辑软件里配音和叠加人像，FrameLoom 到此就完成**画面交接**，无需把音频交回项目。
@@ -110,7 +158,7 @@ npm run inspect:output -- frame-loom-smoke.mp4 examples/article-video/storyboard
 ```text
 请使用 frame-loom Skill，读取 <文档绝对路径>，用 fast 模式制作项目内有声视频。
 使用已配置的真实 TTS；如果有多个可用配置，先列出名称、服务和音色让我选一个。
-视频模板：retro-zine。
+视频风格：retro-zine；镜头配方：请根据文档推荐兼容集合。
 ```
 
 `review` 的输入：
@@ -119,7 +167,7 @@ npm run inspect:output -- frame-loom-smoke.mp4 examples/article-video/storyboard
 请使用 frame-loom Skill，读取 <文档绝对路径>，使用已配置的真实 TTS 制作项目内有声视频。
 使用 review 模式，先给我审核讲稿、分镜和时间安排；我确认后再合成。
 如果有多个可用配置，先列出名称、服务和音色让我选一个。
-视频模板：retro-zine。
+视频风格：retro-zine；镜头配方：请根据文档推荐兼容集合。
 ```
 
 只有一个可用的真实 TTS 配置时，Agent 应告知实际选用项；多个配置必须选定其中一个，不能替你猜。尚无真实配置时，应说明缺口，不能把静音预览或 `mock` 语音冒充可交付有声视频。真实 TTS 生成后要按实测音频时长检查分镜；若因此修改已批准内容，`review` 必须再次确认。通过自动 QA 得到的是**有声待审版**，完整播放复核后才可标记 `release-ready`；`mock` TTS 只用于测试管线。
@@ -131,7 +179,7 @@ npm run inspect:output -- frame-loom-smoke.mp4 examples/article-video/storyboard
 ```text
 请使用 frame-loom Skill，读取 <文档绝对路径>，用 fast 模式先交视频讲稿和分镜。
 我会据此录制配音，收到音频前不要渲染 MP4。
-视频模板：retro-zine。
+视频风格：retro-zine；镜头配方：请根据文档推荐兼容集合。
 ```
 
 `review` 的第一阶段输入：
@@ -139,7 +187,7 @@ npm run inspect:output -- frame-loom-smoke.mp4 examples/article-video/storyboard
 ```text
 请使用 frame-loom Skill，读取 <文档绝对路径>，用 review 模式先准备视频讲稿和分镜。
 先给我审核讲稿和分镜；我确认后再交给我录音。收到音频前不要渲染 MP4。
-视频模板：retro-zine。
+视频风格：retro-zine；镜头配方：请根据文档推荐兼容集合。
 ```
 
 第一阶段应得到按镜头编号的讲稿和 `script-ready`，**不会得到静音预览**。配音完成后，在原项目的对话中继续，沿用第一阶段选定的模板：
@@ -158,7 +206,7 @@ npm run inspect:output -- frame-loom-smoke.mp4 examples/article-video/storyboard
 ```text
 请使用 frame-loom Skill，读取 <文档绝对路径> 和已有配音 <音频绝对路径>，用 fast 模式制作项目内有声视频。
 请先核对配音与讲稿是否匹配，按实测时长安排画面，完成后交给我审片。
-视频模板：retro-zine。
+视频风格：retro-zine；镜头配方：请根据文档推荐兼容集合。
 ```
 
 `review` 的输入：
@@ -166,7 +214,7 @@ npm run inspect:output -- frame-loom-smoke.mp4 examples/article-video/storyboard
 ```text
 请使用 frame-loom Skill，读取 <文档绝对路径> 和已有配音 <音频绝对路径>，制作项目内有声视频。
 使用 review 模式，先核对配音与讲稿是否匹配，并给我审核讲稿、分镜和时间安排；我确认后再合成。
-视频模板：retro-zine。
+视频风格：retro-zine；镜头配方：请根据文档推荐兼容集合。
 ```
 
 外部音频须能读取、来源和使用权清楚，并与已交讲稿相符；可提供 SRT/VTT 字幕。两条外部配音路线完成自动 QA 后都处于 `manual-review-pending`，需要完整播放并确认声音、字幕和画面后才能标记 `release-ready`。
@@ -175,34 +223,153 @@ npm run inspect:output -- frame-loom-smoke.mp4 examples/article-video/storyboard
 
 ![纯文档试点的流程镜头](examples/creator-production-pilot/previews/process.png)
 
-## 六套视频模板
+## 风格 + 多镜头配方（2.4）
 
-FrameLoom 的视频模板是 Style Pack：它决定标题、图解、卡片、字幕和转场怎样呈现。同一份分镜可以换模板比较；叙事路线和原文依据仍由 Skill 根据文档确定。六套模板均支持横屏 `landscape`（1920×1080）和竖屏 `portrait`（1080×1920）。
+主入口是独立组合，使用配方不必先选预设模板。风格控制外观，配方集合限定可选镜头，Agent 再按内容决定每场使用哪个配方。要直接开始制作，可复制开头的 Agent 指令；下面是手动运行 CLI 的步骤。
 
-| 模板（`--style` ID） | 适合的文档 | 画面与节奏 | 状态 |
+### 查询组合并初始化项目
+
+在仓库根目录执行，首次使用先安装项目依赖：
+
+```bash
+cd "<仓库绝对路径>"
+npm ci
+npm run list:styles
+npm run list:shots -- --style retro-zine --canvas landscape
+npm run init:project -- --slug my-explainer --style retro-zine --shots paper-title,document-conclusions,list-reveal,concept-matrix,compare-reveal,semantic-default --canvas landscape --input-mode document
+```
+
+`--slug` 换成简短的英文主题，不带日期。命令打印 `PROJECT INITIALIZED` 和实际项目绝对路径，目录格式为 `projects/YYYYMMDD-my-explainer`，同日同名会加序号。后续命令使用这个实际路径；继续同一条视频时无需重新初始化。
+
+草稿中的 `shotRecipes` 固定可用集合，逐场 `shot` 填实际选用项；允许重复、调整顺序和只用其中一部分，不能悄悄添加集合外镜头。初始化只创建待编排文件，不读取文档、不渲染视频。具体说明及适配上游的方法见[配方库](shots/README.md)。当前全部 37 个场景配方支持六套风格的 16:9 横屏；竖屏目前可选基础语义配方；不支持的组合会明确报错。`--shots` 只接收场景配方 ID，辅助动作和跨场转场不能填入这个参数。
+
+### 让 Agent 完成原文到分镜的编排
+
+初始化后，在 Agent 对话框输入下面的指令，把两个路径替换为真实绝对路径：
+
+```text
+请使用 frame-loom Skill，在已初始化的 <项目绝对路径> 中继续制作。
+读取 <文档绝对路径>，完整保留原文及来源路径，沿用项目已有风格和 shotRecipes 集合。
+完成讲稿、shot-map 和 Storyboard 2.4；根据内容选择、重复和排列镜头，不必全部使用。
+将编排完成的分镜保存为 storyboard.json，fast 模式使用 generated 状态，并通过校验。
+先完成编排与校验，渲染由我在终端执行。
+```
+
+原始文章不能直接传给 `produce`；它需要已经编排的项目。`storyboard.draft.json` 也不能直接传给渲染命令。若只有**编排完成且有效**的草稿，`produce --mode fast` 可以生成 `storyboard.json` 后继续；已有 `storyboard.json` 时则以它为输入，不会自动采用后来修改的草稿。
+
+### 校验并制作视频
+
+把变量值换成初始化命令打印的实际项目路径，再在同一个终端执行：
+
+```bash
+video_project="<项目绝对路径>"
+npm run validate:storyboard -- "$video_project/storyboard.json" --mode fast
+npm run produce -- "$video_project" --mode fast --audio-mode silent --output-purpose visual-preview
+```
+
+成功后查看项目内的 `output/preview-silent.mp4`、`output/preview-silent-review/qa-report.json` 和 `run.json`。`produce` 包含校验、渲染和 QA，无需再手动重复渲染。它是静音审片预览；若要交给剪辑软件配音，可改为制作干净画面底片：
+
+```bash
+npm run produce -- "$video_project" --mode fast --audio-mode silent --output-purpose visual-master
+```
+
+若要在项目内制作有声视频，先按下文[音频配置步骤](#6-接入音频制作项目内有声视频)启用真实 TTS 配置，再运行：
+
+```bash
+npm run list:tts-profiles -- "$video_project"
+npm run produce -- "$video_project" --mode fast --audio-mode tts --output-purpose in-project-video --tts-config "$video_project/audio/tts-config.json"
+```
+
+`--tts-config` 指向实际启用的配置文件，不能使用默认关闭的 `.example.json`。如果实测语音时长与分镜不匹配，命令会报错；让 Agent 根据[质量生产说明](references/quality-production.md)生成时间提案、检查镜头动作和阅读窗口，再采用提案重新校验、制作。成功后的有声输出是 `output/pilot-audio.mp4`，自动 QA 后仍需完整播放复核。外部录音和 `review` 模式的命令见下文；`review` 需要先审过分镜并记录当前版本的审核指纹，不能只替换命令中的模式就直接渲染。
+
+镜头配方当前使用白色、冷灰或石墨底色，封面和样片由同一 renderer 生成；风格提供强调色；新项目的全片字体独立选择。P1 视觉优化记录见[P1复核](examples/shot-recipes/p1-visual-review/README.md)；新增 P2 的输入条件、动效阶段与实际检查见[P2施工清单](references/p2-recipe-implementation.md)。
+
+### 预设组合快捷入口
+
+首套视频模板 **`retro-zine-explainer@1.2.0`** 为 experimental：默认 `retro-zine@1.0.0`，仅适配 16:9 横屏。包含纸面标题、标题降格、原文与三条结论、并列清单、原生文本对照及向外关系展开；另有 `semantic-default` 保留其他语义图解和收尾。模板选用与素材条件见 [guide](video-templates/retro-zine-explainer/guide.md)，实际帧和验证缺口见 [preview](video-templates/retro-zine-explainer/preview.md)。
+
+```text
+请使用 frame-loom Skill，读取 <文档路径>，用 fast 模式制作静音预览。
+视频模板：retro-zine-explainer
+```
+
+```bash
+npm run list:video-templates
+npm run init:project -- --slug my-explainer --video-template retro-zine-explainer
+npm run validate:shots
+npm run migrate:storyboard -- <old-2.3.json> <new-2.4.json>
+```
+
+Agent 按原文选择镜头，逐场显式填写精确 `shot` 与 layer 槽位；模板不会强制每篇文章使用全部镜头。指定模板与 `style` 必须匹配，未支持画幅或镜头会报错。仍说“视频模板：retro-zine”时按历史风格选择理解，不自动改成新镜头序列。`init:project --style` 的 2.3 入口继续保留。
+
+2.4 的 dock、demote 和逐项入场全部进入 beats；实测音频提案保留动作范围、阶段顺序与阅读窗口。渲染记录绑定所选模板、配方、风格、代码与解析计划，派生证据存于 `<video.mp4>.production/production-lock.json` 和 `resolved-shot-plan.json`，更改输入或实现后须重新渲染。QA 覆盖每个动作中途与结束，不以自动通过代替完整播放复核。迁移只输出新文件和报告，不继承审核状态；2.1/2.2 继续保留原路径，转为语义镜头需人工编排。
+
+公开示例：[资料笔记](examples/video-templates/knowledge-notes/README.md)、[演示产品更新](examples/video-templates/product-update/README.md)，以及 [单镜 fixture](examples/shot-recipes/)。两份原始文档均为自有演示材料，不代表第三方产品事实。阶段完成情况、实际验证与剩余缺口见[实施记录](references/video-template-refactor-status.md)。
+
+当前运行时：37 个场景配方、9 个宿主动作、5 个换章配方；筛选清单接入 48/48。
+
+场景配方包括34个上游方法适配和3个原生配方。P2 新增了资料卡堆、列表压弹、中枢翻面、滚动刹停、真实曲线、粒子柱图、成员网格、环形注释、循环节点、前后对照、文档书写、代码揭示和字形描画。具体适配变体见[台账](shots/shortlist-coverage.json)。`npm run list:shots -- --auxiliary` 查询辅助动作，`--transitions` 查询换章配方，均不计成独立正文镜头。
+
+P2 支持六套当前风格的 16:9 横屏，保持 experimental。数据类需要真实记录和单位；前后对照需要两份有来源、同尺寸同视角素材；代码需要原文；字形描画需要输入 SVG 几何。辅助效果在场景 `shot.effects` 中绑定指定宿主与目标，使用显式 `highlight` 阶段；换章在 `transitionIn` 中声明并避开字幕。不能仅凭一句需求让 renderer 编造这些输入。网页仍在三个独立页面选风格、勾选场景、导出制作指令。
+
+原先接入的27份配方已重做动效和视觉：21个上游场景与4个宿主动作使用 `1.2.0`，两个换章配方保持 `1.0.0`，3个原生场景保留。风格提供配色与推荐字体，项目可独立选择全片字体；各镜头分别采用纸面、深色柔光、灰白空间、浅色矩阵或仪表等构图与材质；网页样片与实际生产共用 renderer。旧分镜的 `1.0.0`、`1.1.0` 按精确版本继续使用原渲染器，`--shots` 新建项目取当前版本。卡片可视时静音循环播放，详情可切换矩阵线框与卡堆胶带。范围见[视觉实施矩阵](references/shot-visual-redesign.md)，实测见[复核记录](examples/shot-recipes/visual-review/README.md)。
+
+## 全片字体选择
+
+视频风格与字体独立选择，一次选择一个字体家族。风格页提供五套字体的真实字形与六套风格 × 五套字体的横屏组合样片。墨白杂志推荐思源宋体、手绘便签推荐霞鹜文楷，其余风格推荐思源黑体；手动选字体后切换风格保留该选择，“使用当前风格推荐字体”恢复跟随推荐。字体与其他公开选择跨页保存，并进入 Agent 制作指令。
+
+```bash
+npm run validate:fonts
+npm run preview:fonts
+npm run init:project -- --slug font-demo --style scatterbrain --font source-han-sans-sc --shots paper-title,concept-matrix
+```
+
+`--font` 支持 `source-han-sans-sc`、`source-han-serif-sc`、`lxgw-wenkai`、`smiley-sans`、`xiaolai`；新建项目省略时选择当前风格推荐字体。初始化写入独立的 `font: {id, version}`，实际字体文件加载完成后才挂载镜头并测量文字；缺失、损坏、未知字体或版本不匹配会报错。字体与许可进入生产／审核指纹，换字体后需要重新渲染和复核。字号、字重、字幕颜色及安全区仍按原规则；素材截图中的原有文字保持原貌。
+
+风格卡片与镜头库原样片保留其原始字体；风格页的字体组合样片才展示当前风格与所选字体的实际效果。组合样片是横屏静音示例，竖屏、真实旁白和长文排版需在实际项目中检查。`preview:fonts` 输出在被忽略的 `library/font-previews/`，普通静态构建对缺失或过期组合样片显示明确状态。
+
+字体采用 SIL OFL 1.1，保留独立的版权及许可文件，不随项目改成 MIT；来源与文件说明见 [项目字体](fonts/README.md)。字体文件约 88.8 MiB，无需安装到操作系统，也不使用远程字体 CDN。
+
+## 六套视频风格
+
+六套风格通过标题构图、中文字体、节点形状、流程布局和入场方式形成不同的画面语言。Style Pack 提供配色、默认字体与基础动效，显式选择的全片字体覆盖默认字体，基础语义 renderer 根据风格组织画面；文字、数字、连接和素材仍由分镜提供。
+
+六套风格均支持横屏 `landscape`（1920×1080）和竖屏 `portrait`（1080×1920）。六套风格的 16:9 横屏均有 37 个可用场景配方；竖屏组合支持 `semantic-default`，这一基础配方覆盖观点、对照、顺序、关联、变化、数据和素材七种语义画面，可在同一视频中重复使用。风格支持某种画幅不代表所有专用配方都已适配，实际选择以页面和 catalog 的兼容清单为准。
+
+展示名称已更新，命令行 ID 保持不变：墨白杂志仍使用 `retro-zine`，瑞士蓝使用 `archive-grid`，手绘便签使用 `scatterbrain`。已有分镜更换风格或采用更新后的实现时，需要重新校验布局并渲染。
+
+| 风格（`--style` ID） | 适合的文档 | 构图与动效 | 状态 |
 | --- | --- | --- | --- |
-| [Retro Zine](styles/retro-zine/preview.md) · `retro-zine` | 观点文章、知识解释、故事 | 暖纸网格、衬线大字与珊瑚红／青绿重点；逐项揭示 | stable |
-| [Signal](styles/signal/preview.md) · `signal` | 需要清晰观看路径的知识、叙事或流程说明 | 深色画布、白色粗体与蓝色连线；节点依次聚焦 | experimental |
-| [Scatterbrain](styles/scatterbrain/preview.md) · `scatterbrain` | 学习笔记、方法拆解、轻量产品说明 | 奶油色点阵、手写感标题与黄色重点；错时入场 | stable |
-| [Clean Editorial](styles/archive-grid/preview.md) · `archive-grid` | 报告摘要、观点拆解、结构化知识 | 浅灰白底、深色标题与荧光绿结构线；分步呈现 | experimental |
-| [Blueprint](styles/signal-noir/preview.md) · `signal-noir` | 系统、机制、技术流程 | 深蓝工程网格、琥珀色连线与青色重点；逐节点推进 | experimental |
-| [Product Frame](styles/studio-frame/preview.md) · `studio-frame` | 产品说明文档、功能步骤、工作流 | 浅灰绿底、深色粗体与橄榄绿结构线；突出流程 | experimental |
+| [墨白杂志 / Editorial Ink](styles/retro-zine/preview.md) · `retro-zine` | 观点文章、知识解释、故事 | 中性白底、中文宋体、杂志分栏与朱红印章；横向揭示 | stable |
+| [暗场信号 / Signal](styles/signal/preview.md) · `signal` | 核心观点、转折、重点说明 | 石墨暗场、淡紫焦点与中央构图；克制缩放 | experimental |
+| [手绘便签 / Sketch Notes](styles/scatterbrain/preview.md) · `scatterbrain` | 学习笔记、方法拆解、灵感整理 | 白色点阵、黄色便签、中文楷体与蓝色批注；错落贴入 | stable |
+| [瑞士蓝 / Swiss Blue](styles/archive-grid/preview.md) · `archive-grid` | 报告、分析、结构化方法论 | 克莱因蓝、直角色块与强字号对比；网格裁切揭示 | experimental |
+| [工程蓝图 / Blueprint](styles/signal-noir/preview.md) · `signal-noir` | 系统、机制、技术流程 | 石墨蓝灰网格、等宽标注与琥珀路由；模块按连接展开 | experimental |
+| [产品演示 / Product Frame](styles/studio-frame/preview.md) · `studio-frame` | 产品说明、教程、工作流 | 冷灰工作台、窗口层次与绿色状态；说明和来源素材分区 | experimental |
 
-以下截图和视频均由 Remotion 根据[同一份 2.3 语义分镜](examples/template-families/storyboard.semantic.json)重新渲染：每套 7 个镜头、50.8 秒，均为无旁白、无配乐的静音审片预览。截图取自第三个“关系网络”镜头；视频可查看完整的开场、对比、网络、顺序、变化、媒体和收尾镜头。媒体镜头使用[仓库内演示插画](examples/template-families/assets/product-workflow.svg)，不是真实产品截图。语义镜头由 `visual.kind` 决定图解构图，Style Pack 决定配色、字体、背景和动效。用户可选纯文档，或选文档＋图片；两种输入方式都不要求录屏。审片预览和干净画面底片均无需音频；项目内有声讲解视频需要旁白。`experimental` 表示模板可用，仍待更多文档与完整播放复核。旧 `retro-windows` 已标记为 deprecated，仅保留对已有 Storyboard 2.1 项目的兼容。
+以下截图和视频均由 Remotion 根据[同一份 2.3 语义分镜](examples/template-families/storyboard.semantic.json)重新渲染：每套 7 个镜头、50.8 秒，均为无旁白、无配乐的静音审片预览。截图取自第一个“开篇”镜头；视频包含开场、对比、网络、顺序、变化、媒体和收尾。媒体镜头使用[仓库内演示插画](examples/template-families/assets/product-workflow.svg)，来源见[素材清单](examples/template-families/asset-manifest.semantic.json)。
 
-| Retro Zine | Signal | Scatterbrain |
+| 墨白杂志 · Editorial Ink | 暗场信号 · Signal | 手绘便签 · Sketch Notes |
 | --- | --- | --- |
-| ![Retro Zine 关系网络](examples/template-families/previews/retro-zine-semantic-process.png) | ![Signal 关系网络](examples/template-families/previews/signal-semantic-process.png) | ![Scatterbrain 关系网络](examples/template-families/previews/scatterbrain-semantic-process.png) |
+| ![Editorial Ink 开篇](examples/template-families/previews/retro-zine-semantic-opening.png) | ![Signal 开篇](examples/template-families/previews/signal-semantic-opening.png) | ![Sketch Notes 开篇](examples/template-families/previews/scatterbrain-semantic-opening.png) |
 | [观看静音视频](examples/template-families/previews/retro-zine-semantic.mp4) | [观看静音视频](examples/template-families/previews/signal-semantic.mp4) | [观看静音视频](examples/template-families/previews/scatterbrain-semantic.mp4) |
 
-| Clean Editorial | Blueprint | Product Frame |
+| 瑞士蓝 · Swiss Blue | 工程蓝图 · Blueprint | 产品演示 · Product Frame |
 | --- | --- | --- |
-| ![Clean Editorial 关系网络](examples/template-families/previews/archive-grid-semantic-process.png) | ![Blueprint 关系网络](examples/template-families/previews/signal-noir-semantic-process.png) | ![Product Frame 关系网络](examples/template-families/previews/studio-frame-semantic-process.png) |
+| ![Swiss Blue 开篇](examples/template-families/previews/archive-grid-semantic-opening.png) | ![Blueprint 开篇](examples/template-families/previews/signal-noir-semantic-opening.png) | ![Product Frame 开篇](examples/template-families/previews/studio-frame-semantic-opening.png) |
 | [观看静音视频](examples/template-families/previews/archive-grid-semantic.mp4) | [观看静音视频](examples/template-families/previews/signal-noir-semantic.mp4) | [观看静音视频](examples/template-families/previews/studio-frame-semantic.mp4) |
 
-## 进阶：选择素材、模板与命令行
+同一顺序图解的六种布局，按行从左到右为墨白杂志、瑞士蓝、手绘便签、暗场信号、工程蓝图、产品演示：
 
-需要 Node.js 20+。首次在仓库根目录运行 `npm ci`。Skill 负责读文档、拆主张、设计画面路线和编写分镜；命令行负责校验、渲染与 QA。`init:project` 只生成占位草稿，不能直接出片。
+![六套风格的实际流程布局](designs/style-language-redesign/sequence-comparison.png)
+
+新项目内置思源黑体、思源宋体、霞鹜文楷、得意黑和小赖字体，使用固定版本的本地字体文件；字体来源、许可和 SHA-256 见 [字体清单](fonts/font-index.json)。未指定 `font` 的历史分镜继续使用原有系统字体栈，不同系统的字形可能略有差异。画布以白色、冷灰或石墨色为主，黄色用于便签等内容形状；字幕直接显示在画布上，按深浅背景使用独立文字颜色。
+
+六套风格已检查同内容的横竖屏代表帧与公开静音样片，具体范围及证据见[风格实施记录](designs/style-language-redesign/README.md)。`experimental` 表示仍需更多文档与完整播放复核。静音样片供选型和审片参考，项目内有声讲解视频需要匹配旁白与交付检查。旧 `retro-windows` 已标记为 deprecated，仅保留对已有 Storyboard 2.1 项目的兼容。
+
+## 进阶：选择素材、风格与命令行
+
+需要 Node.js 24+，推荐 Node.js 24 LTS；两条 GitHub Actions 工作流也使用 Node.js 24。首次在仓库根目录运行 `npm ci`。Skill 负责读文档、拆主张、设计画面路线和编写分镜；命令行负责校验、渲染与 QA。`init:project` 只生成占位草稿，不能直接出片。
 
 ### 1. 让 Agent 加载 Skill
 
@@ -214,17 +381,21 @@ FrameLoom 的视频模板是 Style Pack：它决定标题、图解、卡片、�
 
 `document` 是纯文档，画面使用有原文依据的文字和图解；`document-images` 是文档＋图片，可附本地图片或给 Codex 明确的网址去截图。网址本身不能直接用于渲染，须先保存真实截图。首次预览未指定图片时，Agent 直接选择 `document`，不要求用户先回答输入模式。输入方式与音频路线无关；项目初始化时用 `--input-mode` 记录实际选择。
 
-Skill 会先判断文档适合的画面路线，再选择可用模板并记录理由；首次 `fast + silent` 不必为常规模板选择中断。如果想自己选，可让 Agent 推荐至多三套并说明取舍，再用命令核对代码 ID 和画幅支持。`preview:styles` 是轻量视觉画廊；`preview:templates` 会使用同一份 2.3 语义分镜生成真正的 Remotion 帧，去掉 `--stills-only` 还会生成 50.8 秒静音视频和自动 QA。预览写入新的 `projects/template-family-gallery-*` 目录，不会覆盖已有目录。
+Skill 会先判断文档适合的画面路线，再选择可用模板并记录理由；首次 `fast + silent` 不必为常规模板选择中断。如果想自己选，可让 Agent 推荐至多三套并说明取舍，再用命令核对代码 ID 和画幅支持。`preview:styles` 是轻量视觉画廊；`preview:templates` 默认比较全部六套风格，使用同一份 2.3 语义分镜生成实际 Remotion 帧，去掉 `--stills-only` 还会生成各 50.8 秒的静音视频和自动 QA。默认写入新的 `projects/template-family-gallery-*` 目录，也可用 `--output` 指定新目录；已有目录不会被覆盖。
 
 ```bash
 npm run list:styles
 npm run list:styles -- --content knowledge --canvas portrait
 npm run preview:styles -- /tmp/frame-loom-style-gallery.html
-npm run preview:templates -- --styles retro-zine,signal,scatterbrain,archive-grid,signal-noir,studio-frame --stills-only
-npm run preview:templates -- --styles retro-zine,signal,scatterbrain,archive-grid,signal-noir,studio-frame
+# 六套风格的横屏代表帧
+npm run preview:templates -- --stills-only --output .tmp/style-gallery-landscape
+# 六套风格的竖屏代表帧
+npm run preview:templates -- --portrait --stills-only --output .tmp/style-gallery-portrait
+# 六套完整静音样片与自动 QA，使用新的默认输出目录
+npm run preview:templates
 ```
 
-如果手动建立项目，可用表格中的 **代码 ID** 指定模板；例如选择 Blueprint：
+新的“风格＋镜头配方”项目使用上面的 `--style ... --shots ...` 入口，生成 Storyboard 2.4。下面仅传 `--style` 的示例保留旧 2.3 语义分镜入口，可用表格中的 **代码 ID** 指定风格；例如选择 Blueprint：
 
 ```bash
 npm run init:project -- --slug knowledge-explainer --style signal-noir --canvas landscape --input-mode document
@@ -289,7 +460,7 @@ npm run prepare:script-handoff -- projects/my-video --mode review
 
 上面两条是不同模式的示例，**一次只运行一条**，而且应在没有 MP4 生产记录的新项目中进行。命令检查 `script.md` 与每个 `scene.narration` 的文字对应关系，写入 `output/script-handoff/`，状态为 `script-ready`。录音回来后复用同一项目，用下面的 `external` 路线完成视频；命令会拒绝与已交讲稿不同的版本。画面先行且音频要回到 FrameLoom 时，旧底片文件会保留；若 `timelinePolicy=picture-locked` 而确实要按录音修改分镜，Agent 应先明确选择新版本，再在有声制作命令中加 `--retime-from-master`。
 
-新项目采用 Storyboard 2.3：每屏先确定是对照、顺序、关联、前后变化、数据还是来源素材，再由风格模板决定外观；字段及约束见 [Storyboard 契约](references/storyboard-schema.md)。[语义画面示例](examples/semantic-visuals/) 可用 `npm run preview:semantic -- --output .tmp/semantic-gallery` 在全部已安装模板上生成完成态画廊。仓库仍保留 [文章讲解](examples/article-video/)、[数据讲解](examples/data-explainer/)和[同分镜模板对比](examples/template-families/)等旧版示例。
+风格与镜头配方组合采用 Storyboard 2.4；旧的仅风格初始化保留 2.3：每屏先确定是对照、顺序、关联、前后变化、数据还是来源素材，再由风格模板决定外观；字段及约束见 [Storyboard 契约](references/storyboard-schema.md)。[语义画面示例](examples/semantic-visuals/) 可用 `npm run preview:semantic -- --output .tmp/semantic-gallery` 在全部已安装模板上生成完成态画廊。仓库仍保留 [文章讲解](examples/article-video/)、[数据讲解](examples/data-explainer/)和[同分镜模板对比](examples/template-families/)等旧版示例。
 
 完成分镜后可先运行 `npm run preview:shot -- <storyboard.json> <scene-id> <new-output.mp4>`，检查实际镜头的短片、入场中途、完成态和切镜前画面，再渲染全片。命令不会覆盖现有输出，也不接受草稿文件直接渲染。
 

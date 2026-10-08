@@ -1,0 +1,27 @@
+{
+  "id": "card-flip",
+  "version": "1.2.0",
+  "status": "experimental",
+  "shortlist": "C08",
+  "kind": "hosted-action",
+  "hosts": [
+    "concept-matrix"
+  ],
+  "action": "enter",
+  "targetSlot": "items",
+  "styles": [
+    "retro-zine",
+    "signal",
+    "scatterbrain",
+    "archive-grid",
+    "signal-noir",
+    "studio-frame"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "sound": false,
+  "requires": [
+    "正反面不能编造因果；反面足够阅读，可组成镜头但不是通用跨场转场"
+  ]
+}

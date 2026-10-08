@@ -1,3 +1,4 @@
+import {compareAssetIssues} from './lib/compare-assets.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
@@ -84,6 +85,7 @@ export function validateAssets(storyboardPath, manifestPath) {
     }
   }
   for (const scene of storyboard.scenes) {
+    issues.push(...compareAssetIssues(scene, path.dirname(resolvedStoryboard)));
     for (const layer of scene.layers) {
       if (!['screenshot', 'object'].includes(layer.type) || !layer.asset) continue;
       const layerAssetPath = path.resolve(path.dirname(resolvedStoryboard), layer.asset);

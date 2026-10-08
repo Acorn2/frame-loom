@@ -1,0 +1,27 @@
+{
+  "id": "line-boil",
+  "version": "1.2.0",
+  "status": "experimental",
+  "kind": "hosted-action",
+  "shortlist": "C06",
+  "styles": [
+    "retro-zine",
+    "signal",
+    "scatterbrain",
+    "archive-grid",
+    "signal-noir",
+    "studio-frame"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "sound": false,
+  "requires": [
+    "一次一组、确定种子；正文保持稳定，不拿抖动修补无意义长停留"
+  ],
+  "hosts": [
+    "ring-annotation"
+  ],
+  "action": "highlight",
+  "targetSlot": "subject"
+}

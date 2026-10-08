@@ -1,0 +1,22 @@
+{
+  "id": "scanline-annotate-focus",
+  "mode": "method-reference",
+  "repository": "https://github.com/Acorn2/video-shotcraft",
+  "commit": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab",
+  "recipe": "references/shots/effects/scanline-annotate-focus.md",
+  "implementation": "demos/effects/scanline-annotate-focus/ScanlineAnnotateFocus.tsx",
+  "shortlist": "C04",
+  "upstreamLicense": "Apache-2.0",
+  "implementationLicense": "MIT",
+  "notice": "Independent implementation; upstream fixtures and assets excluded.",
+  "retained": [
+    "按阅读顺序框注内容",
+    "目标框绑定实际内容；不暗示软件实测识别能力，不能作为任意文章装饰"
+  ],
+  "omitted": [
+    "upstream media",
+    "fixed frames",
+    "continuous drift",
+    "automatic sound"
+  ]
+}

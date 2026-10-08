@@ -1,0 +1,27 @@
+{
+  "id": "scanline-annotate-focus",
+  "version": "1.2.0",
+  "status": "experimental",
+  "kind": "hosted-action",
+  "shortlist": "C04",
+  "styles": [
+    "retro-zine",
+    "signal",
+    "scatterbrain",
+    "archive-grid",
+    "signal-noir",
+    "studio-frame"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "sound": false,
+  "requires": [
+    "目标框绑定实际内容；不暗示软件实测识别能力，不能作为任意文章装饰"
+  ],
+  "hosts": [
+    "document-write"
+  ],
+  "action": "highlight",
+  "targetSlot": "blocks"
+}

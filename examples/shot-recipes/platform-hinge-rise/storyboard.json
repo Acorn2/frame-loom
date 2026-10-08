@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "platform-hinge-rise",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "阅读与实践相互促进",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 4.666666666666667,
+    "durationFrames": 140,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "platform-hinge-rise",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "阅读与实践相互促进",
+      "primaryClaim": "阅读提供方法，实践检验方法",
+      "visual": {
+        "kind": "statement",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "platform-hinge-rise",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "i0",
+            "i1"
+          ],
+          "result": "result"
+        }
+      },
+      "narration": "阅读提供方法，实践检验方法",
+      "durationFrames": 140,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "card",
+          "label": "阅读",
+          "text": "理解方法"
+        },
+        {
+          "id": "i1",
+          "type": "card",
+          "label": "实践",
+          "text": "检验方法"
+        },
+        {
+          "id": "result",
+          "type": "card",
+          "label": "形成自己的理解",
+          "text": "知识在行动中变得具体"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 0,
+          "duration": 30
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 18,
+          "duration": 30
+        },
+        {
+          "id": "result-enter",
+          "target": "result",
+          "action": "enter",
+          "start": 68,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

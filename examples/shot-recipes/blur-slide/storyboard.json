@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "blur-slide",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "把复杂讲清楚",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 3.0,
+    "durationFrames": 90,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "blur-slide",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "把复杂讲清楚",
+      "primaryClaim": "从一个问题，到一个解释",
+      "visual": {
+        "kind": "statement",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "blur-slide",
+        "version": "1.2.0",
+        "slots": {
+          "phrases": [
+            "p0",
+            "p1"
+          ],
+          "emphasis": "p1",
+          "subtitle": "sub"
+        }
+      },
+      "narration": "从一个问题，到一个解释",
+      "durationFrames": 90,
+      "layers": [
+        {
+          "id": "p0",
+          "type": "label",
+          "label": "把复杂"
+        },
+        {
+          "id": "p1",
+          "type": "label",
+          "label": "讲清楚"
+        },
+        {
+          "id": "sub",
+          "type": "label",
+          "label": "从一个问题，到一个解释"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "p0-enter",
+          "target": "p0",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "p1-enter",
+          "target": "p1",
+          "action": "enter",
+          "start": 9,
+          "duration": 18
+        },
+        {
+          "id": "p1-highlight",
+          "target": "p1",
+          "action": "highlight",
+          "start": 36,
+          "duration": 12
+        },
+        {
+          "id": "sub-enter",
+          "target": "sub",
+          "action": "enter",
+          "start": 18,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

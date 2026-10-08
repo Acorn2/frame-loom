@@ -1,0 +1,57 @@
+[
+  {
+    "id": "research-stack",
+    "duration": 6.4,
+    "currentTime": 6.4,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 201,
+    "droppedFrames": 0
+  },
+  {
+    "id": "list-stack-press",
+    "duration": 6.6,
+    "currentTime": 6.6,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 207,
+    "droppedFrames": 0
+  },
+  {
+    "id": "integration-hub",
+    "duration": 6.733333,
+    "currentTime": 6.733333,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 211,
+    "droppedFrames": 0
+  },
+  {
+    "id": "scroll-brake",
+    "duration": 6.133333,
+    "currentTime": 6.133333,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 193,
+    "droppedFrames": 0
+  },
+  {
+    "id": "chart-live",
+    "duration": 6.8,
+    "currentTime": 6.8,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 213,
+    "droppedFrames": 0
+  }
+]

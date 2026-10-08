@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "2.4",
+  "videoTemplate": {
+    "id": "retro-zine-explainer",
+    "version": "1.2.0"
+  },
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "project": {
+    "title": "访谈里的三个发现",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 6.5,
+    "durationFrames": 195,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "evidence",
+      "template": "graph-explainer",
+      "purpose": "evidence",
+      "title": "访谈里的三个发现",
+      "primaryClaim": "从一段访谈中归纳三个需求",
+      "visual": {
+        "kind": "network",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md#evidence",
+        "anchorId": "source",
+        "networkDirection": "outward"
+      },
+      "shot": {
+        "id": "document-conclusions",
+        "version": "1.2.0",
+        "slots": {
+          "source": "source",
+          "items": [
+            "i0",
+            "i1",
+            "i2"
+          ]
+        }
+      },
+      "narration": "从一段访谈中归纳三个需求",
+      "durationFrames": 195,
+      "layers": [
+        {
+          "id": "source",
+          "type": "node",
+          "label": "访谈摘录",
+          "text": "希望先看重点，再展开细节；入口应容易找到；操作后应及时得到反馈。",
+          "glyph": "document"
+        },
+        {
+          "id": "i0",
+          "type": "node",
+          "label": "重点先行",
+          "text": "先概览，再展开",
+          "glyph": "document"
+        },
+        {
+          "id": "i1",
+          "type": "node",
+          "label": "入口清晰",
+          "text": "减少寻找的时间",
+          "glyph": "document"
+        },
+        {
+          "id": "i2",
+          "type": "node",
+          "label": "反馈及时",
+          "text": "让操作结果可见",
+          "glyph": "document"
+        }
+      ],
+      "connections": [
+        {
+          "id": "link0",
+          "from": "source",
+          "to": "i0"
+        },
+        {
+          "id": "link1",
+          "from": "source",
+          "to": "i1"
+        },
+        {
+          "id": "link2",
+          "from": "source",
+          "to": "i2"
+        }
+      ],
+      "beats": [
+        {
+          "id": "source-enter",
+          "target": "source",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "source-dock",
+          "target": "source",
+          "action": "dock",
+          "start": 30,
+          "duration": 18
+        },
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 56,
+          "duration": 18
+        },
+        {
+          "id": "link0-draw",
+          "target": "link0",
+          "action": "draw",
+          "start": 56,
+          "duration": 12
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 96,
+          "duration": 18
+        },
+        {
+          "id": "link1-draw",
+          "target": "link1",
+          "action": "draw",
+          "start": 96,
+          "duration": 12
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 136,
+          "duration": 18
+        },
+        {
+          "id": "link2-draw",
+          "target": "link2",
+          "action": "draw",
+          "start": 136,
+          "duration": 12
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

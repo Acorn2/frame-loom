@@ -1,0 +1,34 @@
+{
+  "id": "text-column-converge",
+  "mode": "method-reference",
+  "repository": "https://github.com/Acorn2/video-shotcraft",
+  "commit": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab",
+  "recipe": "references/shots/typography/text-column-converge.md",
+  "implementation": "demos/typography/text-column-converge/TextColumnConverge.tsx",
+  "upstreamLicense": "Apache-2.0",
+  "implementationLicense": "MIT",
+  "notice": "No applicable NOTICE found in the local upstream snapshot. Independently implemented; no upstream code, copy, fixtures or external media copied.",
+  "retained": [
+    "表达目的",
+    "阶段顺序",
+    "2026-10-02 对照所选 Markdown 和 TSX 重建的配方特征：左右文字钉在各自外缘轮换，末项停稳后只合拢一次，再出现可追溯的归纳。"
+  ],
+  "omitted": [
+    "固定帧数",
+    "固定坐标与配色",
+    "独立字幕",
+    "持续漂移",
+    "占位事实",
+    "自动音效",
+    "段尾急推",
+    "上游假页面与纹理",
+    "上游夸大收束句"
+  ],
+  "externalAttribution": "Upstream attribution is research provenance, not media authorization.",
+  "shortlist": "A09",
+  "dependenciesReviewed": [
+    "demos/_fixtures/Motion.tsx",
+    "demos/_fixtures/Fixtures.tsx"
+  ],
+  "adaptationNotes": "换词为硬切；focus 用 inOutCubic；合拢终点依赖实测 prefix 与末词宽度，不随每词缩缝。 不能每切一次就渐进缩缝；结果必须来自原文；不能用臆测字符宽度设置咬合终点。"
+}

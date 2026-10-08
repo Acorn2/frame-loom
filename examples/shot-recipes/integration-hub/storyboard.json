@@ -1,0 +1,169 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "integration-hub",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "分散记录归入索引",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 6.733333333333333,
+    "durationFrames": 202,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "integration-hub",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "分散记录归入索引",
+      "primaryClaim": "旧结构变为统一中枢",
+      "visual": {
+        "kind": "change",
+        "explanation": "FrameLoom 自写公开示意资料，不代表真实产品、用户或研究结果",
+        "representation": "diagram",
+        "source": "source.md",
+        "beforeId": "item1",
+        "afterId": "item2"
+      },
+      "shot": {
+        "id": "integration-hub",
+        "version": "1.2.0",
+        "slots": {
+          "before": "item1",
+          "hub": "item2",
+          "items": [
+            "item3",
+            "item4",
+            "item5"
+          ]
+        }
+      },
+      "narration": "旧结构变为统一中枢",
+      "durationFrames": 202,
+      "layers": [
+        {
+          "id": "item1",
+          "type": "card",
+          "label": "分散存放",
+          "text": "记录分别保存在三个位置"
+        },
+        {
+          "id": "item2",
+          "type": "card",
+          "label": "统一索引",
+          "text": "通过一个目录找到原有内容"
+        },
+        {
+          "id": "item3",
+          "type": "card",
+          "label": "原文",
+          "text": "保留原始文档"
+        },
+        {
+          "id": "item4",
+          "type": "card",
+          "label": "笔记",
+          "text": "记录自己的判断"
+        },
+        {
+          "id": "item5",
+          "type": "card",
+          "label": "素材",
+          "text": "保存有来源图片"
+        }
+      ],
+      "connections": [
+        {
+          "id": "link1",
+          "from": "item3",
+          "to": "item2"
+        },
+        {
+          "id": "link2",
+          "from": "item4",
+          "to": "item2"
+        },
+        {
+          "id": "link3",
+          "from": "item5",
+          "to": "item2"
+        }
+      ],
+      "beats": [
+        {
+          "id": "item1-enter",
+          "target": "item1",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item2-enter",
+          "target": "item2",
+          "action": "enter",
+          "start": 84,
+          "duration": 24
+        },
+        {
+          "id": "item3-enter",
+          "target": "item3",
+          "action": "enter",
+          "start": 84,
+          "duration": 24
+        },
+        {
+          "id": "item4-enter",
+          "target": "item4",
+          "action": "enter",
+          "start": 84,
+          "duration": 24
+        },
+        {
+          "id": "item5-enter",
+          "target": "item5",
+          "action": "enter",
+          "start": 84,
+          "duration": 24
+        },
+        {
+          "id": "item1-focus",
+          "target": "item1",
+          "action": "focus",
+          "start": 48,
+          "duration": 36
+        },
+        {
+          "id": "link1-draw",
+          "target": "link1",
+          "action": "draw",
+          "start": 130,
+          "duration": 24
+        },
+        {
+          "id": "link2-draw",
+          "target": "link2",
+          "action": "draw",
+          "start": 130,
+          "duration": 24
+        },
+        {
+          "id": "link3-draw",
+          "target": "link3",
+          "action": "draw",
+          "start": 130,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

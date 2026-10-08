@@ -1,0 +1,100 @@
+name: Library Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/library-pages.yml'
+      - 'library/**'
+      - 'src/**'
+      - 'shots/**'
+      - 'styles/**'
+      - 'video-templates/**'
+      - 'examples/shot-recipes/**'
+      - 'examples/template-families/**'
+      - 'examples/article-video/**'
+      - 'scripts/**'
+      - 'schemas/**'
+      - 'package*.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/library-pages.yml'
+      - 'library/**'
+      - 'src/**'
+      - 'shots/**'
+      - 'styles/**'
+      - 'video-templates/**'
+      - 'examples/shot-recipes/**'
+      - 'examples/template-families/**'
+      - 'examples/article-video/**'
+      - 'scripts/**'
+      - 'schemas/**'
+      - 'package*.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: library-pages-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install rendering tools and public fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-noto-cjk fonts-liberation
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run check:docs
+      - run: npm run validate:shots
+      - run: npm run test:library
+      - name: Calculate public preview fingerprint
+        id: previews
+        run: |
+          node --import tsx/esm --input-type=module -e 'import {previewFingerprint} from "./scripts/lib/library-catalog.mjs"; console.log("fingerprint=" + previewFingerprint());' >> "$GITHUB_OUTPUT"
+      - name: Restore public preview cache
+        uses: actions/cache@v5
+        with:
+          path: library/previews
+          key: library-previews-${{ runner.os }}-${{ runner.arch }}-${{ steps.previews.outputs.fingerprint }}
+      - name: Render public recipe samples
+        run: npm run preview:library
+      - name: Build complete static library
+        run: npm run build:library -- --require-previews
+      - name: Upload library site only
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist/library
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check GitHub Pages configuration
+        uses: actions/configure-pages@v5
+      - name: Publish library
+        id: deployment
+        uses: actions/deploy-pages@v4

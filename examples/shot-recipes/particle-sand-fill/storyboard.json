@@ -1,0 +1,121 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "particle-sand-fill",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "让数量形成可读柱形",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 5.533333333333333,
+    "durationFrames": 166,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "particle-sand-fill",
+      "template": "metric-grid",
+      "purpose": "claim",
+      "title": "让数量形成可读柱形",
+      "primaryClaim": "数量汇积成柱",
+      "visual": {
+        "kind": "metric",
+        "explanation": "FrameLoom 自写公开示意资料，不代表真实产品、用户或研究结果",
+        "representation": "diagram",
+        "source": "source.md",
+        "unit": "示意项"
+      },
+      "shot": {
+        "id": "particle-sand-fill",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "item1",
+            "item2",
+            "item3"
+          ]
+        },
+        "grainUnit": 2
+      },
+      "narration": "数量汇积成柱",
+      "durationFrames": 166,
+      "layers": [
+        {
+          "id": "item1",
+          "type": "metric",
+          "label": "第一组",
+          "text": "示意数量",
+          "value": 32
+        },
+        {
+          "id": "item2",
+          "type": "metric",
+          "label": "第二组",
+          "text": "示意数量",
+          "value": 56
+        },
+        {
+          "id": "item3",
+          "type": "metric",
+          "label": "第三组",
+          "text": "示意数量",
+          "value": 42
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "item1-enter",
+          "target": "item1",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item2-enter",
+          "target": "item2",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item3-enter",
+          "target": "item3",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item1-count",
+          "target": "item1",
+          "action": "count",
+          "start": 36,
+          "duration": 66
+        },
+        {
+          "id": "item2-count",
+          "target": "item2",
+          "action": "count",
+          "start": 44,
+          "duration": 66
+        },
+        {
+          "id": "item3-count",
+          "target": "item3",
+          "action": "count",
+          "start": 52,
+          "duration": 66
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

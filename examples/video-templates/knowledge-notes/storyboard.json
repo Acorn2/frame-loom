@@ -1,0 +1,584 @@
+{
+  "schemaVersion": "2.4",
+  "videoTemplate": {
+    "id": "retro-zine-explainer",
+    "version": "1.2.0"
+  },
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "project": {
+    "title": "笔记需要保留依据",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 52.0,
+    "durationFrames": 1560,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "opening",
+      "template": "statement",
+      "purpose": "opening",
+      "title": "读懂资料保留依据",
+      "primaryClaim": "笔记需要保留依据",
+      "visual": {
+        "kind": "statement",
+        "explanation": "笔记需要保留依据",
+        "representation": "diagram",
+        "source": "source.md#opening"
+      },
+      "shot": {
+        "id": "paper-title",
+        "version": "1.2.0",
+        "slots": {
+          "phrases": [
+            "p0",
+            "p1"
+          ],
+          "emphasis": "p1"
+        }
+      },
+      "narration": "笔记需要保留依据",
+      "durationFrames": 180,
+      "layers": [
+        {
+          "id": "p0",
+          "type": "label",
+          "label": "读懂资料"
+        },
+        {
+          "id": "p1",
+          "type": "label",
+          "label": "保留依据"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "p0-enter",
+          "target": "p0",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "p1-enter",
+          "target": "p1",
+          "action": "enter",
+          "start": 10,
+          "duration": 18
+        },
+        {
+          "id": "p1-highlight",
+          "target": "p1",
+          "action": "highlight",
+          "start": 32,
+          "duration": 12
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "structure",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "先分清内容",
+      "primaryClaim": "主题建立后再看正文结构",
+      "visual": {
+        "kind": "statement",
+        "explanation": "主题建立后再看正文结构",
+        "representation": "diagram",
+        "source": "source.md#structure"
+      },
+      "shot": {
+        "id": "title-to-label",
+        "version": "1.2.0",
+        "slots": {
+          "title": "title",
+          "items": [
+            "i0",
+            "i1"
+          ]
+        }
+      },
+      "narration": "主题建立后再看正文结构",
+      "durationFrames": 240,
+      "layers": [
+        {
+          "id": "title",
+          "type": "label",
+          "label": "先分清内容"
+        },
+        {
+          "id": "i0",
+          "type": "node",
+          "label": "主张",
+          "text": "作者明确表达的判断",
+          "glyph": "document"
+        },
+        {
+          "id": "i1",
+          "type": "node",
+          "label": "依据",
+          "text": "能够回到原文的段落",
+          "glyph": "document"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "title-enter",
+          "target": "title",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "title-demote",
+          "target": "title",
+          "action": "demote",
+          "start": 38,
+          "duration": 18
+        },
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 62,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 94,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "evidence",
+      "template": "graph-explainer",
+      "purpose": "evidence",
+      "title": "原文支持三条线索",
+      "primaryClaim": "三条信息都能回到同一段原文",
+      "visual": {
+        "kind": "network",
+        "explanation": "三条信息都能回到同一段原文",
+        "representation": "diagram",
+        "source": "source.md#evidence",
+        "anchorId": "source",
+        "networkDirection": "outward"
+      },
+      "shot": {
+        "id": "document-conclusions",
+        "version": "1.2.0",
+        "slots": {
+          "source": "source",
+          "items": [
+            "i0",
+            "i1",
+            "i2"
+          ]
+        }
+      },
+      "narration": "三条信息都能回到同一段原文",
+      "durationFrames": 300,
+      "layers": [
+        {
+          "id": "source",
+          "type": "node",
+          "label": "文档摘录",
+          "text": "标出作者提出的具体判断；保留支持判断的原文位置；写明判断与依据之间的关系。",
+          "glyph": "document"
+        },
+        {
+          "id": "i0",
+          "type": "node",
+          "label": "标记主张",
+          "text": "标出作者提出的具体判断",
+          "glyph": "document"
+        },
+        {
+          "id": "i1",
+          "type": "node",
+          "label": "留下出处",
+          "text": "保留支持判断的原文位置",
+          "glyph": "document"
+        },
+        {
+          "id": "i2",
+          "type": "node",
+          "label": "说明联系",
+          "text": "写明判断与依据之间的关系",
+          "glyph": "document"
+        }
+      ],
+      "connections": [
+        {
+          "id": "link0",
+          "from": "source",
+          "to": "i0"
+        },
+        {
+          "id": "link1",
+          "from": "source",
+          "to": "i1"
+        },
+        {
+          "id": "link2",
+          "from": "source",
+          "to": "i2"
+        }
+      ],
+      "beats": [
+        {
+          "id": "source-enter",
+          "target": "source",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "source-dock",
+          "target": "source",
+          "action": "dock",
+          "start": 30,
+          "duration": 18
+        },
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 56,
+          "duration": 18
+        },
+        {
+          "id": "link0-draw",
+          "target": "link0",
+          "action": "draw",
+          "start": 56,
+          "duration": 12
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 96,
+          "duration": 18
+        },
+        {
+          "id": "link1-draw",
+          "target": "link1",
+          "action": "draw",
+          "start": 96,
+          "duration": 12
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 136,
+          "duration": 18
+        },
+        {
+          "id": "link2-draw",
+          "target": "link2",
+          "action": "draw",
+          "start": 136,
+          "duration": 12
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "checklist",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "检查三个条件",
+      "primaryClaim": "并列要点分别出现，不暗示因果顺序",
+      "visual": {
+        "kind": "statement",
+        "explanation": "并列要点分别出现，不暗示因果顺序",
+        "representation": "diagram",
+        "source": "source.md#checklist"
+      },
+      "shot": {
+        "id": "list-reveal",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "i0",
+            "i1",
+            "i2"
+          ]
+        }
+      },
+      "narration": "并列要点分别出现，不暗示因果顺序",
+      "durationFrames": 240,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "node",
+          "label": "能查到",
+          "text": "记录原文与位置",
+          "glyph": "document"
+        },
+        {
+          "id": "i1",
+          "type": "node",
+          "label": "能看懂",
+          "text": "使用具体文字说明",
+          "glyph": "document"
+        },
+        {
+          "id": "i2",
+          "type": "node",
+          "label": "能修改",
+          "text": "保留原始材料",
+          "glyph": "document"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 38,
+          "duration": 18
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 76,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "compare",
+      "template": "metric-grid",
+      "purpose": "claim",
+      "title": "记录方式有差异",
+      "primaryClaim": "两种方式的差异来自文档",
+      "visual": {
+        "kind": "compare",
+        "explanation": "两种方式的差异来自文档",
+        "representation": "diagram",
+        "source": "source.md#compare"
+      },
+      "shot": {
+        "id": "compare-reveal",
+        "version": "1.0.0",
+        "slots": {
+          "items": [
+            "i0",
+            "i1"
+          ]
+        }
+      },
+      "narration": "两种方式的差异来自文档",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "node",
+          "label": "只记结论",
+          "text": "缺少支持判断的原文",
+          "glyph": "document"
+        },
+        {
+          "id": "i1",
+          "type": "node",
+          "label": "结论加依据",
+          "text": "回看时能定位原文",
+          "glyph": "document"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 44,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "relations",
+      "template": "graph-explainer",
+      "purpose": "evidence",
+      "title": "一份笔记连接什么",
+      "primaryClaim": "主体和关系都在原文中明示",
+      "visual": {
+        "kind": "network",
+        "explanation": "主体和关系都在原文中明示",
+        "representation": "diagram",
+        "source": "source.md#relations",
+        "anchorId": "anchor",
+        "networkDirection": "outward"
+      },
+      "shot": {
+        "id": "network-expand",
+        "version": "1.0.0",
+        "slots": {
+          "anchor": "anchor",
+          "items": [
+            "i0",
+            "i1",
+            "i2"
+          ]
+        }
+      },
+      "narration": "主体和关系都在原文中明示",
+      "durationFrames": 270,
+      "layers": [
+        {
+          "id": "anchor",
+          "type": "node",
+          "label": "一份笔记连接什么",
+          "text": "连接相关的信息",
+          "glyph": "document"
+        },
+        {
+          "id": "i0",
+          "type": "node",
+          "label": "原文",
+          "text": "判断的材料来源",
+          "glyph": "document"
+        },
+        {
+          "id": "i1",
+          "type": "node",
+          "label": "主张",
+          "text": "笔记关注的判断",
+          "glyph": "document"
+        },
+        {
+          "id": "i2",
+          "type": "node",
+          "label": "问题",
+          "text": "仍待进一步确认的内容",
+          "glyph": "document"
+        }
+      ],
+      "connections": [
+        {
+          "id": "link0",
+          "from": "anchor",
+          "to": "i0"
+        },
+        {
+          "id": "link1",
+          "from": "anchor",
+          "to": "i1"
+        },
+        {
+          "id": "link2",
+          "from": "anchor",
+          "to": "i2"
+        }
+      ],
+      "beats": [
+        {
+          "id": "anchor-enter",
+          "target": "anchor",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 26,
+          "duration": 18
+        },
+        {
+          "id": "link0-draw",
+          "target": "link0",
+          "action": "draw",
+          "start": 26,
+          "duration": 12
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 64,
+          "duration": 18
+        },
+        {
+          "id": "link1-draw",
+          "target": "link1",
+          "action": "draw",
+          "start": 64,
+          "duration": 12
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 102,
+          "duration": 18
+        },
+        {
+          "id": "link2-draw",
+          "target": "link2",
+          "action": "draw",
+          "start": 102,
+          "duration": 12
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "closing",
+      "template": "statement",
+      "purpose": "closing",
+      "title": "保留依据再继续",
+      "primaryClaim": "笔记需要保留依据",
+      "visual": {
+        "kind": "statement",
+        "explanation": "笔记需要保留依据",
+        "representation": "diagram",
+        "source": "source.md#closing"
+      },
+      "shot": {
+        "id": "semantic-default",
+        "version": "1.0.0",
+        "slots": {}
+      },
+      "narration": "笔记需要保留依据",
+      "durationFrames": 120,
+      "layers": [],
+      "connections": [],
+      "beats": [],
+      "captions": []
+    }
+  ]
+}

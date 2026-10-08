@@ -1,0 +1,64 @@
+[
+  {
+    "width": 1440,
+    "scrollWidth": 1440,
+    "cards": 24,
+    "visibleVideos": [
+      {
+        "src": "media/scene-blur-slide.mp4",
+        "paused": false,
+        "time": 1.335357,
+        "error": null
+      },
+      {
+        "src": "media/scene-paper-title.mp4",
+        "paused": false,
+        "time": 1.334133,
+        "error": null
+      },
+      {
+        "src": "media/scene-title-to-label.mp4",
+        "paused": false,
+        "time": 0.218923,
+        "error": null
+      },
+      {
+        "src": "media/scene-card-stack.mp4",
+        "paused": false,
+        "time": 0.216701,
+        "error": null
+      },
+      {
+        "src": "media/scene-source-converge.mp4",
+        "paused": false,
+        "time": 0.214153,
+        "error": null
+      },
+      {
+        "src": "media/scene-concept-matrix.mp4",
+        "paused": false,
+        "time": 0.214127,
+        "error": null
+      }
+    ]
+  },
+  {
+    "width": 375,
+    "scrollWidth": 375,
+    "cards": 24,
+    "visibleVideos": [
+      {
+        "src": "media/scene-blur-slide.mp4",
+        "paused": false,
+        "time": 0.376506,
+        "error": null
+      }
+    ]
+  },
+  {
+    "modal": true,
+    "title": "柔焦滑入 / blur-slide",
+    "videoTime": 1.251249,
+    "error": null
+  }
+]

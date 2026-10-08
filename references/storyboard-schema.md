@@ -1,4 +1,4 @@
-# Storyboard 2.1 / 2.2 / 2.3 Contract
+# Storyboard 2.1 / 2.2 / 2.3 / 2.4 Contract
 
 The machine-readable contract is `schemas/storyboard.schema.json`; runtime checks live in `src/validation/storyboard-validator.ts`. This reference explains the production rules and does not replace either file.
 
@@ -35,6 +35,14 @@ New project input selection is stored separately in `project-input.json` (schema
 | `media` | 恰好一个有来源的 `screenshot/object`，可用 `label`、`fit` | `fit: contain` 可保留完整界面 |
 
 职责版式目前执行指向主体图层的 `enter`、`reveal`、`focus`、`highlight`、`count` beat；标题与副标题使用模板默认错时入场。`opening`、`claim`、`process`、`closing` 可以使用顺序内容层和 connection，适合让一段讲稿由一条关系链承载，而不是逐句生成字幕镜头。场景字幕与外部字幕都预留底部区域。文本预检在 2.2 按风格、画幅和镜头槽位估算；超过可读区域必须缩短或拆镜头。旧版 2.2 公开例子保留在 `examples/template-families/storyboard.json`。
+
+## Project-wide font
+
+All supported storyboard versions accept an optional root `font: {id, version}` independent of `style`. Resolve IDs and exact upstream versions from [fonts/font-index.json](../fonts/font-index.json). The registered choices are `source-han-sans-sc`, `source-han-serif-sc`, `lxgw-wenkai`, `smiley-sans`, and `xiaolai`. A storyboard selects one family, not an array or per-scene fonts.
+
+New `init:project` projects record the style's recommendation unless `--font <id>` selects another family. Generated titles, body text, diagram labels, numbers and captions share this family; embedded source-image lettering is unchanged. Sizes, weights and caption colors remain controlled by the style and recipe. Historical boards without `font` retain their original font stacks.
+
+Font files must match their recorded SHA-256 and original OFL license. Missing files, unknown IDs and version mismatches are errors. Font loading completes before mounting scenes that measure text; actual measured title bounds can reject a long title even when approximate preflight passes. Font selection and files enter input/approval fingerprints; 2.4 locks and render receipts record the chosen font. Changing fonts requires a new render and applicable review.
 
 ## Root
 
@@ -116,4 +124,71 @@ Free-text motion instructions are documentation only. They cannot introduce an a
 
 ## Opt-in 2.3 quality extensions
 
-`visual.networkDirection` defaults to outward; inward requires one edge from each branch to anchorId. `visual.changeMode` defaults to compare; replace requires beforeId/afterId with the same glyph and changes one on-screen object. `visual.mediaFocus` specifies a normalized source-image rectangle (x/y/width/height), local-frame start/duration and a label. Width/height are 0.25–1, the rectangle must fit inside the image, and the animation must finish inside the scene. These options are declared in the capability manifest and rejected on unrelated visual kinds. See [quality production](quality-production.md) and the [public fixtures](../examples/quality-production/README.md).
+`visual.networkDirection` defaults to outward; inward requires one edge from each branch to anchorId. `visual.changeMode` defaults to compare; replace requires beforeId/afterId with the same glyph and changes one on-screen object. `visual.mediaFocus` specifies a normalized source-image rectangle (x/y/width/height), local-frame start/duration and a label. Width/height are 0.25–1, the rectangle must fit inside the image, and the animation must finish inside the scene. `visual.shotPattern: "document-conclusion-deal"` is an optional `network` layout: `anchorId` identifies one `node/card` whose `text` is a source excerpt, three other `node/card` layers provide named conclusions, and each conclusion needs an outward connection and its own entry/draw beats. Record the excerpt location in `visual.source`; the shot renders a document-derived diagram, not a website capture. These options are declared in the capability manifest and rejected on unrelated visual kinds. See [quality production](quality-production.md) and the [public fixtures](../examples/quality-production/README.md).
+
+## Storyboard 2.4 controlled shots
+
+2.4 显式启用受控配方；2.1–2.3 不接受 `shot`、`shotRecipes`、`videoTemplate`、`dock`、`demote`、`trace`、`tape` 或新换章转场，且保留原版渲染。2.4 不接受旧 `visual.shotPattern`。用户独立选择顶层 `style` 与 `shotRecipes`，每场保留原 `template`、`visual`、内容与时间字段，增加严格的 `shot`：
+
+```json
+{
+  "schemaVersion": "2.4",
+  "style": {"id": "retro-zine", "version": "1.0.0"},
+  "shotRecipes": [
+    {"id": "paper-title", "version": "1.2.0"},
+    {"id": "list-reveal", "version": "1.2.0"}
+  ]
+}
+```
+
+以上为选择字段片段，完整分镜仍需 `project` 与 `scenes`。`shotRecipes` 是不重复的精确版本集合；每场实际 `shot` 必须属于集合，允许重复使用及只使用部分配方，顺序由场景数组定义。所有已选配方都需与风格／画幅兼容，即使本次未使用；渲染锁也绑定这些定义。未选基础配方时不能自动回退。字段可选以兼容已有 2.4 分镜，独立组合初始化会写入它。
+
+顶层可选 `videoTemplate: {id: "retro-zine-explainer", version: "1.2.0"}` 仅是预设组合快捷入口；使用时 `style` 与默认精确版本一致，另外指定的 `shotRecipes` 也须属于其配方集合。独立组合无需此字段。
+
+| ID（均为 1.0.0） | visual.kind | slots | 约束 |
+| --- | --- | --- | --- |
+| paper-title | statement | phrases: 1–4 label IDs; emphasis: optional phrase ID | 短语完整构成标题，按明确短语依次显影 |
+| title-to-label | statement | title: label ID; items: 2–4 node/card IDs | title 与标题一致，显影后站稳再 demote，正文其后入场 |
+| document-conclusions | network | source: node/card ID; items: 恰好3个 IDs | 原文、visual.source、outward 连线；先入场、阅读、dock，再结论 |
+| list-reveal | statement | items: 2–4 node/card IDs | 并列无连线；依次入场，默认无持续漂移 |
+| compare-reveal | compare | items: 2–3 node/card IDs | 原生文本对照；名称和差异描述皆有依据 |
+| network-expand | network | anchor: node/card ID; items: 2–5 IDs | 原生向外关系；每项恰好一条可执行连接，visual.source 必填 |
+| semantic-default | 现有7种 | 空对象 | 明确回退；复用语义校验，仍遵守有界动作和阅读预算 |
+| blur-slide | statement | phrases: 1–4 label IDs; subtitle: label ID; emphasis: optional phrase | 主副标题共用收敛进度；短语组成 title，副标题不先于主标题 |
+| split-text-stagger | statement | phrases: 1–4 label IDs; emphasis: optional phrase | 中文短语遮罩裂升，title≤18字，仅该变体 |
+| card-stack | statement | items: 2–4 node/card IDs | 入场全部完成后，第一张卡的唯一 focus 控制整组展开 |
+| concept-matrix | statement | items: 2–4 node/card IDs | 必须显式 variant=bento-light-up 或 wireframe-draw-on |
+| platform-hinge-rise | statement | items: 恰好2个 node/card IDs; result: node/card ID | 原文证据落定并阅读后 result 入场，visual.source 必填 |
+| source-converge | network | items: 2–4来源 IDs; result: 结果 ID | anchorId=result、inward；每个来源到结果有唯一 draw 连接 |
+| diagram-cascade | network | root: node/card ID; items: 2–4子节点 IDs | items父先子后，最多三层，唯一父连接，无循环或孤立 |
+| lead-word-assemble | statement | phrases: 2–4 label IDs | 短语按顺序组成 title≤18字，首词≤5字。首词唯一 focus，入场后站稳0.6秒；其余短语从 focus 完成后组句。组件等待字体，测量实际首词宽度与基线，不采用段尾急推。 |
+| brace-expand | statement | title: label ID | title 与 scene.title 一致且≤18字；标题与括号从同一 enter/reveal 进度展开。字体加载后测量宽度；预检拒绝超出单行的中文。仅适用于带技术/机制语感的标题。 |
+| pill-slot-cycle | statement | prefix: label ID; items: 2–4 label IDs; suffix: optional label ID | 句干和可选后缀先落定，每项落定后至少阅读0.8秒才能替换。最长词实际测量以固定宽度；Agent 检查句干与每项语法通顺，最终停在最后一个实际条目，不生成夸大结语。 |
+| word-roll | statement | prefix: label ID; items: 2–4 label IDs; suffix: optional label ID | 与轮换句干同样保留每项0.8秒阅读；最长词实际测量、上下滚动与距离模糊，终态零模糊。内容胶囊不是旁白字幕底板。 |
+| text-column-converge | statement | prefix: label ID; items: 2–4 label IDs; result: label ID | visual.source 必填。先轮换并阅读全部词；result 唯一 focus 控制一次合拢，完成后 result 的 enter/reveal 给出原文支持的结论。不自动拼接词语制造结论。 |
+| evidence-relay | statement | items: 2–4 node/card IDs; keywords: equal number of label IDs | visual.source 必填，每个摘录 label 标记来源位置；证据与关键词按数组一对一，其入场 start/duration 完全相同。每项至少阅读0.8秒；旧词先退、新词后入。只显示自有原文摘录，不导入假网站。 |
+| row-embed | statement | items: 2–4 node/card IDs | 自有条目行落入固定文本结构。可选 treatment="masking-tape"，每项唯一 tape beat 必须在该行落位后；两条胶带拍定前短暂晃动，拍定后停止。移除 live-layout、纹理素材及持续相机漂移。 |
+| structure-then-text | statement | items: 2–4 node/card IDs | 每个实际矩形对应唯一 trace beat；全部轮廓闭合后才开始文字 enter/reveal。描线带笔头，文字逐字填入。无真实产品生成暗示，未接入逐字3D变体。 |
+| timeline-travel | sequence | items: 2–4 node/card IDs; spacing="ordinal" | visual.kind=sequence、template=graph-explainer、visual.source 必填。layer.value 提供严格递增有效 YYYY-MM-DD 日期。日期等距仅表示顺序，画面说明非时间跨度；逐项行进，每项落定后至少阅读0.8秒。 |
+| odometer-roll | metric | metric: metric layer ID | visual.kind=metric、template=metric-grid；layer.value 是精度明确的数字字符串，可含负号、1–3位小数，总数字位≤6。单位和来源必填，标签与正文必填。唯一 count 在入场后滚动，各位落定检查点进入QA；符号、小数点、精度、最终真值不变，无计算完成暗示或自动音效。 |
+
+除基础回退外，所有 layer 都必须有唯一内容槽位，不能重复内容或留下不可见图层；emphasis 只引用已有 phrases 中的短语。当前23种专用场景只支持 `retro-zine@1.0.0 + 16:9`；基础配方保留原有风格与画幅。文本、数量、动作范围见 [shot manifests](../shots/shot-index.json)，机器契约见 [shot schema](../schemas/shot.schema.json)、[recipe schema](../schemas/shot-recipe.schema.json)、[template schema](../schemas/video-template.schema.json)。
+
+C01 [marker-underline](../shots/marker-underline/recipe.md) 是受控宿主动作，不是场景或集合 ID。paper-title／blur-slide／split-text-stagger 可将 `slots.emphasis` 指向标题短语，并为该 layer 设置落定后的 highlight beat；动作计入完成态和QA，manifest及来源独立进入生产锁。不接受自由效果数组或自动挑选重点词。
+
+`dock` 用于来源文档停靠，`demote` 用于标题连续降格。均为 layer beat，不接受任意 CSS、文件路径或可执行函数。最短/最长窗口与阶段约束由配方编译器检查，最终完成态到转场前至少留0.8秒。JSON Schema 的版本条件与 Zod 运行时一起拒绝新旧混用。缺少 ID/版本、引用、来源、关系或预算时停止，不自动回退。
+
+`migrate:storyboard` 目前只显式迁移2.3；2.1/2.2 的关系无法从坐标可靠推导，需 Agent 先人工重新编排为2.3。迁移源文件不覆盖，输出 `<new.json>` 与 `<new.json>.migration.json`，清除批准状态；必要的停靠可能引发预算冲突，此时返回错误供重新编排。
+
+
+C02 `trace` 只在 structure-then-text 上描实际轮廓；C03需 row-embed/card-stack 显式 `treatment: "masking-tape"` 和逐卡 `tape` 阶段；C08需 concept-matrix 的 `revealMode: "card-flip"` 与数量相同的 `slots.fronts` / `slots.items`，不能遗漏正面阅读或来源。
+
+跨场 C10/C13 使用 `transitionIn: {type: "overlap-blinds"|"overlap-push-stack", durationFrames: <0.2–0.8秒>, chapterBoundary: true}`。只支持2.4、retro-zine@1.0.0、16:9；前后章节标题不同，不能用于首场或与旧退出叠加。正文动作从交接结束后开始，场景及外部字幕不能覆盖重叠窗口，有声换章必须提供字幕时间轴。定义与来源进入生产锁，交接中途/结束进入必选QA。契约见 [宿主动作schema](../schemas/auxiliary-recipe.schema.json)、[换章schema](../schemas/chapter-transition.schema.json)。
+
+## P2 数据与宿主契约
+
+37个场景入口中，13个为P2增量。`shot` 的额外输入均为严格字段：research-stack.authors、scroll-brake.focusId、chart-live.samples、particle-sand-fill.grainUnit、member-grid.flagged、code-reveal.mode/tokens、letterspace-materialize.glyphs；内容仍只在真实 layer 槽位保存。字段细节见 [配方目录](../shots/README.md)。缺失数据、失配 token、无来源关系、错误真实图片尺寸会在预检拒绝。
+
+五个新增宿主效果采用 `effects: [{id, target}]`，每场最多一种，绑定实际目标及唯一 highlight beat。冻结位于 focus 内部且保留运动连续性；扫描只在文档正文落定后开始；轮廓微颤不影响正文；重排不新增或丢失成员。
+
+三个新增换章是 overlap-line-carry / overlap-ink / overlap-barn-door，0.6–2.4秒、chapterBoundary=true，只有2.4与已验证横屏风格可用。线条承接额外需要 carryKey，并校验前后 code 图层相同 semanticRole 和 label，每片最多一次。所有新转场进入共享时间线、字幕边界校验、生产锁和必选QA帧。

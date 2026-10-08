@@ -1,0 +1,89 @@
+{
+  "id": "retro-zine-explainer",
+  "version": "1.0.0",
+  "status": "experimental",
+  "defaultStyle": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shots": [
+    {
+      "id": "semantic-default",
+      "version": "1.0.0"
+    },
+    {
+      "id": "paper-title",
+      "version": "1.0.0"
+    },
+    {
+      "id": "title-to-label",
+      "version": "1.0.0"
+    },
+    {
+      "id": "document-conclusions",
+      "version": "1.0.0"
+    },
+    {
+      "id": "list-reveal",
+      "version": "1.0.0"
+    },
+    {
+      "id": "compare-reveal",
+      "version": "1.0.0"
+    },
+    {
+      "id": "network-expand",
+      "version": "1.0.0"
+    }
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "inputModes": [
+    "document-only",
+    "document-with-assets"
+  ],
+  "selectionRules": [
+    {
+      "content": "基础语义回退与收尾",
+      "shotId": "semantic-default"
+    },
+    {
+      "content": "主张与章节标题",
+      "shotId": "paper-title"
+    },
+    {
+      "content": "主题先建立，再让位给正文",
+      "shotId": "title-to-label"
+    },
+    {
+      "content": "一段原文支持三条结论",
+      "shotId": "document-conclusions"
+    },
+    {
+      "content": "并列要点逐项呈现",
+      "shotId": "list-reveal"
+    },
+    {
+      "content": "有依据的文本对照",
+      "shotId": "compare-reveal"
+    },
+    {
+      "content": "有依据的向外关系展开",
+      "shotId": "network-expand"
+    }
+  ],
+  "handoff": {
+    "type": "cut",
+    "readingSec": 0.8,
+    "maxNarrationGapSec": 0.5
+  },
+  "sound": {
+    "music": false,
+    "sfx": false
+  },
+  "validatedExamples": [
+    "examples/video-templates/knowledge-notes/storyboard.json",
+    "examples/video-templates/product-update/storyboard.json"
+  ]
+}

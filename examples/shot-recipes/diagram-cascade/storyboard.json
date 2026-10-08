@@ -1,0 +1,174 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "diagram-cascade",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "一次旅行的安排",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 4.666666666666667,
+    "durationFrames": 140,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "diagram-cascade",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "一次旅行的安排",
+      "primaryClaim": "旅行计划分成交通与行程两个部分",
+      "visual": {
+        "kind": "network",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md",
+        "anchorId": "root",
+        "networkDirection": "outward"
+      },
+      "shot": {
+        "id": "diagram-cascade",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "i0",
+            "i1",
+            "i2",
+            "i3"
+          ],
+          "root": "root"
+        }
+      },
+      "narration": "旅行计划分成交通与行程两个部分",
+      "durationFrames": 140,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "card",
+          "label": "交通",
+          "text": "安排出行"
+        },
+        {
+          "id": "i1",
+          "type": "card",
+          "label": "行程",
+          "text": "规划游览"
+        },
+        {
+          "id": "i2",
+          "type": "card",
+          "label": "车票",
+          "text": "确认班次"
+        },
+        {
+          "id": "i3",
+          "type": "card",
+          "label": "路线",
+          "text": "串联地点"
+        },
+        {
+          "id": "root",
+          "type": "card",
+          "label": "旅行计划",
+          "text": "交通与行程"
+        }
+      ],
+      "connections": [
+        {
+          "id": "e0",
+          "from": "root",
+          "to": "i0"
+        },
+        {
+          "id": "e1",
+          "from": "root",
+          "to": "i1"
+        },
+        {
+          "id": "e2",
+          "from": "i0",
+          "to": "i2"
+        },
+        {
+          "id": "e3",
+          "from": "i1",
+          "to": "i3"
+        }
+      ],
+      "beats": [
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 22,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 40,
+          "duration": 18
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 62,
+          "duration": 18
+        },
+        {
+          "id": "i3-enter",
+          "target": "i3",
+          "action": "enter",
+          "start": 80,
+          "duration": 18
+        },
+        {
+          "id": "root-enter",
+          "target": "root",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "e0-draw",
+          "target": "e0",
+          "action": "draw",
+          "start": 22,
+          "duration": 15
+        },
+        {
+          "id": "e1-draw",
+          "target": "e1",
+          "action": "draw",
+          "start": 40,
+          "duration": 15
+        },
+        {
+          "id": "e2-draw",
+          "target": "e2",
+          "action": "draw",
+          "start": 62,
+          "duration": 15
+        },
+        {
+          "id": "e3-draw",
+          "target": "e3",
+          "action": "draw",
+          "start": 80,
+          "duration": 15
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

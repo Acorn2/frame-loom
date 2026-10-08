@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "concept-matrix",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "学习的四个维度",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 4.0,
+    "durationFrames": 120,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "concept-matrix",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "学习的四个维度",
+      "primaryClaim": "从不同维度理解学习过程",
+      "visual": {
+        "kind": "statement",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "concept-matrix",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "i0",
+            "i1",
+            "i2",
+            "i3"
+          ]
+        },
+        "variant": "wireframe-draw-on"
+      },
+      "narration": "从不同维度理解学习过程",
+      "durationFrames": 120,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "card",
+          "label": "观察",
+          "text": "发现细节"
+        },
+        {
+          "id": "i1",
+          "type": "card",
+          "label": "提问",
+          "text": "寻找原因"
+        },
+        {
+          "id": "i2",
+          "type": "card",
+          "label": "实践",
+          "text": "验证方法"
+        },
+        {
+          "id": "i3",
+          "type": "card",
+          "label": "复盘",
+          "text": "整理经验"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 18,
+          "duration": 18
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 36,
+          "duration": 18
+        },
+        {
+          "id": "i3-enter",
+          "target": "i3",
+          "action": "enter",
+          "start": 54,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

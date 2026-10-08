@@ -1,0 +1,13 @@
+[
+  {
+    "id": "mosaic-reframe",
+    "duration": 6.933333,
+    "currentTime": 6.933333,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 217,
+    "droppedFrames": 0
+  }
+]

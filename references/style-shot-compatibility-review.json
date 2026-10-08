@@ -1,0 +1,100 @@
+{
+  "date": "2026-10-06",
+  "scope": {
+    "styles": 6,
+    "scenes": 37,
+    "hostedActions": 9,
+    "chapterTransitions": 5,
+    "variants": 2,
+    "orientation": "landscape"
+  },
+  "tests": {
+    "files": 23,
+    "passed": 383,
+    "typecheck": true,
+    "lint": true,
+    "validateShots": true
+  },
+  "preflight": {
+    "combinations": 318,
+    "errors": 0
+  },
+  "media": {
+    "expected": 318,
+    "valid": 318,
+    "fingerprint": "af49b66ab86e0ddfa6b5531ac3c8e0185b13a5e470f6b2370b6fe8dc44b97ba0",
+    "resumeCheck": "current (318 samples)",
+    "spec": "960x540, 30fps, muted, duration tolerance 0.04s"
+  },
+  "browserMatrix": [
+    {
+      "style": "retro-zine",
+      "enabled": 37,
+      "selected": 2,
+      "preview": "media/style-blur-slide.mp4"
+    },
+    {
+      "style": "signal",
+      "enabled": 37,
+      "selected": 2,
+      "preview": "media/style-blur-slide--signal.mp4"
+    },
+    {
+      "style": "scatterbrain",
+      "enabled": 37,
+      "selected": 2,
+      "preview": "media/style-blur-slide--scatterbrain.mp4"
+    },
+    {
+      "style": "archive-grid",
+      "enabled": 37,
+      "selected": 2,
+      "preview": "media/style-blur-slide--archive-grid.mp4"
+    },
+    {
+      "style": "signal-noir",
+      "enabled": 37,
+      "selected": 2,
+      "preview": "media/style-blur-slide--signal-noir.mp4"
+    },
+    {
+      "style": "studio-frame",
+      "enabled": 37,
+      "selected": 2,
+      "preview": "media/style-blur-slide--studio-frame.mp4"
+    }
+  ],
+  "browserDetails": {
+    "variant": {
+      "src": "http://127.0.0.1:4318/media/style-card-stack-tape--studio-frame.mp4",
+      "time": 1.025008,
+      "selectEnabled": true
+    },
+    "default": {
+      "src": "http://127.0.0.1:4318/media/style-card-stack--studio-frame.mp4",
+      "error": null,
+      "selectEnabled": true
+    },
+    "export": {
+      "prompt": "请使用 frame-loom Skill，根据我在对话中提供的文档与素材，制作带旁白的待审视频。尚未提供文档时先请我提供，不生成占位内容。\n视频风格：studio-frame\n画幅：16:9 横屏\n可用镜头配方：blur-slide、paper-title\n根据原文自动生成简短项目主题，按项目规则创建带日期的生产目录，不要求我填写目录名。\n制作参数：--output-purpose in-project-video --audio-mode tts --mode fast。\n完整保留原文和来源；只在上述配方集合内编排，可重复、调整顺序或只用其中一部分，不补造事实。\n完成讲稿、分镜、校验、渲染和 QA。\n运行 list:tts-profiles 查看项目已启用的 TTS 配置；仅一个时使用它，多个时展示不含密钥的服务、模型和音色摘要让我选择，无可用配置时说明缺口并指导配置。实际使用时明确指定 --tts-config，按实测旁白调整分镜，不退回静音结果。\n返回实际项目路径、产物路径、时长与 QA 结果，说明完整播放复核仍需完成，不将自动 QA 当作交付批准。",
+      "enabled": true
+    }
+  },
+  "browserResponsive": {
+    "width": 375,
+    "scroll": 375,
+    "checked": false,
+    "count": "1",
+    "portrait": {
+      "enabled": 1,
+      "selected": [
+        "semantic-default"
+      ]
+    }
+  },
+  "remaining": {
+    "portrait": "semantic-default only",
+    "fullPlaybackReview": "Not a complete normal-speed viewing of all 318 samples",
+    "historicalRecipes": "Historical capability limits preserved"
+  }
+}

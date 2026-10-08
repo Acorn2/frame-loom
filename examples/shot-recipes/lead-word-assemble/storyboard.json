@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "lead-word-assemble",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "灵感从观察开始",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 5.0,
+    "durationFrames": 150,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "lead-word-assemble",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "灵感从观察开始",
+      "primaryClaim": "先记住灵感，再看它从哪里来",
+      "visual": {
+        "kind": "statement",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "lead-word-assemble",
+        "version": "1.2.0",
+        "slots": {
+          "phrases": [
+            "lead",
+            "rest"
+          ]
+        }
+      },
+      "narration": "先记住灵感，再看它从哪里来",
+      "durationFrames": 150,
+      "layers": [
+        {
+          "id": "lead",
+          "type": "label",
+          "label": "灵感"
+        },
+        {
+          "id": "rest",
+          "type": "label",
+          "label": "从观察开始"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "lead-enter",
+          "target": "lead",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "lead-focus",
+          "target": "lead",
+          "action": "focus",
+          "start": 48,
+          "duration": 30
+        },
+        {
+          "id": "rest-enter",
+          "target": "rest",
+          "action": "enter",
+          "start": 84,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "id": "before",
+      "path": "assets/before.svg",
+      "type": "screenshot",
+      "source": "FrameLoom authored public layout illustration; same canvas and content",
+      "license": "MIT",
+      "intendedUse": "Schematic before/after layout comparison"
+    },
+    {
+      "id": "after",
+      "path": "assets/after.svg",
+      "type": "screenshot",
+      "source": "FrameLoom authored public layout illustration; same canvas and content",
+      "license": "MIT",
+      "intendedUse": "Schematic before/after layout comparison"
+    }
+  ]
+}

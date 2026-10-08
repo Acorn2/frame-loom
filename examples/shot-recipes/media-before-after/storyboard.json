@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "media-before-after",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "比较两份布局素材",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 7.2,
+    "durationFrames": 216,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "media-before-after",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "比较两份布局素材",
+      "primaryClaim": "真实前后素材擦动对照",
+      "visual": {
+        "kind": "media",
+        "explanation": "FrameLoom 自写公开示意资料，不代表真实产品、用户或研究结果",
+        "representation": "source-media",
+        "source": "source.md",
+        "beforeId": "item1",
+        "afterId": "item2"
+      },
+      "shot": {
+        "id": "media-before-after",
+        "version": "1.2.0",
+        "slots": {
+          "before": "item1",
+          "after": "item2"
+        }
+      },
+      "narration": "真实前后素材擦动对照",
+      "durationFrames": 216,
+      "layers": [
+        {
+          "id": "item1",
+          "type": "screenshot",
+          "label": "调整前",
+          "asset": "assets/before.svg",
+          "width": 1200,
+          "height": 700,
+          "fit": "contain"
+        },
+        {
+          "id": "item2",
+          "type": "screenshot",
+          "label": "调整后",
+          "asset": "assets/after.svg",
+          "width": 1200,
+          "height": 700,
+          "fit": "contain"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "item1-enter",
+          "target": "item1",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item2-enter",
+          "target": "item2",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item2-focus",
+          "target": "item2",
+          "action": "focus",
+          "start": 48,
+          "duration": 120
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

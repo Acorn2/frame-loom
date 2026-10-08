@@ -1,0 +1,124 @@
+{
+  "generatedAt": "2026-10-04T03:44:26.316Z",
+  "storyboard": "/Users/ankanghao/ai_code/frame-loom/examples/shot-recipes/media-before-after/storyboard.json",
+  "video": "/Users/ankanghao/ai_code/frame-loom/.tmp/p2-recipes/media-final.mp4",
+  "executionMode": "fast",
+  "outputPurpose": "visual-preview",
+  "mode": "silent-preview",
+  "automatedPassed": true,
+  "releaseReady": false,
+  "checks": {
+    "schema": {
+      "passed": true
+    },
+    "productionLock": {
+      "passed": true,
+      "hash": "92332f720eeb1069ec247cde98318b433304f2a4c54e48f1d099cf46f740b270"
+    },
+    "storyboard": {
+      "passed": true,
+      "issues": []
+    },
+    "timeline": {
+      "passed": true,
+      "scenes": [
+        {
+          "id": "media-before-after",
+          "startFrame": 0,
+          "endFrame": 216,
+          "overlapInFrames": 0,
+          "overlapOutFrames": 0,
+          "primaryClaim": "真实前后素材擦动对照",
+          "visualKind": "media",
+          "visualExplanation": "FrameLoom 自写公开示意资料，不代表真实产品、用户或研究结果",
+          "attentionTarget": null,
+          "lastActionEnd": 168,
+          "stableHoldFrames": 48,
+          "peakCurrentNodes": 0
+        }
+      ]
+    },
+    "assets": {
+      "passed": true,
+      "issues": []
+    },
+    "safeArea": {
+      "passed": true,
+      "orientation": "landscape",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "safeArea": {
+        "top": 100,
+        "right": 120,
+        "bottom": 100,
+        "left": 120
+      },
+      "content": {
+        "width": 1680,
+        "height": 880
+      },
+      "issues": []
+    },
+    "textLayout": {
+      "passed": true,
+      "issues": []
+    },
+    "output": {
+      "passed": true,
+      "path": "/Users/ankanghao/ai_code/frame-loom/.tmp/p2-recipes/media-final.mp4",
+      "bytes": 239628,
+      "codec": "h264",
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "durationSec": 7.2,
+      "expectedDurationSec": 7.2,
+      "durationDeltaSec": 0,
+      "durationToleranceSec": 0.05,
+      "audioStreams": 0,
+      "pixelFormat": "yuvj420p",
+      "formatName": "mov,mp4,m4a,3gp,3g2,mj2",
+      "bitRate": 266253,
+      "orientation": "landscape"
+    },
+    "audio": {
+      "passed": true,
+      "skipped": true,
+      "reason": "本次输出无需音轨"
+    },
+    "reviewFrames": {
+      "passed": true,
+      "count": 15,
+      "missingRequired": [],
+      "contactSheet": "/Users/ankanghao/ai_code/frame-loom/.tmp/p2-recipes/media-qa/contact-sheet.png",
+      "contactSheets": [
+        "contact-sheet.png"
+      ],
+      "pages": [
+        {
+          "file": "contact-sheet.png",
+          "firstFrame": 1,
+          "lastFrame": 15,
+          "startSec": 0,
+          "endSec": 7.133333333333334
+        }
+      ]
+    }
+  },
+  "manualReview": {
+    "required": true,
+    "fullPlaybackPassed": false,
+    "visualHierarchyPassed": false,
+    "textReadabilityPassed": false,
+    "transitionTimingPassed": false,
+    "audioQualityPassed": false,
+    "captionReadabilityPassed": false,
+    "assetRightsPassed": false,
+    "reviewer": "",
+    "reviewedAt": null,
+    "notes": ""
+  },
+  "errors": []
+}

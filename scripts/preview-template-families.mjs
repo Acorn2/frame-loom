@@ -32,7 +32,7 @@ for (let index = 0; index < args.length; index += 1) {
   if (valueOptions.has(arg)) index += 1;
 }
 
-const defaultStyleIds = ['retro-zine', 'signal', 'scatterbrain'];
+const defaultStyleIds = ['retro-zine', 'signal', 'scatterbrain', 'archive-grid', 'signal-noir', 'studio-frame'];
 const styleIds = (stylesOption >= 0 ? args[stylesOption + 1].split(',') : defaultStyleIds)
   .map((id) => id.trim())
   .filter(Boolean);
@@ -73,41 +73,41 @@ fs.copyFileSync(path.join(sourceRoot, 'project-input.semantic.json'), path.join(
 const sourceStoryboard = JSON.parse(fs.readFileSync(path.join(sourceRoot, 'storyboard.semantic.json'), 'utf8'));
 const styleRoot = path.join(projectRoot, 'styles');
 const styleDescriptions = {
-  'retro-zine': {
-    name: 'Retro Zine',
-    subtitle: '编辑式知识讲解',
-    use: '适合观点、报告和资料较多的讲解。',
-    motion: '暖纸网格与衬线大字；内容逐项揭示，结尾留出阅读时间。'
+  "retro-zine": {
+    "name": "Editorial Ink",
+    "subtitle": "墨白杂志",
+    "use": "适合观点、知识讲解和故事。",
+    "motion": "中性白底与中文宋体；杂志分栏、朱红印章和横向揭示。"
   },
-  signal: {
-    name: 'Signal',
-    subtitle: '信息聚焦',
-    use: '适合强调因果、节点和单一观看路径。',
-    motion: '深色画布与蓝色连线；节点依次聚焦，节奏克制。'
+  "signal": {
+    "name": "Signal",
+    "subtitle": "暗场信号",
+    "use": "适合核心观点、转折和重点说明。",
+    "motion": "石墨暗场与淡紫焦点；中央构图、圆形聚焦和克制缩放。"
   },
-  scatterbrain: {
-    name: 'Scatterbrain',
-    subtitle: '白板便签推演',
-    use: '适合非正式解释、学习和灵感整理。',
-    motion: '点阵底纹与手写感标题；信息错时入场后稳定阅读。'
+  "scatterbrain": {
+    "name": "Sketch Notes",
+    "subtitle": "手绘便签",
+    "use": "适合学习笔记、方法拆解和灵感整理。",
+    "motion": "白色点阵与黄色便签；中文楷体、错落贴入和蓝色批注。"
   },
-  'archive-grid': {
-    name: 'Clean Editorial',
-    subtitle: '现代编辑排版',
-    use: '适合知识讲解、报告摘要和观点拆解。',
-    motion: '浅色画布与荧光绿结构线；关系按步骤展开。'
+  "archive-grid": {
+    "name": "Swiss Blue",
+    "subtitle": "瑞士蓝",
+    "use": "适合报告、分析和结构化方法论。",
+    "motion": "克莱因蓝与直角色块；强字号对比、对齐网格和裁切揭示。"
   },
-  'signal-noir': {
-    name: 'Blueprint',
-    subtitle: '技术蓝图推演',
-    use: '适合系统、机制和流程解释。',
-    motion: '深蓝工程网格与琥珀色连线；关系逐节点出现。'
+  "signal-noir": {
+    "name": "Blueprint",
+    "subtitle": "工程蓝图",
+    "use": "适合系统机制、技术关系和流程解释。",
+    "motion": "石墨蓝灰网格与等宽标注；模块逐个出现，琥珀连线按真实关系展开。"
   },
-  'studio-frame': {
-    name: 'Product Frame',
-    subtitle: '产品演示界面',
-    use: '适合产品页面、截图和工作流说明。',
-    motion: '浅灰绿画布与橄榄绿结构线；突出流程顺序。'
+  "studio-frame": {
+    "name": "Product Frame",
+    "subtitle": "产品演示",
+    "use": "适合产品说明、教程和工作流。",
+    "motion": "冷灰工作台与绿色状态；说明和真实素材分区，窗口按操作步骤展开。"
   }
 };
 const plans = styleIds.map((id) => {
@@ -159,7 +159,7 @@ for (const plan of plans) {
   if (!stillsOnly) {
     plan.videoName = `${plan.id}.mp4`;
     const videoPath = path.join(outputRoot, plan.videoName);
-    await renderMedia({composition, serveUrl: bundleLocation, inputProps: plan.inputProps, codec: 'h264', outputLocation: videoPath, audioCodec: null, muted: true});
+    await renderMedia({composition, serveUrl: bundleLocation, inputProps: plan.inputProps, codec: 'h264', outputLocation: videoPath, audioCodec: null, muted: true, concurrency: 2, crf: 20, x264Preset: 'veryfast'});
     const qa = runQa({storyboardPath: plan.storyboardPath, videoPath, reviewDir: path.join(outputRoot, `${plan.id}-review`)});
     if (!qa.report.automatedPassed) throw new Error(`${plan.id} 的自动 QA 未通过：${qa.reportPath}`);
     plan.qaPath = path.relative(outputRoot, qa.reportPath);

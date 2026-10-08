@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "chart-live",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "沿采样记录观察变化",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 6.8,
+    "durationFrames": 204,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "chart-live",
+      "template": "metric-grid",
+      "purpose": "claim",
+      "title": "沿采样记录观察变化",
+      "primaryClaim": "数据按顺序揭示与重组",
+      "visual": {
+        "kind": "metric",
+        "explanation": "FrameLoom 自写公开示意资料，不代表真实产品、用户或研究结果",
+        "representation": "diagram",
+        "source": "source.md",
+        "unit": "示意单位"
+      },
+      "shot": {
+        "id": "chart-live",
+        "version": "1.2.0",
+        "slots": {
+          "series": "item1"
+        },
+        "samples": [
+          {
+            "label": "1",
+            "value": 12
+          },
+          {
+            "label": "2",
+            "value": 16
+          },
+          {
+            "label": "3",
+            "value": 15
+          },
+          {
+            "label": "4",
+            "value": 21
+          },
+          {
+            "label": "5",
+            "value": 34
+          },
+          {
+            "label": "6",
+            "value": 24
+          },
+          {
+            "label": "7",
+            "value": 28
+          },
+          {
+            "label": "8",
+            "value": 30
+          }
+        ]
+      },
+      "narration": "数据按顺序揭示与重组",
+      "durationFrames": 204,
+      "layers": [
+        {
+          "id": "item1",
+          "type": "metric",
+          "label": "示意采样",
+          "text": "仅展示提供的数值，不补造趋势",
+          "value": 30
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "item1-enter",
+          "target": "item1",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item1-focus",
+          "target": "item1",
+          "action": "focus",
+          "start": 36,
+          "duration": 120
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

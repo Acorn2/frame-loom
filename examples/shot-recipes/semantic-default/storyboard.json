@@ -1,0 +1,145 @@
+{
+  "schemaVersion": "2.4",
+  "videoTemplate": {
+    "id": "retro-zine-explainer",
+    "version": "1.2.0"
+  },
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "project": {
+    "title": "想法如何变成作品",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 10.0,
+    "durationFrames": 300,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "evidence-process",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "想法如何变成作品",
+      "primaryClaim": "从观察开始，经过尝试，做出一份作品",
+      "visual": {
+        "kind": "sequence",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md#process"
+      },
+      "shot": {
+        "id": "semantic-default",
+        "version": "1.0.0",
+        "slots": {}
+      },
+      "narration": "从观察开始，经过尝试，做出一份作品",
+      "durationFrames": 180,
+      "layers": [
+        {
+          "id": "claim",
+          "type": "node",
+          "label": "观察",
+          "text": "发现一个问题",
+          "glyph": "quote"
+        },
+        {
+          "id": "source",
+          "type": "node",
+          "label": "尝试",
+          "text": "寻找合适的方法",
+          "glyph": "document"
+        },
+        {
+          "id": "relation",
+          "type": "node",
+          "label": "作品",
+          "text": "把想法变成表达",
+          "glyph": "link"
+        }
+      ],
+      "connections": [
+        {
+          "id": "claim-source",
+          "from": "claim",
+          "to": "source"
+        },
+        {
+          "id": "source-relation",
+          "from": "source",
+          "to": "relation"
+        }
+      ],
+      "beats": [
+        {
+          "id": "claim-enter",
+          "target": "claim",
+          "action": "enter",
+          "start": 20,
+          "duration": 18
+        },
+        {
+          "id": "source-enter",
+          "target": "source",
+          "action": "enter",
+          "start": 48,
+          "duration": 18
+        },
+        {
+          "id": "claim-source-draw",
+          "target": "claim-source",
+          "action": "draw",
+          "start": 66,
+          "duration": 18
+        },
+        {
+          "id": "relation-enter",
+          "target": "relation",
+          "action": "enter",
+          "start": 90,
+          "duration": 18
+        },
+        {
+          "id": "source-relation-draw",
+          "target": "source-relation",
+          "action": "draw",
+          "start": 108,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "closing",
+      "template": "statement",
+      "purpose": "closing",
+      "title": "让想法成为作品",
+      "primaryClaim": "从一次小小的尝试开始",
+      "visual": {
+        "kind": "statement",
+        "explanation": "笔记需要保留依据",
+        "representation": "diagram",
+        "source": "source.md#closing"
+      },
+      "shot": {
+        "id": "semantic-default",
+        "version": "1.0.0",
+        "slots": {}
+      },
+      "narration": "从一次小小的尝试开始",
+      "durationFrames": 120,
+      "layers": [],
+      "connections": [],
+      "beats": [],
+      "captions": []
+    }
+  ],
+  "shotRecipes": [
+    {
+      "id": "semantic-default",
+      "version": "1.0.0"
+    }
+  ]
+}

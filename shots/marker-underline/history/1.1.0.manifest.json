@@ -1,0 +1,26 @@
+{
+  "id": "marker-underline",
+  "version": "1.1.0",
+  "status": "experimental",
+  "shortlist": "C01",
+  "kind": "hosted-action",
+  "hosts": [
+    "paper-title",
+    "blur-slide",
+    "split-text-stagger"
+  ],
+  "action": "highlight",
+  "targetSlot": "emphasis",
+  "styles": [
+    "retro-zine"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "sound": false,
+  "requires": [
+    "explicit phrase reference",
+    "highlight starts after phrase entry completes",
+    "never affects caption layer"
+  ]
+}

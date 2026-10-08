@@ -1,0 +1,26 @@
+{
+  "id": "title-to-label",
+  "mode": "method-reference",
+  "repository": "https://github.com/Acorn2/video-shotcraft",
+  "commit": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab",
+  "recipe": "references/shots/typography/title-demote-to-label.md",
+  "implementation": "demos/typography/title-demote-to-label/TitleDemoteToLabel.tsx",
+  "upstreamLicense": "Apache-2.0",
+  "implementationLicense": "MIT",
+  "notice": "No applicable NOTICE found in the local upstream snapshot. Independently implemented; no upstream code, copy, fixtures or external media copied.",
+  "retained": [
+    "表达目的",
+    "阶段顺序",
+    "2026-10-02 对照所选 Markdown 和 TSX 重建的配方特征：标题先居中站稳，同一曲线缩到左上角；正文在标题完成六成让位时开始生长。"
+  ],
+  "omitted": [
+    "固定帧数",
+    "固定坐标与配色",
+    "独立字幕",
+    "持续漂移",
+    "占位事实",
+    "自动音效"
+  ],
+  "externalAttribution": "title-demote-to-label references perplexity-promo / framer in upstream ATTRIBUTION; those media are not imported.",
+  "adaptationNotes": "连续位置补间 + scale=1→.3；inOutCubic；正文 scaleX=.35→1 与 y=28→0。 先缩后飞会变成两次动作；平移必须同时撤掉居中修正；不能抢掉标题站稳拍。"
+}

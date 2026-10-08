@@ -2,37 +2,87 @@
   "id": "scatterbrain",
   "version": "1.0.0",
   "tokens": {
-    "background": "#fffaf0",
-    "ink": "#24211f",
-    "captionInk": "#2459A8",
-    "muted": "#6f625d",
-    "accent": "#ffd84d",
-    "accentAlt": "#2e75d4",
-    "paper": "#fffef8",
-    "grid": "#8fb6e8",
-    "displayFont": "Comic Sans MS, Chalkboard SE, cursive",
-    "bodyFont": "Arial, sans-serif",
+    "background": "#fafaf7",
+    "ink": "#292929",
+    "captionInk": "#245EA8",
+    "muted": "#5e6267",
+    "accent": "#f6d84a",
+    "accentAlt": "#245ea8",
+    "paper": "#ffffff",
+    "grid": "#b7c2ce",
+    "displayFont": "\"Kaiti SC\", STKaiti, KaiTi, \"Noto Serif CJK SC\", serif",
+    "bodyFont": "Arial, \"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
     "pattern": "dots",
-    "surfaceRadius": 14,
-    "surfaceBorder": "3px solid #24211f",
-    "surfaceShadow": "9px 11px 0 #ffd84d",
+    "surfaceRadius": 0,
+    "surfaceBorder": "1px solid #b7c2ce",
+    "surfaceShadow": "10px 12px 0 #29292912",
     "labelRadius": 8,
     "titleFontSize": 98
   },
   "safeArea": {
-    "landscape": {"top": 96, "right": 110, "bottom": 108, "left": 110},
-    "portrait": {"top": 128, "right": 72, "bottom": 144, "left": 72}
+    "landscape": {
+      "top": 96,
+      "right": 110,
+      "bottom": 108,
+      "left": 110
+    },
+    "portrait": {
+      "top": 128,
+      "right": 72,
+      "bottom": 144,
+      "left": 72
+    }
   },
   "supports": {
-    "purposes": ["opening", "claim", "process", "evidence", "media", "closing"],
-    "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
-    "layers": ["label", "card", "annotation", "metric", "node", "screenshot", "object", "callout"],
-    "actions": ["enter", "reveal", "draw", "focus", "highlight", "count", "camera-push", "rotate", "set-state"],
-    "transitions": ["fade", "slide", "paper-wipe", "carry"],
-    "overlapTransitions": ["overlap-fade", "overlap-slide", "overlap-carry"]
+    "purposes": [
+      "opening",
+      "claim",
+      "process",
+      "evidence",
+      "media",
+      "closing"
+    ],
+    "templates": [
+      "statement",
+      "graph-explainer",
+      "metric-grid",
+      "interaction-flow"
+    ],
+    "layers": [
+      "label",
+      "card",
+      "annotation",
+      "metric",
+      "node",
+      "screenshot",
+      "object",
+      "callout"
+    ],
+    "actions": [
+      "enter",
+      "reveal",
+      "draw",
+      "focus",
+      "highlight",
+      "count",
+      "camera-push",
+      "rotate",
+      "set-state"
+    ],
+    "transitions": [
+      "fade",
+      "slide",
+      "paper-wipe",
+      "carry"
+    ],
+    "overlapTransitions": [
+      "overlap-fade",
+      "overlap-slide",
+      "overlap-carry"
+    ]
   },
   "provenance": {
-    "fonts": "System-installed Comic Sans MS or Chalkboard fallback plus Arial; no bundled font assets.",
+    "fonts": "System Kaiti SC / STKaiti / KaiTi, with installed Noto Serif CJK SC fallback; no fonts bundled. Chinese glyph appearance depends on installed fonts.",
     "assets": "CSS-only dots, notes and annotation shapes; no external assets."
   }
 }

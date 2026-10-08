@@ -1,6 +1,8 @@
 import {createHash} from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import {resolveProductionLock} from './production-lock.mjs';
+import {fontAssetFiles} from '../../src/fonts/assets.ts';
 import {TtsConfigSchema} from '../../src/schemas/tts-config.ts';
 import {resolveTtsVoiceType} from './tts-profiles.mjs';
 
@@ -93,9 +95,11 @@ export function fingerprintProjectInputs(projectPath, styleRoot, audioConfigPath
   const selectedPath = fs.existsSync(storyboardPath) ? storyboardPath : draftPath;
   if (fs.existsSync(selectedPath)) {
     try {
-      const styleId = JSON.parse(fs.readFileSync(selectedPath, 'utf8')).style?.id;
+      const selected = JSON.parse(fs.readFileSync(selectedPath, 'utf8'));
+      if (selected.font) files.push(...fontAssetFiles(selected.font));
+      const styleId = selected.style?.id;
       if (typeof styleId === 'string' && /^[a-z0-9-]+$/.test(styleId)) {
-        files.push(path.join(styleRoot, 'style-index.json'));
+        if (selected.schemaVersion !== '2.4') files.push(path.join(styleRoot, 'style-index.json'));
         files.push(path.join(styleRoot, styleId, 'style.json'));
         files.push(path.join(styleRoot, styleId, 'motion.json'));
       }
@@ -103,7 +107,11 @@ export function fingerprintProjectInputs(projectPath, styleRoot, audioConfigPath
       // The regular storyboard validator reports malformed JSON.
     }
   }
-  const fingerprint = fingerprintFiles(files, projectPath);
+  let fingerprint = fingerprintFiles(files, projectPath);
+  if (fs.existsSync(selectedPath)) {
+    const selected = JSON.parse(fs.readFileSync(selectedPath, 'utf8'));
+    if (selected.schemaVersion === '2.4') fingerprint = createHash('sha256').update(fingerprint).update(resolveProductionLock(selected)?.lock.hash ?? '').digest('hex');
+  }
   return includeAudio && ttsConfigPath && fs.existsSync(configuredTts)
     ? includeEnvironmentVoice(fingerprint, configuredTts)
     : fingerprint;

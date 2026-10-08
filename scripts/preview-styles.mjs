@@ -35,14 +35,14 @@ function renderCard(style) {
       </header>
       <p>${escapeHtml(summary)}</p>
       <div class="frames">
-        <section class="frame" style="${previewStyle}">
+        <section class="frame" style="${escapeHtml(previewStyle)}">
           <span style="background:${tokens.accent};color:${tokens.paper}">HOOK</span>
-          <strong style="font-family:${tokens.displayFont}">A visible idea starts here.</strong>
+          <strong style="font-family:${escapeHtml(tokens.displayFont)}">A visible idea starts here.</strong>
         </section>
-        <section class="frame" style="${previewStyle}">
+        <section class="frame" style="${escapeHtml(previewStyle)}">
           <div class="surface" style="${surfaceStyle}"><small>CONTENT</small><b>Meaning → target</b></div>
         </section>
-        <section class="frame" style="${previewStyle}">
+        <section class="frame" style="${escapeHtml(previewStyle)}">
           <div class="surface metric" style="${surfaceStyle}"><small>REVIEWABLE</small><b>100%</b></div>
         </section>
       </div>

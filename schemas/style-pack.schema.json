@@ -230,7 +230,11 @@
               "count",
               "camera-push",
               "rotate",
-              "set-state"
+              "set-state",
+              "dock",
+              "demote",
+              "trace",
+              "tape"
             ]
           }
         },
@@ -254,7 +258,12 @@
             "enum": [
               "overlap-fade",
               "overlap-slide",
-              "overlap-carry"
+              "overlap-carry",
+              "overlap-blinds",
+              "overlap-push-stack",
+              "overlap-line-carry",
+              "overlap-ink",
+              "overlap-barn-door"
             ]
           }
         }

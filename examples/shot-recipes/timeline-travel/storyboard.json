@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "timeline-travel",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "一份阅读计划",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 6.166666666666667,
+    "durationFrames": 185,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "timeline-travel",
+      "template": "graph-explainer",
+      "purpose": "claim",
+      "title": "一份阅读计划",
+      "primaryClaim": "阅读、讨论与整理依次展开",
+      "visual": {
+        "kind": "sequence",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "timeline-travel",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "i0",
+            "i1",
+            "i2"
+          ]
+        },
+        "spacing": "ordinal"
+      },
+      "narration": "阅读、讨论与整理依次展开",
+      "durationFrames": 185,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "card",
+          "label": "开始阅读",
+          "text": "记录第一印象",
+          "value": "2026-09-01"
+        },
+        {
+          "id": "i1",
+          "type": "card",
+          "label": "交流讨论",
+          "text": "对照不同理解",
+          "value": "2026-09-10"
+        },
+        {
+          "id": "i2",
+          "type": "card",
+          "label": "整理笔记",
+          "text": "留下新的问题",
+          "value": "2026-09-30"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 60,
+          "duration": 24
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 120,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

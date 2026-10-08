@@ -1,0 +1,687 @@
+{
+  "date": "2026-10-02",
+  "scope": "27 previously registered upstream recipes; no P2 additions",
+  "previewFingerprint": "17d6ed4c889e261c28d1a970c81eb96acee1da49b8810c277e9712c0b7bcc7b4",
+  "purpose": "public-recipe-samples",
+  "canvas": "16:9",
+  "style": "retro-zine@1.0.0",
+  "videoResolution": "960x540",
+  "fps": 30,
+  "playbackMethod": "Chromium video playbackRate=1; all ended events received; automated completion, not creator approval",
+  "frames": [
+    {
+      "id": "semantic-default",
+      "frames": [
+        10,
+        9,
+        22,
+        118
+      ],
+      "durationSec": 4,
+      "size": 14298
+    },
+    {
+      "id": "paper-title",
+      "frames": [
+        9,
+        37,
+        46,
+        83
+      ],
+      "durationSec": 2.8333333333333335,
+      "size": 28951
+    },
+    {
+      "id": "title-to-label",
+      "frames": [
+        9,
+        46,
+        101,
+        138
+      ],
+      "durationSec": 4.666666666666667,
+      "size": 50802
+    },
+    {
+      "id": "document-conclusions",
+      "frames": [
+        9,
+        38,
+        156,
+        193
+      ],
+      "durationSec": 6.5,
+      "size": 104605
+    },
+    {
+      "id": "list-reveal",
+      "frames": [
+        9,
+        84,
+        96,
+        133
+      ],
+      "durationSec": 4.5,
+      "size": 45556
+    },
+    {
+      "id": "compare-reveal",
+      "frames": [
+        9,
+        52,
+        64,
+        208
+      ],
+      "durationSec": 7,
+      "size": 39813
+    },
+    {
+      "id": "network-expand",
+      "frames": [
+        9,
+        107,
+        122,
+        268
+      ],
+      "durationSec": 9,
+      "size": 58419
+    },
+    {
+      "id": "blur-slide",
+      "frames": [
+        9,
+        26,
+        50,
+        88
+      ],
+      "durationSec": 3,
+      "size": 26462
+    },
+    {
+      "id": "split-text-stagger",
+      "frames": [
+        9,
+        41,
+        50,
+        88
+      ],
+      "durationSec": 3,
+      "size": 24246
+    },
+    {
+      "id": "card-stack",
+      "frames": [
+        9,
+        120,
+        136,
+        173
+      ],
+      "durationSec": 5.833333333333333,
+      "size": 88700
+    },
+    {
+      "id": "concept-matrix",
+      "frames": [
+        9,
+        98,
+        110,
+        148
+      ],
+      "durationSec": 5,
+      "size": 48349
+    },
+    {
+      "id": "platform-hinge-rise",
+      "frames": [
+        9,
+        158,
+        170,
+        208
+      ],
+      "durationSec": 7,
+      "size": 53146
+    },
+    {
+      "id": "source-converge",
+      "frames": [
+        9,
+        164,
+        176,
+        213
+      ],
+      "durationSec": 7.166666666666667,
+      "size": 57485
+    },
+    {
+      "id": "diagram-cascade",
+      "frames": [
+        39,
+        126,
+        140,
+        178
+      ],
+      "durationSec": 6,
+      "size": 54989
+    },
+    {
+      "id": "lead-word-assemble",
+      "frames": [
+        12,
+        61,
+        110,
+        148
+      ],
+      "durationSec": 5,
+      "size": 46571
+    },
+    {
+      "id": "brace-expand",
+      "frames": [
+        15,
+        13,
+        32,
+        68
+      ],
+      "durationSec": 2.3333333333333335,
+      "size": 21914
+    },
+    {
+      "id": "pill-slot-cycle",
+      "frames": [
+        12,
+        166,
+        182,
+        218
+      ],
+      "durationSec": 7.333333333333333,
+      "size": 28449
+    },
+    {
+      "id": "word-roll",
+      "frames": [
+        12,
+        166,
+        182,
+        218
+      ],
+      "durationSec": 7.333333333333333,
+      "size": 26886
+    },
+    {
+      "id": "text-column-converge",
+      "frames": [
+        12,
+        229,
+        278,
+        313
+      ],
+      "durationSec": 10.5,
+      "size": 40644
+    },
+    {
+      "id": "evidence-relay",
+      "frames": [
+        12,
+        58,
+        74,
+        108
+      ],
+      "durationSec": 3.6666666666666665,
+      "size": 81722
+    },
+    {
+      "id": "row-embed",
+      "frames": [
+        48,
+        166,
+        182,
+        218
+      ],
+      "durationSec": 7.333333333333333,
+      "size": 146769
+    },
+    {
+      "id": "structure-then-text",
+      "frames": [
+        12,
+        46,
+        158,
+        193
+      ],
+      "durationSec": 6.5,
+      "size": 47107
+    },
+    {
+      "id": "timeline-travel",
+      "frames": [
+        12,
+        130,
+        146,
+        183
+      ],
+      "durationSec": 6.166666666666667,
+      "size": 97286
+    },
+    {
+      "id": "odometer-roll",
+      "frames": [
+        12,
+        63,
+        98,
+        133
+      ],
+      "durationSec": 4.5,
+      "size": 90840
+    },
+    {
+      "id": "marker-underline",
+      "frames": [
+        9,
+        26,
+        50,
+        88
+      ],
+      "durationSec": 3,
+      "size": 26462
+    },
+    {
+      "id": "outline-trace",
+      "frames": [
+        12,
+        46,
+        158,
+        193
+      ],
+      "durationSec": 6.5,
+      "size": 47107
+    },
+    {
+      "id": "paper-tape",
+      "frames": [
+        48,
+        166,
+        182,
+        218
+      ],
+      "durationSec": 7.333333333333333,
+      "size": 146263
+    },
+    {
+      "id": "card-flip",
+      "frames": [
+        12,
+        133,
+        152,
+        188
+      ],
+      "durationSec": 6.333333333333333,
+      "size": 107979
+    },
+    {
+      "id": "blinds-wipe",
+      "frames": [
+        27,
+        171,
+        230,
+        340
+      ],
+      "durationSec": 11.4,
+      "size": 101457
+    },
+    {
+      "id": "bottom-push",
+      "frames": [
+        27,
+        171,
+        230,
+        340
+      ],
+      "durationSec": 11.4,
+      "size": 99591
+    },
+    {
+      "id": "concept-matrix-wireframe",
+      "frames": [
+        9,
+        98,
+        110,
+        148
+      ],
+      "durationSec": 5,
+      "size": 42567
+    },
+    {
+      "id": "card-stack-tape",
+      "frames": [
+        9,
+        116,
+        176,
+        213
+      ],
+      "durationSec": 7.166666666666667,
+      "size": 111359
+    }
+  ],
+  "playback": [
+    {
+      "id": "paper-title",
+      "duration": 2.833333,
+      "currentTime": 2.833333,
+      "rate": 1,
+      "frames": 33,
+      "decoded": 85,
+      "dropped": 0,
+      "error": null
+    },
+    {
+      "id": "semantic-default",
+      "duration": 4,
+      "currentTime": 4,
+      "rate": 1,
+      "frames": 61,
+      "decoded": 120,
+      "dropped": 0,
+      "error": null
+    },
+    {
+      "id": "title-to-label",
+      "duration": 4.666667,
+      "currentTime": 4.666667,
+      "rate": 1,
+      "frames": 80,
+      "decoded": 140,
+      "dropped": 0,
+      "error": null
+    },
+    {
+      "id": "document-conclusions",
+      "duration": 6.5,
+      "currentTime": 6.5,
+      "rate": 1,
+      "frames": 135,
+      "decoded": 195,
+      "dropped": 0,
+      "error": null
+    },
+    {
+      "id": "blur-slide",
+      "duration": 3,
+      "currentTime": 3,
+      "rate": 1,
+      "frames": 24,
+      "decoded": 90,
+      "dropped": 7,
+      "error": null
+    },
+    {
+      "id": "list-reveal",
+      "duration": 4.5,
+      "currentTime": 4.5,
+      "rate": 1,
+      "frames": 42,
+      "decoded": 135,
+      "dropped": 7,
+      "error": null
+    },
+    {
+      "id": "compare-reveal",
+      "duration": 7,
+      "currentTime": 7,
+      "rate": 1,
+      "frames": 46,
+      "decoded": 210,
+      "dropped": 7,
+      "error": null
+    },
+    {
+      "id": "network-expand",
+      "duration": 9,
+      "currentTime": 9,
+      "rate": 1,
+      "frames": 49,
+      "decoded": 270,
+      "dropped": 7,
+      "error": null
+    },
+    {
+      "id": "split-text-stagger",
+      "duration": 3,
+      "currentTime": 3,
+      "rate": 1,
+      "frames": 22,
+      "decoded": 90,
+      "dropped": 9,
+      "error": null
+    },
+    {
+      "id": "concept-matrix",
+      "duration": 5,
+      "currentTime": 5,
+      "rate": 1,
+      "frames": 40,
+      "decoded": 150,
+      "dropped": 9,
+      "error": null
+    },
+    {
+      "id": "card-stack",
+      "duration": 5.833333,
+      "currentTime": 5.833333,
+      "rate": 1,
+      "frames": 42,
+      "decoded": 175,
+      "dropped": 9,
+      "error": null
+    },
+    {
+      "id": "platform-hinge-rise",
+      "duration": 7,
+      "currentTime": 7,
+      "rate": 1,
+      "frames": 52,
+      "decoded": 210,
+      "dropped": 9,
+      "error": null
+    },
+    {
+      "id": "brace-expand",
+      "duration": 2.333333,
+      "currentTime": 2.333333,
+      "rate": 1,
+      "frames": 36,
+      "decoded": 70,
+      "dropped": 2,
+      "error": null
+    },
+    {
+      "id": "lead-word-assemble",
+      "duration": 5,
+      "currentTime": 5,
+      "rate": 1,
+      "frames": 116,
+      "decoded": 150,
+      "dropped": 2,
+      "error": null
+    },
+    {
+      "id": "diagram-cascade",
+      "duration": 6,
+      "currentTime": 6,
+      "rate": 1,
+      "frames": 146,
+      "decoded": 180,
+      "dropped": 2,
+      "error": null
+    },
+    {
+      "id": "source-converge",
+      "duration": 7.166667,
+      "currentTime": 7.166667,
+      "rate": 1,
+      "frames": 149,
+      "decoded": 215,
+      "dropped": 2,
+      "error": null
+    },
+    {
+      "id": "evidence-relay",
+      "duration": 3.666667,
+      "currentTime": 3.666667,
+      "rate": 1,
+      "frames": 46,
+      "decoded": 110,
+      "dropped": 0,
+      "error": null
+    },
+    {
+      "id": "pill-slot-cycle",
+      "duration": 7.333333,
+      "currentTime": 7.333333,
+      "rate": 1,
+      "frames": 154,
+      "decoded": 220,
+      "dropped": 0,
+      "error": null
+    },
+    {
+      "id": "word-roll",
+      "duration": 7.333333,
+      "currentTime": 7.333333,
+      "rate": 1,
+      "frames": 145,
+      "decoded": 220,
+      "dropped": 1,
+      "error": null
+    },
+    {
+      "id": "text-column-converge",
+      "duration": 10.5,
+      "currentTime": 10.5,
+      "rate": 1,
+      "frames": 237,
+      "decoded": 315,
+      "dropped": 2,
+      "error": null
+    },
+    {
+      "id": "odometer-roll",
+      "duration": 4.5,
+      "currentTime": 4.5,
+      "rate": 1,
+      "frames": 102,
+      "decoded": 135,
+      "dropped": 0,
+      "error": null
+    },
+    {
+      "id": "timeline-travel",
+      "duration": 6.166667,
+      "currentTime": 6.166667,
+      "rate": 1,
+      "frames": 152,
+      "decoded": 185,
+      "dropped": 0,
+      "error": null
+    },
+    {
+      "id": "structure-then-text",
+      "duration": 6.5,
+      "currentTime": 6.5,
+      "rate": 1,
+      "frames": 162,
+      "decoded": 195,
+      "dropped": 0,
+      "error": null
+    },
+    {
+      "id": "row-embed",
+      "duration": 7.333333,
+      "currentTime": 7.333333,
+      "rate": 1,
+      "frames": 164,
+      "decoded": 220,
+      "dropped": 0,
+      "error": null
+    },
+    {
+      "id": "marker-underline",
+      "duration": 3,
+      "currentTime": 3,
+      "rate": 1,
+      "frames": 33,
+      "decoded": 90,
+      "dropped": 0,
+      "error": null
+    },
+    {
+      "id": "card-flip",
+      "duration": 6.333333,
+      "currentTime": 6.333333,
+      "rate": 1,
+      "frames": 129,
+      "decoded": 190,
+      "dropped": 0,
+      "error": null
+    },
+    {
+      "id": "outline-trace",
+      "duration": 6.5,
+      "currentTime": 6.5,
+      "rate": 1,
+      "frames": 135,
+      "decoded": 195,
+      "dropped": 0,
+      "error": null
+    },
+    {
+      "id": "paper-tape",
+      "duration": 7.333333,
+      "currentTime": 7.333333,
+      "rate": 1,
+      "frames": 160,
+      "decoded": 220,
+      "dropped": 0,
+      "error": null
+    },
+    {
+      "id": "concept-matrix-wireframe",
+      "duration": 5,
+      "currentTime": 5,
+      "rate": 1,
+      "frames": 114,
+      "decoded": 150,
+      "dropped": 6,
+      "error": null
+    },
+    {
+      "id": "card-stack-tape",
+      "duration": 7.166667,
+      "currentTime": 7.166667,
+      "rate": 1,
+      "frames": 178,
+      "decoded": 215,
+      "dropped": 6,
+      "error": null
+    },
+    {
+      "id": "bottom-push",
+      "duration": 11.4,
+      "currentTime": 11.4,
+      "rate": 1,
+      "frames": 305,
+      "decoded": 342,
+      "dropped": 6,
+      "error": null
+    },
+    {
+      "id": "blinds-wipe",
+      "duration": 11.4,
+      "currentTime": 11.4,
+      "rate": 1,
+      "frames": 305,
+      "decoded": 342,
+      "dropped": 6,
+      "error": null
+    }
+  ]
+}

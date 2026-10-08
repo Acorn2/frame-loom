@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "concept-matrix",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "学习的四个维度",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 6.333333333333333,
+    "durationFrames": 190,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "concept-matrix",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "学习的四个维度",
+      "primaryClaim": "观察得到线索，提问开启探索",
+      "visual": {
+        "kind": "statement",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "concept-matrix",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "i0",
+            "i1"
+          ],
+          "fronts": [
+            "f0",
+            "f1"
+          ]
+        },
+        "variant": "bento-light-up",
+        "revealMode": "card-flip"
+      },
+      "narration": "从不同维度理解学习过程",
+      "durationFrames": 190,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "card",
+          "label": "观察记录",
+          "text": "留意环境的变化"
+        },
+        {
+          "id": "i1",
+          "type": "card",
+          "label": "探索方向",
+          "text": "先观察，再寻找解释"
+        },
+        {
+          "id": "f0",
+          "type": "card",
+          "label": "一个细节",
+          "text": "窗边的光线变化"
+        },
+        {
+          "id": "f1",
+          "type": "card",
+          "label": "一个问题",
+          "text": "为什么光线在移动"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "f0-enter",
+          "target": "f0",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "f1-enter",
+          "target": "f1",
+          "action": "enter",
+          "start": 24,
+          "duration": 24
+        },
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 84,
+          "duration": 30
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 120,
+          "duration": 30
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

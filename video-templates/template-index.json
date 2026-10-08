@@ -1,0 +1,10 @@
+{
+  "templates": [
+    {
+      "id": "retro-zine-explainer",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "retro-zine-explainer/template.json"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "line-carry-transition",
+  "version": "1.0.0",
+  "status": "experimental",
+  "kind": "cross-scene-transition",
+  "shortlist": "C09",
+  "styles": [
+    "retro-zine",
+    "signal",
+    "scatterbrain",
+    "archive-grid",
+    "signal-noir",
+    "studio-frame"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "sound": false,
+  "requires": [
+    "既有下划线/轴自然延伸，不凭空造线；声音与跨场时间另校验"
+  ],
+  "type": "overlap-line-carry",
+  "minSec": 0.6,
+  "maxSec": 2.4
+}

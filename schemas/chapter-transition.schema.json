@@ -1,0 +1,436 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FrameLoom Chapter Transition Recipe",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "status": {
+          "type": "string",
+          "const": "experimental"
+        },
+        "kind": {
+          "type": "string",
+          "const": "cross-scene-transition"
+        },
+        "styles": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "retro-zine",
+              "signal",
+              "scatterbrain",
+              "archive-grid",
+              "signal-noir",
+              "studio-frame"
+            ]
+          }
+        },
+        "orientations": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "landscape"
+          }
+        },
+        "minSec": {
+          "type": "number",
+          "const": 0.6
+        },
+        "maxSec": {
+          "type": "number",
+          "const": 2.4
+        },
+        "sound": {
+          "type": "boolean",
+          "const": false
+        },
+        "requires": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string",
+          "const": "line-carry-transition"
+        },
+        "shortlist": {
+          "type": "string",
+          "const": "C09"
+        },
+        "type": {
+          "type": "string",
+          "const": "overlap-line-carry"
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "kind",
+        "styles",
+        "orientations",
+        "minSec",
+        "maxSec",
+        "sound",
+        "requires",
+        "id",
+        "shortlist",
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "status": {
+          "type": "string",
+          "const": "experimental"
+        },
+        "kind": {
+          "type": "string",
+          "const": "cross-scene-transition"
+        },
+        "styles": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "retro-zine",
+              "signal",
+              "scatterbrain",
+              "archive-grid",
+              "signal-noir",
+              "studio-frame"
+            ]
+          }
+        },
+        "orientations": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "landscape"
+          }
+        },
+        "minSec": {
+          "type": "number",
+          "const": 0.6
+        },
+        "maxSec": {
+          "type": "number",
+          "const": 2.4
+        },
+        "sound": {
+          "type": "boolean",
+          "const": false
+        },
+        "requires": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string",
+          "const": "print-texture-transitions"
+        },
+        "shortlist": {
+          "type": "string",
+          "const": "C11"
+        },
+        "type": {
+          "type": "string",
+          "const": "overlap-ink"
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "kind",
+        "styles",
+        "orientations",
+        "minSec",
+        "maxSec",
+        "sound",
+        "requires",
+        "id",
+        "shortlist",
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "status": {
+          "type": "string",
+          "const": "experimental"
+        },
+        "kind": {
+          "type": "string",
+          "const": "cross-scene-transition"
+        },
+        "styles": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "retro-zine",
+              "signal",
+              "scatterbrain",
+              "archive-grid",
+              "signal-noir",
+              "studio-frame"
+            ]
+          }
+        },
+        "orientations": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "landscape"
+          }
+        },
+        "minSec": {
+          "type": "number",
+          "const": 0.6
+        },
+        "maxSec": {
+          "type": "number",
+          "const": 2.4
+        },
+        "sound": {
+          "type": "boolean",
+          "const": false
+        },
+        "requires": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string",
+          "const": "page-turn-transitions"
+        },
+        "shortlist": {
+          "type": "string",
+          "const": "C12"
+        },
+        "type": {
+          "type": "string",
+          "const": "overlap-barn-door"
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "kind",
+        "styles",
+        "orientations",
+        "minSec",
+        "maxSec",
+        "sound",
+        "requires",
+        "id",
+        "shortlist",
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "status": {
+          "type": "string",
+          "const": "experimental"
+        },
+        "kind": {
+          "type": "string",
+          "const": "cross-scene-transition"
+        },
+        "styles": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "retro-zine",
+              "signal",
+              "scatterbrain",
+              "archive-grid",
+              "signal-noir",
+              "studio-frame"
+            ]
+          }
+        },
+        "orientations": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "landscape"
+          }
+        },
+        "minSec": {
+          "type": "number",
+          "const": 0.2
+        },
+        "maxSec": {
+          "type": "number",
+          "const": 0.8
+        },
+        "sound": {
+          "type": "boolean",
+          "const": false
+        },
+        "requires": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string",
+          "const": "blinds-wipe"
+        },
+        "shortlist": {
+          "type": "string",
+          "const": "C10"
+        },
+        "type": {
+          "type": "string",
+          "const": "overlap-blinds"
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "kind",
+        "styles",
+        "orientations",
+        "minSec",
+        "maxSec",
+        "sound",
+        "requires",
+        "id",
+        "shortlist",
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "status": {
+          "type": "string",
+          "const": "experimental"
+        },
+        "kind": {
+          "type": "string",
+          "const": "cross-scene-transition"
+        },
+        "styles": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "retro-zine",
+              "signal",
+              "scatterbrain",
+              "archive-grid",
+              "signal-noir",
+              "studio-frame"
+            ]
+          }
+        },
+        "orientations": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "landscape"
+          }
+        },
+        "minSec": {
+          "type": "number",
+          "const": 0.2
+        },
+        "maxSec": {
+          "type": "number",
+          "const": 0.8
+        },
+        "sound": {
+          "type": "boolean",
+          "const": false
+        },
+        "requires": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string",
+          "const": "bottom-push"
+        },
+        "shortlist": {
+          "type": "string",
+          "const": "C13"
+        },
+        "type": {
+          "type": "string",
+          "const": "overlap-push-stack"
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "kind",
+        "styles",
+        "orientations",
+        "minSec",
+        "maxSec",
+        "sound",
+        "requires",
+        "id",
+        "shortlist",
+        "type"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

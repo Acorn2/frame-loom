@@ -1,0 +1,57 @@
+[
+  {
+    "id": "document-write",
+    "duration": 5.6,
+    "currentTime": 5.6,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 177,
+    "droppedFrames": 0
+  },
+  {
+    "id": "code-reveal",
+    "duration": 5.6,
+    "currentTime": 5.6,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 177,
+    "droppedFrames": 0
+  },
+  {
+    "id": "letterspace-materialize",
+    "duration": 4,
+    "currentTime": 4,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 129,
+    "droppedFrames": 0
+  },
+  {
+    "id": "scanline-annotate-focus",
+    "duration": 8,
+    "currentTime": 8,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 249,
+    "droppedFrames": 0
+  },
+  {
+    "id": "scan-bracket-sweep",
+    "duration": 9,
+    "currentTime": 9,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 279,
+    "droppedFrames": 0
+  }
+]

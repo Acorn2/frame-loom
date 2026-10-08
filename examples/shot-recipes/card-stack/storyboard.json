@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "card-stack",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "四种创作形式",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 4.666666666666667,
+    "durationFrames": 140,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "card-stack",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "四种创作形式",
+      "primaryClaim": "同一个想法，可以成为不同的作品",
+      "visual": {
+        "kind": "statement",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "card-stack",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "i0",
+            "i1",
+            "i2",
+            "i3"
+          ]
+        }
+      },
+      "narration": "同一个想法，可以成为不同的作品",
+      "durationFrames": 140,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "card",
+          "label": "文章",
+          "text": "展开观点"
+        },
+        {
+          "id": "i1",
+          "type": "card",
+          "label": "播客",
+          "text": "说出故事"
+        },
+        {
+          "id": "i2",
+          "type": "card",
+          "label": "图解",
+          "text": "呈现关系"
+        },
+        {
+          "id": "i3",
+          "type": "card",
+          "label": "短片",
+          "text": "组织画面"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 18,
+          "duration": 18
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 36,
+          "duration": 18
+        },
+        {
+          "id": "i3-enter",
+          "target": "i3",
+          "action": "enter",
+          "start": 54,
+          "duration": 18
+        },
+        {
+          "id": "i0-focus",
+          "target": "i0",
+          "action": "focus",
+          "start": 74,
+          "duration": 26
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "list-stack-press",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "记录如何逐项积累",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 6.6,
+    "durationFrames": 198,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "list-stack-press",
+      "template": "graph-explainer",
+      "purpose": "claim",
+      "title": "记录如何逐项积累",
+      "primaryClaim": "新增条目持续积累",
+      "visual": {
+        "kind": "sequence",
+        "explanation": "FrameLoom 自写公开示意资料，不代表真实产品、用户或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "list-stack-press",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "item1",
+            "item2",
+            "item3",
+            "item4"
+          ]
+        }
+      },
+      "narration": "新增条目持续积累",
+      "durationFrames": 198,
+      "layers": [
+        {
+          "id": "item1",
+          "type": "card",
+          "label": "提出问题",
+          "text": "写下待确认的判断"
+        },
+        {
+          "id": "item2",
+          "type": "card",
+          "label": "记录尝试",
+          "text": "把每次操作单独记录"
+        },
+        {
+          "id": "item3",
+          "type": "card",
+          "label": "保留反馈",
+          "text": "记录得到的真实反馈"
+        },
+        {
+          "id": "item4",
+          "type": "card",
+          "label": "归档结果",
+          "text": "保留可复查的结果"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "item1-enter",
+          "target": "item1",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item2-enter",
+          "target": "item2",
+          "action": "enter",
+          "start": 42,
+          "duration": 24
+        },
+        {
+          "id": "item3-enter",
+          "target": "item3",
+          "action": "enter",
+          "start": 84,
+          "duration": 24
+        },
+        {
+          "id": "item4-enter",
+          "target": "item4",
+          "action": "enter",
+          "start": 126,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

@@ -1,0 +1,476 @@
+{
+  "schemaVersion": "2.3",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "project": {
+    "title": "演示笔记工具的更新说明",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 52.0,
+    "durationFrames": 1560,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "opening",
+      "template": "statement",
+      "purpose": "opening",
+      "title": "整理笔记保留原文",
+      "primaryClaim": "演示笔记工具的更新说明",
+      "visual": {
+        "kind": "statement",
+        "explanation": "演示笔记工具的更新说明",
+        "representation": "diagram",
+        "source": "source.md#opening"
+      },
+      "narration": "演示笔记工具的更新说明",
+      "durationFrames": 180,
+      "layers": [
+        {
+          "id": "p0",
+          "type": "label",
+          "label": "整理笔记"
+        },
+        {
+          "id": "p1",
+          "type": "label",
+          "label": "保留原文"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "p0-enter",
+          "target": "p0",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "p1-enter",
+          "target": "p1",
+          "action": "enter",
+          "start": 10,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "structure",
+      "template": "metric-grid",
+      "purpose": "claim",
+      "title": "这次更新什么",
+      "primaryClaim": "主题建立后再看正文结构",
+      "visual": {
+        "kind": "compare",
+        "explanation": "主题建立后再看正文结构",
+        "representation": "diagram",
+        "source": "source.md#structure"
+      },
+      "narration": "主题建立后再看正文结构",
+      "durationFrames": 240,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "node",
+          "label": "来源字段",
+          "text": "为笔记增加原文位置",
+          "glyph": "document"
+        },
+        {
+          "id": "i1",
+          "type": "node",
+          "label": "关联字段",
+          "text": "手工记录资料之间的联系",
+          "glyph": "document"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 62,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 94,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "evidence",
+      "template": "graph-explainer",
+      "purpose": "evidence",
+      "title": "更新规格的三条约定",
+      "primaryClaim": "三条信息都能回到同一段原文",
+      "visual": {
+        "kind": "network",
+        "explanation": "三条信息都能回到同一段原文",
+        "representation": "diagram",
+        "source": "source.md#evidence",
+        "anchorId": "source",
+        "networkDirection": "outward",
+        "shotPattern": "document-conclusion-deal"
+      },
+      "narration": "三条信息都能回到同一段原文",
+      "durationFrames": 300,
+      "layers": [
+        {
+          "id": "source",
+          "type": "node",
+          "label": "文档摘录",
+          "text": "记录中保存用户提供的原文；用户填写原文所在位置；用户明确选择相关记录。",
+          "glyph": "document"
+        },
+        {
+          "id": "i0",
+          "type": "node",
+          "label": "保留原文",
+          "text": "记录中保存用户提供的原文",
+          "glyph": "document"
+        },
+        {
+          "id": "i1",
+          "type": "node",
+          "label": "补充出处",
+          "text": "用户填写原文所在位置",
+          "glyph": "document"
+        },
+        {
+          "id": "i2",
+          "type": "node",
+          "label": "手工关联",
+          "text": "用户明确选择相关记录",
+          "glyph": "document"
+        }
+      ],
+      "connections": [
+        {
+          "id": "link0",
+          "from": "source",
+          "to": "i0"
+        },
+        {
+          "id": "link1",
+          "from": "source",
+          "to": "i1"
+        },
+        {
+          "id": "link2",
+          "from": "source",
+          "to": "i2"
+        }
+      ],
+      "beats": [
+        {
+          "id": "source-enter",
+          "target": "source",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 56,
+          "duration": 18
+        },
+        {
+          "id": "link0-draw",
+          "target": "link0",
+          "action": "draw",
+          "start": 56,
+          "duration": 12
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 96,
+          "duration": 18
+        },
+        {
+          "id": "link1-draw",
+          "target": "link1",
+          "action": "draw",
+          "start": 96,
+          "duration": 12
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 136,
+          "duration": 18
+        },
+        {
+          "id": "link2-draw",
+          "target": "link2",
+          "action": "draw",
+          "start": 136,
+          "duration": 12
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "checklist",
+      "template": "metric-grid",
+      "purpose": "claim",
+      "title": "更新后的使用边界",
+      "primaryClaim": "并列要点分别出现，不暗示因果顺序",
+      "visual": {
+        "kind": "compare",
+        "explanation": "并列要点分别出现，不暗示因果顺序",
+        "representation": "diagram",
+        "source": "source.md#checklist"
+      },
+      "narration": "并列要点分别出现，不暗示因果顺序",
+      "durationFrames": 240,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "node",
+          "label": "本地保存",
+          "text": "此演示规格使用本地文件",
+          "glyph": "document"
+        },
+        {
+          "id": "i1",
+          "type": "node",
+          "label": "手工确认",
+          "text": "关联关系由用户填写",
+          "glyph": "document"
+        },
+        {
+          "id": "i2",
+          "type": "node",
+          "label": "不覆盖",
+          "text": "修改时保留原始材料",
+          "glyph": "document"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 38,
+          "duration": 18
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 76,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "compare",
+      "template": "metric-grid",
+      "purpose": "claim",
+      "title": "旧记录与新记录",
+      "primaryClaim": "两种方式的差异来自文档",
+      "visual": {
+        "kind": "compare",
+        "explanation": "两种方式的差异来自文档",
+        "representation": "diagram",
+        "source": "source.md#compare"
+      },
+      "narration": "两种方式的差异来自文档",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "node",
+          "label": "旧记录",
+          "text": "只包含用户写下的摘要",
+          "glyph": "document"
+        },
+        {
+          "id": "i1",
+          "type": "node",
+          "label": "新记录",
+          "text": "增加原文位置与关联说明",
+          "glyph": "document"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 44,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "relations",
+      "template": "graph-explainer",
+      "purpose": "evidence",
+      "title": "一条记录的关联",
+      "primaryClaim": "主体和关系都在原文中明示",
+      "visual": {
+        "kind": "network",
+        "explanation": "主体和关系都在原文中明示",
+        "representation": "diagram",
+        "source": "source.md#relations",
+        "anchorId": "anchor",
+        "networkDirection": "outward"
+      },
+      "narration": "主体和关系都在原文中明示",
+      "durationFrames": 270,
+      "layers": [
+        {
+          "id": "anchor",
+          "type": "node",
+          "label": "一条记录的关联",
+          "text": "连接相关的信息",
+          "glyph": "document"
+        },
+        {
+          "id": "i0",
+          "type": "node",
+          "label": "来源",
+          "text": "用户提供的原始资料",
+          "glyph": "document"
+        },
+        {
+          "id": "i1",
+          "type": "node",
+          "label": "摘要",
+          "text": "用户写下的内容概括",
+          "glyph": "document"
+        },
+        {
+          "id": "i2",
+          "type": "node",
+          "label": "关联",
+          "text": "用户填写的联系说明",
+          "glyph": "document"
+        }
+      ],
+      "connections": [
+        {
+          "id": "link0",
+          "from": "anchor",
+          "to": "i0"
+        },
+        {
+          "id": "link1",
+          "from": "anchor",
+          "to": "i1"
+        },
+        {
+          "id": "link2",
+          "from": "anchor",
+          "to": "i2"
+        }
+      ],
+      "beats": [
+        {
+          "id": "anchor-enter",
+          "target": "anchor",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 26,
+          "duration": 18
+        },
+        {
+          "id": "link0-draw",
+          "target": "link0",
+          "action": "draw",
+          "start": 26,
+          "duration": 12
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 64,
+          "duration": 18
+        },
+        {
+          "id": "link1-draw",
+          "target": "link1",
+          "action": "draw",
+          "start": 64,
+          "duration": 12
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 102,
+          "duration": 18
+        },
+        {
+          "id": "link2-draw",
+          "target": "link2",
+          "action": "draw",
+          "start": 102,
+          "duration": 12
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "closing",
+      "template": "statement",
+      "purpose": "closing",
+      "title": "保留依据再继续",
+      "primaryClaim": "演示笔记工具的更新说明",
+      "visual": {
+        "kind": "statement",
+        "explanation": "演示笔记工具的更新说明",
+        "representation": "diagram",
+        "source": "source.md#closing"
+      },
+      "narration": "演示笔记工具的更新说明",
+      "durationFrames": 120,
+      "layers": [],
+      "connections": [],
+      "beats": [],
+      "captions": []
+    }
+  ]
+}

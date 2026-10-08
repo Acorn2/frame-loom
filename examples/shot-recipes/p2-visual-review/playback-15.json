@@ -1,0 +1,57 @@
+[
+  {
+    "id": "line-boil",
+    "duration": 9.333333,
+    "currentTime": 9.333333,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 289,
+    "droppedFrames": 0
+  },
+  {
+    "id": "speed-ramp-freeze",
+    "duration": 8.133333,
+    "currentTime": 8.133333,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 253,
+    "droppedFrames": 0
+  },
+  {
+    "id": "line-carry-transition",
+    "duration": 14,
+    "currentTime": 14,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 429,
+    "droppedFrames": 0
+  },
+  {
+    "id": "print-texture-transitions",
+    "duration": 11.8,
+    "currentTime": 11.8,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 363,
+    "droppedFrames": 0
+  },
+  {
+    "id": "page-turn-transitions",
+    "duration": 11.8,
+    "currentTime": 11.8,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 363,
+    "droppedFrames": 0
+  }
+]

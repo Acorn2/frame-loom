@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "evidence-relay",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "从记录到决定",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 3.6666666666666665,
+    "durationFrames": 110,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "evidence-relay",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "从记录到决定",
+      "primaryClaim": "让摘录与归纳逐条对应",
+      "visual": {
+        "kind": "statement",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "evidence-relay",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "i0",
+            "i1"
+          ],
+          "keywords": [
+            "k0",
+            "k1"
+          ]
+        }
+      },
+      "narration": "让摘录与归纳逐条对应",
+      "durationFrames": 110,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "card",
+          "label": "访谈摘录",
+          "text": "大家希望先看重点，再展开细节。"
+        },
+        {
+          "id": "i1",
+          "type": "card",
+          "label": "观察记录",
+          "text": "清楚的目录，让查找更直接。"
+        },
+        {
+          "id": "k0",
+          "type": "label",
+          "label": "听见需求"
+        },
+        {
+          "id": "k1",
+          "type": "label",
+          "label": "明确方向"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "k0-enter",
+          "target": "k0",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 48,
+          "duration": 24
+        },
+        {
+          "id": "k1-enter",
+          "target": "k1",
+          "action": "enter",
+          "start": 48,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

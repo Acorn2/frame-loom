@@ -1,0 +1,34 @@
+{
+  "id": "timeline-travel",
+  "mode": "method-reference",
+  "repository": "https://github.com/Acorn2/video-shotcraft",
+  "commit": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab",
+  "recipe": "references/shots/data/timeline-travel.md",
+  "implementation": "demos/data/timeline-travel/TimelineTravel.tsx",
+  "upstreamLicense": "Apache-2.0",
+  "implementationLicense": "MIT",
+  "notice": "No applicable NOTICE found in the local upstream snapshot. Independently implemented; no upstream code, copy, fixtures or external media copied.",
+  "retained": [
+    "表达目的",
+    "阶段顺序",
+    "2026-10-02 对照所选 Markdown 和 TSX 重建的配方特征：横向世界层沿时间轴逐项行进，事件卡从刻度底边弹立，每项停稳可读。"
+  ],
+  "omitted": [
+    "固定帧数",
+    "固定坐标与配色",
+    "独立字幕",
+    "持续漂移",
+    "占位事实",
+    "自动音效",
+    "段尾急推",
+    "上游假页面与纹理",
+    "上游夸大收束句"
+  ],
+  "externalAttribution": "Upstream attribution is research provenance, not media authorization.",
+  "shortlist": "B05",
+  "dependenciesReviewed": [
+    "demos/_fixtures/Motion.tsx",
+    "demos/_fixtures/Fixtures.tsx"
+  ],
+  "adaptationNotes": "camera 只在新条目 beat 内 inOutCubic 位移；卡 scaleY 从零弹立；日期按顺序等距。 日期间距不表达真实跨度；不得使用连续高速旅行跳过阅读；来源标记与顺序必须真实。"
+}

@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "row-embed",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "一份活动安排",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 5.666666666666667,
+    "durationFrames": 170,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "row-embed",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "一份活动安排",
+      "primaryClaim": "上午交流，下午协作，晚上展示",
+      "visual": {
+        "kind": "statement",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "row-embed",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "i0",
+            "i1",
+            "i2"
+          ]
+        },
+        "treatment": "masking-tape"
+      },
+      "narration": "上午交流，下午协作，晚上展示",
+      "durationFrames": 170,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "card",
+          "label": "上午",
+          "text": "分享与交流"
+        },
+        {
+          "id": "i1",
+          "type": "card",
+          "label": "下午",
+          "text": "小组工作坊"
+        },
+        {
+          "id": "i2",
+          "type": "card",
+          "label": "晚上",
+          "text": "展示与讨论"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 12,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 48,
+          "duration": 18
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 84,
+          "duration": 18
+        },
+        {
+          "id": "i0-tape",
+          "target": "i0",
+          "action": "tape",
+          "start": 30,
+          "duration": 18
+        },
+        {
+          "id": "i1-tape",
+          "target": "i1",
+          "action": "tape",
+          "start": 66,
+          "duration": 18
+        },
+        {
+          "id": "i2-tape",
+          "target": "i2",
+          "action": "tape",
+          "start": 102,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

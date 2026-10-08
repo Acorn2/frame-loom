@@ -65,8 +65,11 @@ npm run produce -- <project> --mode fast --audio-mode tts --output-purpose in-pr
 | `visual.networkDirection: inward` | 多路来源汇聚到 anchor | 每个分支恰好一条指向 anchor 的连接；默认 outward |
 | `visual.changeMode: replace` | 同一位置保留对象，切换状态说明和外观 | 前后状态使用同一 glyph；默认左右 compare |
 | `visual.mediaFocus` | 从全景移动、放大并裁切到来源图片的一部分 | x/y/width/height 为原图归一化矩形；宽高至少 0.25；矩形不可越界 |
+| `visual.shotPattern: document-conclusion-deal` | 原文摘录留在左侧，三条结论按 beat 逐条入场 | 仅用于向外展开的 `network`；原文位置写在 `visual.source`，每条结论有连接与入场 beat |
 
 聚焦对象还需 `start`、`duration`（镜头内帧数）和 `label`。动作必须在镜头内完成。局部放大不会增加原图分辨率。两份可复用公开例子见 [quality-production](../examples/quality-production/README.md)。
+
+文档结论镜头借鉴 [video-shotcraft 的 doc-park-left-pill-deal 配方](https://vincentwei1021.github.io/video-shotcraft/source/doc-park-left-pill-deal.md) 的“来源驻留、结论逐条出现”顺序，使用 FrameLoom 自身的 Style Pack、分镜 beat 与旁白字幕。原文摘录和结论必须来自项目源文档；这个 CSS 图解不代表真实网页。豆包等 TTS 合成后按实测语音调整场景时长，不照搬配方样片的固定秒数。
 
 ## 有声代表片段与长片证据
 
@@ -79,3 +82,14 @@ npm run preview:shot -- <project>/storyboard.json <scene-id> <project>/output/sh
 2.3 长片保留每场完整态和交接前帧，不再被全片 48 帧上限丢弃。额外总览点可以采样；接触表每页最多 48 帧，全部页列于 `review-frames.json.contactSheets`，`pages` 给出每页对应的帧号和时间范围。QA 会核对逐镜必选帧没有缺失、页数与抽帧数一致。抽帧与接触表先在临时目录完成，失败时旧索引保持不变；恢复 QA 时可复用通过指纹校验的视频。这仍不代替正常速度全片播放。
 
 渲染中断后可按 `run.json` 的阶段，从 `--from render` 或 `--from qa` 重试。渲染先写隔离文件并检查媒体，随后发布视频及渲染记录。意外终止的临时目录由下次运行识别；若旧文件与预期不符，程序会停止并保留回退文件，不猜测哪一版该覆盖。公开发布仍需要完整观看、字幕与声音复核。
+
+
+## 2.4 模板生产
+
+显式选择视频模板后，每场使用严格 shot 槽位。`preview:shot` 与全片 QA 使用解析计划中的动作中途、停靠/降格结束、逐项完成、全镜完成和交接前点；必选事件不被长片抽样上限丢弃。当前配方先覆盖16:9。
+
+2.4 音频提案保持动作时长范围，并重排来源、停靠、标题站稳与逐项提示点；只有内容提示点会随旁白变长移动。字幕仍为句级估算/人工修订，不声称自动逐词同步。短音频导致阅读预算不足时明确报错。
+
+输出的 `<video.mp4>.production/` 内保存 `production-lock.json` 与 `resolved-shot-plan.json`；render receipt 同时保存锁及计划快照，绑定视频字节。锁包含所选模板/配方清单、来源记录、Style Pack、渲染实现和实际计划哈希。失败渲染保留旧版及其记录，多个输出各自保存证据。`run.json`、QA 和批准必须匹配同一锁。只改未选配方的说明不影响锁；渲染相关代码变化保守触发重新渲染。锁和计划不是内容输入，不能手工改后继续生产。
+
+首套模板仍 experimental。真实旧豆包语音的复用样片可验证声音与新镜头配合，但不能替代新在线合成、实际发音和正常速度全片复核。只有这些检查成立才提升交付或模板稳定状态。

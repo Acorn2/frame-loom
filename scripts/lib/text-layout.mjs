@@ -1,5 +1,11 @@
+import {checkP2Text} from './p2-text-layout.mjs';
+import {documentConclusionType, listType} from '../../src/shots/type-scale.ts';
+import {shotContentLayout} from '../../src/shots/layout.ts';
+import {compileStoryboardShots} from '../../src/shots/compile-shot.ts';
 import {loadStylePack} from './style-catalog.mjs';
 import {splitCaptionWindow} from '../../src/audio/captions.ts';
+import {checkShortlistText} from './shortlist-text-layout.mjs';
+import {fittedSemanticFont, statementTitleLayout, semanticHeadingLayout, styleLanguage, semanticTextLines} from '../../src/templates/semantic/style-language.ts';
 
 function glyphWidth(char) {
   if (/\p{Script=Han}|[\u3000-\u303f\uff00-\uffef]/u.test(char)) return 1;
@@ -60,28 +66,84 @@ export function checkTextLayout(storyboard, style = loadStylePack(storyboard.sty
   const contentWidth = width - safeArea.left - safeArea.right;
   const scale = portrait ? width / 1080 : width / 1920;
   const issues = [];
+  const recipePlans = new Map(compileStoryboardShots(storyboard).map((plan) => [plan.sceneId, plan]));
   for (const scene of storyboard.scenes) {
     const familyLayout = Boolean(scene.purpose);
-    const captionReserve = scene.captions.length > 0 ? (portrait ? 170 : 125) : 0;
+    const captionReserve = scene.shot ? (portrait ? 170 : 125) * scale : scene.captions.length > 0 ? (portrait ? 170 : 125) : 0;
     const contentHeight = height - safeArea.top - safeArea.bottom - captionReserve;
+    issues.push(...checkP2Text(scene, estimateTextLines));
+    issues.push(...checkShortlistText(scene, contentWidth, contentHeight, scale, estimateTextLines));
     if (scene.visual) {
-      const titleWidth = contentWidth * (scene.visual.kind === 'statement' ? 0.83 : 0.96);
-      const titleFont = (scene.visual.kind === 'statement' ? 120 : 78) * scale;
-      const titleHeight = contentHeight * (scene.visual.kind === 'statement' ? 0.5 : 0.2);
-      if (estimateTextLines(scene.title, titleFont, titleWidth) * titleFont * 1.1 > titleHeight) {
+      const modern = scene.shot && scene.shot.version !== '1.0.0';
+      const current = scene.shot?.version === '1.2.0';
+      const layout = shotContentLayout(scene.shot);
+      const documentShot = scene.shot?.id === 'document-conclusions' || scene.visual.shotPattern === 'document-conclusion-deal';
+      const customShot = recipePlans.has(scene.id) && !['semantic-default', 'compare-reveal', 'network-expand'].includes(scene.shot.id);
+      const family = !customShot && styleLanguage(style.id);
+      const titleSlot = family ? scene.visual.kind === 'statement' ? statementTitleLayout(style.id, contentWidth, contentHeight, portrait, scale) : semanticHeadingLayout(style.id, contentWidth, contentHeight, portrait, scale, scene.visual.kind === 'media') : undefined;
+      const titleWidth = titleSlot?.width ?? contentWidth * (scene.visual.kind === 'statement' ? .83 : .96);
+      const titleFont = titleSlot ? fittedSemanticFont(scene.title, titleSlot.width, titleSlot.height, titleSlot.max, titleSlot.min) : (customShot ? scene.shot.id === 'paper-title' ? current ? 144 : 108 : scene.shot.id === 'title-to-label' ? current ? 152 : 112 : layout.titleFont : scene.visual.kind === 'statement' ? 120 : 78) * scale;
+      const titleHeight = titleSlot?.height ?? contentHeight * (customShot && ['paper-title', 'title-to-label'].includes(scene.shot.id) ? .5 : scene.visual.kind === 'statement' ? .5 : .2);
+      if ((titleSlot ? semanticTextLines : estimateTextLines)(scene.title, titleFont, titleWidth) * titleFont * (titleSlot ? 1.12 : 1.1) > titleHeight) {
         issues.push({severity: 'error', sceneId: scene.id, target: 'title', message: '语义画面标题超出可读区域；请缩短标题或拆屏。'});
       }
       const items = scene.layers.filter((layer) => ['node', 'card', 'metric'].includes(layer.type));
-      const itemWidth = scene.visual.kind === 'network' ? contentWidth * 0.22
+      const itemWidth = family && scene.visual.kind === 'sequence' ? portrait ? contentWidth * .86 - 120 * scale : (contentWidth - 40 * scale * (items.length - 1)) / Math.max(1, items.length) - 48 * scale
+        : scene.visual.kind === 'network' ? contentWidth * 0.22
         : scene.visual.kind === 'change' ? contentWidth * 0.65
           : scene.visual.kind === 'sequence' || scene.visual.kind === 'compare' ? contentWidth / Math.max(1, items.length) - 85 * scale
             : contentWidth * 0.3;
       const maxLines = scene.visual.kind === 'network' ? 2 : 3;
       for (const layer of items) {
+        if (customShot || documentShot) continue;
+        if (family && scene.visual.kind === 'sequence') {
+          const gap = (portrait ? 28 : 40) * scale;
+          const bodyHeight = contentHeight * (portrait ? .56 : .55);
+          const cellWidth = portrait ? contentWidth * .86 : (contentWidth - gap * (items.length - 1)) / Math.max(1, items.length);
+          const cellHeight = portrait ? (bodyHeight - gap * (items.length - 1)) / Math.max(1, items.length) : bodyHeight * (family === 'blueprint' ? .48 : .76);
+          const textWidth = cellWidth - (portrait ? family === 'swiss' ? 180 : 100 : 48) * scale;
+          const heading = layer.label ?? layer.text ?? '';
+          const detail = layer.label ? layer.text : '';
+          const headingFont = fittedSemanticFont(heading, textWidth, cellHeight * .35, 58 * scale, 34 * scale);
+          const detailFont = (portrait ? 29 : 31) * scale;
+          const textHeight = semanticTextLines(heading, headingFont, textWidth) * headingFont * 1.12 + (detail ? 14 * scale + semanticTextLines(detail, detailFont, textWidth) * detailFont * 1.25 : 0);
+          const numberHeight = portrait ? 0 : ((family === 'swiss' ? 110 : family === 'editorial' ? 30 : 28) + 16) * scale;
+          if (textWidth <= 0 || textHeight + numberHeight + 36 * scale > cellHeight) issues.push({severity: 'error', sceneId: scene.id, target: layer.id, message: '顺序图解文字超出当前风格的节点高度；请缩短文案或拆镜头。'});
+          continue;
+        }
         for (const value of [layer.label ?? layer.text ?? String(layer.value ?? ''), layer.label && layer.text ? layer.text : '']) {
           const lines = estimateTextLines(value, 39 * scale, itemWidth);
           if (lines > maxLines) issues.push({severity: 'error', sceneId: scene.id, target: layer.id, message: `语义图解文字预计占 ${lines} 行；请缩短文案或拆屏。`});
         }
+      }
+      if (documentShot) {
+        const sourceId = scene.shot?.id === 'document-conclusions' ? scene.shot.slots.source : scene.visual.anchorId;
+        const source = scene.layers.find((layer) => layer.id === sourceId);
+        const sourceWidth = contentWidth * 0.36 - 60 * scale;
+        const sourceHeight = contentHeight * (customShot ? layout.bodyHeight : portrait ? .56 : .55) * 0.94 - 145 * scale;
+        if (estimateTextLines(source.text, (current ? 44 : modern ? 34 : 29) * scale, sourceWidth) * (current ? 44 : modern ? 34 : 29) * scale * 1.38 > sourceHeight) issues.push({severity: 'error', sceneId: scene.id, target: source.id, message: '原文摘录超出停靠后的可读区域；请缩短或拆镜头。'});
+      }
+      if (documentShot) {
+        const bodyHeight = contentHeight * (customShot ? layout.bodyHeight : portrait ? .56 : .55);
+        const rowWidth = contentWidth * 0.5 - 120 * scale;
+        const rowHeight = bodyHeight * 0.27 - 24 * scale;
+        for (const layer of items.filter((item) => item.id !== (scene.shot?.slots.source ?? scene.visual.anchorId))) {
+          const type = current ? documentConclusionType(layer) : {label: modern ? 44 : 31, text: modern ? 30 : 21};
+          const labelHeight = estimateTextLines(layer.label, type.label * scale, rowWidth) * type.label * scale * 1.1;
+          const textHeight = estimateTextLines(layer.text, type.text * scale, rowWidth) * type.text * scale * 1.25;
+          if (labelHeight + textHeight + 7 * scale > rowHeight) issues.push({severity: 'error', sceneId: scene.id, target: layer.id, message: '文档结论超出信息行高度；请缩短或拆镜头。'});
+        }
+      }
+      if (customShot && scene.shot.id === 'list-reveal') {
+        const compact = items.length === 4;
+        const type = listType(items);
+        const labelFont = current ? type.label : modern ? compact ? 40 : 48 : 30;
+        const textFont = current ? type.text : modern ? compact ? 30 : 36 : 26;
+        const innerWidth = contentWidth * (modern ? .88 : 1) - 64 * scale;
+        const labelWidth = innerWidth * 0.28;
+        const textWidth = innerWidth - labelWidth - (modern ? 50 : 36) * scale - 56 * scale;
+        const rowHeights = items.map((layer) => Math.max(estimateTextLines(layer.label, labelFont * scale, labelWidth) * labelFont * 1.2 * scale, estimateTextLines(layer.text, textFont * scale, textWidth) * textFont * scale * 1.3) + (modern ? compact ? 40 : 48 : 28) * scale);
+        if (rowHeights.reduce((sum, value) => sum + value, 0) + (items.length - 1) * (modern ? compact ? 20 : 26 : 20) * scale > contentHeight * layout.bodyHeight) issues.push({severity: 'error', sceneId: scene.id, target: 'items', message: '清单超出实际可读高度；请缩短条目或拆镜头。'});
       }
       const claimLines = estimateTextLines(scene.primaryClaim ?? '', 25 * scale, contentWidth);
       if (claimLines > 2) issues.push({severity: 'warning', sceneId: scene.id, target: 'primaryClaim', message: '屏底结论超过两行，建议浓缩为一句。'});

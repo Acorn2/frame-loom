@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "2.4",
+  "videoTemplate": {
+    "id": "retro-zine-explainer",
+    "version": "1.2.0"
+  },
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "project": {
+    "title": "两种阅读方式",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 7.0,
+    "durationFrames": 210,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "compare",
+      "template": "metric-grid",
+      "purpose": "claim",
+      "title": "两种阅读方式",
+      "primaryClaim": "连贯阅读与按需检索各有用途",
+      "visual": {
+        "kind": "compare",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md#compare"
+      },
+      "shot": {
+        "id": "compare-reveal",
+        "version": "1.0.0",
+        "slots": {
+          "items": [
+            "i0",
+            "i1"
+          ]
+        }
+      },
+      "narration": "连贯阅读与按需检索各有用途",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "node",
+          "label": "连贯阅读",
+          "text": "理解完整的论述",
+          "glyph": "document"
+        },
+        {
+          "id": "i1",
+          "type": "node",
+          "label": "按需检索",
+          "text": "找到当下的问题",
+          "glyph": "document"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 44,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

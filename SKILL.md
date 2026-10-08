@@ -42,17 +42,36 @@ source document -> Agent-authored storyboard.draft.json
 The current runtime supports:
 
 - `statement`, `graph-explainer`, `metric-grid` and `interaction-flow` base templates
-- all installed Style Packs use the content-driven Storyboard 2.3 route for new projects; existing 2.1 and 2.2 storyboards retain their render paths
+- Style Pack and shot recipes are independent choices in Storyboard 2.4; legacy style-only initialization retains 2.3, and existing 2.1 and 2.2 storyboards retain their render paths
 - `statement`, `compare`, `sequence`, `network`, `change`, `metric`, and `media` visual kinds in 2.3; the visual kind determines composition before style tokens determine paper, typography, color and motion feel
+- an opt-in `network` shot pattern, `document-conclusion-deal`, keeps a sourced document excerpt on the left while exactly three connected conclusions enter in narration order; it uses document text and CSS only
 - `opening`, `claim`, `process`, `evidence`, `media`, `closing` scene purposes in 2.2
 - `node`, `card`, `label`, `annotation`, `metric`, `screenshot`, `object`, `callout` layers in the legacy renderer; 2.2 purpose layouts use the narrower content slots in `references/storyboard-schema.md`
 - `enter`, `reveal`, `draw`, `focus`, `highlight`, `count`, `camera-push`, `rotate`, `set-state` beats in the legacy renderer; 2.2 purpose layouts currently execute only the documented subset
 - `fade`, `slide`, `paper-wipe`, `carry` transition declarations
 - `project-input.json` with `document` or `document-images` for new projects; legacy projects without it keep their existing asset behavior
 
+## Select a video style and multiple shot recipes
+
+Style Pack controls appearance; a shot recipe controls composition and how information appears over time. The primary workflow lets the creator choose one style and multiple compatible recipes, then the Agent maps source claims to shots. Read the [recipe library](shots/README.md), [shot-index](shots/shot-index.json) and relevant recipes. Use `list:shots -- --style <id> --canvas <orientation>` to inspect actual capabilities, then `init:project -- --slug <topic> --style <id> --shots <id,id,...>` to create a 2.4 planning draft. No preset is required. The selected pool is stored in `shotRecipes`; initialization does not invent scenes or render a video.
+
+The [shortlist coverage ledger](shots/shortlist-coverage.json) records the research candidates. Only entries marked registered-experimental have runtime implementations; native recipes do not count toward the shortlist. Read adaptedImplementations before choosing a family variant. Use `list:shots -- --auxiliary` for hosted actions: marker-underline uses an explicit emphasis phrase and a post-entry highlight beat in its declared title hosts. It is not a scene ID or a pool item. Do not silently substitute pending recipes or unimplemented variants.
+
+当前运行时：37 个场景配方、9 个宿主动作、5 个换章配方；筛选清单接入 48/48。
+
+If the creator supplies no recipe choices, recommend a compatible pool from the document and record the final selection. All 37 current scene recipes support all six active styles in 16:9 landscape; portrait combinations retain semantic-default, which covers seven semantic visual kinds. Switching landscape styles does not narrow the creator-selected shot pool. Hosted actions and chapter transitions inherit the selected host style, while retaining their content and timing requirements. Query `list:shots -- --style <id> --canvas <orientation>` before recommending a pool. Do not silently advertise all style/recipe combinations. A video template is a preset style/recipe combination with matching rules and pacing, available as an optional shortcut through `list:video-templates` and `--video-template`. Currently `retro-zine-explainer@1.2.0` is experimental. Read its [guide](video-templates/retro-zine-explainer/guide.md) only when selecting that preset.
+
+Video style and the project-wide font are independent selections. Use `--font <id>` with `--style` and `--shots`; the registered font IDs are `source-han-sans-sc`, `source-han-serif-sc`, `lxgw-wenkai`, `smiley-sans`, and `xiaolai`. Read [fonts/font-index.json](fonts/font-index.json) to resolve exact versions and provenance. Preserve the creator’s explicit font choice when changing styles. New initialization defaults to the style’s recommended font. Keep `font: {id, version}` on the final storyboard, use one family for generated titles, body text, diagram labels and captions, and leave embedded source-image lettering intact. Existing storyboards without `font` retain the original style font stacks. Missing files or mismatched versions must fail; do not substitute a system font. Font changes invalidate production/review fingerprints and require new render and review. `npm run preview:fonts` generates representative landscape combinations; original style/shot samples retain their original typography and do not demonstrate a newly selected font.
+
+Every 2.4 scene needs `shot`, including `semantic-default`. Slots reference existing layer IDs. Record source location, claim, relation, shot ID/version, selection reason, asset requirements, key cues and fallback reasons in `shot-map.md`. Do not fabricate three conclusions or causal links to match a shot. Scenes may reuse recipes or omit selected recipes; the pool is not a forced sequence. Every scene must use a recipe in `shotRecipes` when it is supplied. If none fits, explain the content gap and request a pool change; do not add `semantic-default` unless it is selected. A requested but incompatible shot must be reported rather than silently replaced. Historical requests naming `retro-zine` select a Style Pack.
+
+`dock` and `demote` are explicit beats; require source/title reading before migration and stable reading after completion. TTS timing proposals bound action lengths instead of stretching all animations with speech; short speech conflicts require shorter content, another shot or split scenes. Audio, subtitles and sound sources use the existing package, never an embedded shot caption or TTS client. `preview:shot` and QA extract every parsed event, including stage handoffs. Inspect all contact-sheet pages and the actual clip. Only truthful complete playback review can authorize delivery.
+
+2.4 rendering binds a production lock and resolved shot plan to the receipt; `produce`, QA, recovery and approval verify the same hash and video bytes. Derived plans are evidence, not editable production inputs. `migrate:storyboard -- <2.3.json> <new-2.4.json>` leaves the source and prior audio/output untouched, maps the old document pilot explicitly, and clears approval. The old 2.1–2.3 routes remain available. See [the 2.4 contract](references/storyboard-schema.md#storyboard-24-controlled-shots).
+
 ## Content-first video logic for new projects
 
-Use Storyboard 2.3 for new projects. Read the source and identify one claim per
+Use Storyboard 2.4 for style plus recipe selection or an optional preset; retain the old 2.3 initialization for explicit legacy style-only requests. Read the source and identify one claim per
 scene. In `shot-map.md`, name what the viewer must understand: a difference,
 order, relationship, change, sourced measurement or supplied visual. Choose
 `visual.kind` from that job, then specify `visual.explanation`, the visible
@@ -151,27 +170,29 @@ content purpose, input-mode code, template ID, TTS setup or audio file:
 1. Read the supplied document and confirm it is accessible. Preserve the
    original. Choose a short, meaningful lowercase ASCII topic slug from the
    document title and content (for example `tongliao-zhihu-update`, even when
-   the filename is Chinese). Use `init:project -- --slug <topic-slug>` to create
+   the filename is Chinese). After selection, step 3 creates
    `projects/YYYYMMDD-<topic-slug>` using the machine's local creation date;
-   the command adds `-02`, `-03`, etc. when that day's name already exists.
+   the initializer adds `-02`, `-03`, etc. when that day's name already exists.
    Do not include style, execution mode or audio mode in the slug. Keep the
    creation date fixed. Continue an existing project only when the creator is
    revising that production; a request for a fresh preview needs a fresh run,
    not an old matching MP4. Do not create the directory manually.
 2. Default to `document` and `landscape` when neither is specified. Read the
-   document, compare feasible routes, then choose one supported Style Pack
-   based on its content. A creator's
+   document, compare feasible routes, then choose a supported Style Pack and
+   a compatible recipe pool using `list:shots`. Record user-selected recipes
+   exactly; otherwise recommend the pool from the source. A creator's
    explicit choices take precedence. Do not pause for routine default choices;
    ask only when the source is unreadable, requested material is unavailable,
    or a decision would materially change the requested result.
-3. Run `npm run init:project -- --slug <topic-slug>` with the selected style,
-   canvas and input mode. Use the actual project ID printed by the command in
+3. Run `npm run init:project -- --slug <topic-slug> --style <id> --shots <id,id,...>`
+   with the selected canvas and input mode. Use the actual project ID printed by the command in
    every later path, then copy the source into `source/source.md` without rewriting it.
    Record the original path and style rationale in `production-brief.md`,
    document the route choice, and tell the creator the project path after it
    exists. Fill `route-card.md`, `content-gaps.md`, `shot-map.md`, `script.md` and
    `storyboard.draft.json` from the actual document. Match claims to source
-   locations and visible scene jobs. For each 2.3 scene, make the difference,
+   locations and visible scene jobs. For each 2.4 scene, select its explicit
+   shot and slots from the pool, then make the difference,
    order, connection or state change visible in the chosen visual kind.
    Determine scene count and provisional
    timing from narration, reading time and holds; replace the scaffold's
@@ -240,8 +261,8 @@ npm run list:styles
 npm run preview:styles -- /tmp/frame-loom-style-gallery.html
 npm run preview:templates
 npm run preview:shot -- projects/my-video/storyboard.json scene-02 projects/my-video/output/shot-preview.mp4
-npm run init:project -- --slug knowledge-explainer --style retro-zine --canvas landscape --input-mode document
-npm run init:project -- --slug product-walkthrough --style studio-frame --input-mode document-images
+npm run init:project -- --slug knowledge-explainer --style retro-zine --shots paper-title,document-conclusions,list-reveal,semantic-default --canvas landscape --input-mode document
+npm run init:project -- --slug product-walkthrough --style studio-frame --shots semantic-default --input-mode document-images
 npm run list:tts-profiles -- projects/my-video
 npm run approve:storyboard -- projects/my-video projects/my-video/storyboard-review.json
 npm run prepare:script-handoff -- projects/my-video --mode fast
@@ -303,3 +324,5 @@ schema, capability manifest, validator fixtures and renderer together.
 Read [quality-production](references/quality-production.md) when producing narrated work or using the opt-in 2.3 semantic extensions. For TTS, use `synthesize:voiceover -- <project> --plan-timing <new-storyboard.json>` after narration and provider use are authorized; inspect and explicitly adopt the proposal, then reapprove in review mode. The proposal measures speech and reuses cached takes; it does not guarantee semantic beat alignment. Never claim estimated subtitles are speech-aligned. Manual cues must retain the original narration.
 
 Use inward network connections for convergence, changeMode replace for a single object's state, and mediaFocus for a sourced image region only when the content needs them. Verify both entry and complete states. A voiced representative clip can use `preview:shot -- ... --audio-config <config>`; inspect its adjacent handoff and actual audio. Final narrated candidates are clean before review; keep their `.render.json` receipt and never fabricate one for an old video. Approval does not remove a marker or change the file.
+
+当前能力以上面的 catalog 摘要和实际兼容清单为准，`validate:shots` 会检查 README 与本 Skill 的摘要是否一致。选择始终是style＋多个场景配方；C类动作只能由声明宿主启用，换章使用transitionIn，不加入--shots。轮换项需独立阅读，证据/词同步，时间线按输入日期等距排序并注明非时间跨度，指标用保留精度的字符串。换章须显式chapterBoundary、无字幕交接窗口；有声换章需字幕时间轴核对关键词。详见[配方库](shots/README.md)。

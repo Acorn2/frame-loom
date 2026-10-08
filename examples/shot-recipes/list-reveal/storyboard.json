@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "2.4",
+  "videoTemplate": {
+    "id": "retro-zine-explainer",
+    "version": "1.2.0"
+  },
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "project": {
+    "title": "发布前的三件事",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 4.5,
+    "durationFrames": 135,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "checklist",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "发布前的三件事",
+      "primaryClaim": "分别检查内容、画面和声音",
+      "visual": {
+        "kind": "statement",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md#checklist"
+      },
+      "shot": {
+        "id": "list-reveal",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "i0",
+            "i1",
+            "i2"
+          ]
+        }
+      },
+      "narration": "分别检查内容、画面和声音",
+      "durationFrames": 135,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "node",
+          "label": "内容",
+          "text": "重点清楚，信息完整",
+          "glyph": "document"
+        },
+        {
+          "id": "i1",
+          "type": "node",
+          "label": "画面",
+          "text": "文字易读，构图清晰",
+          "glyph": "document"
+        },
+        {
+          "id": "i2",
+          "type": "node",
+          "label": "声音",
+          "text": "音量稳定，节奏自然",
+          "glyph": "document"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 38,
+          "duration": 18
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 76,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

@@ -1,14 +1,17 @@
 import {z} from 'zod';
+import {ShotSchema, ShotSelectionSchema} from './shot-recipe';
+import {VideoTemplateRefSchema} from './video-template';
+import {FontRefSchema} from './font';
 
-export const STORYBOARD_SCHEMA_VERSION = '2.3' as const;
+export const STORYBOARD_SCHEMA_VERSION = '2.4' as const;
 export const VISUAL_KINDS = ['statement', 'compare', 'sequence', 'network', 'change', 'metric', 'media'] as const;
 export const VISUAL_GLYPHS = ['document', 'search', 'map', 'list', 'person', 'timeline', 'video', 'quote', 'spark', 'database', 'chart', 'link'] as const;
 export const SCENE_PURPOSES = ['opening', 'claim', 'process', 'evidence', 'media', 'closing'] as const;
 export const TEMPLATE_IDS = ['statement', 'graph-explainer', 'metric-grid', 'interaction-flow'] as const;
 export const LAYER_TYPES = ['node', 'card', 'label', 'annotation', 'metric', 'screenshot', 'object', 'callout'] as const;
-export const ACTION_IDS = ['enter', 'reveal', 'draw', 'focus', 'highlight', 'count', 'camera-push', 'rotate', 'set-state'] as const;
+export const ACTION_IDS = ['enter', 'reveal', 'draw', 'focus', 'highlight', 'count', 'camera-push', 'rotate', 'set-state', 'dock', 'demote', 'trace', 'tape'] as const;
 export const TRANSITION_IDS = ['fade', 'slide', 'paper-wipe', 'carry'] as const;
-export const OVERLAP_TRANSITION_IDS = ['overlap-fade', 'overlap-slide', 'overlap-carry'] as const;
+export const OVERLAP_TRANSITION_IDS = ['overlap-fade', 'overlap-slide', 'overlap-carry', 'overlap-blinds', 'overlap-push-stack', 'overlap-line-carry', 'overlap-ink', 'overlap-barn-door'] as const;
 export const NODE_STATES = ['upcoming', 'current', 'completed', 'resolved'] as const;
 
 export const StoryboardStatusSchema = z.enum(['draft', 'generated', 'validated', 'reviewed', 'approved']);
@@ -20,10 +23,11 @@ export const TransitionIdSchema = z.enum(TRANSITION_IDS);
 export const NodeStateSchema = z.enum(NODE_STATES);
 export const VisualKindSchema = z.enum(VISUAL_KINDS);
 export const VisualGlyphSchema = z.enum(VISUAL_GLYPHS);
-export const OverlapTransitionSchema = z.object({
-  type: z.enum(OVERLAP_TRANSITION_IDS),
-  durationFrames: z.number().int().positive()
-}).strict();
+export const OverlapTransitionSchema = z.union([
+  z.object({type: z.enum(['overlap-fade', 'overlap-slide', 'overlap-carry']), durationFrames: z.number().int().positive()}).strict(),
+  z.object({type: z.enum(['overlap-blinds', 'overlap-push-stack', 'overlap-ink', 'overlap-barn-door']), durationFrames: z.number().int().positive(), chapterBoundary: z.literal(true)}).strict(),
+  z.object({type: z.literal('overlap-line-carry'), durationFrames: z.number().int().positive(), chapterBoundary: z.literal(true), carryKey: z.string().min(1).max(50)}).strict()
+]);
 
 export const StoryboardStyleRefSchema = z.object({
   id: z.string().min(1),
@@ -92,6 +96,7 @@ export const SceneVisualSchema = z.object({
   kind: VisualKindSchema,
   explanation: z.string().min(1),
   representation: z.enum(['diagram', 'source-media']),
+  shotPattern: z.enum(['document-conclusion-deal']).optional(),
   networkDirection: z.enum(['outward', 'inward']).optional(),
   changeMode: z.enum(['compare', 'replace']).optional(),
   mediaFocus: z.object({
@@ -114,6 +119,7 @@ export const StoryboardSceneSchema = z.object({
   title: z.string(),
   primaryClaim: z.string().min(1).optional(),
   visual: SceneVisualSchema.optional(),
+  shot: ShotSchema.optional(),
   attentionTarget: z.string().min(1).optional(),
   narration: z.string(),
   durationFrames: z.number().int().positive(),
@@ -127,11 +133,29 @@ export const StoryboardSceneSchema = z.object({
 }).strict();
 
 export const StoryboardSchema = z.object({
-  schemaVersion: z.enum(['2.1', '2.2', STORYBOARD_SCHEMA_VERSION]),
+  schemaVersion: z.enum(['2.1', '2.2', '2.3', STORYBOARD_SCHEMA_VERSION]),
   style: StoryboardStyleRefSchema,
+  font: FontRefSchema.optional(),
+  videoTemplate: VideoTemplateRefSchema.optional(),
+  shotRecipes: ShotSelectionSchema.optional(),
   project: StoryboardProjectSchema,
   scenes: z.array(StoryboardSceneSchema).min(1)
-}).strict();
+}).strict().superRefine((board, ctx) => {
+  if (board.schemaVersion !== '2.4' && board.videoTemplate) ctx.addIssue({code: 'custom', path: ['videoTemplate'], message: 'videoTemplate 仅支持 2.4。'});
+  if (board.schemaVersion !== '2.4' && board.shotRecipes) ctx.addIssue({code: 'custom', path: ['shotRecipes'], message: 'shotRecipes 仅支持 2.4。'});
+  board.scenes.forEach((scene, index) => {
+    const fail = (field: string, message: string) => ctx.addIssue({code: 'custom', path: ['scenes', index, field], message});
+    if (board.schemaVersion === '2.4') {
+      if (!scene.shot) fail('shot', '2.4 每场必须显式声明 shot。');
+      if (!scene.visual) fail('visual', '2.4 每场必须声明 visual。');
+      if (scene.visual?.shotPattern) fail('visual.shotPattern', '2.4 不接受旧 shotPattern，请显式迁移。');
+    } else {
+      if (scene.transitionIn && ['overlap-blinds', 'overlap-push-stack', 'overlap-line-carry', 'overlap-ink', 'overlap-barn-door'].includes(scene.transitionIn.type)) fail('transitionIn', '换章配方仅支持 2.4。');
+      if (scene.shot) fail('shot', 'shot 仅支持 2.4。');
+      if (scene.beats.some((beat) => ['dock', 'demote', 'trace', 'tape'].includes(beat.action))) fail('beats', '配方专用动作仅支持 2.4。');
+    }
+  });
+});
 
 export type StoryboardStatus = z.infer<typeof StoryboardStatusSchema>;
 export type TemplateId = z.infer<typeof TemplateIdSchema>;

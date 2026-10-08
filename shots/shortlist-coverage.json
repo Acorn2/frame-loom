@@ -1,0 +1,982 @@
+{
+  "source": "mydoc/frame-loom-shot-recipe-shortlist-20260930.md",
+  "upstreamRepository": "https://github.com/Acorn2/video-shotcraft",
+  "upstreamCommit": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab",
+  "countingRule": "Unique upstream Markdown recipes; scene recipes and auxiliary actions are counted separately. Native recipes are excluded. Families count once, and only declared variants are adapted.",
+  "candidates": [
+    {
+      "number": "A01",
+      "upstream": "blur-slide",
+      "recipe": "references/shots/typography/blur-slide.md",
+      "purpose": "标题与副标题柔和入场",
+      "inputCondition": "普通章节名、主张短句",
+      "kind": "完整标题镜头",
+      "requirements": "按中文短语分组；blur落定清零，末项入场后留阅读窗口",
+      "priority": "P0",
+      "cost": "低",
+      "status": "registered-experimental",
+      "runtimeId": "blur-slide",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/typography/blur-slide/BlurSlide.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/typography/blur-slide/BlurSlide.tsx"
+      ]
+    },
+    {
+      "number": "A02",
+      "upstream": "paper-title-card",
+      "recipe": "references/shots/typography/paper-title-card.md",
+      "purpose": "纸面主张字卡",
+      "inputCondition": "观点、引语式主张、章节路标",
+      "kind": "完整标题镜头",
+      "requirements": "强调词来自原文；逐词压印适配中文，时长服从朗读和阅读",
+      "priority": "P0",
+      "cost": "低",
+      "status": "registered-experimental",
+      "runtimeId": "paper-title",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/typography/paper-title-card/PaperTitleCard.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/typography/paper-title-card/PaperTitleCard.tsx"
+      ]
+    },
+    {
+      "number": "A03",
+      "upstream": "title-demote-to-label",
+      "recipe": "references/shots/typography/title-demote-to-label.md",
+      "purpose": "大标题变章节标签",
+      "inputCondition": "主题建立后接步骤、证据或正文结构",
+      "kind": "复合场景",
+      "requirements": "先用A式；标题落定再停靠，正文替换灰骨架，外层不重复标题",
+      "priority": "P0",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "title-to-label",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/typography/title-demote-to-label/TitleDemoteToLabel.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/typography/title-demote-to-label/TitleDemoteToLabel.tsx"
+      ]
+    },
+    {
+      "number": "A04",
+      "upstream": "lead-word-zoom-assemble",
+      "recipe": "references/shots/typography/lead-word-zoom-assemble.md",
+      "purpose": "关键词先行，再组成主张",
+      "inputCondition": "一段话有明确核心概念",
+      "kind": "完整标题镜头",
+      "requirements": "保留关键词→整句顺序；测量字体基线，段尾急推不默认采用",
+      "priority": "P1",
+      "cost": "高",
+      "status": "registered-experimental",
+      "runtimeId": "lead-word-assemble",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/typography/lead-word-zoom-assemble/LeadWordZoomAssemble.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/typography/lead-word-zoom-assemble/LeadWordZoomAssemble.tsx"
+      ]
+    },
+    {
+      "number": "A05",
+      "upstream": "type-assembly-moves",
+      "recipe": "references/shots/typography/type-assembly-moves.md",
+      "purpose": "文字逐段集结",
+      "inputCondition": "短章节名与概念定义",
+      "kind": "标题镜头族",
+      "requirements": "首选SplitTextStagger；长中文按短语拆分，其他变体单独评估",
+      "priority": "P1",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "split-text-stagger",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/typography/type-assembly-moves/LetterformDriftAssembly.tsx",
+        "demos/typography/type-assembly-moves/SplitTextStagger.tsx",
+        "demos/typography/type-assembly-moves/TextOnPath.tsx",
+        "demos/typography/type-assembly-moves/TrackingExpandReveal.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/typography/type-assembly-moves/SplitTextStagger.tsx"
+      ]
+    },
+    {
+      "number": "A06",
+      "upstream": "brace-expand",
+      "recipe": "references/shots/typography/brace-expand.md",
+      "purpose": "括号拉开主题",
+      "inputCondition": "技术、编程、机制类短标题",
+      "kind": "完整标题镜头",
+      "requirements": "括号与裁切宽度绑定；中文长度须预检，避免强加代码语感",
+      "priority": "P1",
+      "cost": "低",
+      "status": "registered-experimental",
+      "runtimeId": "brace-expand",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/typography/brace-expand/BraceExpand.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/typography/brace-expand/BraceExpand.tsx"
+      ]
+    },
+    {
+      "number": "A07",
+      "upstream": "pill-slot-cycle",
+      "recipe": "references/shots/typography/pill-slot-cycle.md",
+      "purpose": "同一句干下轮换要点",
+      "inputCondition": "同一主体有多个动词或能力",
+      "kind": "完整文字枚举镜头",
+      "requirements": "先检查句干与每个词均语法通顺；收束句不能夸大原文",
+      "priority": "P1",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "pill-slot-cycle",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/typography/pill-slot-cycle/PillSlotCycle.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/typography/pill-slot-cycle/PillSlotCycle.tsx"
+      ]
+    },
+    {
+      "number": "A08",
+      "upstream": "vertical-word-roll-blur-cycle",
+      "recipe": "references/shots/typography/vertical-word-roll-blur-cycle.md",
+      "purpose": "固定句干下轮换对象",
+      "inputCondition": "受众、角色、类别等平行枚举",
+      "kind": "完整文字枚举镜头",
+      "requirements": "测量最长词；保持各项朗读与阅读窗口；内容胶囊不承载旁白字幕",
+      "priority": "P1",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "word-roll",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/typography/vertical-word-roll-blur-cycle/VerticalWordRollBlurCycle.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/typography/vertical-word-roll-blur-cycle/VerticalWordRollBlurCycle.tsx"
+      ]
+    },
+    {
+      "number": "A09",
+      "upstream": "text-column-converge",
+      "recipe": "references/shots/typography/text-column-converge.md",
+      "purpose": "多个短词收束成一句",
+      "inputCondition": "多个要点最终归纳成一个明确结论",
+      "kind": "完整收束镜头",
+      "requirements": "必须有可追溯归纳；只在最后合拢一次，不强造品牌揭晓",
+      "priority": "P1",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "text-column-converge",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/typography/text-column-converge/TextColumnConverge.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/typography/text-column-converge/TextColumnConverge.tsx"
+      ]
+    },
+    {
+      "number": "A10",
+      "upstream": "word-relay-filmstrip",
+      "recipe": "references/shots/typography/word-relay-filmstrip.md",
+      "purpose": "证据摘录与关键词同步更换",
+      "inputCondition": "多段原文依次支持多条观点",
+      "kind": "复合证据镜头",
+      "requirements": "将上游页面卡重做为原文摘录卡，明确示意；证据换一次、词换一次",
+      "priority": "P1",
+      "cost": "高",
+      "status": "registered-experimental",
+      "runtimeId": "evidence-relay",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/typography/word-relay-filmstrip/WordRelayFilmstrip.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/typography/word-relay-filmstrip/WordRelayFilmstrip.tsx"
+      ]
+    },
+    {
+      "number": "A11",
+      "upstream": "list-reveal",
+      "recipe": "references/shots/ui-entrance/list-reveal.md",
+      "purpose": "并列清单逐项入场",
+      "inputCondition": "要点、注意事项、分类、步骤名称",
+      "kind": "完整清单镜头",
+      "requirements": "适配真实文字与TTS；持续漂移默认关闭，数量多时拆镜",
+      "priority": "P0",
+      "cost": "低",
+      "status": "registered-experimental",
+      "runtimeId": "list-reveal",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/ui-entrance/list-reveal/ListReveal.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/ui-entrance/list-reveal/ListReveal.tsx"
+      ]
+    },
+    {
+      "number": "A12",
+      "upstream": "doc-park-left-pill-deal",
+      "recipe": "references/shots/ui-entrance/doc-park-left-pill-deal.md",
+      "purpose": "原文驻留，结论逐条展开",
+      "inputCondition": "一段原文支持三条结论或后续线索",
+      "kind": "复合证据镜头",
+      "requirements": "首版恰好三条；来源、驻留与入场可校验，统一字幕，不默认滚动",
+      "priority": "P0",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "document-conclusions",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/ui-entrance/doc-park-left-pill-deal/DocParkLeftPillDeal.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/ui-entrance/doc-park-left-pill-deal/DocParkLeftPillDeal.tsx"
+      ]
+    },
+    {
+      "number": "A13",
+      "upstream": "card-stack",
+      "recipe": "references/shots/ui-entrance/card-stack.md",
+      "purpose": "整体卡堆展开为个体",
+      "inputCondition": "多案例、多个概念、章节总览",
+      "kind": "完整集合镜头",
+      "requirements": "选少量可读卡片；正文阅读期降低透视，不使用无意义空卡凑规模",
+      "priority": "P0",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "card-stack",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/ui-entrance/card-stack/CardStack.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/ui-entrance/card-stack/CardStack.tsx"
+      ]
+    },
+    {
+      "number": "A14",
+      "upstream": "row-embed",
+      "recipe": "references/shots/ui-entrance/row-embed.md",
+      "purpose": "内容行落入结构",
+      "inputCondition": "条目、事实、规则逐行构成表或清单",
+      "kind": "完整结构镜头",
+      "requirements": "只借行落位手法；用自有文本布局重写，移除live-layout与纹理",
+      "priority": "P1",
+      "cost": "高",
+      "status": "registered-experimental",
+      "runtimeId": "row-embed",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/ui-entrance/row-embed/RowEmbed.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/ui-entrance/row-embed/RowEmbed.tsx"
+      ]
+    },
+    {
+      "number": "A15",
+      "upstream": "wall-reveal-moves",
+      "recipe": "references/shots/ui-entrance/wall-reveal-moves.md",
+      "purpose": "概念矩阵逐格建立",
+      "inputCondition": "分类矩阵、多维框架、章节全景",
+      "kind": "网格镜头族",
+      "requirements": "首选BentoLightUp/WireframeDrawOn；去掉假dashboard，低密度可读；翻面媒体变体另审",
+      "priority": "P1",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "concept-matrix",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/ui-entrance/wall-reveal-moves/BentoLightUp.tsx",
+        "demos/ui-entrance/wall-reveal-moves/GridWaveFlip.tsx",
+        "demos/ui-entrance/wall-reveal-moves/WireframeDrawOn.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/ui-entrance/wall-reveal-moves/BentoLightUp.tsx",
+        "demos/ui-entrance/wall-reveal-moves/WireframeDrawOn.tsx"
+      ]
+    },
+    {
+      "number": "A16",
+      "upstream": "platform-hinge-rise",
+      "recipe": "references/shots/ui-entrance/platform-hinge-rise.md",
+      "purpose": "两组证据出现，再给结论",
+      "inputCondition": "两个案例、方案或对象支持归纳",
+      "kind": "复合比较镜头",
+      "requirements": "对象和归纳都来自原文；透视只用于入场，最终文本可读",
+      "priority": "P1",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "platform-hinge-rise",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/ui-entrance/platform-hinge-rise/PlatformHingeRise.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/ui-entrance/platform-hinge-rise/PlatformHingeRise.tsx"
+      ]
+    },
+    {
+      "number": "A17",
+      "upstream": "assemble-then-type-flyin",
+      "recipe": "references/shots/effects/assemble-then-type-flyin.md",
+      "purpose": "先建立结构，再填入内容",
+      "inputCondition": "文档框架、论证结构、流程的构建",
+      "kind": "复合结构镜头",
+      "requirements": "用自己的结构图；少量文本块，逐字3D为可选变体，不暗示真实产品自动生成",
+      "priority": "P1",
+      "cost": "高",
+      "status": "registered-experimental",
+      "runtimeId": "structure-then-text",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/effects/assemble-then-type-flyin/AssembleThenTypeFlyin.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/effects/assemble-then-type-flyin/AssembleThenTypeFlyin.tsx"
+      ]
+    },
+    {
+      "number": "B01",
+      "upstream": "bezier-source-converge-merge",
+      "recipe": "references/shots/ui-entrance/bezier-source-converge-merge.md",
+      "purpose": "多源汇聚到一个结果",
+      "inputCondition": "原文确实描述多源整合或输入汇总",
+      "kind": "完整关系镜头",
+      "requirements": "提供来源与汇聚关系；纯几何预计算，来源阅读后再汇入，不制造因果",
+      "priority": "P1",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "source-converge",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/ui-entrance/bezier-source-converge-merge/BezierSourceConvergeMerge.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/ui-entrance/bezier-source-converge-merge/BezierSourceConvergeMerge.tsx"
+      ]
+    },
+    {
+      "number": "B02",
+      "upstream": "research-card-stack-scroll",
+      "recipe": "references/shots/ui-entrance/research-card-stack-scroll.md",
+      "purpose": "资料集合依次进入焦点",
+      "inputCondition": "真实文献、来源文章或记录集合",
+      "kind": "完整资料镜头",
+      "requirements": "标题/作者/数量必须真实；单篇文档不得编造多论文研究，焦点卡停留可读",
+      "priority": "P2",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "research-stack",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/ui-entrance/research-card-stack-scroll/ResearchCardStackScroll.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/ui-entrance/research-card-stack-scroll/ResearchCardStackScroll.tsx"
+      ]
+    },
+    {
+      "number": "B03",
+      "upstream": "list-stack-press",
+      "recipe": "references/shots/ui-entrance/list-stack-press.md",
+      "purpose": "新增条目持续积累",
+      "inputCondition": "原文有累积事件、持续新增条目或资产",
+      "kind": "完整积累镜头",
+      "requirements": "计数绑定真实项目数；移除专属页面布局，不能用物理压弹假造增长",
+      "priority": "P2",
+      "cost": "高",
+      "status": "registered-experimental",
+      "runtimeId": "list-stack-press",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/ui-entrance/list-stack-press/ListStackPress.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/ui-entrance/list-stack-press/ListStackPress.tsx"
+      ]
+    },
+    {
+      "number": "B04",
+      "upstream": "integration-hub-map",
+      "recipe": "references/shots/ui-entrance/integration-hub-map.md",
+      "purpose": "旧结构变为统一中枢",
+      "inputCondition": "原文有前后结构变化和实际接入关系",
+      "kind": "完整关系变化镜头",
+      "requirements": "旧/新结构与连接都有证据；以示意图表达，去掉无来源app标志与流量暗示",
+      "priority": "P2",
+      "cost": "高",
+      "status": "registered-experimental",
+      "runtimeId": "integration-hub",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/ui-entrance/integration-hub-map/IntegrationHubMap.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/ui-entrance/integration-hub-map/IntegrationHubMap.tsx"
+      ]
+    },
+    {
+      "number": "B05",
+      "upstream": "timeline-travel",
+      "recipe": "references/shots/data/timeline-travel.md",
+      "purpose": "沿真实时间线逐项行进",
+      "inputCondition": "历史事件、版本史、项目阶段",
+      "kind": "完整时间镜头",
+      "requirements": "提供日期/顺序与事件内容；减速到每项可读，日期间距是否比例须明确",
+      "priority": "P1",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "timeline-travel",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/data/timeline-travel/TimelineTravel.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/data/timeline-travel/TimelineTravel.tsx"
+      ]
+    },
+    {
+      "number": "B06",
+      "upstream": "scroll-brake-moves",
+      "recipe": "references/shots/data/scroll-brake-moves.md",
+      "purpose": "从长列表定位关键条目",
+      "inputCondition": "有真实日志、条目清单与重点项",
+      "kind": "长列表聚焦镜头族",
+      "requirements": "优先A式；保持上下文，重点项完整可读，不把假条目当历史记录",
+      "priority": "P2",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "scroll-brake",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/data/scroll-brake-moves/BrakeReticleLock.tsx",
+        "demos/data/scroll-brake-moves/ChangelogScrollBrake.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/data/scroll-brake-moves/ChangelogScrollBrake.tsx"
+      ]
+    },
+    {
+      "number": "B07",
+      "upstream": "chart-live-moves",
+      "recipe": "references/shots/data/chart-live-moves.md",
+      "purpose": "数据按顺序揭示与重组",
+      "inputCondition": "真实序列、分组统计或量级变化",
+      "kind": "数据镜头族",
+      "requirements": "每个变体单独审；时间、单位、基数、轴标可查，禁止编造尖峰和增长",
+      "priority": "P2",
+      "cost": "高",
+      "status": "registered-experimental",
+      "runtimeId": "chart-live",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/data/chart-live-moves/AxisRescaleShockV2.tsx",
+        "demos/data/chart-live-moves/OscilloscopeStreamV2.tsx",
+        "demos/data/chart-live-moves/UnitDotSwarmRegroupV2.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/data/chart-live-moves/OscilloscopeStreamV2.tsx"
+      ]
+    },
+    {
+      "number": "B08",
+      "upstream": "odometer-digit-roll",
+      "recipe": "references/shots/data/odometer-digit-roll.md",
+      "purpose": "真实指标逐位落定",
+      "inputCondition": "原文有值得强调的数字与单位",
+      "kind": "完整数据标题镜头",
+      "requirements": "最终真值、精度、单位不变；增加来源，不能用滚轮声冒充计算完成",
+      "priority": "P1",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "odometer-roll",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/data/odometer-digit-roll/OdometerDigitRoll.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/data/odometer-digit-roll/OdometerDigitRoll.tsx"
+      ]
+    },
+    {
+      "number": "B09",
+      "upstream": "particle-sand-fill",
+      "recipe": "references/shots/data/particle-sand-fill.md",
+      "purpose": "数量汇积成柱",
+      "inputCondition": "有真实量级对比或积累统计",
+      "kind": "完整数据镜头",
+      "requirements": "3–5柱、明确单位与颗粒代表值；粒子闭式计算，不暗示未提供的累计过程",
+      "priority": "P2",
+      "cost": "高",
+      "status": "registered-experimental",
+      "runtimeId": "particle-sand-fill",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/data/particle-sand-fill/ParticleSandFill.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/data/particle-sand-fill/ParticleSandFill.tsx"
+      ]
+    },
+    {
+      "number": "B10",
+      "upstream": "avatar-grid-radial-build-colorize",
+      "recipe": "references/shots/data/avatar-grid-radial-build-colorize.md",
+      "purpose": "集合中突出特定成员",
+      "inputCondition": "真实群体、类别、状态或异常比例",
+      "kind": "完整集合状态镜头",
+      "requirements": "格数、分母、异常名单可查；移除随机15%染色，网格面积不误导比例",
+      "priority": "P2",
+      "cost": "高",
+      "status": "registered-experimental",
+      "runtimeId": "member-grid",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/data/avatar-grid-radial-build-colorize/AvatarGridRadialBuildColorize.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/data/avatar-grid-radial-build-colorize/AvatarGridRadialBuildColorize.tsx"
+      ]
+    },
+    {
+      "number": "B11",
+      "upstream": "ring-diagram-annotation-reveal",
+      "recipe": "references/shots/data/ring-diagram-annotation-reveal.md",
+      "purpose": "主体转为机制图，旁侧解释",
+      "inputCondition": "有真实分层、环形结构或结构关系",
+      "kind": "复合机制镜头",
+      "requirements": "分段和箭头从语义生成，不照搬12箭头；最终图解静稳，注释可读",
+      "priority": "P2",
+      "cost": "高",
+      "status": "registered-experimental",
+      "runtimeId": "ring-annotation",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/data/ring-diagram-annotation-reveal/RingDiagramAnnotationReveal.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/data/ring-diagram-annotation-reveal/RingDiagramAnnotationReveal.tsx"
+      ]
+    },
+    {
+      "number": "B12",
+      "upstream": "cycle-glass-node-morph",
+      "recipe": "references/shots/data/cycle-glass-node-morph.md",
+      "purpose": "对象转入循环机制",
+      "inputCondition": "原文有明确循环/反馈机制",
+      "kind": "复合机制镜头",
+      "requirements": "节点数与方向有依据；玻璃质感与诊断状态为可选，不能将直线流程画成循环",
+      "priority": "P2",
+      "cost": "高",
+      "status": "registered-experimental",
+      "runtimeId": "cycle-mechanism",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/data/cycle-glass-node-morph/CycleGlassNodeMorph.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/data/cycle-glass-node-morph/CycleGlassNodeMorph.tsx"
+      ]
+    },
+    {
+      "number": "B13",
+      "upstream": "before-after-slider-scrub",
+      "recipe": "references/shots/data/before-after-slider-scrub.md",
+      "purpose": "真实前后素材擦动对照",
+      "inputCondition": "两张可比较的真实图片或截图",
+      "kind": "完整媒体比较镜头",
+      "requirements": "同视角同布局，真实旧态/新态；文本对比优先原生compare，不做故意模糊旧图",
+      "priority": "P2",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "media-before-after",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/data/before-after-slider-scrub/BeforeAfterSliderScrub.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/data/before-after-slider-scrub/BeforeAfterSliderScrub.tsx"
+      ]
+    },
+    {
+      "number": "B14",
+      "upstream": "document-typewriter-reveal",
+      "recipe": "references/shots/typography/document-typewriter-reveal.md",
+      "purpose": "文档段落逐步书写显现",
+      "inputCondition": "有完整且需要展示版式的原文摘录",
+      "kind": "复合文档镜头",
+      "requirements": "用原文重建文档版面并标注来源，移除假侧栏历史、@成员和上游纹理",
+      "priority": "P2",
+      "cost": "高",
+      "status": "registered-experimental",
+      "runtimeId": "document-write",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/ui-entrance/document-typewriter-reveal/DocumentTypewriterReveal.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/ui-entrance/document-typewriter-reveal/DocumentTypewriterReveal.tsx"
+      ]
+    },
+    {
+      "number": "B15",
+      "upstream": "typing-code-block",
+      "recipe": "references/shots/typography/typing-code-block.md",
+      "purpose": "代码/配置逐行或逐字符揭示",
+      "inputCondition": "原文包含实际代码或配置示例",
+      "kind": "完整代码镜头",
+      "requirements": "原代码不被篡改；选择一种揭示方式，不照搬双屏对照；长代码拆镜",
+      "priority": "P2",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "code-reveal",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/typography/typing-code-block/TypingCodeBlock.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/typography/typing-code-block/TypingCodeBlock.tsx"
+      ]
+    },
+    {
+      "number": "B16",
+      "upstream": "canvas-materialize-moves",
+      "recipe": "references/shots/interaction/canvas-materialize-moves.md",
+      "purpose": "结构按层建立／条目变成卡片",
+      "inputCondition": "原文存在层级关系，或同内容形式转换",
+      "kind": "复合结构镜头族",
+      "requirements": "优先DiagramCascadeBuild，移除prompt和假AI操作；连线不能早于未存在主体的可解释关系",
+      "priority": "P1",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "diagram-cascade",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/interaction/canvas-materialize-moves/DiagramCascadeBuild.tsx",
+        "demos/interaction/canvas-materialize-moves/PanelToCanvasMaterialize.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/interaction/canvas-materialize-moves/DiagramCascadeBuild.tsx"
+      ]
+    },
+    {
+      "number": "B17",
+      "upstream": "letterspace-materialize",
+      "recipe": "references/shots/opening/letterspace-materialize.md",
+      "purpose": "有来源字标连续描画",
+      "inputCondition": "文档需要真实品牌/组织字标或短章名",
+      "kind": "字标标题镜头",
+      "requirements": "上游只定义SUPERHUMAN部分拉丁字母路径；新字标必须另备可用字形/SVG，中文不可直接套",
+      "priority": "P2",
+      "cost": "高",
+      "status": "registered-experimental",
+      "runtimeId": "letterspace-materialize",
+      "runtimeKind": "scene",
+      "implementations": [
+        "demos/opening/letterspace-materialize/LetterspaceMaterialize.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/opening/letterspace-materialize/LetterspaceMaterialize.tsx"
+      ]
+    },
+    {
+      "number": "C01",
+      "upstream": "marker-underline-title",
+      "recipe": "references/shots/typography/marker-underline-title.md",
+      "purpose": "关键词划线",
+      "inputCondition": "已有标题/正文需要突出一个词",
+      "kind": "强调动作",
+      "requirements": "关键词范围明确；落定后起笔，不覆盖字幕，不自动找营销词",
+      "priority": "P0",
+      "cost": "低",
+      "status": "registered-experimental",
+      "runtimeId": "marker-underline",
+      "runtimeKind": "auxiliary",
+      "implementations": [
+        "demos/typography/marker-underline-title/MarkerUnderlineTitle.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/typography/marker-underline-title/MarkerUnderlineTitle.tsx"
+      ]
+    },
+    {
+      "number": "C02",
+      "upstream": "draw-svg-trace",
+      "recipe": "references/shots/ui-entrance/draw-svg-trace.md",
+      "purpose": "描线建立或点名图形",
+      "inputCondition": "明确轮廓、图解节点、框注或下划线",
+      "kind": "描画动作",
+      "requirements": "路径与实际对象吻合；闭合再交内容，不能把装饰线当关系",
+      "priority": "P1",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "outline-trace",
+      "runtimeKind": "auxiliary",
+      "implementations": [
+        "demos/ui-entrance/draw-svg-trace/DrawSvgTrace.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/ui-entrance/draw-svg-trace/DrawSvgTrace.tsx"
+      ]
+    },
+    {
+      "number": "C03",
+      "upstream": "paper-craft-moves",
+      "recipe": "references/shots/ui-entrance/paper-craft-moves.md",
+      "purpose": "纸卡固定或立起",
+      "inputCondition": "纸刊/笔记式要点、引语、证据卡",
+      "kind": "卡片入场动作族",
+      "requirements": "优先MaskingTapeSlap；停止晃动后阅读，PopupBookRise终态需可读",
+      "priority": "P1",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "paper-tape",
+      "runtimeKind": "auxiliary",
+      "implementations": [
+        "demos/ui-entrance/paper-craft-moves/MaskingTapeSlap.tsx",
+        "demos/ui-entrance/paper-craft-moves/PopupBookRise.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/ui-entrance/paper-craft-moves/MaskingTapeSlap.tsx"
+      ]
+    },
+    {
+      "number": "C04",
+      "upstream": "scanline-annotate-focus",
+      "recipe": "references/shots/effects/scanline-annotate-focus.md",
+      "purpose": "按阅读顺序框注内容",
+      "inputCondition": "文稿正在解释真实文档布局或分析过程",
+      "kind": "分析与标注动作",
+      "requirements": "目标框绑定实际内容；不暗示软件实测识别能力，不能作为任意文章装饰",
+      "priority": "P2",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "scanline-annotate-focus",
+      "runtimeKind": "auxiliary",
+      "implementations": [
+        "demos/effects/scanline-annotate-focus/ScanlineAnnotateFocus.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/effects/scanline-annotate-focus/ScanlineAnnotateFocus.tsx"
+      ]
+    },
+    {
+      "number": "C05",
+      "upstream": "scan-bracket-sweep",
+      "recipe": "references/shots/effects/scan-bracket-sweep.md",
+      "purpose": "对文档检查过程作示意",
+      "inputCondition": "原文明确讲读取/校验/检查流程",
+      "kind": "过程强调动作",
+      "requirements": "仅作示意，不把机械扫描包装成实际AI操作；目标静止，扫描范围一致",
+      "priority": "P2",
+      "cost": "低",
+      "status": "registered-experimental",
+      "runtimeId": "scan-bracket-sweep",
+      "runtimeKind": "auxiliary",
+      "implementations": [
+        "demos/effects/scan-bracket-sweep/ScanBracketSweep.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/effects/scan-bracket-sweep/ScanBracketSweep.tsx"
+      ]
+    },
+    {
+      "number": "C06",
+      "upstream": "line-boil",
+      "recipe": "references/shots/effects/line-boil.md",
+      "purpose": "轻量手绘轮廓质感",
+      "inputCondition": "手账风的少量非正文轮廓",
+      "kind": "质感动作",
+      "requirements": "一次一组、确定种子；正文保持稳定，不拿抖动修补无意义长停留",
+      "priority": "P2",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "line-boil",
+      "runtimeKind": "auxiliary",
+      "implementations": [
+        "demos/effects/line-boil/LineBoil.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/effects/line-boil/LineBoil.tsx"
+      ]
+    },
+    {
+      "number": "C07",
+      "upstream": "speed-ramp-freeze",
+      "recipe": "references/shots/rhythm/speed-ramp-freeze.md",
+      "purpose": "停在重点并标注",
+      "inputCondition": "真实长列表/卡片流中需要停讲一个重点",
+      "kind": "运镜与阅读节奏",
+      "requirements": "优先FreezeAnnotateReal的思路；重做文本版，避免直接引入motion-blur；SFX用输出帧",
+      "priority": "P2",
+      "cost": "高",
+      "status": "registered-experimental",
+      "runtimeId": "speed-ramp-freeze",
+      "runtimeKind": "auxiliary",
+      "implementations": [
+        "demos/rhythm/speed-ramp-freeze/FreezeAnnotateReal.tsx",
+        "demos/rhythm/speed-ramp-freeze/SpeedRampReal.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/rhythm/speed-ramp-freeze/FreezeAnnotateReal.tsx"
+      ]
+    },
+    {
+      "number": "C08",
+      "upstream": "card-flip-reveal",
+      "recipe": "references/shots/transition/card-flip-reveal.md",
+      "purpose": "问题/证据翻到答案/结论",
+      "inputCondition": "原文具有真实一对一对应",
+      "kind": "元素转场",
+      "requirements": "正反面不能编造因果；反面足够阅读，可组成镜头但不是通用跨场转场",
+      "priority": "P1",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "card-flip",
+      "runtimeKind": "auxiliary",
+      "implementations": [
+        "demos/transition/card-flip-reveal/CardFlipReveal.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/transition/card-flip-reveal/CardFlipReveal.tsx"
+      ]
+    },
+    {
+      "number": "C09",
+      "upstream": "line-carry-transition",
+      "recipe": "references/shots/transition/line-carry-transition.md",
+      "purpose": "线条连接前后表达",
+      "inputCondition": "前后场有同一图形线索",
+      "kind": "跨场转场",
+      "requirements": "既有下划线/轴自然延伸，不凭空造线；声音与跨场时间另校验",
+      "priority": "P2",
+      "cost": "高",
+      "status": "registered-experimental",
+      "runtimeId": "line-carry-transition",
+      "runtimeKind": "transition",
+      "implementations": [
+        "demos/transition/line-carry-transition/LineCarryTransition.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/transition/line-carry-transition/LineCarryTransition.tsx"
+      ]
+    },
+    {
+      "number": "C10",
+      "upstream": "wipe-transitions",
+      "recipe": "references/shots/transition/wipe-transitions.md",
+      "purpose": "几何擦除交接",
+      "inputCondition": "普通换章或同级主题转换",
+      "kind": "跨场转场族",
+      "requirements": "优先简洁条扫；避开旁白关键词，不直接采用长示例时长",
+      "priority": "P1",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "blinds-wipe",
+      "runtimeKind": "transition",
+      "implementations": [
+        "demos/transition/wipe-transitions/BlindsSlice.tsx",
+        "demos/transition/wipe-transitions/ClockWipe.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/transition/wipe-transitions/BlindsSlice.tsx"
+      ]
+    },
+    {
+      "number": "C11",
+      "upstream": "print-texture-transitions",
+      "recipe": "references/shots/transition/print-texture-transitions.md",
+      "purpose": "墨迹显影换章",
+      "inputCondition": "retro-zine纸墨章节",
+      "kind": "跨场转场",
+      "requirements": "一次接缝一种动作，干净清除旧字，字幕层不参与墨迹覆盖",
+      "priority": "P2",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "print-texture-transitions",
+      "runtimeKind": "transition",
+      "implementations": [
+        "demos/transition/print-texture-transitions/InkBleedReveal.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/transition/print-texture-transitions/InkBleedReveal.tsx"
+      ]
+    },
+    {
+      "number": "C12",
+      "upstream": "page-turn-transitions",
+      "recipe": "references/shots/transition/page-turn-transitions.md",
+      "purpose": "页面作为实体换章",
+      "inputCondition": "明显章节变化",
+      "kind": "跨场转场族",
+      "requirements": "先评估BarnDoorSplit；CubeRotate后置，限制频次，动作压缩与语音衔接实测",
+      "priority": "P2",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "page-turn-transitions",
+      "runtimeKind": "transition",
+      "implementations": [
+        "demos/transition/page-turn-transitions/BarnDoorSplit.tsx",
+        "demos/transition/page-turn-transitions/CubeRotate.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/transition/page-turn-transitions/BarnDoorSplit.tsx"
+      ]
+    },
+    {
+      "number": "C13",
+      "upstream": "bottom-push-stack-wipe",
+      "recipe": "references/shots/transition/bottom-push-stack-wipe.md",
+      "purpose": "新章节顶出旧章节",
+      "inputCondition": "同风格多章节内容",
+      "kind": "跨场转场",
+      "requirements": "整屏位移保持边界一致；不要求章节换配色，避免双标题/双字幕",
+      "priority": "P1",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "bottom-push",
+      "runtimeKind": "transition",
+      "implementations": [
+        "demos/transition/bottom-push-stack-wipe/BottomPushStackWipe.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/transition/bottom-push-stack-wipe/BottomPushStackWipe.tsx"
+      ]
+    },
+    {
+      "number": "C14",
+      "upstream": "mosaic-reframe",
+      "recipe": "references/shots/transition/mosaic-reframe.md",
+      "purpose": "同一内容重新分组排版",
+      "inputCondition": "同一批概念或案例由总览转重点",
+      "kind": "布局变换动作",
+      "requirements": "复用同一真实卡集合；只选可读布局，正文阅读不使用高速瀑布终态",
+      "priority": "P2",
+      "cost": "中",
+      "status": "registered-experimental",
+      "runtimeId": "mosaic-reframe",
+      "runtimeKind": "auxiliary",
+      "implementations": [
+        "demos/transition/mosaic-reframe/MosaicReframe.tsx"
+      ],
+      "adaptedImplementations": [
+        "demos/transition/mosaic-reframe/MosaicReframe.tsx"
+      ]
+    }
+  ]
+}

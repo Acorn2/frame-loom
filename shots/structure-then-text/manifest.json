@@ -1,0 +1,85 @@
+{
+  "id": "structure-then-text",
+  "version": "1.2.0",
+  "status": "experimental",
+  "registered": true,
+  "visualKinds": [
+    "statement"
+  ],
+  "purpose": "先建立结构，再填入内容",
+  "inputModes": [
+    "document-only",
+    "document-with-assets"
+  ],
+  "requiredAssets": [],
+  "styles": [
+    "retro-zine",
+    "signal",
+    "scatterbrain",
+    "archive-grid",
+    "signal-noir",
+    "studio-frame"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "slots": {
+    "items": {
+      "min": 2,
+      "max": 4,
+      "labelMax": 12,
+      "textMax": 40
+    }
+  },
+  "timing": {
+    "actions": {
+      "enter": {
+        "minSec": 0.2,
+        "maxSec": 1.2
+      },
+      "reveal": {
+        "minSec": 0.2,
+        "maxSec": 1.2
+      },
+      "trace": {
+        "minSec": 0.2,
+        "maxSec": 1.2
+      }
+    },
+    "readingSec": 0.8,
+    "titleHoldSec": 0.6,
+    "sourceHoldSec": 0.3,
+    "itemHoldSec": 0.6
+  },
+  "motion": {
+    "recipeOwned": [
+      "structure-then-text",
+      "recipe-specific-curves",
+      "bounded-stage-order",
+      "composition",
+      "light-dark-stage",
+      "material",
+      "spatial-depth"
+    ],
+    "styleOwned": [
+      "color-family",
+      "font-family",
+      "caption-color",
+      "safe-area"
+    ],
+    "continuousDrift": false
+  },
+  "qa": [
+    "action-mid",
+    "action-complete",
+    "complete",
+    "before-handoff"
+  ],
+  "sound": {
+    "enabled": false,
+    "events": [
+      "title-settled",
+      "item-entered"
+    ]
+  }
+}

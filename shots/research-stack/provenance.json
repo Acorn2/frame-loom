@@ -1,0 +1,23 @@
+{
+  "id": "research-stack",
+  "mode": "method-reference",
+  "repository": "https://github.com/Acorn2/video-shotcraft",
+  "commit": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab",
+  "recipe": "references/shots/ui-entrance/research-card-stack-scroll.md",
+  "implementation": "demos/ui-entrance/research-card-stack-scroll/ResearchCardStackScroll.tsx",
+  "upstreamLicense": "Apache-2.0",
+  "implementationLicense": "MIT",
+  "notice": "Independent implementation; no upstream fixtures, copy, media or runtime dependencies copied.",
+  "shortlist": "B02",
+  "retained": [
+    "资料集合依次进入焦点",
+    "标题/作者/数量必须真实；单篇文档不得编造多论文研究，焦点卡停留可读"
+  ],
+  "omitted": [
+    "fixed copy and coordinates",
+    "invented facts",
+    "continuous drift",
+    "automatic sound"
+  ],
+  "externalAttribution": "Research provenance does not authorize upstream media."
+}

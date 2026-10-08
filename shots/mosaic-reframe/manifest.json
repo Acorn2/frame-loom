@@ -1,0 +1,27 @@
+{
+  "id": "mosaic-reframe",
+  "version": "1.2.0",
+  "status": "experimental",
+  "kind": "hosted-action",
+  "shortlist": "C14",
+  "styles": [
+    "retro-zine",
+    "signal",
+    "scatterbrain",
+    "archive-grid",
+    "signal-noir",
+    "studio-frame"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "sound": false,
+  "requires": [
+    "复用同一真实卡集合；只选可读布局，正文阅读不使用高速瀑布终态"
+  ],
+  "hosts": [
+    "member-grid"
+  ],
+  "action": "highlight",
+  "targetSlot": "items"
+}

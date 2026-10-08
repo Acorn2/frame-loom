@@ -1,0 +1,150 @@
+{
+  "schemaVersion": "2.4",
+  "videoTemplate": {
+    "id": "retro-zine-explainer",
+    "version": "1.2.0"
+  },
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "project": {
+    "title": "一篇文章的关联",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 9.0,
+    "durationFrames": 270,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "relations",
+      "template": "graph-explainer",
+      "purpose": "evidence",
+      "title": "一篇文章的关联",
+      "primaryClaim": "把文章与资料、观点和问题连接起来",
+      "visual": {
+        "kind": "network",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md#relations",
+        "anchorId": "anchor",
+        "networkDirection": "outward"
+      },
+      "shot": {
+        "id": "network-expand",
+        "version": "1.0.0",
+        "slots": {
+          "anchor": "anchor",
+          "items": [
+            "i0",
+            "i1",
+            "i2"
+          ]
+        }
+      },
+      "narration": "把文章与资料、观点和问题连接起来",
+      "durationFrames": 270,
+      "layers": [
+        {
+          "id": "anchor",
+          "type": "node",
+          "label": "文章",
+          "text": "连接相关信息",
+          "glyph": "document"
+        },
+        {
+          "id": "i0",
+          "type": "node",
+          "label": "资料",
+          "text": "提供背景",
+          "glyph": "document"
+        },
+        {
+          "id": "i1",
+          "type": "node",
+          "label": "观点",
+          "text": "形成判断",
+          "glyph": "document"
+        },
+        {
+          "id": "i2",
+          "type": "node",
+          "label": "问题",
+          "text": "继续探索",
+          "glyph": "document"
+        }
+      ],
+      "connections": [
+        {
+          "id": "link0",
+          "from": "anchor",
+          "to": "i0"
+        },
+        {
+          "id": "link1",
+          "from": "anchor",
+          "to": "i1"
+        },
+        {
+          "id": "link2",
+          "from": "anchor",
+          "to": "i2"
+        }
+      ],
+      "beats": [
+        {
+          "id": "anchor-enter",
+          "target": "anchor",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 26,
+          "duration": 18
+        },
+        {
+          "id": "link0-draw",
+          "target": "link0",
+          "action": "draw",
+          "start": 26,
+          "duration": 12
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 64,
+          "duration": 18
+        },
+        {
+          "id": "link1-draw",
+          "target": "link1",
+          "action": "draw",
+          "start": 64,
+          "duration": 12
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 102,
+          "duration": 18
+        },
+        {
+          "id": "link2-draw",
+          "target": "link2",
+          "action": "draw",
+          "start": 102,
+          "duration": 12
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

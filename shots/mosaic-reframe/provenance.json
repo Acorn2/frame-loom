@@ -1,0 +1,22 @@
+{
+  "id": "mosaic-reframe",
+  "mode": "method-reference",
+  "repository": "https://github.com/Acorn2/video-shotcraft",
+  "commit": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab",
+  "recipe": "references/shots/transition/mosaic-reframe.md",
+  "implementation": "demos/transition/mosaic-reframe/MosaicReframe.tsx",
+  "shortlist": "C14",
+  "upstreamLicense": "Apache-2.0",
+  "implementationLicense": "MIT",
+  "notice": "Independent implementation; upstream fixtures and assets excluded.",
+  "retained": [
+    "同一内容重新分组排版",
+    "复用同一真实卡集合；只选可读布局，正文阅读不使用高速瀑布终态"
+  ],
+  "omitted": [
+    "upstream media",
+    "fixed frames",
+    "continuous drift",
+    "automatic sound"
+  ]
+}

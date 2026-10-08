@@ -1,0 +1,22 @@
+{
+  "id": "outline-trace",
+  "version": "1.0.0",
+  "status": "experimental",
+  "shortlist": "C02",
+  "kind": "hosted-action",
+  "hosts": [
+    "structure-then-text"
+  ],
+  "action": "trace",
+  "targetSlot": "items",
+  "styles": [
+    "retro-zine"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "sound": false,
+  "requires": [
+    "路径与实际对象吻合；闭合再交内容，不能把装饰线当关系"
+  ]
+}

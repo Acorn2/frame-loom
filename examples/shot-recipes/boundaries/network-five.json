@@ -1,0 +1,204 @@
+{
+  "schemaVersion": "2.4",
+  "videoTemplate": {
+    "id": "retro-zine-explainer",
+    "version": "1.2.0"
+  },
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "project": {
+    "title": "笔记需要保留依据",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 10.0,
+    "durationFrames": 300,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "five-relations",
+      "template": "graph-explainer",
+      "purpose": "evidence",
+      "title": "一份笔记连接什么",
+      "primaryClaim": "主体和关系都在原文中明示",
+      "visual": {
+        "kind": "network",
+        "explanation": "主体和关系都在原文中明示",
+        "representation": "diagram",
+        "source": "source.md#relations",
+        "anchorId": "anchor",
+        "networkDirection": "outward"
+      },
+      "shot": {
+        "id": "network-expand",
+        "version": "1.0.0",
+        "slots": {
+          "anchor": "anchor",
+          "items": [
+            "i0",
+            "i1",
+            "i2",
+            "i3",
+            "i4"
+          ]
+        }
+      },
+      "narration": "",
+      "durationFrames": 300,
+      "layers": [
+        {
+          "id": "anchor",
+          "type": "node",
+          "label": "资料2026",
+          "text": "中文与 v2.4 依据",
+          "glyph": "document"
+        },
+        {
+          "id": "i0",
+          "type": "node",
+          "glyph": "document",
+          "label": "边界2026内容",
+          "text": "来源中文与 English v2.4 原文依据"
+        },
+        {
+          "id": "i1",
+          "type": "node",
+          "glyph": "document",
+          "label": "边界2026内容",
+          "text": "来源中文与 English v2.4 原文依据"
+        },
+        {
+          "id": "i2",
+          "type": "node",
+          "glyph": "document",
+          "label": "边界2026内容",
+          "text": "来源中文与 English v2.4 原文依据"
+        },
+        {
+          "id": "i3",
+          "type": "node",
+          "glyph": "document",
+          "label": "边界2026内容",
+          "text": "来源中文与 English v2.4 原文依据"
+        },
+        {
+          "id": "i4",
+          "type": "node",
+          "glyph": "document",
+          "label": "边界2026内容",
+          "text": "来源中文与 English v2.4 原文依据"
+        }
+      ],
+      "connections": [
+        {
+          "id": "link0",
+          "from": "anchor",
+          "to": "i0"
+        },
+        {
+          "id": "link1",
+          "from": "anchor",
+          "to": "i1"
+        },
+        {
+          "id": "link2",
+          "from": "anchor",
+          "to": "i2"
+        },
+        {
+          "id": "link3",
+          "from": "anchor",
+          "to": "i3"
+        },
+        {
+          "id": "link4",
+          "from": "anchor",
+          "to": "i4"
+        }
+      ],
+      "beats": [
+        {
+          "id": "anchor-enter",
+          "target": "anchor",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 26,
+          "duration": 18
+        },
+        {
+          "id": "link0-draw",
+          "target": "link0",
+          "action": "draw",
+          "start": 26,
+          "duration": 12
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 64,
+          "duration": 18
+        },
+        {
+          "id": "link1-draw",
+          "target": "link1",
+          "action": "draw",
+          "start": 64,
+          "duration": 12
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 102,
+          "duration": 18
+        },
+        {
+          "id": "link2-draw",
+          "target": "link2",
+          "action": "draw",
+          "start": 102,
+          "duration": 12
+        },
+        {
+          "id": "i3-enter",
+          "target": "i3",
+          "action": "enter",
+          "start": 140,
+          "duration": 18
+        },
+        {
+          "id": "link3-draw",
+          "target": "link3",
+          "action": "draw",
+          "start": 140,
+          "duration": 12
+        },
+        {
+          "id": "i4-enter",
+          "target": "i4",
+          "action": "enter",
+          "start": 178,
+          "duration": 18
+        },
+        {
+          "id": "link4-draw",
+          "target": "link4",
+          "action": "draw",
+          "start": 178,
+          "duration": 12
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

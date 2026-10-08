@@ -1,3 +1,4 @@
+import {chapterWindows, assertChapterCaptions} from '../../src/shots/shortlist/chapter-transitions.tsx';
 import fs from 'node:fs';
 import {validateStoryboard} from '../../src/validation/storyboard-validator.ts';
 import {parseCaptions} from '../../src/audio/captions.ts';
@@ -23,8 +24,12 @@ export function checkVisualInput(storyboard) {
 export function checkAudioInput(storyboardPath, audioConfigPath) {
   if (!audioConfigPath) return undefined;
   const report = inspectAudio(storyboardPath, audioConfigPath);
+  const storyboard = JSON.parse(fs.readFileSync(storyboardPath, 'utf8'));
+  const captions = report.captionPath ? parseCaptions(fs.readFileSync(report.captionPath, 'utf8')) : [];
+  if (chapterWindows(storyboard).length && report.tracks.some((track) => track.kind === 'voiceover') && !captions.length) throw new Error('有声换章需要字幕时间轴以检查关键词窗口。');
+  assertChapterCaptions(storyboard, captions);
   const captionIssues = report.captionPath
-    ? checkExternalCaptionLayout(JSON.parse(fs.readFileSync(storyboardPath, 'utf8')), parseCaptions(fs.readFileSync(report.captionPath, 'utf8')))
+    ? checkExternalCaptionLayout(storyboard, captions)
     : [];
   if (captionIssues.length > 0) {
     throw new Error(captionIssues.map((item) => `${item.target}: ${item.message}`).join('; '));

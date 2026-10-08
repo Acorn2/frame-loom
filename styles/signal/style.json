@@ -2,37 +2,87 @@
   "id": "signal",
   "version": "1.0.0",
   "tokens": {
-    "background": "#111b27",
-    "ink": "#f5f3ec",
+    "background": "#16171d",
+    "ink": "#f3f3f7",
     "captionInk": "#ffffff",
-    "muted": "#b8cbcb",
-    "accent": "#44e0d3",
-    "accentAlt": "#849ddd",
-    "paper": "#192936",
-    "grid": "#304451",
-    "displayFont": "Arial, PingFang SC, sans-serif",
-    "bodyFont": "Arial, PingFang SC, sans-serif",
+    "muted": "#bbb8c9",
+    "accent": "#b6a3f2",
+    "accentAlt": "#c5badf",
+    "paper": "#25262f",
+    "grid": "#65606f",
+    "displayFont": "Arial, \"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+    "bodyFont": "Arial, \"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
     "pattern": "solid",
-    "surfaceRadius": 8,
-    "surfaceBorder": "2px solid #718c8b",
-    "surfaceShadow": "8px 10px 0 #0a121b",
+    "surfaceRadius": 50,
+    "surfaceBorder": "1px solid #65606f",
+    "surfaceShadow": "none",
     "labelRadius": 2,
     "titleFontSize": 116
   },
   "safeArea": {
-    "landscape": {"top": 84, "right": 104, "bottom": 88, "left": 104},
-    "portrait": {"top": 132, "right": 70, "bottom": 140, "left": 70}
+    "landscape": {
+      "top": 84,
+      "right": 104,
+      "bottom": 88,
+      "left": 104
+    },
+    "portrait": {
+      "top": 132,
+      "right": 70,
+      "bottom": 140,
+      "left": 70
+    }
   },
   "supports": {
-    "purposes": ["opening", "claim", "process", "evidence", "media", "closing"],
-    "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
-    "layers": ["label", "card", "annotation", "metric", "node", "screenshot", "object", "callout"],
-    "actions": ["enter", "reveal", "draw", "focus", "highlight", "count", "camera-push", "rotate", "set-state"],
-    "transitions": ["fade", "slide", "paper-wipe", "carry"],
-    "overlapTransitions": ["overlap-fade", "overlap-slide", "overlap-carry"]
+    "purposes": [
+      "opening",
+      "claim",
+      "process",
+      "evidence",
+      "media",
+      "closing"
+    ],
+    "templates": [
+      "statement",
+      "graph-explainer",
+      "metric-grid",
+      "interaction-flow"
+    ],
+    "layers": [
+      "label",
+      "card",
+      "annotation",
+      "metric",
+      "node",
+      "screenshot",
+      "object",
+      "callout"
+    ],
+    "actions": [
+      "enter",
+      "reveal",
+      "draw",
+      "focus",
+      "highlight",
+      "count",
+      "camera-push",
+      "rotate",
+      "set-state"
+    ],
+    "transitions": [
+      "fade",
+      "slide",
+      "paper-wipe",
+      "carry"
+    ],
+    "overlapTransitions": [
+      "overlap-fade",
+      "overlap-slide",
+      "overlap-carry"
+    ]
   },
   "provenance": {
-    "fonts": "System Arial and PingFang SC fallback; no bundled font assets.",
+    "fonts": "System Arial / PingFang SC / Microsoft YaHei or installed Noto Sans CJK SC; no fonts bundled.",
     "assets": "CSS-only light and lines; example media must provide its own provenance."
   }
 }

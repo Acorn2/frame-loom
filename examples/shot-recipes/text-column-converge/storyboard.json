@@ -1,0 +1,125 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "text-column-converge",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "新的开始来自行动",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 7.5,
+    "durationFrames": 225,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "text-column-converge",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "新的开始来自行动",
+      "primaryClaim": "从新的想法、尝试，走向新的开始",
+      "visual": {
+        "kind": "statement",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "text-column-converge",
+        "version": "1.2.0",
+        "slots": {
+          "prefix": "prefix",
+          "items": [
+            "i0",
+            "i1",
+            "i2"
+          ],
+          "result": "result"
+        }
+      },
+      "narration": "从新的想法、尝试，走向新的开始",
+      "durationFrames": 225,
+      "layers": [
+        {
+          "id": "prefix",
+          "type": "label",
+          "label": "新的"
+        },
+        {
+          "id": "i0",
+          "type": "label",
+          "label": "想法"
+        },
+        {
+          "id": "i1",
+          "type": "label",
+          "label": "尝试"
+        },
+        {
+          "id": "i2",
+          "type": "label",
+          "label": "开始"
+        },
+        {
+          "id": "result",
+          "type": "label",
+          "label": "新的开始"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "prefix-enter",
+          "target": "prefix",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 18,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 60,
+          "duration": 18
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 102,
+          "duration": 18
+        },
+        {
+          "id": "result-focus",
+          "target": "result",
+          "action": "focus",
+          "start": 144,
+          "duration": 26
+        },
+        {
+          "id": "result-enter",
+          "target": "result",
+          "action": "enter",
+          "start": 170,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

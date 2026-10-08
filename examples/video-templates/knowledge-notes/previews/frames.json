@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0",
+  "sourceStoryboard": "../storyboard.json",
+  "frames": [
+    {
+      "label": "opening-shot-complete",
+      "required": true,
+      "timeSec": 1.5,
+      "file": "paper-title-complete.png"
+    },
+    {
+      "label": "structure-shot-complete",
+      "required": true,
+      "timeSec": 9.766666666666667,
+      "file": "title-to-label-complete.png"
+    },
+    {
+      "label": "evidence-shot-complete",
+      "required": true,
+      "timeSec": 19.166666666666668,
+      "file": "document-conclusions-complete.png"
+    },
+    {
+      "label": "checklist-shot-complete",
+      "required": true,
+      "timeSec": 27.166666666666668,
+      "file": "list-reveal-complete.png"
+    },
+    {
+      "label": "compare-shot-complete",
+      "required": true,
+      "timeSec": 34.1,
+      "file": "compare-reveal-complete.png"
+    },
+    {
+      "label": "relations-shot-complete",
+      "required": true,
+      "timeSec": 43.03333333333333,
+      "file": "network-expand-complete.png"
+    },
+    {
+      "label": "closing-shot-complete",
+      "required": true,
+      "timeSec": 48.03333333333333,
+      "file": "semantic-default-complete.png"
+    },
+    {
+      "label": "structure-shot-title-demote-mid",
+      "required": true,
+      "timeSec": 7.566666666666666,
+      "file": "title-demote-mid.png"
+    },
+    {
+      "label": "evidence-shot-source-dock-mid",
+      "required": true,
+      "timeSec": 15.3,
+      "file": "source-dock-mid.png"
+    }
+  ]
+}

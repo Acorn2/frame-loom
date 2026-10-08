@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {resolveProductionLock, writeProductionLock, productionDirectory} from './lib/production-lock.mjs';
 import {bundle} from '@remotion/bundler';
 import {getCompositions, renderMedia} from '@remotion/renderer';
 import {loadAudioRuntime} from './lib/audio-runtime.mjs';
@@ -11,6 +12,7 @@ import {checkAssetInput, checkAudioInput, checkStoryboardInput, checkVisualInput
 import {loadHandoffConfig, OUTPUT_PURPOSES} from './lib/output-purpose.mjs';
 import {assertStoryboardApproval} from './lib/storyboard-approval.mjs';
 import {renderToVerifiedOutput} from './lib/verified-render-output.mjs';
+import {verifyFontAssets} from '../src/fonts/assets.ts';
 
 const args = process.argv.slice(2);
 let force = false;
@@ -140,7 +142,7 @@ function hydrateStoryboardAssets(value) {
 const styleDirectory = path.join(styleRoot, storyboard.style.id);
 const style = parseFile(StylePackSchema, path.join(styleDirectory, 'style.json'), 'style.json');
 const motion = parseFile(MotionPackSchema, path.join(styleDirectory, 'motion.json'), 'motion.json');
-const styleTokens = createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height);
+const styleTokens = createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height, storyboard.font);
 const hydratedStoryboard = hydrateStoryboardAssets(storyboard);
 const audioRuntime = loadAudioRuntime(audioConfigPath, audioTiming);
 const hasAudio = Boolean(audioRuntime?.voiceoverDataUri || audioRuntime?.musicDataUri || audioRuntime?.sfx?.length);
@@ -149,10 +151,15 @@ if (outputPurpose === 'in-project-video' && !audioRuntime?.voiceoverDataUri) {
 }
 const handoff = outputPurpose === 'visual-master' ? loadHandoffConfig(path.dirname(resolvedInput)) : undefined;
 
+const resolvedProduction = resolveProductionLock(storyboard);
+const productionLock = resolvedProduction?.lock;
+const font = storyboard.font ? verifyFontAssets(storyboard.font) : undefined;
 const entryPoint = path.join(projectRoot, 'src/index.ts');
 console.log('Bundling Remotion composition...');
 const bundleLocation = await bundle({entryPoint});
 const inputProps = {storyboard: hydratedStoryboard, styleTokens, audioRuntime, renderProfile: {
+  ...(font ? {font: {id: font.id, version: font.version, faces: font.faces.map(({file, sha256}) => ({file, sha256})), licenseSha256: font.licenseSha256}} : {}),
+  ...(productionLock ? {productionLockHash: productionLock.hash, productionLock, resolvedShotPlan: resolvedProduction.plans} : {}),
   purpose: outputPurpose ?? (hasAudio ? 'in-project-video' : 'visual-preview'),
   showReviewMarker: !hasAudio && outputPurpose !== 'visual-master',
   facecamRightFraction: handoff?.facecamRightFraction ?? 0,
@@ -178,6 +185,10 @@ await renderToVerifiedOutput({
       console.log(`RENDER PROGRESS ${Math.min(bucket * 10, 100)}% rendered=${renderedFrames}/${composition.durationInFrames} encoded=${encodedFrames}`);
     }
   }),
-  verify: (stagedVideo) => inspectOutput(stagedVideo, storyboard, {expectAudio: hasAudio})
+  verify: (stagedVideo) => {
+    inspectOutput(stagedVideo, storyboard, {expectAudio: hasAudio});
+    if (productionLock && resolveProductionLock(storyboard).lock.hash !== productionLock.hash) throw new Error('输入或渲染实现已在渲染期间变化，未发布候选视频。');
+  }
 });
+if (productionLock) writeProductionLock(storyboard, productionDirectory(resolvedOutput), resolvedProduction);
 console.log(`Rendered: ${resolvedOutput}`);

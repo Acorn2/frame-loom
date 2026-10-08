@@ -1,0 +1,71 @@
+{
+  "id": "timeline-travel",
+  "version": "1.0.0",
+  "status": "experimental",
+  "registered": true,
+  "visualKinds": [
+    "sequence"
+  ],
+  "purpose": "沿真实时间线逐项行进",
+  "inputModes": [
+    "document-only",
+    "document-with-assets"
+  ],
+  "requiredAssets": [],
+  "styles": [
+    "retro-zine"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "slots": {
+    "items": {
+      "min": 2,
+      "max": 4,
+      "labelMax": 12,
+      "textMax": 40
+    }
+  },
+  "timing": {
+    "actions": {
+      "enter": {
+        "minSec": 0.2,
+        "maxSec": 1.2
+      },
+      "reveal": {
+        "minSec": 0.2,
+        "maxSec": 1.2
+      }
+    },
+    "readingSec": 0.8,
+    "titleHoldSec": 0.6,
+    "sourceHoldSec": 0.3,
+    "itemHoldSec": 0.6
+  },
+  "motion": {
+    "recipeOwned": [
+      "timeline-travel",
+      "bounded-stage-order"
+    ],
+    "styleOwned": [
+      "color",
+      "font",
+      "surface",
+      "entrance-offset"
+    ],
+    "continuousDrift": false
+  },
+  "qa": [
+    "action-mid",
+    "action-complete",
+    "complete",
+    "before-handoff"
+  ],
+  "sound": {
+    "enabled": false,
+    "events": [
+      "title-settled",
+      "item-entered"
+    ]
+  }
+}

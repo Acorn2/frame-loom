@@ -1,0 +1,787 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FrameLoom Hosted Action Recipe",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "enum": [
+            "1.0.0",
+            "1.1.0",
+            "1.2.0"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "const": "experimental"
+        },
+        "kind": {
+          "type": "string",
+          "const": "hosted-action"
+        },
+        "styles": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "orientations": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "landscape"
+          }
+        },
+        "sound": {
+          "type": "boolean",
+          "const": false
+        },
+        "requires": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string",
+          "const": "scanline-annotate-focus"
+        },
+        "shortlist": {
+          "type": "string",
+          "const": "C04"
+        },
+        "hosts": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "document-write"
+          }
+        },
+        "action": {
+          "type": "string",
+          "const": "highlight"
+        },
+        "targetSlot": {
+          "type": "string",
+          "const": "blocks"
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "kind",
+        "styles",
+        "orientations",
+        "sound",
+        "requires",
+        "id",
+        "shortlist",
+        "hosts",
+        "action",
+        "targetSlot"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "enum": [
+            "1.0.0",
+            "1.1.0",
+            "1.2.0"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "const": "experimental"
+        },
+        "kind": {
+          "type": "string",
+          "const": "hosted-action"
+        },
+        "styles": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "orientations": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "landscape"
+          }
+        },
+        "sound": {
+          "type": "boolean",
+          "const": false
+        },
+        "requires": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string",
+          "const": "scan-bracket-sweep"
+        },
+        "shortlist": {
+          "type": "string",
+          "const": "C05"
+        },
+        "hosts": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "document-write"
+          }
+        },
+        "action": {
+          "type": "string",
+          "const": "highlight"
+        },
+        "targetSlot": {
+          "type": "string",
+          "const": "blocks"
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "kind",
+        "styles",
+        "orientations",
+        "sound",
+        "requires",
+        "id",
+        "shortlist",
+        "hosts",
+        "action",
+        "targetSlot"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "enum": [
+            "1.0.0",
+            "1.1.0",
+            "1.2.0"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "const": "experimental"
+        },
+        "kind": {
+          "type": "string",
+          "const": "hosted-action"
+        },
+        "styles": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "orientations": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "landscape"
+          }
+        },
+        "sound": {
+          "type": "boolean",
+          "const": false
+        },
+        "requires": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string",
+          "const": "line-boil"
+        },
+        "shortlist": {
+          "type": "string",
+          "const": "C06"
+        },
+        "hosts": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "ring-annotation"
+          }
+        },
+        "action": {
+          "type": "string",
+          "const": "highlight"
+        },
+        "targetSlot": {
+          "type": "string",
+          "const": "subject"
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "kind",
+        "styles",
+        "orientations",
+        "sound",
+        "requires",
+        "id",
+        "shortlist",
+        "hosts",
+        "action",
+        "targetSlot"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "enum": [
+            "1.0.0",
+            "1.1.0",
+            "1.2.0"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "const": "experimental"
+        },
+        "kind": {
+          "type": "string",
+          "const": "hosted-action"
+        },
+        "styles": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "orientations": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "landscape"
+          }
+        },
+        "sound": {
+          "type": "boolean",
+          "const": false
+        },
+        "requires": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string",
+          "const": "speed-ramp-freeze"
+        },
+        "shortlist": {
+          "type": "string",
+          "const": "C07"
+        },
+        "hosts": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "scroll-brake"
+          }
+        },
+        "action": {
+          "type": "string",
+          "const": "highlight"
+        },
+        "targetSlot": {
+          "type": "string",
+          "const": "items"
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "kind",
+        "styles",
+        "orientations",
+        "sound",
+        "requires",
+        "id",
+        "shortlist",
+        "hosts",
+        "action",
+        "targetSlot"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "enum": [
+            "1.0.0",
+            "1.1.0",
+            "1.2.0"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "const": "experimental"
+        },
+        "kind": {
+          "type": "string",
+          "const": "hosted-action"
+        },
+        "styles": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "orientations": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "landscape"
+          }
+        },
+        "sound": {
+          "type": "boolean",
+          "const": false
+        },
+        "requires": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string",
+          "const": "mosaic-reframe"
+        },
+        "shortlist": {
+          "type": "string",
+          "const": "C14"
+        },
+        "hosts": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "member-grid"
+          }
+        },
+        "action": {
+          "type": "string",
+          "const": "highlight"
+        },
+        "targetSlot": {
+          "type": "string",
+          "const": "items"
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "kind",
+        "styles",
+        "orientations",
+        "sound",
+        "requires",
+        "id",
+        "shortlist",
+        "hosts",
+        "action",
+        "targetSlot"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "enum": [
+            "1.0.0",
+            "1.1.0",
+            "1.2.0"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "const": "experimental"
+        },
+        "kind": {
+          "type": "string",
+          "const": "hosted-action"
+        },
+        "styles": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "orientations": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "landscape"
+          }
+        },
+        "sound": {
+          "type": "boolean",
+          "const": false
+        },
+        "requires": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string",
+          "const": "marker-underline"
+        },
+        "shortlist": {
+          "type": "string",
+          "const": "C01"
+        },
+        "hosts": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "paper-title",
+              "blur-slide",
+              "split-text-stagger"
+            ]
+          }
+        },
+        "action": {
+          "type": "string",
+          "const": "highlight"
+        },
+        "targetSlot": {
+          "type": "string",
+          "const": "emphasis"
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "kind",
+        "styles",
+        "orientations",
+        "sound",
+        "requires",
+        "id",
+        "shortlist",
+        "hosts",
+        "action",
+        "targetSlot"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "enum": [
+            "1.0.0",
+            "1.1.0",
+            "1.2.0"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "const": "experimental"
+        },
+        "kind": {
+          "type": "string",
+          "const": "hosted-action"
+        },
+        "styles": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "orientations": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "landscape"
+          }
+        },
+        "sound": {
+          "type": "boolean",
+          "const": false
+        },
+        "requires": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string",
+          "const": "outline-trace"
+        },
+        "shortlist": {
+          "type": "string",
+          "const": "C02"
+        },
+        "hosts": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "structure-then-text"
+          }
+        },
+        "action": {
+          "type": "string",
+          "const": "trace"
+        },
+        "targetSlot": {
+          "type": "string",
+          "const": "items"
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "kind",
+        "styles",
+        "orientations",
+        "sound",
+        "requires",
+        "id",
+        "shortlist",
+        "hosts",
+        "action",
+        "targetSlot"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "enum": [
+            "1.0.0",
+            "1.1.0",
+            "1.2.0"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "const": "experimental"
+        },
+        "kind": {
+          "type": "string",
+          "const": "hosted-action"
+        },
+        "styles": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "orientations": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "landscape"
+          }
+        },
+        "sound": {
+          "type": "boolean",
+          "const": false
+        },
+        "requires": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string",
+          "const": "paper-tape"
+        },
+        "shortlist": {
+          "type": "string",
+          "const": "C03"
+        },
+        "hosts": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "card-stack",
+              "row-embed"
+            ]
+          }
+        },
+        "action": {
+          "type": "string",
+          "const": "tape"
+        },
+        "targetSlot": {
+          "type": "string",
+          "const": "items"
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "kind",
+        "styles",
+        "orientations",
+        "sound",
+        "requires",
+        "id",
+        "shortlist",
+        "hosts",
+        "action",
+        "targetSlot"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "enum": [
+            "1.0.0",
+            "1.1.0",
+            "1.2.0"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "const": "experimental"
+        },
+        "kind": {
+          "type": "string",
+          "const": "hosted-action"
+        },
+        "styles": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "orientations": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "landscape"
+          }
+        },
+        "sound": {
+          "type": "boolean",
+          "const": false
+        },
+        "requires": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "type": "string",
+          "const": "card-flip"
+        },
+        "shortlist": {
+          "type": "string",
+          "const": "C08"
+        },
+        "hosts": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "concept-matrix"
+          }
+        },
+        "action": {
+          "type": "string",
+          "const": "enter"
+        },
+        "targetSlot": {
+          "type": "string",
+          "const": "items"
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "kind",
+        "styles",
+        "orientations",
+        "sound",
+        "requires",
+        "id",
+        "shortlist",
+        "hosts",
+        "action",
+        "targetSlot"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "letterspace-materialize",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "LOOM",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 4.0,
+    "durationFrames": 120,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "letterspace-materialize",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "LOOM",
+      "primaryClaim": "有来源字标连续描画",
+      "visual": {
+        "kind": "statement",
+        "explanation": "FrameLoom 自写公开示意资料，不代表真实产品、用户或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "letterspace-materialize",
+        "version": "1.2.0",
+        "slots": {
+          "title": "item1"
+        },
+        "glyphs": [
+          {
+            "character": "L",
+            "advance": 100,
+            "paths": [
+              "M20 15V85H80"
+            ]
+          },
+          {
+            "character": "O",
+            "advance": 100,
+            "paths": [
+              "M50 15C10 15 10 85 50 85C90 85 90 15 50 15Z"
+            ]
+          },
+          {
+            "character": "O",
+            "advance": 100,
+            "paths": [
+              "M50 15C10 15 10 85 50 85C90 85 90 15 50 15Z"
+            ]
+          },
+          {
+            "character": "M",
+            "advance": 100,
+            "paths": [
+              "M15 85V15L50 55L85 15V85"
+            ]
+          }
+        ]
+      },
+      "narration": "有来源字标连续描画",
+      "durationFrames": 120,
+      "layers": [
+        {
+          "id": "item1",
+          "type": "label",
+          "label": "LOOM"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "item1-enter",
+          "target": "item1",
+          "action": "enter",
+          "start": 0,
+          "duration": 72
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

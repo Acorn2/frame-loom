@@ -1,0 +1,27 @@
+{
+  "id": "blinds-wipe",
+  "version": "1.0.0",
+  "status": "experimental",
+  "kind": "cross-scene-transition",
+  "shortlist": "C10",
+  "type": "overlap-blinds",
+  "styles": [
+    "retro-zine",
+    "signal",
+    "scatterbrain",
+    "archive-grid",
+    "signal-noir",
+    "studio-frame"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "minSec": 0.2,
+  "maxSec": 0.8,
+  "sound": false,
+  "requires": [
+    "显式 chapterBoundary: true",
+    "换章独立无字幕窗口",
+    "完成态阅读在交接前结束"
+  ]
+}

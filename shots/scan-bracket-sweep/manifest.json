@@ -1,0 +1,27 @@
+{
+  "id": "scan-bracket-sweep",
+  "version": "1.2.0",
+  "status": "experimental",
+  "kind": "hosted-action",
+  "shortlist": "C05",
+  "styles": [
+    "retro-zine",
+    "signal",
+    "scatterbrain",
+    "archive-grid",
+    "signal-noir",
+    "studio-frame"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "sound": false,
+  "requires": [
+    "仅作示意，不把机械扫描包装成实际AI操作；目标静止，扫描范围一致"
+  ],
+  "hosts": [
+    "document-write"
+  ],
+  "action": "highlight",
+  "targetSlot": "blocks"
+}

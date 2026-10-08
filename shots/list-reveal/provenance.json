@@ -1,0 +1,26 @@
+{
+  "id": "list-reveal",
+  "mode": "method-reference",
+  "repository": "https://github.com/Acorn2/video-shotcraft",
+  "commit": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab",
+  "recipe": "references/shots/ui-entrance/list-reveal.md",
+  "implementation": "demos/ui-entrance/list-reveal/ListReveal.tsx",
+  "upstreamLicense": "Apache-2.0",
+  "implementationLicense": "MIT",
+  "notice": "No applicable NOTICE found in the local upstream snapshot. Independently implemented; no upstream code, copy, fixtures or external media copied.",
+  "retained": [
+    "表达目的",
+    "阶段顺序",
+    "2026-10-02 对照所选 Markdown 和 TSX 重建的配方特征：条目依次从小到实落位，早早变得不透明，落定带一次软过冲。"
+  ],
+  "omitted": [
+    "固定帧数",
+    "固定坐标与配色",
+    "独立字幕",
+    "持续漂移",
+    "占位事实",
+    "自动音效"
+  ],
+  "externalAttribution": "Upstream ATTRIBUTION.md credits remotion-bits.dev for this research recipe; external artwork/media are not imported or licensed by that table.",
+  "adaptationNotes": "scale=.78→1；y=14→0；outBack(1.4)；opacity=min(1,2.2p)；持续漂移关闭。 不要把找位改成大距离飞行；多于四条应拆镜；每项仍按旁白和阅读窗口编排。"
+}

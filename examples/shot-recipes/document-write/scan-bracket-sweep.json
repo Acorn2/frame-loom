@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "document-write",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "逐段保留文档内容",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 9.0,
+    "durationFrames": 270,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "document-write",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "逐段保留文档内容",
+      "primaryClaim": "文档段落逐步书写显现",
+      "visual": {
+        "kind": "statement",
+        "explanation": "FrameLoom 自写公开示意资料，不代表真实产品、用户或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "document-write",
+        "version": "1.2.0",
+        "slots": {
+          "blocks": [
+            "item1",
+            "item2",
+            "item3"
+          ]
+        },
+        "effects": [
+          {
+            "id": "scan-bracket-sweep",
+            "target": "item2"
+          }
+        ]
+      },
+      "narration": "文档段落逐步书写显现",
+      "durationFrames": 270,
+      "layers": [
+        {
+          "id": "item1",
+          "type": "card",
+          "label": "提出问题",
+          "text": "先写下这份资料要回答什么，不把疑问直接当作结论。"
+        },
+        {
+          "id": "item2",
+          "type": "card",
+          "label": "核对来源",
+          "text": "引用原文时记录位置，让之后的复核能找到相同内容。"
+        },
+        {
+          "id": "item3",
+          "type": "card",
+          "label": "保留边界",
+          "text": "把已确认事实与自己的解释分开，保留还没有答案的问题。"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "item1-reveal",
+          "target": "item1",
+          "action": "reveal",
+          "start": 0,
+          "duration": 36
+        },
+        {
+          "id": "item2-reveal",
+          "target": "item2",
+          "action": "reveal",
+          "start": 42,
+          "duration": 36
+        },
+        {
+          "id": "item3-reveal",
+          "target": "item3",
+          "action": "reveal",
+          "start": 84,
+          "duration": 36
+        },
+        {
+          "id": "scan-bracket-sweep-phase",
+          "target": "item2",
+          "action": "highlight",
+          "start": 132,
+          "duration": 90
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "ring-annotation",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "从主体展开结构说明",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 6.933333333333334,
+    "durationFrames": 208,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "ring-annotation",
+      "template": "graph-explainer",
+      "purpose": "claim",
+      "title": "从主体展开结构说明",
+      "primaryClaim": "主体转为机制图，旁侧解释",
+      "visual": {
+        "kind": "network",
+        "explanation": "FrameLoom 自写公开示意资料，不代表真实产品、用户或研究结果",
+        "representation": "diagram",
+        "source": "source.md",
+        "anchorId": "item1",
+        "networkDirection": "inward"
+      },
+      "shot": {
+        "id": "ring-annotation",
+        "version": "1.2.0",
+        "slots": {
+          "subject": "item1",
+          "items": [
+            "item2",
+            "item3",
+            "item4"
+          ]
+        }
+      },
+      "narration": "主体转为机制图，旁侧解释",
+      "durationFrames": 208,
+      "layers": [
+        {
+          "id": "item1",
+          "type": "card",
+          "label": "阅读过程",
+          "text": "关注文本与证据"
+        },
+        {
+          "id": "item2",
+          "type": "card",
+          "label": "提问",
+          "text": "记录不确定之处"
+        },
+        {
+          "id": "item3",
+          "type": "card",
+          "label": "核查",
+          "text": "返回原文查找支持"
+        },
+        {
+          "id": "item4",
+          "type": "card",
+          "label": "解释",
+          "text": "区分事实和自己的推断"
+        }
+      ],
+      "connections": [
+        {
+          "id": "link1",
+          "from": "item2",
+          "to": "item1"
+        },
+        {
+          "id": "link2",
+          "from": "item3",
+          "to": "item1"
+        },
+        {
+          "id": "link3",
+          "from": "item4",
+          "to": "item1"
+        }
+      ],
+      "beats": [
+        {
+          "id": "item1-enter",
+          "target": "item1",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item2-enter",
+          "target": "item2",
+          "action": "enter",
+          "start": 90,
+          "duration": 24
+        },
+        {
+          "id": "item3-enter",
+          "target": "item3",
+          "action": "enter",
+          "start": 96,
+          "duration": 24
+        },
+        {
+          "id": "item4-enter",
+          "target": "item4",
+          "action": "enter",
+          "start": 102,
+          "duration": 24
+        },
+        {
+          "id": "item1-focus",
+          "target": "item1",
+          "action": "focus",
+          "start": 48,
+          "duration": 36
+        },
+        {
+          "id": "link1-draw",
+          "target": "link1",
+          "action": "draw",
+          "start": 136,
+          "duration": 24
+        },
+        {
+          "id": "link2-draw",
+          "target": "link2",
+          "action": "draw",
+          "start": 136,
+          "duration": 24
+        },
+        {
+          "id": "link3-draw",
+          "target": "link3",
+          "action": "draw",
+          "start": 136,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

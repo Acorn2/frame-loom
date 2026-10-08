@@ -1,0 +1,31 @@
+{
+  "id": "outline-trace",
+  "mode": "method-reference",
+  "repository": "https://github.com/Acorn2/video-shotcraft",
+  "commit": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab",
+  "recipe": "references/shots/ui-entrance/draw-svg-trace.md",
+  "implementation": "demos/ui-entrance/draw-svg-trace/DrawSvgTrace.tsx",
+  "upstreamLicense": "Apache-2.0",
+  "implementationLicense": "MIT",
+  "notice": "No applicable NOTICE found in the local upstream snapshot. Independently implemented; no upstream code, copy, fixtures or external media copied.",
+  "retained": [
+    "表达目的",
+    "阶段顺序",
+    "2026-10-02 对照所选 Markdown 和 TSX 重建的配方特征：先沿卡片轮廓描边，粗笔头跑在前面，闭合再把正文交给宿主。"
+  ],
+  "omitted": [
+    "固定帧数",
+    "固定坐标与配色",
+    "独立字幕",
+    "持续漂移",
+    "占位事实",
+    "自动音效"
+  ],
+  "externalAttribution": "Upstream attribution is research provenance, not media authorization.",
+  "shortlist": "C02",
+  "dependenciesReviewed": [
+    "demos/_fixtures/Motion.tsx",
+    "demos/_fixtures/Fixtures.tsx"
+  ],
+  "adaptationNotes": "pathLength=1、dashoffset=1→0；笔头dash=.045/.955；trace先于文字enter。 无笔头只剩边框加载；只接structure-then-text宿主；不能抢读正文。"
+}

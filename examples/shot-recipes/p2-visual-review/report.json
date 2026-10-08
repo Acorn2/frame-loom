@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-04",
+  "scope": "21 P2 public silent fixture samples",
+  "sourceFingerprint": "2c4bff885a3846709160f49487d4302965d5a1a0ea64ce628e2725d8f51980b9",
+  "candidateCoverage": 48,
+  "sceneEntries": 37,
+  "hostedActions": 9,
+  "chapterTransitions": 5,
+  "publicSamplesRendered": 53,
+  "testsPassed": 350,
+  "sceneMotionAndCompletionFrames": 26,
+  "effectAndTransitionFrames": 24,
+  "normalPlayback": {
+    "count": 21,
+    "ended": 21,
+    "droppedFrames": 0,
+    "decodedFrames": 4929
+  },
+  "productionQA": {
+    "media": true,
+    "carry": true
+  },
+  "releaseReady": false,
+  "limitations": [
+    "retro-zine landscape only",
+    "declared upstream variants only",
+    "public illustrative inputs only",
+    "real narration and creator approval pending"
+  ]
+}

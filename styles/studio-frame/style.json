@@ -2,20 +2,20 @@
   "id": "studio-frame",
   "version": "1.0.0",
   "tokens": {
-    "background": "#dfe5e1",
-    "ink": "#19231f",
-    "captionInk": "#3F5D1B",
-    "muted": "#728079",
-    "accent": "#b2d72b",
-    "accentAlt": "#608719",
+    "background": "#eef1f4",
+    "ink": "#23302b",
+    "captionInk": "#4B5E55",
+    "muted": "#4b5e55",
+    "accent": "#b5ce45",
+    "accentAlt": "#486f28",
     "paper": "#ffffff",
-    "grid": "#aab6b0",
-    "displayFont": "Arial, PingFang SC, sans-serif",
-    "bodyFont": "Arial, PingFang SC, sans-serif",
+    "grid": "#cdd5d4",
+    "displayFont": "Arial, \"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+    "bodyFont": "Arial, \"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
     "pattern": "desktop",
-    "surfaceRadius": 10,
-    "surfaceBorder": "1px solid #a6b8af",
-    "surfaceShadow": "0 16px 32px #17231e1c",
+    "surfaceRadius": 16,
+    "surfaceBorder": "1px solid #cdd5d4",
+    "surfaceShadow": "0 18px 36px #23302b12",
     "labelRadius": 4,
     "titleFontSize": 110
   },
@@ -82,7 +82,7 @@
     ]
   },
   "provenance": {
-    "fonts": "System Arial and PingFang SC fallback; no bundled font assets.",
+    "fonts": "System Arial / PingFang SC / Microsoft YaHei or installed Noto Sans CJK SC; no fonts bundled.",
     "assets": "CSS-only layout chrome; media is supplied by the storyboard and must be recorded in its asset manifest."
   }
 }

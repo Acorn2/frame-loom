@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "brace-expand",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "构建你的想法",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 2.3333333333333335,
+    "durationFrames": 70,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "brace-expand",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "构建你的想法",
+      "primaryClaim": "用一个清楚的主题开启章节",
+      "visual": {
+        "kind": "statement",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "brace-expand",
+        "version": "1.2.0",
+        "slots": {
+          "title": "title"
+        }
+      },
+      "narration": "用一个清楚的主题开启章节",
+      "durationFrames": 70,
+      "layers": [
+        {
+          "id": "title",
+          "type": "label",
+          "label": "构建你的想法"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "title-enter",
+          "target": "title",
+          "action": "enter",
+          "start": 0,
+          "duration": 30
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

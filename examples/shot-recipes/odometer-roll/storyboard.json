@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "odometer-roll",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "让数字成为焦点",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 4.5,
+    "durationFrames": 135,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "odometer-roll",
+      "template": "metric-grid",
+      "purpose": "claim",
+      "title": "让数字成为焦点",
+      "primaryClaim": "用示意比例展示数字逐位锁定",
+      "visual": {
+        "kind": "metric",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md",
+        "unit": "%"
+      },
+      "shot": {
+        "id": "odometer-roll",
+        "version": "1.2.0",
+        "slots": {
+          "metric": "metric"
+        }
+      },
+      "narration": "用示意比例展示数字逐位锁定",
+      "durationFrames": 135,
+      "layers": [
+        {
+          "id": "metric",
+          "type": "metric",
+          "label": "示例完成比例",
+          "value": "82.50",
+          "text": "示意数值，非真实统计"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "metric-enter",
+          "target": "metric",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "metric-count",
+          "target": "metric",
+          "action": "count",
+          "start": 36,
+          "duration": 60
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

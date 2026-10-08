@@ -1,6 +1,7 @@
 import retroZineMotionJson from '../../styles/retro-zine/motion.json' with {type: 'json'};
 import retroZineJson from '../../styles/retro-zine/style.json' with {type: 'json'};
 import type {MotionPack, StylePack} from '../schemas/style-pack';
+import {resolveFont, type FontRef} from '../fonts/catalog';
 
 export type StylePattern = 'grid' | 'desktop' | 'dots' | 'solid';
 
@@ -16,6 +17,7 @@ export interface StyleTokens {
   grid: string;
   displayFont: string;
   bodyFont: string;
+  font?: FontRef;
   pattern: StylePattern;
   surfaceRadius: number;
   surfaceBorder: string;
@@ -27,14 +29,20 @@ export interface StyleTokens {
   safeArea: StylePack['safeArea']['landscape'];
 }
 
-export function createStyleTokens(style: StylePack, motion: MotionPack, width: number, height: number): StyleTokens {
-  return {
+export function applyProjectFont(tokens: StyleTokens, font?: FontRef): StyleTokens {
+  if (!font) return tokens;
+  const family = `"${resolveFont(font).family}"`;
+  return {...tokens, font, displayFont: family, bodyFont: family};
+}
+
+export function createStyleTokens(style: StylePack, motion: MotionPack, width: number, height: number, font?: FontRef): StyleTokens {
+  return applyProjectFont({
     id: style.id,
     ...style.tokens,
     motion: motion.runtime,
     motionRules: {enter: motion.enter, reveal: motion.reveal, count: motion.count},
     safeArea: width < height ? style.safeArea.portrait : style.safeArea.landscape
-  };
+  }, font);
 }
 
 export function getDefaultStyleTokens(width = 1920, height = 1080): StyleTokens {

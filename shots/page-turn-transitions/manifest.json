@@ -1,0 +1,25 @@
+{
+  "id": "page-turn-transitions",
+  "version": "1.0.0",
+  "status": "experimental",
+  "kind": "cross-scene-transition",
+  "shortlist": "C12",
+  "styles": [
+    "retro-zine",
+    "signal",
+    "scatterbrain",
+    "archive-grid",
+    "signal-noir",
+    "studio-frame"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "sound": false,
+  "requires": [
+    "先评估BarnDoorSplit；CubeRotate后置，限制频次，动作压缩与语音衔接实测"
+  ],
+  "type": "overlap-barn-door",
+  "minSec": 0.6,
+  "maxSec": 2.4
+}

@@ -5,10 +5,16 @@ import type {StyleTokens} from '../../styles/style-loader';
 import {captionTextStyle} from '../../audio/caption-style';
 import {splitCaptionWindow} from '../../audio/captions';
 import {FocusedMedia} from './FocusedMedia';
+import {DocumentConclusionDeal} from './DocumentConclusionDeal';
 import {ConceptGlyph} from './ConceptGlyph';
 import {overlapHandoffOpacity} from '../../timeline/overlap-handoff';
 import {getAttentionOpacity, getAttentionTarget} from '../../timeline/attention';
 import {entranceProgress} from '../../timeline/motion-progress';
+import {semanticTextTiming} from './text-timing';
+import type {RecipeAppearance} from '../../shots/appearance';
+import {StyleStatement} from './StyleStatement';
+import {StyleSequence} from './StyleSequence';
+import {fittedSemanticFont, languageBackground, languageEntrance, semanticHeadingLayout, styleLanguage} from './style-language';
 
 interface Props {
   scene: StoryboardScene;
@@ -16,6 +22,8 @@ interface Props {
   showSceneCaptions: boolean;
   externalCaptions?: boolean;
   overlapOutFrames: number;
+  chapterTransitionOut?: boolean;
+  appearance?: RecipeAppearance;
 }
 
 const clamp = (value: number) => Math.max(0, Math.min(1, value));
@@ -41,7 +49,7 @@ function surface(tokens: StyleTokens, active: boolean, index: number): React.CSS
   const zine = tokens.id === 'retro-zine';
   return {
     background: active ? tokens.accent : tokens.paper,
-    color: active ? contrastInk(tokens.accent) : tokens.ink,
+    color: active ? contrastInk(tokens.accent) : tokens.paper === '#ffffff' ? '#192330' : tokens.ink,
     border: tokens.surfaceBorder,
     borderRadius: tokens.surfaceRadius,
     boxShadow: active
@@ -52,6 +60,7 @@ function surface(tokens: StyleTokens, active: boolean, index: number): React.CSS
 }
 
 function background(tokens: StyleTokens, scale: number): React.CSSProperties {
+  if (styleLanguage(tokens.id)) return languageBackground(tokens, scale);
   if (tokens.id === 'retro-zine' || tokens.id === 'signal-noir') {
     return {backgroundImage: `linear-gradient(${tokens.grid}45 1px, transparent 1px),linear-gradient(90deg, ${tokens.grid}45 1px, transparent 1px)`, backgroundSize: `${72 * scale}px ${72 * scale}px`};
   }
@@ -63,11 +72,28 @@ function background(tokens: StyleTokens, scale: number): React.CSSProperties {
 }
 
 function entranceStyle(progress: number, tokens: StyleTokens, scale: number): React.CSSProperties {
+  if (styleLanguage(tokens.id)) return languageEntrance(progress, tokens, scale);
   return {opacity: clamp(progress), translate: `0 ${(1 - progress) * tokens.motion.enterOffset * scale}px`};
 }
 
-export function transitionStyle(scene: StoryboardScene, frame: number, overlapOutFrames: number): React.CSSProperties {
-  const incoming = scene.transitionIn;
+export function semanticTextProgress(scene: StoryboardScene, frame: number, fps: number, tokens: StyleTokens, overlapOutFrames = 0) {
+  if (scene.shot?.id !== 'semantic-default') {
+    return {
+      heading: scene.shot || scene.transitionIn ? 1 : 0.12 + 0.88 * clamp(frame / 18),
+      claim: scene.shot ? 1 : clamp((frame - 12) / 18)
+    };
+  }
+  // The basic recipe owns its text entrance; specialized shots own their own stages.
+  const {duration, claimStart} = semanticTextTiming(scene, fps, overlapOutFrames);
+  return {
+    heading: scene.transitionIn ? 1 : entranceProgress({frame, start: 0, duration, tokens}),
+    claim: entranceProgress({frame, start: claimStart, duration, tokens})
+  };
+}
+
+export function transitionStyle(scene: StoryboardScene, frame: number, overlapOutFrames: number, chapterTransitionOut = false): React.CSSProperties {
+  const incoming = scene.transitionIn && !['overlap-blinds', 'overlap-push-stack', 'overlap-line-carry', 'overlap-ink', 'overlap-barn-door'].includes(scene.transitionIn.type) ? scene.transitionIn : undefined;
+  if (chapterTransitionOut && frame >= scene.durationFrames - overlapOutFrames) return {opacity: 1};
   const inProgress = incoming ? clamp(frame / incoming.durationFrames) : 1;
   const outgoingFrames = overlapOutFrames || (scene.outro?.fadeFrames ?? (scene.transitionOut ? 12 : 0));
   const outProgress = outgoingFrames ? clamp((frame - (scene.durationFrames - outgoingFrames)) / outgoingFrames) : 0;
@@ -84,7 +110,7 @@ export function transitionStyle(scene: StoryboardScene, frame: number, overlapOu
   };
 }
 
-function DiagramNode({layer, scene, tokens, frame, scale, active, compact = false}: {
+function DiagramNode({layer, scene, tokens, frame, scale, active, compact = false, horizontal = false}: {
   layer: StoryboardLayer;
   scene: StoryboardScene;
   tokens: StyleTokens;
@@ -92,22 +118,27 @@ function DiagramNode({layer, scene, tokens, frame, scale, active, compact = fals
   scale: number;
   active: boolean;
   compact?: boolean;
+  horizontal?: boolean;
 }) {
   const beat = scene.beats.find((item) => item.target === layer.id && ['enter', 'reveal'].includes(item.action));
   const progress = beat ? entranceProgress({frame, start: beat.start, duration: beat.duration, tokens, easing: beat.action === 'reveal' ? tokens.motionRules.reveal.easing : undefined}) : 1;
-  const diameter = (compact ? 122 : 158) * scale;
-  return <div style={{...entranceStyle(progress, tokens, scale), width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', gap: 14 * scale, opacity: clamp(progress) * getAttentionOpacity(scene, layer.id, frame)}}>
-    <div style={{width: diameter, height: diameter, borderRadius: '50%', border: `${4 * scale}px solid ${active ? tokens.accent : tokens.accentAlt}`, background: active ? tokens.accent : tokens.paper, boxShadow: active ? `0 0 0 ${12 * scale}px ${tokens.accent}22` : undefined, display: 'grid', placeItems: 'center', boxSizing: 'border-box'}}>
+  const neutral = scene.shot && ['semantic-default', 'compare-reveal', 'network-expand'].includes(scene.shot.id);
+  const framed = neutral && ['compare', 'network'].includes(scene.visual?.kind ?? '');
+  const family = styleLanguage(tokens.id);
+  const cardInk = contrastInk(tokens.paper);
+  const diameter = (neutral ? horizontal ? 64 : compact ? 84 : 104 : horizontal ? 70 : compact ? 122 : 158) * scale;
+  const heading = <strong style={{fontFamily: tokens.displayFont, fontSize: (neutral ? horizontal ? 48 : compact ? 52 : 64 : horizontal ? 30 : compact ? 38 : 48) * scale, lineHeight: 1.1, overflowWrap: 'anywhere'}}>{layerHeading(layer)}</strong>;
+  const detail = layer.label && layer.text ? <span style={{fontSize: (neutral ? compact ? 30 : 38 : compact ? 23 : 27) * scale, lineHeight: 1.2, color: tokens.muted, overflowWrap: 'anywhere'}}>{layer.text}</span> : null;
+  return <div style={{...entranceStyle(progress, tokens, scale), width: '100%', height: '100%', display: 'flex', flexDirection: horizontal ? 'row' : 'column', justifyContent: 'center', alignItems: 'center', textAlign: horizontal ? 'left' : 'center', gap: 14 * scale, color: framed ? cardInk : tokens.ink, boxSizing: 'border-box', padding: framed ? 18 * scale : undefined, background: framed ? tokens.paper : undefined, border: framed ? tokens.surfaceBorder : undefined, borderRadius: framed ? tokens.surfaceRadius * scale : undefined, boxShadow: framed ? tokens.surfaceShadow : undefined, rotate: family === 'notes' ? `${layer.id.length % 2 ? 1.2 : -1.2}deg` : undefined, opacity: clamp(progress) * (framed ? 1 : getAttentionOpacity(scene, layer.id, frame))}}>
+    <div style={{width: diameter, height: diameter, flexShrink: 0, borderRadius: family === 'swiss' || family === 'blueprint' ? 0 : family === 'signal' ? '50%' : neutral ? tokens.surfaceRadius * scale : '50%', border: `${(neutral ? 1.5 : 4) * scale}px solid ${active ? tokens.accent : tokens.grid}`, background: active ? tokens.accent : tokens.paper, boxShadow: active && family === 'signal' ? `0 0 0 ${12 * scale}px ${tokens.accent}18` : undefined, display: 'grid', placeItems: 'center', boxSizing: 'border-box'}}>
       {layer.glyph ? <ConceptGlyph glyph={layer.glyph} color={active ? contrastInk(tokens.accent) : tokens.accentAlt} size={diameter * 0.54} /> : <span style={{fontFamily: tokens.displayFont, fontSize: 57 * scale}}>{[...layerHeading(layer)][0]}</span>}
     </div>
-    <strong style={{fontFamily: tokens.displayFont, fontSize: (compact ? 38 : 48) * scale, lineHeight: 1.1, overflowWrap: 'anywhere'}}>{layerHeading(layer)}</strong>
-    {layer.label && layer.text ? <span style={{fontSize: (compact ? 23 : 27) * scale, lineHeight: 1.2, color: tokens.muted, overflowWrap: 'anywhere'}}>{layer.text}</span> : null}
+    {horizontal ? <div style={{minWidth: 0, flex: 1, display: 'flex', flexDirection: 'column', gap: 10 * scale}}>{heading}{detail}</div> : <>{heading}{detail}</>}
   </div>;
 }
 
-function StatementVisual({scene, tokens, frame, scale}: {scene: StoryboardScene; tokens: StyleTokens; frame: number; scale: number}) {
+function StatementVisual({scene, tokens, frame, scale, titleProgress}: {scene: StoryboardScene; tokens: StyleTokens; frame: number; scale: number; titleProgress: number}) {
   const labels = scene.layers.filter((layer) => layer.type === 'label');
-  const titleProgress = scene.transitionIn ? 1 : 0.12 + 0.88 * clamp(frame / 18);
   return <div style={{height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', gap: 38 * scale}}>
     <div style={{width: 116 * scale * titleProgress, height: 9 * scale, background: tokens.accent}} />
     <div style={{...entranceStyle(titleProgress, tokens, scale), fontFamily: tokens.displayFont, fontSize: 120 * scale, fontWeight: 800, lineHeight: 1.06, maxWidth: '83%', overflowWrap: 'anywhere'}}>{scene.title}</div>
@@ -122,9 +153,10 @@ function StatementVisual({scene, tokens, frame, scale}: {scene: StoryboardScene;
 function CompareVisual({scene, tokens, frame, scale}: {scene: StoryboardScene; tokens: StyleTokens; frame: number; scale: number}) {
   const items = scene.layers.filter((layer) => layer.type === 'node' || layer.type === 'card');
   const focused = getAttentionTarget(scene, frame);
+  const neutral = scene.shot?.id === 'compare-reveal';
   return <div style={{height: '100%', display: 'grid', gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))`, gap: 14 * scale, alignItems: 'stretch'}}>
-    {items.map((layer, index) => <div key={layer.id} style={{minWidth: 0, position: 'relative', borderTop: `${7 * scale}px solid ${focused === layer.id ? tokens.accent : tokens.grid}`, borderRight: index < items.length - 1 ? `2px solid ${tokens.grid}` : undefined, padding: `0 ${26 * scale}px`}}>
-      <span style={{position: 'absolute', left: 26 * scale, top: 17 * scale, color: tokens.accentAlt, fontSize: 28 * scale, fontWeight: 800}}>0{index + 1}</span>
+    {items.map((layer, index) => <div key={layer.id} style={{minWidth: 0, position: 'relative', borderTop: neutral ? undefined : `${7 * scale}px solid ${focused === layer.id ? tokens.accent : tokens.grid}`, borderRight: !neutral && index < items.length - 1 ? `2px solid ${tokens.grid}` : undefined, padding: neutral ? undefined : `0 ${26 * scale}px`}}>
+      <span style={{position: 'absolute', left: (neutral ? 20 : 26) * scale, top: 17 * scale, zIndex: 1, color: tokens.accentAlt, fontSize: 28 * scale, fontWeight: 800}}>0{index + 1}</span>
       <DiagramNode layer={layer} scene={scene} tokens={tokens} frame={frame} scale={scale} active={focused === layer.id} />
     </div>)}
   </div>;
@@ -185,7 +217,11 @@ function NetworkVisual({scene, tokens, frame, scale}: {scene: StoryboardScene; t
   const items = scene.layers.filter((layer) => layer.type === 'node' || layer.type === 'card');
   const anchor = items.find((layer) => layer.id === scene.visual?.anchorId);
   const branches = items.filter((layer) => layer.id !== anchor?.id);
-  const positions = branchPositions(branches.length);
+  const controlled = scene.shot?.id === 'network-expand' || styleLanguage(tokens.id) === 'blueprint';
+  const positions: Array<[number, number]> = controlled
+    ? branches.map((_, index) => [0.54 + (index % 2) * 0.3, branches.length <= 2 ? 0.5 : branches.length <= 4 ? 0.25 + Math.floor(index / 2) * 0.5 : 0.17 + Math.floor(index / 2) * 0.33])
+    : branchPositions(branches.length);
+  const anchorX = controlled ? 0.17 : 0.5;
   const focused = getAttentionTarget(scene, frame) ?? anchor?.id;
   return <div style={{position: 'relative', height: '100%'}}>
     <svg viewBox="0 0 1000 600" preserveAspectRatio="none" style={{position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'visible'}} aria-hidden="true">
@@ -193,13 +229,19 @@ function NetworkVisual({scene, tokens, frame, scale}: {scene: StoryboardScene; t
         const link = scene.connections.find((connection) => connection.from === anchor?.id && connection.to === branch.id);
         const point = positions[index] ?? [0.5, 0.74];
         const progress = link ? beatProgress(scene, link.id, frame, ['draw']) : 0;
-        return <path key={branch.id} d={`M500 300 L${point[0] * 1000} ${point[1] * 600}`} fill="none" stroke={tokens.accentAlt} strokeWidth="4" pathLength="1" strokeDasharray="1" strokeDashoffset={1 - progress} opacity={0.9} />;
+        const endpointX = (point[0] - 0.12) * 1000;
+        const endpointY = point[1] * 600;
+        const route = controlled
+          ? index % 2 === 0 ? `M170 250 H340 V${endpointY} H${endpointX}`
+            : `M170 250 H340 V${endpointY - 90} H${endpointX} V${endpointY}`
+          : `M500 300 L${point[0] * 1000} ${endpointY}`;
+        return <path key={branch.id} d={route} fill="none" stroke={styleLanguage(tokens.id) === 'blueprint' ? tokens.accent : tokens.accentAlt} strokeWidth="4" pathLength="1" strokeDasharray="1" strokeDashoffset={1 - progress} opacity={0.9} />;
       })}
     </svg>
-    {anchor ? <div style={{position: 'absolute', left: '50%', top: '50%', width: '26%', height: '46%', transform: 'translate(-50%, -50%)'}}><DiagramNode layer={anchor} scene={scene} tokens={tokens} frame={frame} scale={scale} active={focused === anchor.id} compact /></div> : null}
+    {anchor ? <div style={{position: 'absolute', left: `${anchorX * 100}%`, top: '50%', width: '26%', height: controlled ? '64%' : '46%', transform: 'translate(-50%, -50%)'}}><DiagramNode layer={anchor} scene={scene} tokens={tokens} frame={frame} scale={scale} active={focused === anchor.id} compact /></div> : null}
     {branches.map((branch, index) => {
       const point = positions[index] ?? [0.5, 0.74];
-      return <div key={branch.id} style={{position: 'absolute', left: `${point[0] * 100}%`, top: `${point[1] * 100}%`, width: '22%', height: '44%', transform: 'translate(-50%, -50%)'}}><DiagramNode layer={branch} scene={scene} tokens={tokens} frame={frame} scale={scale} active={focused === branch.id} compact /></div>;
+      return <div key={branch.id} style={{position: 'absolute', left: `${point[0] * 100}%`, top: `${point[1] * 100}%`, width: controlled ? '27%' : '22%', height: controlled ? '34%' : '44%', transform: 'translate(-50%, -50%)'}}><DiagramNode layer={branch} scene={scene} tokens={tokens} frame={frame} scale={scale} active={focused === branch.id} compact horizontal={controlled} /></div>;
     })}
   </div>;
 }
@@ -266,15 +308,16 @@ function MediaVisual({scene, tokens, frame, scale, width, height}: {scene: Story
   const progress = beat ? entranceProgress({frame, start: beat.start, duration: beat.duration, tokens, easing: beat.action === 'reveal' ? tokens.motionRules.reveal.easing : undefined}) : 1;
   const focus = scene.visual?.mediaFocus;
   const focusProgress = focus ? 1 - (1 - clamp((frame - focus.start) / focus.duration)) ** 3 : 0;
-  return <div style={{...surface(tokens, false, 0), ...entranceStyle(progress, tokens, scale), height: '100%', padding: 25 * scale, boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative'}}>
+  const family = styleLanguage(tokens.id);
+  return <div style={{...surface(tokens, false, 0), ...entranceStyle(progress, tokens, scale), height: '100%', padding: (family === 'notes' ? 38 : 25) * scale, boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative', rotate: family === 'notes' ? '-1.5deg' : undefined, border: family === 'swiss' ? `3px solid ${tokens.accent}` : family === 'blueprint' ? `2px solid ${tokens.accentAlt}` : tokens.surfaceBorder}}>
     {layer.assetDataUri ? focus ? <FocusedMedia src={layer.assetDataUri} focus={focus} frame={frame} width={width - 50 * scale} height={height - 50 * scale} /> : <Img src={layer.assetDataUri} style={{maxWidth: '100%', maxHeight: '100%', width: '100%', height: '100%', objectFit: layer.fit ?? 'contain'}} /> : null}
     {focus ? <span style={{position: 'absolute', left: 24 * scale, bottom: 16 * scale, fontSize: 21 * scale, fontWeight: 700, color: tokens.ink, opacity: focusProgress}}>{focus.label}</span> : null}
   </div>;
 }
 
-export function SemanticScene({scene, tokens, showSceneCaptions, externalCaptions, overlapOutFrames}: Props) {
+export function SemanticScene({scene, tokens, appearance, showSceneCaptions, externalCaptions, overlapOutFrames, chapterTransitionOut}: Props) {
   const frame = useCurrentFrame();
-  const {width, height} = useVideoConfig();
+  const {width, height, fps} = useVideoConfig();
   const visual = scene.visual;
   if (!visual) return null;
   const portrait = width < height;
@@ -284,27 +327,38 @@ export function SemanticScene({scene, tokens, showSceneCaptions, externalCaption
   const contentWidth = width - tokens.safeArea.left - tokens.safeArea.right;
   const contentHeight = height - tokens.safeArea.top - tokens.safeArea.bottom - captionReserve;
   const extended = visual.networkDirection || visual.changeMode || visual.mediaFocus;
-  const titleSize = Math.max(38, Math.min(portrait ? 82 : 78, (portrait ? 75 : 76) * 14 / Math.max(8, [...scene.title].length), extended ? contentWidth * 0.94 / scale / Math.max(1, [...scene.title].length) : Infinity)) * scale;
-  const body = visual.kind === 'statement' ? <StatementVisual scene={scene} tokens={tokens} frame={frame} scale={scale} />
-    : visual.kind === 'compare' ? <CompareVisual scene={scene} tokens={tokens} frame={frame} scale={scale} />
-      : visual.kind === 'sequence' ? <SequenceVisual scene={scene} tokens={tokens} frame={frame} scale={scale} />
-        : visual.kind === 'network' ? <NetworkVisual scene={scene} tokens={tokens} frame={frame} scale={scale} />
-          : visual.kind === 'change' ? <ChangeVisual scene={scene} tokens={tokens} frame={frame} scale={scale} />
-            : visual.kind === 'metric' ? <MetricVisual scene={scene} tokens={tokens} frame={frame} scale={scale} />
-              : <MediaVisual scene={scene} tokens={tokens} frame={frame} scale={scale} width={contentWidth} height={contentHeight * (portrait ? 0.56 : 0.55)} />;
+  const family = styleLanguage(tokens.id);
+  const productMedia = family === 'product' && visual.kind === 'media' && !portrait;
+  const bodyLeft = productMedia ? contentWidth * .37 : family === 'signal' && visual.kind === 'media' ? contentWidth * .10 : 0;
+  const bodyWidth = productMedia ? contentWidth * .63 : family === 'signal' && visual.kind === 'media' ? contentWidth * .80 : contentWidth;
+  const bodyTop = productMedia ? contentHeight * .14 : contentHeight * (portrait ? .26 : .29);
+  const bodyHeight = contentHeight * (productMedia ? .66 : portrait ? .56 : .55);
+  const titleWidth = contentWidth * (productMedia ? .30 : .96);
+  const headingSlot = semanticHeadingLayout(tokens.id, contentWidth, contentHeight, portrait, scale, visual.kind === 'media');
+  const titleSize = family ? fittedSemanticFont(scene.title, headingSlot.width, headingSlot.height, headingSlot.max, headingSlot.min)
+    : Math.max(38, Math.min(portrait ? 82 : 78, (portrait ? 75 : 76) * 14 / Math.max(8, [...scene.title].length), extended ? contentWidth * .94 / scale / Math.max(1, [...scene.title].length) : Infinity)) * scale;
+  const {heading: headingProgress, claim: claimProgress} = semanticTextProgress(scene, frame, fps, tokens, overlapOutFrames);
+  const stageTokens = appearance ? {...tokens, ink: appearance.stageInk, muted: appearance.stageMuted} : tokens;
+  const body = visual.kind === 'statement' ? family ? <StyleStatement scene={scene} tokens={stageTokens} frame={frame} scale={scale} titleProgress={headingProgress} width={contentWidth} height={contentHeight} portrait={portrait} /> : <StatementVisual scene={scene} tokens={stageTokens} frame={frame} scale={scale} titleProgress={headingProgress} />
+    : visual.kind === 'compare' ? <CompareVisual scene={scene} tokens={stageTokens} frame={frame} scale={scale} />
+      : visual.kind === 'sequence' ? family ? <StyleSequence scene={scene} tokens={stageTokens} frame={frame} scale={scale} width={bodyWidth} height={bodyHeight} portrait={portrait} /> : <SequenceVisual scene={scene} tokens={stageTokens} frame={frame} scale={scale} />
+        : visual.kind === 'network' ? visual.shotPattern === 'document-conclusion-deal'
+          ? <DocumentConclusionDeal scene={scene} tokens={tokens} frame={frame} scale={scale} />
+          : <NetworkVisual scene={scene} tokens={stageTokens} frame={frame} scale={scale} />
+          : visual.kind === 'change' ? <ChangeVisual scene={scene} tokens={stageTokens} frame={frame} scale={scale} />
+            : visual.kind === 'metric' ? <MetricVisual scene={scene} tokens={stageTokens} frame={frame} scale={scale} />
+              : <MediaVisual scene={scene} tokens={tokens} frame={frame} scale={scale} width={bodyWidth} height={bodyHeight} />;
   const kindLabel = {statement: '观点', compare: '对照', sequence: '顺序', network: '关联', change: '变化', metric: '数据', media: '素材'}[visual.kind];
-  const headingProgress = scene.transitionIn ? 1 : 0.12 + 0.88 * clamp(frame / 18);
-  const claimProgress = clamp((frame - 12) / 18);
-  return <AbsoluteFill style={{backgroundColor: tokens.background, color: tokens.ink, fontFamily: tokens.bodyFont, overflow: 'hidden', ...background(tokens, scale), ...transitionStyle(scene, frame, overlapOutFrames)}}>
+  return <AbsoluteFill style={{background: appearance?.background ?? tokens.background, color: appearance?.stageInk ?? tokens.ink, fontFamily: tokens.bodyFont, overflow: 'hidden', ...background(tokens, scale), ...transitionStyle(scene, frame, overlapOutFrames, chapterTransitionOut)}}>
     <div style={{position: 'absolute', left: tokens.safeArea.left, top: tokens.safeArea.top, width: contentWidth, height: contentHeight}}>
       {visual.kind !== 'statement' ? <>
-        <div style={{position: 'absolute', left: 0, top: 0, right: 0, display: 'flex', justifyContent: 'space-between', borderBottom: `2px solid ${tokens.grid}`, paddingBottom: 14 * scale, color: tokens.muted, fontSize: 17 * scale, letterSpacing: 2 * scale}}><span>{kindLabel}</span><span>{visual.representation === 'diagram' ? '示意图' : '来源素材'}</span></div>
-        <h1 style={{...entranceStyle(headingProgress, tokens, scale), position: 'absolute', left: 0, top: contentHeight * 0.075, margin: 0, width: '96%', fontFamily: tokens.displayFont, fontSize: titleSize, lineHeight: 1.1, overflowWrap: 'anywhere'}}>{scene.title}</h1>
-        <div style={{position: 'absolute', left: 0, right: 0, top: contentHeight * (portrait ? 0.26 : 0.29), height: contentHeight * (portrait ? 0.56 : 0.55)}}>{body}</div>
-        <div style={{...entranceStyle(claimProgress, tokens, scale), position: 'absolute', left: 0, right: 0, bottom: 0, borderTop: `2px solid ${tokens.grid}`, paddingTop: 14 * scale, fontSize: 25 * scale, lineHeight: 1.25, color: tokens.muted}}>{scene.primaryClaim}</div>
+        <div style={{position: 'absolute', left: 0, top: 0, right: 0, display: 'flex', justifyContent: 'space-between', borderBottom: family === 'signal' ? undefined : `${2 * scale}px solid ${family === 'swiss' ? tokens.accent : tokens.grid}`, paddingBottom: 14 * scale, color: appearance?.stageMuted ?? tokens.muted, fontSize: 23 * scale, fontFamily: tokens.font ? tokens.bodyFont : family === 'blueprint' ? 'monospace' : tokens.bodyFont, letterSpacing: 2 * scale}}><span>{kindLabel}</span><span>{visual.representation === 'diagram' ? '示意图' : '来源素材'}</span></div>
+        <h1 style={{...entranceStyle(headingProgress, tokens, scale), position: 'absolute', left: 0, top: contentHeight * (productMedia ? .13 : .085), margin: 0, width: titleWidth, fontFamily: tokens.displayFont, fontSize: titleSize, fontWeight: family === 'editorial' || family === 'notes' ? 700 : 800, lineHeight: 1.12, overflowWrap: 'anywhere', textWrap: 'balance', textAlign: family === 'signal' ? 'center' : 'left', rotate: family === 'notes' ? '-.7deg' : undefined}}>{scene.title}</h1>
+        <div style={{position: 'absolute', left: bodyLeft, width: bodyWidth, top: bodyTop, height: bodyHeight}}>{body}</div>
+        <div style={{...entranceStyle(claimProgress, tokens, scale), position: 'absolute', left: 0, right: 0, bottom: 0, borderTop: family === 'signal' ? undefined : `1px solid ${tokens.grid}`, paddingTop: 14 * scale, fontSize: 27 * scale, lineHeight: 1.25, textAlign: family === 'signal' ? 'center' : 'left', color: appearance?.stageMuted ?? tokens.muted}}>{scene.primaryClaim}</div>
       </> : <>
         <div style={{position: 'absolute', inset: 0}}>{body}</div>
-        <div style={{...entranceStyle(claimProgress, tokens, scale), position: 'absolute', left: 0, bottom: 0, borderTop: `2px solid ${tokens.grid}`, paddingTop: 17 * scale, fontSize: 26 * scale, color: tokens.muted}}>{scene.primaryClaim}</div>
+        <div style={{...entranceStyle(claimProgress, tokens, scale), position: 'absolute', left: 0, bottom: 0, borderTop: appearance ? `1px solid ${tokens.grid}60` : `${2 * scale}px solid ${tokens.grid}`, paddingTop: 17 * scale, fontSize: 26 * scale, color: appearance?.stageMuted ?? tokens.muted}}>{scene.primaryClaim}</div>
       </>}
     </div>
     {caption ? <div style={{...captionTextStyle(tokens), position: 'absolute', left: tokens.safeArea.left, right: tokens.safeArea.right, bottom: tokens.safeArea.bottom + 10 * scale, padding: `${12 * scale}px ${18 * scale}px`, fontSize: (portrait ? 32 : 28) * scale, lineHeight: 1.3}}>{caption.text}</div> : null}

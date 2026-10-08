@@ -3,13 +3,29 @@
   "styles": [
     {
       "id": "retro-zine",
-      "name": "Retro Zine",
+      "name": "Editorial Ink",
       "version": "1.0.0",
       "category": "editorial",
-      "mood": ["warm", "handmade", "printed"],
-      "bestFor": ["knowledge", "opinion", "story"],
-      "canvas": ["landscape", "portrait"],
-      "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
+      "mood": [
+        "warm",
+        "handmade",
+        "printed"
+      ],
+      "bestFor": [
+        "knowledge",
+        "opinion",
+        "story"
+      ],
+      "canvas": [
+        "landscape",
+        "portrait"
+      ],
+      "templates": [
+        "statement",
+        "graph-explainer",
+        "metric-grid",
+        "interaction-flow"
+      ],
       "preview": "styles/retro-zine/preview.md",
       "status": "stable"
     },
@@ -18,10 +34,27 @@
       "name": "Signal",
       "version": "1.0.0",
       "category": "cinematic",
-      "mood": ["focused", "calm", "contemporary"],
-      "bestFor": ["knowledge", "story", "product", "tutorial"],
-      "canvas": ["landscape", "portrait"],
-      "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
+      "mood": [
+        "focused",
+        "calm",
+        "contemporary"
+      ],
+      "bestFor": [
+        "knowledge",
+        "story",
+        "product",
+        "tutorial"
+      ],
+      "canvas": [
+        "landscape",
+        "portrait"
+      ],
+      "templates": [
+        "statement",
+        "graph-explainer",
+        "metric-grid",
+        "interaction-flow"
+      ],
       "preview": "styles/signal/preview.md",
       "status": "experimental"
     },
@@ -30,34 +63,84 @@
       "name": "Retro Windows",
       "version": "1.0.0",
       "category": "software",
-      "mood": ["technical", "mechanical", "nostalgic"],
-      "bestFor": ["product", "tutorial", "software"],
-      "canvas": ["landscape", "portrait"],
-      "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
+      "mood": [
+        "technical",
+        "mechanical",
+        "nostalgic"
+      ],
+      "bestFor": [
+        "product",
+        "tutorial",
+        "software"
+      ],
+      "canvas": [
+        "landscape",
+        "portrait"
+      ],
+      "templates": [
+        "statement",
+        "graph-explainer",
+        "metric-grid",
+        "interaction-flow"
+      ],
       "preview": "styles/retro-windows/preview.md",
       "status": "deprecated"
     },
     {
       "id": "scatterbrain",
-      "name": "Scatterbrain",
+      "name": "Sketch Notes",
       "version": "1.0.0",
       "category": "notes",
-      "mood": ["playful", "informal", "annotated"],
-      "bestFor": ["knowledge", "learning", "creative", "product"],
-      "canvas": ["landscape", "portrait"],
-      "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
+      "mood": [
+        "playful",
+        "informal",
+        "annotated"
+      ],
+      "bestFor": [
+        "knowledge",
+        "learning",
+        "creative",
+        "product"
+      ],
+      "canvas": [
+        "landscape",
+        "portrait"
+      ],
+      "templates": [
+        "statement",
+        "graph-explainer",
+        "metric-grid",
+        "interaction-flow"
+      ],
       "preview": "styles/scatterbrain/preview.md",
       "status": "stable"
     },
     {
       "id": "archive-grid",
-      "name": "Clean Editorial",
+      "name": "Swiss Blue",
       "version": "1.0.0",
       "category": "editorial",
-      "mood": ["clean", "structured", "modern"],
-      "bestFor": ["knowledge", "opinion", "story", "learning"],
-      "canvas": ["landscape", "portrait"],
-      "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
+      "mood": [
+        "clean",
+        "structured",
+        "modern"
+      ],
+      "bestFor": [
+        "knowledge",
+        "opinion",
+        "story",
+        "learning"
+      ],
+      "canvas": [
+        "landscape",
+        "portrait"
+      ],
+      "templates": [
+        "statement",
+        "graph-explainer",
+        "metric-grid",
+        "interaction-flow"
+      ],
       "preview": "styles/archive-grid/preview.md",
       "status": "experimental"
     },
@@ -66,10 +149,28 @@
       "name": "Blueprint",
       "version": "1.0.0",
       "category": "technical",
-      "mood": ["structured", "technical", "precise"],
-      "bestFor": ["knowledge", "product", "tutorial", "software", "story"],
-      "canvas": ["landscape", "portrait"],
-      "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
+      "mood": [
+        "structured",
+        "technical",
+        "precise"
+      ],
+      "bestFor": [
+        "knowledge",
+        "product",
+        "tutorial",
+        "software",
+        "story"
+      ],
+      "canvas": [
+        "landscape",
+        "portrait"
+      ],
+      "templates": [
+        "statement",
+        "graph-explainer",
+        "metric-grid",
+        "interaction-flow"
+      ],
       "preview": "styles/signal-noir/preview.md",
       "status": "experimental"
     },
@@ -78,10 +179,26 @@
       "name": "Product Frame",
       "version": "1.0.0",
       "category": "software",
-      "mood": ["clear", "product", "modern"],
-      "bestFor": ["product", "tutorial", "software"],
-      "canvas": ["landscape", "portrait"],
-      "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
+      "mood": [
+        "clear",
+        "product",
+        "modern"
+      ],
+      "bestFor": [
+        "product",
+        "tutorial",
+        "software"
+      ],
+      "canvas": [
+        "landscape",
+        "portrait"
+      ],
+      "templates": [
+        "statement",
+        "graph-explainer",
+        "metric-grid",
+        "interaction-flow"
+      ],
       "preview": "styles/studio-frame/preview.md",
       "status": "experimental"
     }

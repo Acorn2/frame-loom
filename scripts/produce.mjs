@@ -4,6 +4,7 @@ import {spawnSync} from 'node:child_process';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 import {AudioConfigSchema} from '../src/schemas/audio-config.ts';
 import {StoryboardSchema} from '../src/schemas/storyboard.ts';
+import {assertProductionLock, productionDirectory} from './lib/production-lock.mjs';
 import {runQa} from './qa-storyboard.mjs';
 import {fingerprintFiles, fingerprintProjectInputs} from './lib/input-fingerprint.mjs';
 import {checkAssetInput, checkStoryboardInput, checkVisualInput} from './lib/preflight.mjs';
@@ -479,6 +480,9 @@ export function runProduction(options) {
       if (!previousRun.outputFingerprint || previousRun.outputFingerprint !== fingerprintFiles([outputPath], projectPath)) {
         throw new Error('无法从 qa 恢复：输出视频与上次渲染结果不同，请从 render 阶段重跑。');
       }
+      const lock = assertProductionLock(storyboard, outputPath);
+      if (lock && previousRun.productionLockHash !== lock.hash) throw new Error('无法恢复：run 与生产锁不匹配。');
+      if (lock) run.productionLockHash = lock.hash;
       setStage(run, 'render', 'reused');
       persistRun(projectPath, run);
     } else {
@@ -497,6 +501,12 @@ export function runProduction(options) {
       runCommand(renderArgs);
       setStage(run, 'render', 'completed');
       run.outputFingerprint = fingerprintFiles([outputPath], projectPath);
+      const lock = assertProductionLock(storyboard, outputPath);
+      if (lock) {
+        run.productionLockHash = lock.hash;
+        run.artifacts.productionLock = path.relative(projectPath, path.join(productionDirectory(outputPath), 'production-lock.json'));
+        run.artifacts.resolvedShotPlan = path.relative(projectPath, path.join(productionDirectory(outputPath), 'resolved-shot-plan.json'));
+      }
       persistRun(projectPath, run);
     }
 

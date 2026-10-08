@@ -1,0 +1,57 @@
+[
+  {
+    "id": "particle-sand-fill",
+    "duration": 5.533333,
+    "currentTime": 5.533333,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 175,
+    "droppedFrames": 0
+  },
+  {
+    "id": "member-grid",
+    "duration": 4.533333,
+    "currentTime": 4.533333,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 145,
+    "droppedFrames": 0
+  },
+  {
+    "id": "ring-annotation",
+    "duration": 6.933333,
+    "currentTime": 6.933333,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 217,
+    "droppedFrames": 0
+  },
+  {
+    "id": "cycle-mechanism",
+    "duration": 6.933333,
+    "currentTime": 6.933333,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 217,
+    "droppedFrames": 0
+  },
+  {
+    "id": "media-before-after",
+    "duration": 7.2,
+    "currentTime": 7.2,
+    "width": 960,
+    "height": 540,
+    "playbackRate": 1,
+    "ended": true,
+    "totalFrames": 225,
+    "droppedFrames": 0
+  }
+]

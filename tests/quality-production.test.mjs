@@ -100,6 +100,26 @@ describe('quality production contracts', () => {
         invalid.scenes[2].visual.mediaFocus.x = 0.9;
         expect(StoryboardSchema.safeParse(invalid).success).toBe(false);
     });
+    it('requires a sourced excerpt and three connected conclusions for the document deal shot', () => {
+        const storyboard = StoryboardSchema.parse(fixture);
+        const scene = storyboard.scenes[0];
+        scene.visual.shotPattern = 'document-conclusion-deal';
+        scene.visual.networkDirection = 'outward';
+        scene.visual.source = 'source/source.md §更新重点';
+        scene.layers.find((layer) => layer.id === 'script').text = '原文中的入口';
+        scene.layers.push({id: 'video', type: 'node', label: '视频', text: '回到对应视频'});
+        scene.connections = ['text', 'evidence', 'video'].map((id) => ({id: `script-to-${id}`, from: 'script', to: id}));
+        scene.beats = [
+            {id: 'script-enter', target: 'script', action: 'enter', start: 0, duration: 18},
+            ...['text', 'evidence', 'video'].flatMap((id, index) => [
+                {id: `${id}-enter`, target: id, action: 'enter', start: 25 + index * 48, duration: 18},
+                {id: `${id}-draw`, target: `script-to-${id}`, action: 'draw', start: 30 + index * 48, duration: 18}
+            ])
+        ];
+        expect(validateContentMapping(storyboard)).toEqual([]);
+        scene.visual.source = undefined;
+        expect(validateContentMapping(storyboard).some((issue) => issue.severity === 'error' && issue.message.includes('原文摘录'))).toBe(true);
+    });
     it('keeps every scene complete and pre-cut frame in a long production', () => {
         const source = StoryboardSchema.parse(fixture);
         source.scenes = Array.from({ length: 35 }, (_, index) => ({ ...structuredClone(source.scenes[index % 3]), id: `scene-${index}` }));

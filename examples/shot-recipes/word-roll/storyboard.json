@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "word-roll",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "为不同创作者而生",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 5.333333333333333,
+    "durationFrames": 160,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "word-roll",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "为不同创作者而生",
+      "primaryClaim": "为写作者、设计师和研究者提供表达",
+      "visual": {
+        "kind": "statement",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "word-roll",
+        "version": "1.2.0",
+        "slots": {
+          "prefix": "prefix",
+          "items": [
+            "i0",
+            "i1",
+            "i2"
+          ]
+        }
+      },
+      "narration": "为写作者、设计师和研究者提供表达",
+      "durationFrames": 160,
+      "layers": [
+        {
+          "id": "prefix",
+          "type": "label",
+          "label": "为"
+        },
+        {
+          "id": "i0",
+          "type": "label",
+          "label": "写作者"
+        },
+        {
+          "id": "i1",
+          "type": "label",
+          "label": "设计师"
+        },
+        {
+          "id": "i2",
+          "type": "label",
+          "label": "研究者"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "prefix-enter",
+          "target": "prefix",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 18,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 60,
+          "duration": 18
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 102,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

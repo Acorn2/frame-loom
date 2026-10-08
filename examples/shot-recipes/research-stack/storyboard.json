@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "research-stack",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "让来源逐份进入焦点",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 6.4,
+    "durationFrames": 192,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "research-stack",
+      "template": "graph-explainer",
+      "purpose": "claim",
+      "title": "让来源逐份进入焦点",
+      "primaryClaim": "资料集合依次进入焦点",
+      "visual": {
+        "kind": "sequence",
+        "explanation": "FrameLoom 自写公开示意资料，不代表真实产品、用户或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "research-stack",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "item1",
+            "item2",
+            "item3"
+          ]
+        },
+        "authors": {
+          "item1": "FrameLoom 示例作者",
+          "item2": "FrameLoom 示例作者",
+          "item3": "FrameLoom 示例作者"
+        }
+      },
+      "narration": "资料集合依次进入焦点",
+      "durationFrames": 192,
+      "layers": [
+        {
+          "id": "item1",
+          "type": "card",
+          "label": "研究笔记",
+          "text": "保存问题与查证位置"
+        },
+        {
+          "id": "item2",
+          "type": "card",
+          "label": "阅读记录",
+          "text": "区分作者判断与引用"
+        },
+        {
+          "id": "item3",
+          "type": "card",
+          "label": "实验备忘",
+          "text": "记录测试条件与限制"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "item1-enter",
+          "target": "item1",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item2-enter",
+          "target": "item2",
+          "action": "enter",
+          "start": 60,
+          "duration": 24
+        },
+        {
+          "id": "item3-enter",
+          "target": "item3",
+          "action": "enter",
+          "start": 120,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

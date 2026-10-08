@@ -1,0 +1,27 @@
+{
+  "id": "speed-ramp-freeze",
+  "version": "1.2.0",
+  "status": "experimental",
+  "kind": "hosted-action",
+  "shortlist": "C07",
+  "styles": [
+    "retro-zine",
+    "signal",
+    "scatterbrain",
+    "archive-grid",
+    "signal-noir",
+    "studio-frame"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "sound": false,
+  "requires": [
+    "优先FreezeAnnotateReal的思路；重做文本版，避免直接引入motion-blur；SFX用输出帧"
+  ],
+  "hosts": [
+    "scroll-brake"
+  ],
+  "action": "highlight",
+  "targetSlot": "items"
+}

@@ -1,0 +1,23 @@
+{
+  "id": "chart-live",
+  "mode": "method-reference",
+  "repository": "https://github.com/Acorn2/video-shotcraft",
+  "commit": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab",
+  "recipe": "references/shots/data/chart-live-moves.md",
+  "implementation": "demos/data/chart-live-moves/OscilloscopeStreamV2.tsx",
+  "upstreamLicense": "Apache-2.0",
+  "implementationLicense": "MIT",
+  "notice": "Independent implementation; no upstream fixtures, copy, media or runtime dependencies copied.",
+  "shortlist": "B07",
+  "retained": [
+    "数据按顺序揭示与重组",
+    "每个变体单独审；时间、单位、基数、轴标可查，禁止编造尖峰和增长"
+  ],
+  "omitted": [
+    "fixed copy and coordinates",
+    "invented facts",
+    "continuous drift",
+    "automatic sound"
+  ],
+  "externalAttribution": "Research provenance does not authorize upstream media."
+}

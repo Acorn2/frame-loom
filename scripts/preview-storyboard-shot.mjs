@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {compileStoryboardShots} from '../src/shots/compile-shot.ts';
 import {bundle} from '@remotion/bundler';
 import {getCompositions, renderMedia, renderStill} from '@remotion/renderer';
 import {MotionPackSchema, StylePackSchema} from '../src/schemas/style-pack.ts';
@@ -59,7 +60,7 @@ for (const scene of hydrated.scenes) {
 const audioTiming = audioConfigPath ? checkAudioInput(storyboardPath, audioConfigPath) : undefined;
 const audioRuntime = loadAudioRuntime(audioConfigPath, audioTiming);
 const hasAudio = Boolean(audioRuntime?.voiceoverDataUri || audioRuntime?.musicDataUri || audioRuntime?.sfx?.length);
-const inputProps = {storyboard: hydrated, audioRuntime, styleTokens: createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height), renderProfile: {purpose: 'visual-preview'}};
+const inputProps = {storyboard: hydrated, audioRuntime, styleTokens: createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height, storyboard.font), renderProfile: {purpose: 'visual-preview'}};
 console.log('Bundling Remotion composition...');
 const serveUrl = await bundle({entryPoint: path.join(root, 'src/index.ts')});
 const composition = (await getCompositions(serveUrl, {inputProps})).find((item) => item.id === 'StoryboardV2');
@@ -74,6 +75,7 @@ const firstAction = timing.scene.beats.find((beat) => beat.action !== 'set-state
 const lastActionEnd = Math.max(0, ...timing.scene.beats.map((beat) => beat.start + beat.duration));
 const fadeFrames = timing.scene.outro?.fadeFrames ?? (timing.overlapOutFrames === 0 && timing.scene.transitionOut ? 12 : 0);
 const frames = [
+  ...(compileStoryboardShots(storyboard).find((plan) => plan.sceneId === sceneId)?.checkpoints ?? []).map((event, index) => ({name: `shot-${String(index + 1).padStart(3, '0')}`, eventId: event.id, local: event.frame})),
   {name: 'entry-mid', local: firstAction ? firstAction.start + Math.floor(firstAction.duration / 2) : 9},
   {name: 'complete', local: Math.max(22, lastActionEnd + 2)},
   {name: 'before-cut', local: timing.scene.durationFrames - timing.overlapOutFrames - fadeFrames - 2}
@@ -82,6 +84,6 @@ for (const item of frames) {
   const frame = timing.startFrame + Math.max(0, Math.min(timing.scene.durationFrames - 1, item.local));
   await renderStill({composition, serveUrl, inputProps, frame, output: path.join(reviewDir, `${item.name}.png`), imageFormat: 'png'});
 }
-fs.writeFileSync(path.join(reviewDir, 'clip-timing.json'), JSON.stringify({sceneId, sourceStartFrame: start, sourceEndFrameInclusive: end, fps: storyboard.project.fps, hasAudio, reviewOnly: true}, null, 2));
+fs.writeFileSync(path.join(reviewDir, 'clip-timing.json'), JSON.stringify({sceneId, sourceStartFrame: start, sourceEndFrameInclusive: end, fps: storyboard.project.fps, hasAudio, reviewOnly: true, frames}, null, 2));
 console.log(`SHOT PREVIEW ${outputPath} (${timing.scene.durationFrames / storyboard.project.fps}s)`);
 console.log(`REVIEW FRAMES ${reviewDir}`);

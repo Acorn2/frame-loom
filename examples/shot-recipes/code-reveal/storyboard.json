@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "code-reveal",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "看清制作配置",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 5.6,
+    "durationFrames": 168,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "code-reveal",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "看清制作配置",
+      "primaryClaim": "代码/配置逐行或逐字符揭示",
+      "visual": {
+        "kind": "statement",
+        "explanation": "FrameLoom 自写公开示意资料，不代表真实产品、用户或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "code-reveal",
+        "version": "1.2.0",
+        "slots": {
+          "code": "item1"
+        },
+        "mode": "characters",
+        "tokens": [
+          {
+            "text": "{\n  \"style\": \"retro-zine\",\n  \"audioMode\": \"silent\",\n  \"outputPurpose\": \"visual-master\"\n}",
+            "kind": "plain"
+          }
+        ]
+      },
+      "narration": "代码/配置逐行或逐字符揭示",
+      "durationFrames": 168,
+      "layers": [
+        {
+          "id": "item1",
+          "type": "card",
+          "label": "公开配置示例",
+          "text": "{\n  \"style\": \"retro-zine\",\n  \"audioMode\": \"silent\",\n  \"outputPurpose\": \"visual-master\"\n}"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "item1-enter",
+          "target": "item1",
+          "action": "enter",
+          "start": 0,
+          "duration": 120
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

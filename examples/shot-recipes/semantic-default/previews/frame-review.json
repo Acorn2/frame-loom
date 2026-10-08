@@ -1,0 +1,13 @@
+{
+  "frames": 300,
+  "uniqueFrames": 190,
+  "phaseFrames": [
+    32,
+    75,
+    110,
+    146,
+    189,
+    216
+  ],
+  "distinctPhases": 6
+}

@@ -1,0 +1,285 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FrameLoom Shot Recipe",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "enum": [
+        "semantic-default",
+        "paper-title",
+        "title-to-label",
+        "document-conclusions",
+        "list-reveal",
+        "compare-reveal",
+        "network-expand",
+        "blur-slide",
+        "split-text-stagger",
+        "card-stack",
+        "concept-matrix",
+        "platform-hinge-rise",
+        "source-converge",
+        "diagram-cascade",
+        "lead-word-assemble",
+        "brace-expand",
+        "pill-slot-cycle",
+        "word-roll",
+        "text-column-converge",
+        "evidence-relay",
+        "row-embed",
+        "structure-then-text",
+        "timeline-travel",
+        "odometer-roll",
+        "research-stack",
+        "list-stack-press",
+        "integration-hub",
+        "scroll-brake",
+        "chart-live",
+        "particle-sand-fill",
+        "member-grid",
+        "ring-annotation",
+        "cycle-mechanism",
+        "media-before-after",
+        "document-write",
+        "code-reveal",
+        "letterspace-materialize"
+      ]
+    },
+    "version": {
+      "type": "string",
+      "enum": [
+        "1.0.0",
+        "1.1.0",
+        "1.2.0"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "experimental",
+        "stable",
+        "deprecated"
+      ]
+    },
+    "registered": {
+      "type": "boolean",
+      "const": true
+    },
+    "visualKinds": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "statement",
+          "compare",
+          "sequence",
+          "network",
+          "change",
+          "metric",
+          "media"
+        ]
+      }
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1
+    },
+    "inputModes": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "document-only",
+          "document-with-assets"
+        ]
+      }
+    },
+    "requiredAssets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "styles": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "orientations": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "landscape",
+          "portrait"
+        ]
+      }
+    },
+    "slots": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "min": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "max": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "labelMax": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "textMax": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "min",
+          "max"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "timing": {
+      "type": "object",
+      "properties": {
+        "actions": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "minSec": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "maxSec": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              }
+            },
+            "required": [
+              "minSec",
+              "maxSec"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "readingSec": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "titleHoldSec": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "sourceHoldSec": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "itemHoldSec": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "actions",
+        "readingSec",
+        "titleHoldSec",
+        "sourceHoldSec",
+        "itemHoldSec"
+      ],
+      "additionalProperties": false
+    },
+    "motion": {
+      "type": "object",
+      "properties": {
+        "recipeOwned": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "styleOwned": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "continuousDrift": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "recipeOwned",
+        "styleOwned",
+        "continuousDrift"
+      ],
+      "additionalProperties": false
+    },
+    "qa": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sound": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "const": false
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "enabled",
+        "events"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "id",
+    "version",
+    "status",
+    "registered",
+    "visualKinds",
+    "purpose",
+    "inputModes",
+    "requiredAssets",
+    "styles",
+    "orientations",
+    "slots",
+    "timing",
+    "motion",
+    "qa",
+    "sound"
+  ],
+  "additionalProperties": false
+}

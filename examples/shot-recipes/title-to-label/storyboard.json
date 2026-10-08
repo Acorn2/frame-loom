@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "2.4",
+  "videoTemplate": {
+    "id": "retro-zine-explainer",
+    "version": "1.2.0"
+  },
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "project": {
+    "title": "从问题开始",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 4.666666666666667,
+    "durationFrames": 140,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "structure",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "从问题开始",
+      "primaryClaim": "先建立问题，再明确方向",
+      "visual": {
+        "kind": "statement",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md#structure"
+      },
+      "shot": {
+        "id": "title-to-label",
+        "version": "1.2.0",
+        "slots": {
+          "title": "title",
+          "items": [
+            "i0",
+            "i1"
+          ]
+        }
+      },
+      "narration": "先建立问题，再明确方向",
+      "durationFrames": 140,
+      "layers": [
+        {
+          "id": "title",
+          "type": "label",
+          "label": "从问题开始"
+        },
+        {
+          "id": "i0",
+          "type": "node",
+          "label": "问题",
+          "text": "我们希望改变什么",
+          "glyph": "document"
+        },
+        {
+          "id": "i1",
+          "type": "node",
+          "label": "方向",
+          "text": "先从一个小目标开始",
+          "glyph": "document"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "title-enter",
+          "target": "title",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "title-demote",
+          "target": "title",
+          "action": "demote",
+          "start": 38,
+          "duration": 18
+        },
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 49,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 81,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

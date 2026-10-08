@@ -1,0 +1,174 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "source-converge",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "让线索汇成全貌",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 5.666666666666667,
+    "durationFrames": 170,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "source-converge",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "让线索汇成全貌",
+      "primaryClaim": "把不同来源的线索汇入研究档案",
+      "visual": {
+        "kind": "network",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md",
+        "anchorId": "result",
+        "networkDirection": "inward"
+      },
+      "shot": {
+        "id": "source-converge",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "i0",
+            "i1",
+            "i2",
+            "i3"
+          ],
+          "result": "result"
+        }
+      },
+      "narration": "把不同来源的线索汇入研究档案",
+      "durationFrames": 170,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "card",
+          "label": "笔记",
+          "text": "收集想法"
+        },
+        {
+          "id": "i1",
+          "type": "card",
+          "label": "访谈",
+          "text": "倾听观点"
+        },
+        {
+          "id": "i2",
+          "type": "card",
+          "label": "图片",
+          "text": "观察现场"
+        },
+        {
+          "id": "i3",
+          "type": "card",
+          "label": "记录",
+          "text": "整理变化"
+        },
+        {
+          "id": "result",
+          "type": "card",
+          "label": "研究档案",
+          "text": "保留每条线索的出处"
+        }
+      ],
+      "connections": [
+        {
+          "id": "e0",
+          "from": "i0",
+          "to": "result"
+        },
+        {
+          "id": "e1",
+          "from": "i1",
+          "to": "result"
+        },
+        {
+          "id": "e2",
+          "from": "i2",
+          "to": "result"
+        },
+        {
+          "id": "e3",
+          "from": "i3",
+          "to": "result"
+        }
+      ],
+      "beats": [
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 18,
+          "duration": 18
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 36,
+          "duration": 18
+        },
+        {
+          "id": "i3-enter",
+          "target": "i3",
+          "action": "enter",
+          "start": 54,
+          "duration": 18
+        },
+        {
+          "id": "result-enter",
+          "target": "result",
+          "action": "enter",
+          "start": 102,
+          "duration": 30
+        },
+        {
+          "id": "e0-draw",
+          "target": "e0",
+          "action": "draw",
+          "start": 81,
+          "duration": 12
+        },
+        {
+          "id": "e1-draw",
+          "target": "e1",
+          "action": "draw",
+          "start": 84,
+          "duration": 12
+        },
+        {
+          "id": "e2-draw",
+          "target": "e2",
+          "action": "draw",
+          "start": 87,
+          "duration": 12
+        },
+        {
+          "id": "e3-draw",
+          "target": "e3",
+          "action": "draw",
+          "start": 90,
+          "duration": 12
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

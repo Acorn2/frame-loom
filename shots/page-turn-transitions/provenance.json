@@ -1,0 +1,22 @@
+{
+  "id": "page-turn-transitions",
+  "mode": "method-reference",
+  "repository": "https://github.com/Acorn2/video-shotcraft",
+  "commit": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab",
+  "recipe": "references/shots/transition/page-turn-transitions.md",
+  "implementation": "demos/transition/page-turn-transitions/BarnDoorSplit.tsx",
+  "shortlist": "C12",
+  "upstreamLicense": "Apache-2.0",
+  "implementationLicense": "MIT",
+  "notice": "Independent implementation; upstream fixtures and assets excluded.",
+  "retained": [
+    "页面作为实体换章",
+    "先评估BarnDoorSplit；CubeRotate后置，限制频次，动作压缩与语音衔接实测"
+  ],
+  "omitted": [
+    "upstream media",
+    "fixed frames",
+    "continuous drift",
+    "automatic sound"
+  ]
+}

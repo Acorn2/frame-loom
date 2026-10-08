@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import {assertProductionLock} from './lib/production-lock.mjs';
 import path from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 import {fingerprintFiles, fingerprintProjectInputs} from './lib/input-fingerprint.mjs';
@@ -52,6 +53,8 @@ export function approveVisualHandoff(projectDirectory, reviewFilePath) {
     throw new Error('讲稿、分镜、素材或预留区域在 QA 后变化，请重新运行 produce。');
   }
   const storyboard = read(path.join(projectPath, 'storyboard.json'));
+  const lock = assertProductionLock(storyboard, videoPath);
+  if (lock && (run.productionLockHash !== lock.hash || qa.checks?.productionLock?.hash !== lock.hash)) throw new Error('run、QA 与生产锁不一致。');
   inspectOutput(videoPath, storyboard, {expectAudio: false});
   const reviewedAt = new Date().toISOString();
   qa.manualReview = {...review, reviewer: review.reviewer.trim(), notes: review.notes.trim(), reviewedAt, required: true};

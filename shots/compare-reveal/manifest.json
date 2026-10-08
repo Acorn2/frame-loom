@@ -1,0 +1,95 @@
+{
+  "id": "compare-reveal",
+  "version": "1.0.0",
+  "status": "experimental",
+  "registered": true,
+  "visualKinds": [
+    "compare"
+  ],
+  "purpose": "有依据的文本对照",
+  "inputModes": [
+    "document-only",
+    "document-with-assets"
+  ],
+  "requiredAssets": [],
+  "styles": [
+    "retro-zine",
+    "signal",
+    "scatterbrain",
+    "archive-grid",
+    "signal-noir",
+    "studio-frame"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "slots": {
+    "items": {
+      "min": 2,
+      "max": 3,
+      "labelMax": 16,
+      "textMax": 40
+    }
+  },
+  "timing": {
+    "actions": {
+      "enter": {
+        "minSec": 0.2,
+        "maxSec": 1.2
+      },
+      "reveal": {
+        "minSec": 0.2,
+        "maxSec": 1.2
+      },
+      "draw": {
+        "minSec": 0.15,
+        "maxSec": 0.8
+      },
+      "focus": {
+        "minSec": 0.15,
+        "maxSec": 1.2
+      },
+      "highlight": {
+        "minSec": 0.15,
+        "maxSec": 0.6
+      },
+      "count": {
+        "minSec": 0.2,
+        "maxSec": 1.2
+      }
+    },
+    "readingSec": 0.8,
+    "titleHoldSec": 0.6,
+    "sourceHoldSec": 0.3,
+    "itemHoldSec": 0.6
+  },
+  "motion": {
+    "recipeOwned": [
+      "stage-order",
+      "dock",
+      "demote",
+      "letterpress",
+      "soft-out-back"
+    ],
+    "styleOwned": [
+      "color",
+      "font",
+      "surface",
+      "entrance-offset"
+    ],
+    "continuousDrift": false
+  },
+  "qa": [
+    "action-mid",
+    "action-complete",
+    "complete",
+    "before-handoff"
+  ],
+  "sound": {
+    "enabled": false,
+    "events": [
+      "title-settled",
+      "item-entered"
+    ]
+  }
+}

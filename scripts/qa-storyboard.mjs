@@ -1,4 +1,6 @@
 import fs from 'node:fs';
+import {assertProductionLock} from './lib/production-lock.mjs';
+import {compileStoryboardShots} from '../src/shots/compile-shot.ts';
 import path from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 import {StoryboardSchema} from '../src/schemas/storyboard.ts';
@@ -83,6 +85,10 @@ export function runQa(options) {
   }
 
   if (storyboard) {
+    if (storyboard.schemaVersion === '2.4') {
+      try {checks.productionLock = {passed: true, hash: assertProductionLock(storyboard, resolvedVideo).hash};}
+      catch (error) {checks.productionLock = {passed: false, error: error.message}; errors.push(`production lock: ${error.message}`);}
+    }
     let expectAudio = options.expectAudio || outputPurpose === 'in-project-video';
     if (options.audioConfigPath) {
       try {
@@ -118,7 +124,7 @@ export function runQa(options) {
           visualExplanation: scene.visual?.explanation ?? null,
           attentionTarget: scene.attentionTarget ?? null,
           lastActionEnd,
-          stableHoldFrames: scene.durationFrames - (overlapOutFrames > 0 ? overlapOutFrames : (scene.outro?.fadeFrames ?? (storyboard.schemaVersion === '2.3' ? 0 : 24))) - lastActionEnd,
+          stableHoldFrames: scene.durationFrames - (overlapOutFrames > 0 ? overlapOutFrames : (scene.outro?.fadeFrames ?? (['2.3', '2.4'].includes(storyboard.schemaVersion) ? 0 : 24))) - lastActionEnd,
           peakCurrentNodes
         };
       })
@@ -240,8 +246,9 @@ export function runQa(options) {
     if (checks.output.passed) {
       try {
         const review = extractReviewFrames(resolvedVideo, resolvedStoryboard, resolvedReviewDir);
-        const requiredLabels = storyboard.schemaVersion === '2.3'
+        const requiredLabels = ['2.3', '2.4'].includes(storyboard.schemaVersion)
           ? storyboard.scenes.flatMap((scene) => [`${scene.id}-complete`, `${scene.id}-before-handoff`]) : [];
+        if (storyboard.schemaVersion === '2.4') requiredLabels.push(...compileStoryboardShots(storyboard).flatMap((plan) => plan.checkpoints.map((event) => `${plan.sceneId}-shot-${event.id}`)));
         const extractedLabels = new Set(review.frames.map((frame) => frame.label));
         const missingRequired = requiredLabels.filter((label) => !extractedLabels.has(label));
         checks.reviewFrames = {

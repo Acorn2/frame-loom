@@ -1,0 +1,290 @@
+{
+  "shots": [
+    {
+      "id": "semantic-default",
+      "version": "1.0.0",
+      "status": "experimental",
+      "purpose": "基础语义回退与收尾",
+      "manifest": "semantic-default/manifest.json",
+      "recipe": "semantic-default/recipe.md"
+    },
+    {
+      "id": "paper-title",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "主张与章节标题",
+      "manifest": "paper-title/manifest.json",
+      "recipe": "paper-title/recipe.md"
+    },
+    {
+      "id": "title-to-label",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "主题先建立，再让位给正文",
+      "manifest": "title-to-label/manifest.json",
+      "recipe": "title-to-label/recipe.md"
+    },
+    {
+      "id": "document-conclusions",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "一段原文支持三条结论",
+      "manifest": "document-conclusions/manifest.json",
+      "recipe": "document-conclusions/recipe.md"
+    },
+    {
+      "id": "list-reveal",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "并列要点逐项呈现",
+      "manifest": "list-reveal/manifest.json",
+      "recipe": "list-reveal/recipe.md"
+    },
+    {
+      "id": "compare-reveal",
+      "version": "1.0.0",
+      "status": "experimental",
+      "purpose": "有依据的文本对照",
+      "manifest": "compare-reveal/manifest.json",
+      "recipe": "compare-reveal/recipe.md"
+    },
+    {
+      "id": "network-expand",
+      "version": "1.0.0",
+      "status": "experimental",
+      "purpose": "有依据的向外关系展开",
+      "manifest": "network-expand/manifest.json",
+      "recipe": "network-expand/recipe.md"
+    },
+    {
+      "id": "blur-slide",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "标题与副标题柔和入场",
+      "manifest": "blur-slide/manifest.json",
+      "recipe": "blur-slide/recipe.md"
+    },
+    {
+      "id": "split-text-stagger",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "中文短语遮罩裂升",
+      "manifest": "split-text-stagger/manifest.json",
+      "recipe": "split-text-stagger/recipe.md"
+    },
+    {
+      "id": "card-stack",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "整体卡堆展开为可读个体",
+      "manifest": "card-stack/manifest.json",
+      "recipe": "card-stack/recipe.md"
+    },
+    {
+      "id": "concept-matrix",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "低密度概念矩阵建立",
+      "manifest": "concept-matrix/manifest.json",
+      "recipe": "concept-matrix/recipe.md"
+    },
+    {
+      "id": "platform-hinge-rise",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "两组证据铰起后给出归纳",
+      "manifest": "platform-hinge-rise/manifest.json",
+      "recipe": "platform-hinge-rise/recipe.md"
+    },
+    {
+      "id": "source-converge",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "有依据的多源汇聚",
+      "manifest": "source-converge/manifest.json",
+      "recipe": "source-converge/recipe.md"
+    },
+    {
+      "id": "diagram-cascade",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "真实层级逐层建立",
+      "manifest": "diagram-cascade/manifest.json",
+      "recipe": "diagram-cascade/recipe.md"
+    },
+    {
+      "id": "lead-word-assemble",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "lead-word-assemble/manifest.json",
+      "recipe": "lead-word-assemble/recipe.md"
+    },
+    {
+      "id": "brace-expand",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "brace-expand/manifest.json",
+      "recipe": "brace-expand/recipe.md"
+    },
+    {
+      "id": "pill-slot-cycle",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "pill-slot-cycle/manifest.json",
+      "recipe": "pill-slot-cycle/recipe.md"
+    },
+    {
+      "id": "word-roll",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "word-roll/manifest.json",
+      "recipe": "word-roll/recipe.md"
+    },
+    {
+      "id": "text-column-converge",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "text-column-converge/manifest.json",
+      "recipe": "text-column-converge/recipe.md"
+    },
+    {
+      "id": "evidence-relay",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "evidence-relay/manifest.json",
+      "recipe": "evidence-relay/recipe.md"
+    },
+    {
+      "id": "row-embed",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "row-embed/manifest.json",
+      "recipe": "row-embed/recipe.md"
+    },
+    {
+      "id": "structure-then-text",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "structure-then-text/manifest.json",
+      "recipe": "structure-then-text/recipe.md"
+    },
+    {
+      "id": "timeline-travel",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "timeline-travel/manifest.json",
+      "recipe": "timeline-travel/recipe.md"
+    },
+    {
+      "id": "odometer-roll",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "odometer-roll/manifest.json",
+      "recipe": "odometer-roll/recipe.md"
+    },
+    {
+      "id": "research-stack",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "资料集合依次进入焦点",
+      "manifest": "research-stack/manifest.json",
+      "recipe": "research-stack/recipe.md"
+    },
+    {
+      "id": "list-stack-press",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "新增条目持续积累",
+      "manifest": "list-stack-press/manifest.json",
+      "recipe": "list-stack-press/recipe.md"
+    },
+    {
+      "id": "integration-hub",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "旧结构变为统一中枢",
+      "manifest": "integration-hub/manifest.json",
+      "recipe": "integration-hub/recipe.md"
+    },
+    {
+      "id": "scroll-brake",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "从长列表定位关键条目",
+      "manifest": "scroll-brake/manifest.json",
+      "recipe": "scroll-brake/recipe.md"
+    },
+    {
+      "id": "chart-live",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "数据按顺序揭示与重组",
+      "manifest": "chart-live/manifest.json",
+      "recipe": "chart-live/recipe.md"
+    },
+    {
+      "id": "particle-sand-fill",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "数量汇积成柱",
+      "manifest": "particle-sand-fill/manifest.json",
+      "recipe": "particle-sand-fill/recipe.md"
+    },
+    {
+      "id": "member-grid",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "集合中突出特定成员",
+      "manifest": "member-grid/manifest.json",
+      "recipe": "member-grid/recipe.md"
+    },
+    {
+      "id": "ring-annotation",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "主体转为机制图，旁侧解释",
+      "manifest": "ring-annotation/manifest.json",
+      "recipe": "ring-annotation/recipe.md"
+    },
+    {
+      "id": "cycle-mechanism",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "对象转入循环机制",
+      "manifest": "cycle-mechanism/manifest.json",
+      "recipe": "cycle-mechanism/recipe.md"
+    },
+    {
+      "id": "media-before-after",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "真实前后素材擦动对照",
+      "manifest": "media-before-after/manifest.json",
+      "recipe": "media-before-after/recipe.md"
+    },
+    {
+      "id": "document-write",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "文档段落逐步书写显现",
+      "manifest": "document-write/manifest.json",
+      "recipe": "document-write/recipe.md"
+    },
+    {
+      "id": "code-reveal",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "代码/配置逐行或逐字符揭示",
+      "manifest": "code-reveal/manifest.json",
+      "recipe": "code-reveal/recipe.md"
+    },
+    {
+      "id": "letterspace-materialize",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "有来源字标连续描画",
+      "manifest": "letterspace-materialize/manifest.json",
+      "recipe": "letterspace-materialize/recipe.md"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "paper-title",
+  "mode": "method-reference",
+  "repository": "https://github.com/Acorn2/video-shotcraft",
+  "commit": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab",
+  "recipe": "references/shots/typography/paper-title-card.md",
+  "implementation": "demos/typography/paper-title-card/PaperTitleCard.tsx",
+  "upstreamLicense": "Apache-2.0",
+  "implementationLicense": "MIT",
+  "notice": "No applicable NOTICE found in the local upstream snapshot. Independently implemented; no upstream code, copy, fixtures or external media copied.",
+  "retained": [
+    "表达目的",
+    "阶段顺序",
+    "2026-10-02 对照所选 Markdown 和 TSX 重建的配方特征：短语依次压印上纸，原文关键词以斜体强调，最后一笔划线。"
+  ],
+  "omitted": [
+    "固定帧数",
+    "固定坐标与配色",
+    "独立字幕",
+    "持续漂移",
+    "占位事实",
+    "自动音效"
+  ],
+  "externalAttribution": "Upstream attribution is research provenance, not media authorization.",
+  "adaptationNotes": "scale=1.28→1，blur=7→0；bezier(.2,.75,.3,1)；只有原文 emphasis 获得强调。 不能给所有词同样强调；压印完成后需留完整句阅读时间。"
+}

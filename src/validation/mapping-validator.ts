@@ -19,6 +19,7 @@ function validateSemanticScene(scene: StoryboardScene): MappingIssue[] {
   const visual = scene.visual;
   if (!visual) return [mappingIssue(scene, 'Storyboard 2.3 需要 visual：先定义画面解释的关系，再选择风格。', 'error')];
   if (visual.networkDirection && visual.kind !== 'network') issues.push(mappingIssue(scene, 'networkDirection 仅适用于 network。', 'error'));
+  if (visual.shotPattern === 'document-conclusion-deal' && visual.kind !== 'network') issues.push(mappingIssue(scene, 'document-conclusion-deal 仅适用于 network。', 'error'));
   if (visual.changeMode && visual.kind !== 'change') issues.push(mappingIssue(scene, 'changeMode 仅适用于 change。', 'error'));
   if (visual.mediaFocus && (visual.kind !== 'media' || visual.mediaFocus.start + visual.mediaFocus.duration > scene.durationFrames)) issues.push(mappingIssue(scene, 'mediaFocus 仅适用于 media，且聚焦动作必须位于镜头内。', 'error'));
   const primary = scene.layers.filter((layer) => SEMANTIC_CONTENT_TYPES.has(layer.type));
@@ -37,7 +38,7 @@ function validateSemanticScene(scene: StoryboardScene): MappingIssue[] {
     issues.push(mappingIssue(scene, 'media 需要 source-media；其余语义图解需要 diagram，避免把示意图伪装成真实素材。', 'error'));
   }
   for (const layer of scene.layers) {
-    if (UNUSED_LAYOUT_FIELDS.some((field) => field in layer)) issues.push(mappingIssue(scene, `layer ${layer.id} 含语义版式不会读取的坐标或状态字段。`, 'error'));
+    if (UNUSED_LAYOUT_FIELDS.some((field) => field in layer && !(scene.shot?.id === 'media-before-after' && ['width','height','fit'].includes(field)))) issues.push(mappingIssue(scene, `layer ${layer.id} 含语义版式不会读取的坐标或状态字段。`, 'error'));
     const allowed = visual.kind === 'statement' ? ['label']
       : visual.kind === 'media' ? ['screenshot', 'object']
         : visual.kind === 'metric' ? ['metric'] : ['node', 'card'];
@@ -57,6 +58,14 @@ function validateSemanticScene(scene: StoryboardScene): MappingIssue[] {
     if (nodes.length < 3 || nodes.length > 6 || !visual.anchorId || !nodes.some((node) => node.id === visual.anchorId)) issues.push(mappingIssue(scene, 'network 需要 3–6 个主体及存在的 anchorId。', 'error'));
     const branches = nodes.filter((node) => node.id !== visual.anchorId).map((node) => node.id);
     if (scene.connections.length !== branches.length || branches.some((id) => scene.connections.filter((link) => (visual.networkDirection === 'inward' ? link.from === id && link.to === visual.anchorId : link.from === visual.anchorId && link.to === id)).length !== 1)) issues.push(mappingIssue(scene, 'network 的连接必须符合 networkDirection：outward 中心向外，inward 各分支汇聚中心；每个分支恰好一条。', 'error'));
+  }
+  if (visual.shotPattern === 'document-conclusion-deal') {
+    const source = nodes.find((node) => node.id === visual.anchorId);
+    const conclusions = nodes.filter((node) => node.id !== visual.anchorId);
+    if (nodes.length !== 4 || !source?.text?.trim() || conclusions.some((node) => !node.label?.trim() || !node.text?.trim()) || !visual.source?.trim()) {
+      issues.push(mappingIssue(scene, '文档结论镜头需要一段有来源位置的原文摘录及三个有名称和说明的结论。', 'error'));
+    }
+    if (visual.networkDirection === 'inward') issues.push(mappingIssue(scene, '文档结论镜头的线索应从原文向外展开。', 'error'));
   }
   if (visual.kind === 'change') {
     if (nodes.length !== 2 || !visual.beforeId || !visual.afterId || visual.beforeId === visual.afterId
@@ -99,8 +108,13 @@ function overlaps(start: number, end: number, otherStart: number, otherEnd: numb
 export function validateContentMapping(storyboard: Storyboard): MappingIssue[] {
   const issues: MappingIssue[] = [];
   for (const scene of storyboard.scenes) {
-    if (storyboard.schemaVersion !== '2.3' && scene.visual && (scene.visual.networkDirection || scene.visual.changeMode || scene.visual.mediaFocus)) issues.push(mappingIssue(scene, '语义扩展只支持 Storyboard 2.3。', 'error'));
-    if (storyboard.schemaVersion === '2.3') {
+    if (!['2.3', '2.4'].includes(storyboard.schemaVersion) && scene.visual && (scene.visual.networkDirection || scene.visual.changeMode || scene.visual.mediaFocus || scene.visual.shotPattern)) issues.push(mappingIssue(scene, '语义扩展只支持 Storyboard 2.3。', 'error'));
+    if (storyboard.schemaVersion === '2.4' && !['semantic-default', 'compare-reveal', 'network-expand'].includes(scene.shot?.id ?? '')) {
+      if (!scene.primaryClaim?.trim() || !scene.title.trim() || scene.visual?.representation !== (scene.shot?.id === 'media-before-after' ? 'source-media' : 'diagram') || scene.template !== (['network', 'sequence'].includes(scene.visual?.kind ?? '') ? 'graph-explainer' : scene.visual?.kind === 'metric' ? 'metric-grid' : 'statement')) issues.push(mappingIssue(scene, '配方需要主张、标题、diagram 与匹配的基础 template。', 'error'));
+      if (scene.layers.some((layer) => UNUSED_LAYOUT_FIELDS.some((field) => field in layer && !(scene.shot?.id === 'media-before-after' && ['width','height','fit'].includes(field))))) issues.push(mappingIssue(scene, '配方不接受不会执行的坐标/状态字段。', 'error'));
+      continue;
+    }
+    if (['2.3', '2.4'].includes(storyboard.schemaVersion)) {
       issues.push(...validateSemanticScene(scene));
       continue;
     }

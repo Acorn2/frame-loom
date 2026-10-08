@@ -4,11 +4,14 @@ FrameLoom favors small, deterministic changes that keep the storyboard contract,
 
 ## Local checks
 
+Use Node.js 24 or later (Node.js 24 LTS recommended), plus FFmpeg/ffprobe. CI and the Pages workflow use Node.js 24.
+
 ```bash
 npm ci
 npm run generate:schemas
 npm run check:docs
 npm run validate:styles
+npm run validate:shots
 npm run typecheck
 npm run lint
 npm test

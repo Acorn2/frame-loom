@@ -1,0 +1,191 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "member-grid",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "在成员集合中标记对象",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 4.533333333333333,
+    "durationFrames": 136,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "member-grid",
+      "template": "graph-explainer",
+      "purpose": "claim",
+      "title": "在成员集合中标记对象",
+      "primaryClaim": "集合中突出特定成员",
+      "visual": {
+        "kind": "sequence",
+        "explanation": "FrameLoom 自写公开示意资料，不代表真实产品、用户或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "member-grid",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "item1",
+            "item2",
+            "item3",
+            "item4",
+            "item5",
+            "item6",
+            "item7",
+            "item8"
+          ]
+        },
+        "flagged": [
+          "item2",
+          "item5",
+          "item8"
+        ]
+      },
+      "narration": "集合中突出特定成员",
+      "durationFrames": 136,
+      "layers": [
+        {
+          "id": "item1",
+          "type": "card",
+          "label": "甲组",
+          "text": "待检查"
+        },
+        {
+          "id": "item2",
+          "type": "card",
+          "label": "乙组",
+          "text": "已检查"
+        },
+        {
+          "id": "item3",
+          "type": "card",
+          "label": "丙组",
+          "text": "待检查"
+        },
+        {
+          "id": "item4",
+          "type": "card",
+          "label": "丁组",
+          "text": "待检查"
+        },
+        {
+          "id": "item5",
+          "type": "card",
+          "label": "戊组",
+          "text": "已检查"
+        },
+        {
+          "id": "item6",
+          "type": "card",
+          "label": "己组",
+          "text": "待检查"
+        },
+        {
+          "id": "item7",
+          "type": "card",
+          "label": "庚组",
+          "text": "待检查"
+        },
+        {
+          "id": "item8",
+          "type": "card",
+          "label": "辛组",
+          "text": "已检查"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "item1-enter",
+          "target": "item1",
+          "action": "enter",
+          "start": 14,
+          "duration": 24
+        },
+        {
+          "id": "item2-enter",
+          "target": "item2",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item3-enter",
+          "target": "item3",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item4-enter",
+          "target": "item4",
+          "action": "enter",
+          "start": 14,
+          "duration": 24
+        },
+        {
+          "id": "item5-enter",
+          "target": "item5",
+          "action": "enter",
+          "start": 14,
+          "duration": 24
+        },
+        {
+          "id": "item6-enter",
+          "target": "item6",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item7-enter",
+          "target": "item7",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item8-enter",
+          "target": "item8",
+          "action": "enter",
+          "start": 14,
+          "duration": 24
+        },
+        {
+          "id": "item2-highlight",
+          "target": "item2",
+          "action": "highlight",
+          "start": 64,
+          "duration": 24
+        },
+        {
+          "id": "item5-highlight",
+          "target": "item5",
+          "action": "highlight",
+          "start": 64,
+          "duration": 24
+        },
+        {
+          "id": "item8-highlight",
+          "target": "item8",
+          "action": "highlight",
+          "start": 64,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

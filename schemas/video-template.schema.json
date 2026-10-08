@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FrameLoom Video Template",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "const": "retro-zine-explainer"
+    },
+    "version": {
+      "type": "string",
+      "enum": [
+        "1.0.0",
+        "1.1.0",
+        "1.2.0"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "experimental",
+        "stable",
+        "deprecated"
+      ]
+    },
+    "defaultStyle": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "shots": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "semantic-default",
+              "paper-title",
+              "title-to-label",
+              "document-conclusions",
+              "list-reveal",
+              "compare-reveal",
+              "network-expand",
+              "blur-slide",
+              "split-text-stagger",
+              "card-stack",
+              "concept-matrix",
+              "platform-hinge-rise",
+              "source-converge",
+              "diagram-cascade",
+              "lead-word-assemble",
+              "brace-expand",
+              "pill-slot-cycle",
+              "word-roll",
+              "text-column-converge",
+              "evidence-relay",
+              "row-embed",
+              "structure-then-text",
+              "timeline-travel",
+              "odometer-roll",
+              "research-stack",
+              "list-stack-press",
+              "integration-hub",
+              "scroll-brake",
+              "chart-live",
+              "particle-sand-fill",
+              "member-grid",
+              "ring-annotation",
+              "cycle-mechanism",
+              "media-before-after",
+              "document-write",
+              "code-reveal",
+              "letterspace-materialize"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "enum": [
+              "1.0.0",
+              "1.1.0",
+              "1.2.0"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "version"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "orientations": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "landscape",
+          "portrait"
+        ]
+      }
+    },
+    "inputModes": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "document-only",
+          "document-with-assets"
+        ]
+      }
+    },
+    "selectionRules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "minLength": 1
+          },
+          "shotId": {
+            "type": "string",
+            "enum": [
+              "semantic-default",
+              "paper-title",
+              "title-to-label",
+              "document-conclusions",
+              "list-reveal",
+              "compare-reveal",
+              "network-expand",
+              "blur-slide",
+              "split-text-stagger",
+              "card-stack",
+              "concept-matrix",
+              "platform-hinge-rise",
+              "source-converge",
+              "diagram-cascade",
+              "lead-word-assemble",
+              "brace-expand",
+              "pill-slot-cycle",
+              "word-roll",
+              "text-column-converge",
+              "evidence-relay",
+              "row-embed",
+              "structure-then-text",
+              "timeline-travel",
+              "odometer-roll",
+              "research-stack",
+              "list-stack-press",
+              "integration-hub",
+              "scroll-brake",
+              "chart-live",
+              "particle-sand-fill",
+              "member-grid",
+              "ring-annotation",
+              "cycle-mechanism",
+              "media-before-after",
+              "document-write",
+              "code-reveal",
+              "letterspace-materialize"
+            ]
+          }
+        },
+        "required": [
+          "content",
+          "shotId"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "cut"
+        },
+        "readingSec": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "maxNarrationGapSec": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "type",
+        "readingSec",
+        "maxNarrationGapSec"
+      ],
+      "additionalProperties": false
+    },
+    "sound": {
+      "type": "object",
+      "properties": {
+        "music": {
+          "type": "boolean",
+          "const": false
+        },
+        "sfx": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "music",
+        "sfx"
+      ],
+      "additionalProperties": false
+    },
+    "validatedExamples": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "version",
+    "status",
+    "defaultStyle",
+    "shots",
+    "orientations",
+    "inputModes",
+    "selectionRules",
+    "handoff",
+    "sound",
+    "validatedExamples"
+  ],
+  "additionalProperties": false
+}

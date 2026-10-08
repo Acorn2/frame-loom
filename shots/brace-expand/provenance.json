@@ -1,0 +1,34 @@
+{
+  "id": "brace-expand",
+  "mode": "method-reference",
+  "repository": "https://github.com/Acorn2/video-shotcraft",
+  "commit": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab",
+  "recipe": "references/shots/typography/brace-expand.md",
+  "implementation": "demos/typography/brace-expand/BraceExpand.tsx",
+  "upstreamLicense": "Apache-2.0",
+  "implementationLicense": "MIT",
+  "notice": "No applicable NOTICE found in the local upstream snapshot. Independently implemented; no upstream code, copy, fixtures or external media copied.",
+  "retained": [
+    "表达目的",
+    "阶段顺序",
+    "2026-10-02 对照所选 Markdown 和 TSX 重建的配方特征：花括号先在中心建立，再弹向两边；文字揭示宽度与括号间距严格绑定。"
+  ],
+  "omitted": [
+    "固定帧数",
+    "固定坐标与配色",
+    "独立字幕",
+    "持续漂移",
+    "占位事实",
+    "自动音效",
+    "段尾急推",
+    "上游假页面与纹理",
+    "上游夸大收束句"
+  ],
+  "externalAttribution": "Upstream attribution is research provenance, not media authorization.",
+  "shortlist": "A06",
+  "dependenciesReviewed": [
+    "demos/_fixtures/Motion.tsx",
+    "demos/_fixtures/Fixtures.tsx"
+  ],
+  "adaptationNotes": "outBack(1.4) 的单次过冲；括号 scale=.6→1；字体宽度在加载后实测。 文字不可独立淡入冒充括号揭示；超长标题必须预检；不强加与内容无关的代码隐喻。"
+}

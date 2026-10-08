@@ -107,7 +107,8 @@ describe('Style Pack workflow', () => {
     const temp = makeTempDir();
     const gallery = buildStyleGallery([path.join(temp, 'gallery.html')]);
     expect(fs.readFileSync(gallery, 'utf8')).toContain('Blueprint');
-    expect(fs.readFileSync(gallery, 'utf8')).toContain('Scatterbrain');
+    expect(fs.readFileSync(gallery, 'utf8')).toContain('Sketch Notes');
+    expect(fs.readFileSync(gallery, 'utf8')).toContain('&quot;Kaiti SC&quot;');
 
     const project = initProject(['demo-project', '--style', 'scatterbrain', '--canvas', 'portrait', '--projects-dir', temp]);
     const draft = JSON.parse(fs.readFileSync(path.join(project, 'storyboard.draft.json'), 'utf8'));

@@ -1,0 +1,24 @@
+{
+  "id": "semantic-default",
+  "mode": "native",
+  "repository": "FrameLoom",
+  "commit": null,
+  "recipe": null,
+  "implementation": "src/templates/semantic/SemanticScene.tsx",
+  "upstreamLicense": "MIT",
+  "implementationLicense": "MIT",
+  "notice": "No applicable NOTICE found in the local upstream snapshot. Independently implemented; no upstream code, copy, fixtures or external media copied.",
+  "retained": [
+    "表达目的",
+    "阶段顺序"
+  ],
+  "omitted": [
+    "固定帧数",
+    "固定坐标与配色",
+    "独立字幕",
+    "持续漂移",
+    "占位事实",
+    "自动音效"
+  ],
+  "externalAttribution": "Upstream attribution is research provenance, not media authorization."
+}

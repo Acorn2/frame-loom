@@ -1,4 +1,5 @@
 import React from 'react';
+import {RenderShot} from '../shots/renderer-registry';
 import type {StoryboardScene} from '../schemas/storyboard';
 import type {StyleTokens} from '../styles/style-loader';
 import {StatementTemplate} from '../templates/statement/StatementTemplate';
@@ -11,14 +12,17 @@ import {SemanticScene} from '../templates/semantic/SemanticScene';
 
 interface RenderSceneProps {
   scene: StoryboardScene;
+  styleVersion: string;
   tokens: StyleTokens;
   showSceneCaptions: boolean;
   externalCaptions?: boolean;
   overlapOutFrames: number;
+  chapterTransitionOut?: boolean;
 }
 
-export function RenderScene({scene, tokens, showSceneCaptions, externalCaptions, overlapOutFrames}: RenderSceneProps) {
-  const props = {scene, tokens, showSceneCaptions, overlapOutFrames};
+export function RenderScene({scene, tokens, showSceneCaptions, externalCaptions, overlapOutFrames, chapterTransitionOut, styleVersion}: RenderSceneProps) {
+  const props = {scene, tokens, showSceneCaptions, overlapOutFrames, chapterTransitionOut};
+  if (scene.shot) return <RenderShot {...props} styleVersion={styleVersion} externalCaptions={externalCaptions} />;
   if (scene.visual) {
     return <SemanticScene {...props} externalCaptions={externalCaptions} />;
   }

@@ -1,0 +1,106 @@
+{
+  "id": "integration-hub",
+  "version": "1.2.0",
+  "status": "experimental",
+  "registered": true,
+  "visualKinds": [
+    "change"
+  ],
+  "purpose": "旧结构变为统一中枢",
+  "inputModes": [
+    "document-only",
+    "document-with-assets"
+  ],
+  "requiredAssets": [],
+  "styles": [
+    "retro-zine",
+    "signal",
+    "scatterbrain",
+    "archive-grid",
+    "signal-noir",
+    "studio-frame"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "slots": {
+    "before": {
+      "min": 1,
+      "max": 1,
+      "labelMax": 18,
+      "textMax": 44
+    },
+    "hub": {
+      "min": 1,
+      "max": 1,
+      "labelMax": 18,
+      "textMax": 44
+    },
+    "items": {
+      "min": 2,
+      "max": 4,
+      "labelMax": 14,
+      "textMax": 32
+    }
+  },
+  "timing": {
+    "actions": {
+      "enter": {
+        "minSec": 0.2,
+        "maxSec": 2.8
+      },
+      "reveal": {
+        "minSec": 0.2,
+        "maxSec": 2.8
+      },
+      "focus": {
+        "minSec": 0.2,
+        "maxSec": 10
+      },
+      "highlight": {
+        "minSec": 0.2,
+        "maxSec": 10
+      },
+      "draw": {
+        "minSec": 0.2,
+        "maxSec": 2.8
+      },
+      "count": {
+        "minSec": 0.2,
+        "maxSec": 2.8
+      }
+    },
+    "readingSec": 1.2,
+    "titleHoldSec": 0.6,
+    "sourceHoldSec": 0.6,
+    "itemHoldSec": 0.001
+  },
+  "motion": {
+    "recipeOwned": [
+      "integration-hub",
+      "bounded-explicit-phases",
+      "neutral-material",
+      "source-faithful-layout"
+    ],
+    "styleOwned": [
+      "accent",
+      "font-family",
+      "caption-color",
+      "safe-area"
+    ],
+    "continuousDrift": false
+  },
+  "qa": [
+    "action-mid",
+    "action-complete",
+    "complete",
+    "before-handoff"
+  ],
+  "sound": {
+    "enabled": false,
+    "events": [
+      "item-settled",
+      "focus-complete"
+    ]
+  }
+}

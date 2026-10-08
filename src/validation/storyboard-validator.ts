@@ -3,11 +3,13 @@ import path from 'node:path';
 import {CAPABILITY_MANIFEST} from '../renderer/capability-manifest';
 import {StoryboardSchema, type Storyboard, type StoryboardLayer, type StoryboardScene} from '../schemas/storyboard';
 import {MotionPackSchema, StyleIndexSchema, StylePackSchema, type StylePack} from '../schemas/style-pack';
+import {validateShots} from './shot-validator';
 import {validateContentMapping} from './mapping-validator';
 import {getNodeState} from '../renderer/node-state';
 import {getTimelineDuration} from '../timeline/scene-timeline';
 import {isTemplateFamily} from '../templates/families/family-registry';
 import {estimateVisibleReadingSeconds} from './reading-time';
+import {verifyFontAssets} from '../fonts/assets';
 
 export interface ValidationIssue {
   path: string;
@@ -115,7 +117,7 @@ function validateLayer(
 }
 
 function validateScene(scene: StoryboardScene, issues: ValidationIssue[], storyboardPath: string | undefined, schemaVersion: Storyboard['schemaVersion'], fps: number, style?: StylePack) {
-  if (scene.purpose && style && (schemaVersion !== '2.3' || style.supports.purposes) && !style.supports.purposes?.includes(scene.purpose)) {
+  if (scene.purpose && style && (!['2.3', '2.4'].includes(schemaVersion) || style.supports.purposes) && !style.supports.purposes?.includes(scene.purpose)) {
     issues.push(issue(`scene ${scene.id}.purpose`, `Style Pack "${style.id}" 不支持镜头职责 "${scene.purpose}"。`));
   }
   if (!CAPABILITY_MANIFEST.templates.includes(scene.template)) {
@@ -134,7 +136,7 @@ function validateScene(scene: StoryboardScene, issues: ValidationIssue[], storyb
     if (!CAPABILITY_MANIFEST.overlapTransitions.includes(scene.transitionIn.type)) {
       issues.push(issue(`scene ${scene.id}.transitionIn`, '未知 overlap transition。'));
     }
-    if (style?.supports.overlapTransitions && !style.supports.overlapTransitions.includes(scene.transitionIn.type)) {
+    if (style?.supports.overlapTransitions && !['overlap-blinds', 'overlap-push-stack', 'overlap-line-carry', 'overlap-ink', 'overlap-barn-door'].includes(scene.transitionIn.type) && !style.supports.overlapTransitions.includes(scene.transitionIn.type)) {
       issues.push(issue(`scene ${scene.id}.transitionIn`, `Style Pack "${style.id}" 不支持 ${scene.transitionIn.type}。`));
     }
     if (scene.transitionIn.durationFrames >= scene.durationFrames) {
@@ -176,7 +178,7 @@ function validateScene(scene: StoryboardScene, issues: ValidationIssue[], storyb
     if (!CAPABILITY_MANIFEST.actions.includes(beat.action)) {
       issues.push(issue(`scene ${scene.id}, beat ${beat.id}`, `未知或尚未实现的 action "${beat.action}"。`));
     } else {
-      if (style && !style.supports.actions.includes(beat.action)) {
+      if (style && !style.supports.actions.includes(beat.action) && !(schemaVersion === '2.4' && ['dock', 'demote', 'trace', 'tape'].includes(beat.action))) {
         issues.push(issue(`scene ${scene.id}, beat ${beat.id}`, `Style Pack "${style.id}" 不支持 action "${beat.action}"。`));
       }
       const targetType = connectionIds.has(beat.target) ? 'connection' : scene.layers.find((layer) => layer.id === beat.target)?.type;
@@ -247,10 +249,13 @@ export function validateStoryboard(value: unknown, options: ValidationOptions = 
 
   const storyboard = parsed.data;
   const issues: ValidationIssue[] = [];
-  if (storyboard.schemaVersion === '2.2' || storyboard.schemaVersion === '2.3') {
+  if (storyboard.font) {
+    try {verifyFontAssets(storyboard.font);} catch (error) {issues.push(issue('font', error instanceof Error ? error.message : String(error)));}
+  }
+  if (['2.2', '2.3', '2.4'].includes(storyboard.schemaVersion)) {
     for (const scene of storyboard.scenes) {
-      if (!scene.purpose) issues.push(issue(`scene ${scene.id}.purpose`, 'Storyboard 2.2/2.3 的每个 scene 必须声明镜头职责。'));
-      if (storyboard.schemaVersion === '2.3' && !scene.visual) issues.push(issue(`scene ${scene.id}.visual`, 'Storyboard 2.3 需要语义画面计划。'));
+      if (!scene.purpose) issues.push(issue(`scene ${scene.id}.purpose`, 'Storyboard 2.2–2.4 的每个 scene 必须声明镜头职责。'));
+      if (['2.3', '2.4'].includes(storyboard.schemaVersion) && !scene.visual) issues.push(issue(`scene ${scene.id}.visual`, 'Storyboard 2.3/2.4 需要语义画面计划。'));
       if (storyboard.schemaVersion === '2.2' && scene.visual) issues.push(issue(`scene ${scene.id}.visual`, 'Storyboard 2.2 不支持 visual；请升级为 2.3。'));
     }
   } else if (storyboard.scenes.some((scene) => scene.purpose || scene.visual)) {
@@ -280,9 +285,9 @@ export function validateStoryboard(value: unknown, options: ValidationOptions = 
     }
     validateScene(scene, issues, options.storyboardPath, storyboard.schemaVersion, storyboard.project.fps, style);
     if (scene.primaryClaim && !scene.outro) {
-      const overlapOut = storyboard.scenes[index + 1]?.transitionIn?.durationFrames ?? (storyboard.schemaVersion === '2.3' ? 0 : 24);
+      const overlapOut = storyboard.scenes[index + 1]?.transitionIn?.durationFrames ?? (['2.3', '2.4'].includes(storyboard.schemaVersion) ? 0 : 24);
       const lastBeatEnd = Math.max(0, ...scene.beats.map((beat) => beat.start + beat.duration), scene.visual?.mediaFocus ? scene.visual.mediaFocus.start + scene.visual.mediaFocus.duration : 0);
-      const requiredHold = storyboard.schemaVersion === '2.3' ? Math.ceil(storyboard.project.fps * 0.8) : 24;
+      const requiredHold = ['2.3', '2.4'].includes(storyboard.schemaVersion) ? Math.ceil(storyboard.project.fps * 0.8) : 24;
       if (scene.durationFrames - overlapOut - lastBeatEnd < requiredHold) {
         issues.push(issue(`scene ${scene.id}.beats`, `关键动作后不足 ${requiredHold} 帧稳定停留，可能在观众读完前进入转场。`, 'warning'));
       }
@@ -295,6 +300,6 @@ export function validateStoryboard(value: unknown, options: ValidationOptions = 
   if (sceneTotal !== storyboard.project.durationFrames) {
     issues.push(issue('scenes', `scene 总时长 ${sceneTotal} 不等于 project.durationFrames ${storyboard.project.durationFrames}。`));
   }
-  issues.push(...validateContentMapping(storyboard));
+  issues.push(...validateContentMapping(storyboard), ...validateShots(storyboard));
   return issues;
 }

@@ -1,0 +1,28 @@
+{
+  "id": "paper-tape",
+  "version": "1.2.0",
+  "status": "experimental",
+  "shortlist": "C03",
+  "kind": "hosted-action",
+  "hosts": [
+    "card-stack",
+    "row-embed"
+  ],
+  "action": "tape",
+  "targetSlot": "items",
+  "styles": [
+    "retro-zine",
+    "signal",
+    "scatterbrain",
+    "archive-grid",
+    "signal-noir",
+    "studio-frame"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "sound": false,
+  "requires": [
+    "优先MaskingTapeSlap；停止晃动后阅读，PopupBookRise终态需可读"
+  ]
+}

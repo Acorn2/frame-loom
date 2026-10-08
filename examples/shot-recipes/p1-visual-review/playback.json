@@ -1,0 +1,322 @@
+[
+  {
+    "id": "paper-title",
+    "duration": 2.833333,
+    "currentTime": 2.833333,
+    "rate": 1,
+    "frames": 34,
+    "decoded": 85,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "title-to-label",
+    "duration": 4.666667,
+    "currentTime": 4.666667,
+    "rate": 1,
+    "frames": 81,
+    "decoded": 140,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "document-conclusions",
+    "duration": 6.5,
+    "currentTime": 6.5,
+    "rate": 1,
+    "frames": 135,
+    "decoded": 195,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "semantic-default",
+    "duration": 10,
+    "currentTime": 10,
+    "rate": 1,
+    "frames": 240,
+    "decoded": 300,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "blur-slide",
+    "duration": 3,
+    "currentTime": 3,
+    "rate": 1,
+    "frames": 34,
+    "decoded": 90,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "list-reveal",
+    "duration": 4.5,
+    "currentTime": 4.5,
+    "rate": 1,
+    "frames": 76,
+    "decoded": 135,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "compare-reveal",
+    "duration": 7,
+    "currentTime": 7,
+    "rate": 1,
+    "frames": 151,
+    "decoded": 210,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "network-expand",
+    "duration": 9,
+    "currentTime": 9,
+    "rate": 1,
+    "frames": 210,
+    "decoded": 270,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "split-text-stagger",
+    "duration": 3,
+    "currentTime": 3,
+    "rate": 1,
+    "frames": 54,
+    "decoded": 90,
+    "dropped": 5,
+    "error": null
+  },
+  {
+    "id": "concept-matrix",
+    "duration": 4,
+    "currentTime": 4,
+    "rate": 1,
+    "frames": 84,
+    "decoded": 120,
+    "dropped": 5,
+    "error": null
+  },
+  {
+    "id": "card-stack",
+    "duration": 4.666667,
+    "currentTime": 4.666667,
+    "rate": 1,
+    "frames": 104,
+    "decoded": 140,
+    "dropped": 4,
+    "error": null
+  },
+  {
+    "id": "platform-hinge-rise",
+    "duration": 4.666667,
+    "currentTime": 4.666667,
+    "rate": 1,
+    "frames": 104,
+    "decoded": 140,
+    "dropped": 4,
+    "error": null
+  },
+  {
+    "id": "brace-expand",
+    "duration": 2.333333,
+    "currentTime": 2.333333,
+    "rate": 1,
+    "frames": 32,
+    "decoded": 70,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "diagram-cascade",
+    "duration": 4.666667,
+    "currentTime": 4.666667,
+    "rate": 1,
+    "frames": 79,
+    "decoded": 140,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "lead-word-assemble",
+    "duration": 5,
+    "currentTime": 5,
+    "rate": 1,
+    "frames": 89,
+    "decoded": 150,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "source-converge",
+    "duration": 5.666667,
+    "currentTime": 5.666667,
+    "rate": 1,
+    "frames": 110,
+    "decoded": 170,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "evidence-relay",
+    "duration": 3.666667,
+    "currentTime": 3.666667,
+    "rate": 1,
+    "frames": 77,
+    "decoded": 110,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "pill-slot-cycle",
+    "duration": 5.333333,
+    "currentTime": 5.333333,
+    "rate": 1,
+    "frames": 127,
+    "decoded": 160,
+    "dropped": 2,
+    "error": null
+  },
+  {
+    "id": "word-roll",
+    "duration": 5.333333,
+    "currentTime": 5.333333,
+    "rate": 1,
+    "frames": 127,
+    "decoded": 160,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "text-column-converge",
+    "duration": 7.5,
+    "currentTime": 7.5,
+    "rate": 1,
+    "frames": 130,
+    "decoded": 225,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "odometer-roll",
+    "duration": 4.5,
+    "currentTime": 4.5,
+    "rate": 1,
+    "frames": 76,
+    "decoded": 135,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "row-embed",
+    "duration": 5.666667,
+    "currentTime": 5.666667,
+    "rate": 1,
+    "frames": 111,
+    "decoded": 170,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "structure-then-text",
+    "duration": 5.833333,
+    "currentTime": 5.833333,
+    "rate": 1,
+    "frames": 116,
+    "decoded": 175,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "timeline-travel",
+    "duration": 6.166667,
+    "currentTime": 6.166667,
+    "rate": 1,
+    "frames": 117,
+    "decoded": 185,
+    "dropped": 0,
+    "error": null
+  },
+  {
+    "id": "marker-underline",
+    "duration": 3,
+    "currentTime": 3,
+    "rate": 1,
+    "frames": 14,
+    "decoded": 90,
+    "dropped": 16,
+    "error": null
+  },
+  {
+    "id": "paper-tape",
+    "duration": 5.666667,
+    "currentTime": 5.666667,
+    "rate": 1,
+    "frames": 33,
+    "decoded": 170,
+    "dropped": 16,
+    "error": null
+  },
+  {
+    "id": "outline-trace",
+    "duration": 5.833333,
+    "currentTime": 5.833333,
+    "rate": 1,
+    "frames": 33,
+    "decoded": 175,
+    "dropped": 16,
+    "error": null
+  },
+  {
+    "id": "card-flip",
+    "duration": 6.333333,
+    "currentTime": 6.333333,
+    "rate": 1,
+    "frames": 33,
+    "decoded": 190,
+    "dropped": 16,
+    "error": null
+  },
+  {
+    "id": "concept-matrix-wireframe",
+    "duration": 4,
+    "currentTime": 4,
+    "rate": 1,
+    "frames": 32,
+    "decoded": 120,
+    "dropped": 28,
+    "error": null
+  },
+  {
+    "id": "card-stack-tape",
+    "duration": 5.333333,
+    "currentTime": 5.333333,
+    "rate": 1,
+    "frames": 49,
+    "decoded": 160,
+    "dropped": 28,
+    "error": null
+  },
+  {
+    "id": "blinds-wipe",
+    "duration": 11.4,
+    "currentTime": 11.4,
+    "rate": 1,
+    "frames": 55,
+    "decoded": 342,
+    "dropped": 28,
+    "error": null
+  },
+  {
+    "id": "bottom-push",
+    "duration": 11.4,
+    "currentTime": 11.4,
+    "rate": 1,
+    "frames": 55,
+    "decoded": 342,
+    "dropped": 28,
+    "error": null
+  }
+]

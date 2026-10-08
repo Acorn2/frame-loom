@@ -1,0 +1,27 @@
+{
+  "id": "document-conclusions",
+  "mode": "method-reference",
+  "repository": "https://github.com/Acorn2/video-shotcraft",
+  "commit": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab",
+  "recipe": "references/shots/ui-entrance/doc-park-left-pill-deal.md",
+  "implementation": "demos/ui-entrance/doc-park-left-pill-deal/DocParkLeftPillDeal.tsx",
+  "upstreamLicense": "Apache-2.0",
+  "implementationLicense": "MIT",
+  "notice": "No applicable NOTICE found in the local upstream snapshot. Independently implemented; no upstream code, copy, fixtures or external media copied.",
+  "retained": [
+    "内容关系",
+    "逐帧确定性",
+    "来源驻留与顺序",
+    "2026-10-02 对照所选 Markdown 和 TSX 重建的配方特征：原文先居中阅读，再停靠左侧；三条圆端结论逐条发出，来源持续驻留。"
+  ],
+  "omitted": [
+    "固定帧数",
+    "固定坐标与配色",
+    "独立字幕",
+    "持续漂移",
+    "占位事实",
+    "自动音效"
+  ],
+  "externalAttribution": "Upstream ATTRIBUTION.md credits x.com/Jerrythe2d for this research recipe; external artwork/media are not imported or licensed by that table.",
+  "adaptationNotes": "dock 用 inOutCubic；结论 scale=.94→1 与 y=14→0；三条从原文连接出来。 恰好三条；不能让原文变装饰或偷偷自动滚动；统一字幕，不复制上游独立字幕。"
+}

@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "list-reveal",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "对开页面换章",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 11.8,
+    "durationFrames": 354,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "brace-expand",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "收集线索",
+      "primaryClaim": "先观察，再记录",
+      "visual": {
+        "kind": "statement",
+        "explanation": "根据示例文档中的真实结构绘制示意图",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "list-reveal",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "i0",
+            "i1"
+          ]
+        }
+      },
+      "narration": "先观察，再记录",
+      "durationFrames": 180,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "card",
+          "label": "观察",
+          "text": "发现一个细节"
+        },
+        {
+          "id": "i1",
+          "type": "card",
+          "label": "记录",
+          "text": "留下当时的想法"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 30,
+          "duration": 18
+        }
+      ],
+      "captions": [
+        {
+          "id": "caption",
+          "text": "先观察，再记录",
+          "start": 0,
+          "end": 140
+        }
+      ]
+    },
+    {
+      "id": "second-chapter",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "整理观点",
+      "primaryClaim": "把线索组织成清楚的观点",
+      "visual": {
+        "kind": "statement",
+        "explanation": "根据示例文档中的真实结构绘制示意图",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "list-reveal",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "i0",
+            "i1"
+          ]
+        }
+      },
+      "narration": "把线索组织成清楚的观点",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "card",
+          "label": "归类",
+          "text": "整理相关线索"
+        },
+        {
+          "id": "i1",
+          "type": "card",
+          "label": "表达",
+          "text": "说清自己的判断"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 36,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 66,
+          "duration": 18
+        }
+      ],
+      "captions": [
+        {
+          "id": "caption",
+          "text": "把线索组织成清楚的观点",
+          "start": 36,
+          "end": 198
+        }
+      ],
+      "transitionIn": {
+        "type": "overlap-barn-door",
+        "durationFrames": 36,
+        "chapterBoundary": true
+      }
+    }
+  ]
+}

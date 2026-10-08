@@ -1,0 +1,25 @@
+{
+  "id": "print-texture-transitions",
+  "version": "1.0.0",
+  "status": "experimental",
+  "kind": "cross-scene-transition",
+  "shortlist": "C11",
+  "styles": [
+    "retro-zine",
+    "signal",
+    "scatterbrain",
+    "archive-grid",
+    "signal-noir",
+    "studio-frame"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "sound": false,
+  "requires": [
+    "一次接缝一种动作，干净清除旧字，字幕层不参与墨迹覆盖"
+  ],
+  "type": "overlap-ink",
+  "minSec": 0.6,
+  "maxSec": 2.4
+}

@@ -2,37 +2,87 @@
   "id": "retro-zine",
   "version": "1.0.0",
   "tokens": {
-    "background": "#f2ead9",
-    "ink": "#18211d",
-    "captionInk": "#8A3D2B",
-    "muted": "#68736a",
-    "accent": "#e65335",
-    "accentAlt": "#218c72",
-    "paper": "#fffaf0",
-    "grid": "#d8cdb8",
-    "displayFont": "Georgia, serif",
-    "bodyFont": "Arial, sans-serif",
-    "pattern": "grid",
+    "background": "#f5f5f3",
+    "ink": "#242424",
+    "captionInk": "#55575B",
+    "muted": "#55575b",
+    "accent": "#d94b36",
+    "accentAlt": "#b93827",
+    "paper": "#ffffff",
+    "grid": "#bfc2c0",
+    "displayFont": "\"Songti SC\", \"Noto Serif CJK SC\", \"Source Han Serif SC\", SimSun, serif",
+    "bodyFont": "Arial, \"PingFang SC\", \"Noto Sans CJK SC\", \"Microsoft YaHei\", sans-serif",
+    "pattern": "solid",
     "surfaceRadius": 0,
-    "surfaceBorder": "2px solid #18211d",
-    "surfaceShadow": "10px 10px 0 #e65335",
+    "surfaceBorder": "1px solid #bfc2c0",
+    "surfaceShadow": "none",
     "labelRadius": 0,
     "titleFontSize": 104
   },
   "safeArea": {
-    "landscape": {"top": 100, "right": 120, "bottom": 100, "left": 120},
-    "portrait": {"top": 132, "right": 72, "bottom": 132, "left": 72}
+    "landscape": {
+      "top": 100,
+      "right": 120,
+      "bottom": 100,
+      "left": 120
+    },
+    "portrait": {
+      "top": 132,
+      "right": 72,
+      "bottom": 132,
+      "left": 72
+    }
   },
   "supports": {
-    "purposes": ["opening", "claim", "process", "evidence", "media", "closing"],
-    "templates": ["statement", "graph-explainer", "metric-grid", "interaction-flow"],
-    "layers": ["label", "card", "annotation", "metric", "node", "screenshot", "object", "callout"],
-    "actions": ["enter", "reveal", "draw", "focus", "highlight", "count", "camera-push", "rotate", "set-state"],
-    "transitions": ["fade", "slide", "paper-wipe", "carry"],
-    "overlapTransitions": ["overlap-fade", "overlap-slide", "overlap-carry"]
+    "purposes": [
+      "opening",
+      "claim",
+      "process",
+      "evidence",
+      "media",
+      "closing"
+    ],
+    "templates": [
+      "statement",
+      "graph-explainer",
+      "metric-grid",
+      "interaction-flow"
+    ],
+    "layers": [
+      "label",
+      "card",
+      "annotation",
+      "metric",
+      "node",
+      "screenshot",
+      "object",
+      "callout"
+    ],
+    "actions": [
+      "enter",
+      "reveal",
+      "draw",
+      "focus",
+      "highlight",
+      "count",
+      "camera-push",
+      "rotate",
+      "set-state"
+    ],
+    "transitions": [
+      "fade",
+      "slide",
+      "paper-wipe",
+      "carry"
+    ],
+    "overlapTransitions": [
+      "overlap-fade",
+      "overlap-slide",
+      "overlap-carry"
+    ]
   },
   "provenance": {
-    "fonts": "System-installed Georgia and Arial; no bundled font assets.",
+    "fonts": "System Songti SC / SimSun, or installed Noto Serif CJK SC / Source Han Serif SC; system sans-serif body. No fonts bundled.",
     "assets": "CSS-only texture and shapes; no external assets."
   }
 }

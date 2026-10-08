@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>制作组合 · FrameLoom</title>
+  <link rel="stylesheet" href="library.css">
+</head>
+<body data-page="selection">
+  <a class="skip" href="#main">跳到主要内容</a>
+  <header class="masthead">
+    <a class="brand" href="index.html" aria-label="FrameLoom 视频风格"><span class="brand-mark" aria-hidden="true">F<span></span></span><span>FrameLoom<small>视频创作配方库</small></span></a>
+    <nav class="page-nav" aria-label="配方库导航"><a href="index.html"><span class="nav-step">01</span>视频风格</a><a href="shots.html"><span class="nav-step">02</span>镜头配方</a><a href="selection.html" aria-current="page"><span class="nav-step">03</span>制作组合<span id="nav-count" class="nav-count">0</span></a></nav>
+    <span class="header-note">看效果 · 选组合 · 本地制作</span>
+  </header>
+  <main id="main" data-screen-label="制作组合">
+    <section class="page-heading"><div><p class="eyebrow">03 / MAKE YOUR VIDEO</p><h1>把选择变成视频</h1><p class="page-description">选成品、选配音，再把制作指令和文档交给 Agent。</p></div><div class="canvas-label"><label for="canvas">制作画幅</label><select id="canvas"><option value="landscape">16:9 横屏</option><option value="portrait">9:16 竖屏</option></select></div></section>
+    <div class="selection-layout">
+      <aside class="combination-card"><p class="meta-label">我的制作组合</p><div class="combination-style"><img id="selected-style-poster" alt="当前风格原始字体样片" width="960" height="540"><div><strong id="current-style"></strong><p id="current-font" class="section-note"></p><a href="index.html" class="text-button">更换风格 ↗</a></div></div><div class="selected-heading"><h2>镜头集合 <span id="selected-count">0 个</span></h2><button id="clear" class="text-button">清空</button></div><div id="selected-list" class="selected-list"></div><a href="shots.html" class="button secondary wide">继续挑选镜头 <span aria-hidden="true">→</span></a><p class="section-note">选的是可用镜头集合。Agent 会根据原文编排，可重复使用，也无需全部出场。</p></aside>
+      <section class="export-main" aria-label="视频制作向导">
+        <!-- Approved flow: choose the deliverable and voice, then hand the document to the Agent. -->
+        <div class="form-card wizard-card">
+          <div class="wizard-heading"><span class="step-number" aria-hidden="true">1</span><div><h2>你想得到什么？</h2><p class="section-note">按最终用途选择，文件命名由 Agent 处理。</p></div></div>
+          <fieldset class="choice-grid"><legend class="sr-only">成品类型</legend>
+            <label class="choice-card"><input type="radio" name="goal" value="narrated" checked><span><strong>带旁白的视频</strong><small>配音、画面与字幕一起制作，得到可播放的待审视频。</small></span></label>
+            <label class="choice-card"><input type="radio" name="goal" value="master"><span><strong>仅画面，供后期剪辑</strong><small>保留标题与图解，无配音、旁白字幕和审片标记，方便自行剪辑。</small></span></label>
+          </fieldset>
+          <p id="master-note" class="inline-note" hidden>会同时提供讲稿与逐镜时间表，你可以在剪辑软件中继续配音和加字幕。</p>
+        </div>
+        <div id="voice-section" class="form-card wizard-card">
+          <div class="wizard-heading"><span class="step-number" aria-hidden="true">2</span><div><h2>旁白从哪里来？</h2><p class="section-note">自动配音，或使用你已经录好的声音。</p></div></div>
+          <fieldset class="choice-grid"><legend class="sr-only">配音方式</legend>
+            <label class="choice-card"><input type="radio" name="audio" value="tts" checked><span><strong>TTS 自动配音</strong><small>根据讲稿生成旁白，再按音频安排镜头。</small></span></label>
+            <label class="choice-card"><input type="radio" name="audio" value="external"><span><strong>使用已有旁白</strong><small>在 Agent 对话中提供音频，以及逐场或字幕时间信息。</small></span></label>
+          </fieldset>
+          <div id="tts-section" class="tts-section">
+            <label class="tts-select-label" for="tts-preset">配音配置</label><select id="tts-preset" aria-describedby="tts-note"><option value="configured">沿用本地已配置的 TTS</option></select>
+            <div id="tts-summary" class="tts-summary" aria-live="polite"></div>
+            <p id="tts-note" class="section-note">这里展示项目内置预设。Agent 会在本地核对是否已启用；已有多个配置时会列出音色供你选择。</p>
+          </div>
+          <p id="external-note" class="inline-note" hidden>粘贴指令时附上旁白文件。Agent 会检查音频、字幕与画面的时间对应关系。</p>
+        </div>
+        <details class="form-card advanced-settings"><summary>制作前的确认</summary><label class="review-choice"><input id="review-first" type="checkbox"><span><strong>先确认讲稿和分镜，再制作</strong><small>勾选后，Agent 会先展示内容与镜头安排，等待你确认。默认直接制作，出片后复核。</small></span></label><p class="section-note">静音审片用于检查制作过程中的画面；“仅画面”则是交给后期剪辑的产物。</p></details>
+        <div class="export-card handoff-card">
+          <div class="wizard-heading"><span id="handoff-step" class="step-number" aria-hidden="true">3</span><div><h2>交给 Agent 开始制作</h2><p id="production-summary" class="section-note" aria-live="polite"></p></div></div>
+          <ol class="handoff-steps"><li><span>复制下方制作指令</span></li><li><span>粘贴到使用 FrameLoom 的 Agent，附上文档；需要时一起附图片或旁白</span></li><li><span>按选择完成制作，查看待审产物与检查结果</span></li></ol>
+          <p id="export-error" class="error" role="status"></p>
+          <button id="copy-prompt" class="button wide" disabled>复制制作指令 <span aria-hidden="true">→</span></button>
+          <details id="prompt-details" class="prompt-details"><summary>查看完整制作指令</summary><textarea id="prompt" readonly aria-label="Agent 制作指令" rows="12"></textarea></details>
+          <p class="section-note">网页保存你的公开选项，制作在本地 Agent 中完成。文档、音频和密钥在本地处理。</p>
+        </div>
+      </section>
+    </div>
+  </main>
+  <footer class="page-footer"><span>FrameLoom / 风格与镜头配方库</span><span>公开样片仅供选型参考 · experimental</span></footer>
+
+  <dialog id="detail" class="recipe-detail" aria-labelledby="detail-title" aria-describedby="detail-description">
+    <header class="dialog-top">
+      <div class="detail-heading"><p id="detail-category" class="detail-kicker"></p><h2 id="detail-title"></h2><div class="detail-id-row"><p id="detail-id" class="detail-id" lang="en"></p><button id="detail-copy-id" class="detail-copy-button" title="在当前项目中使用">复制 ID</button></div><p id="detail-copy-status" class="detail-copy-status" role="status" aria-live="polite"></p></div>
+      <button id="detail-close" class="close" aria-label="关闭配方详情" autofocus>×</button>
+    </header>
+    <div class="detail-layout">
+      <section class="detail-stage" aria-label="动态预览">
+        <div class="detail-player">
+          <div id="detail-media" class="detail-media"></div>
+          <div id="detail-controls" class="detail-controls">
+            <button id="detail-play" class="player-button" aria-label="播放样片"><span aria-hidden="true">▶</span></button>
+            <label class="sr-only" for="detail-progress">样片播放进度</label><input id="detail-progress" class="player-progress" type="range" min="0" max="100" value="0" step="0.1" disabled>
+            <output id="detail-time" class="player-time" for="detail-progress">0:00 / 0:00</output>
+            <button id="detail-replay" class="player-button" aria-label="重新播放"><span aria-hidden="true">↻</span></button>
+            <button id="detail-fullscreen" class="player-button" aria-label="全屏播放样片"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5"></path></svg></button>
+          </div>
+        </div>
+        <div id="detail-variants" class="preview-variants" aria-label="效果变体" hidden></div>
+        <div id="detail-facts" class="detail-facts"></div><p id="detail-preview-note" class="detail-preview-note"></p>
+      </section>
+      <section class="detail-reading" aria-label="配方说明">
+        <div class="detail-tabs" role="tablist" aria-label="配方信息">
+          <button id="detail-tab-overview" role="tab" aria-selected="true" aria-controls="detail-panel-overview" data-detail-tab="overview">概览</button>
+          <button id="detail-tab-guide" role="tab" aria-selected="false" aria-controls="detail-panel-guide" data-detail-tab="guide" tabindex="-1">制作要点</button>
+          <button id="detail-tab-source" role="tab" aria-selected="false" aria-controls="detail-panel-source" data-detail-tab="source" tabindex="-1">来源</button>
+        </div>
+        <div class="detail-panels">
+          <section id="detail-panel-overview" role="tabpanel" aria-labelledby="detail-tab-overview" tabindex="0"><p id="detail-description" class="detail-description"></p><div id="detail-overview"></div></section>
+          <section id="detail-panel-guide" role="tabpanel" aria-labelledby="detail-tab-guide" tabindex="0" hidden><div id="detail-copy-guide" class="detail-copy-guide"><div><strong>在其他项目复用</strong><p>复制输入、动作、参数与来源，交给 Agent 实现。</p></div><button id="detail-copy-recipe" class="detail-copy-button">复制动效配方</button></div><details id="detail-portable-preview" class="detail-portable-preview"><summary>查看将复制的内容</summary><pre id="detail-portable-text"></pre></details><div id="detail-doc" class="recipe-doc"></div></section>
+          <section id="detail-panel-source" role="tabpanel" aria-labelledby="detail-tab-source" tabindex="0" hidden><div id="detail-attribution" class="detail-attribution"></div><details class="detail-source-record"><summary>完整来源记录</summary><pre id="detail-source"></pre></details></section>
+        </div>
+      </section>
+    </div>
+    <footer class="detail-footer"><p id="detail-selection-note" role="status"></p><div class="detail-footer-actions"><a href="selection.html" class="detail-next">查看制作组合 <span aria-hidden="true">↗</span></a><button id="detail-select" class="button" aria-pressed="false">选择镜头</button></div></footer>
+  </dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <noscript>请启用 JavaScript 浏览和勾选配方。命令行入口：npm run list:shots。</noscript>
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>

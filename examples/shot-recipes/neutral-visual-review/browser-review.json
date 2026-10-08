@@ -1,0 +1,497 @@
+{
+  "results": [
+    {
+      "id": "semantic-default",
+      "status": "ended",
+      "duration": 10,
+      "currentTime": 10,
+      "totalVideoFrames": 300,
+      "droppedVideoFrames": 0,
+      "mediaError": null
+    },
+    {
+      "id": "paper-title",
+      "status": "ended",
+      "duration": 2.833333,
+      "currentTime": 2.833333,
+      "totalVideoFrames": 85,
+      "droppedVideoFrames": 0,
+      "mediaError": null
+    },
+    {
+      "id": "title-to-label",
+      "status": "ended",
+      "duration": 4.666667,
+      "currentTime": 4.666667,
+      "totalVideoFrames": 140,
+      "droppedVideoFrames": 0,
+      "mediaError": null
+    },
+    {
+      "id": "document-conclusions",
+      "status": "ended",
+      "duration": 6.5,
+      "currentTime": 6.5,
+      "totalVideoFrames": 195,
+      "droppedVideoFrames": 0,
+      "mediaError": null
+    },
+    {
+      "id": "list-reveal",
+      "status": "ended",
+      "duration": 4.5,
+      "currentTime": 4.5,
+      "totalVideoFrames": 135,
+      "droppedVideoFrames": 6,
+      "mediaError": null
+    },
+    {
+      "id": "compare-reveal",
+      "status": "ended",
+      "duration": 7,
+      "currentTime": 7,
+      "totalVideoFrames": 210,
+      "droppedVideoFrames": 6,
+      "mediaError": null
+    },
+    {
+      "id": "network-expand",
+      "status": "ended",
+      "duration": 9,
+      "currentTime": 9,
+      "totalVideoFrames": 270,
+      "droppedVideoFrames": 6,
+      "mediaError": null
+    },
+    {
+      "id": "blur-slide",
+      "status": "ended",
+      "duration": 3,
+      "currentTime": 3,
+      "totalVideoFrames": 90,
+      "droppedVideoFrames": 0,
+      "mediaError": null
+    },
+    {
+      "id": "split-text-stagger",
+      "status": "ended",
+      "duration": 3,
+      "currentTime": 3,
+      "totalVideoFrames": 90,
+      "droppedVideoFrames": 3,
+      "mediaError": null
+    },
+    {
+      "id": "card-stack",
+      "status": "ended",
+      "duration": 5.833333,
+      "currentTime": 5.833333,
+      "totalVideoFrames": 175,
+      "droppedVideoFrames": 3,
+      "mediaError": null
+    },
+    {
+      "id": "concept-matrix",
+      "status": "ended",
+      "duration": 5,
+      "currentTime": 5,
+      "totalVideoFrames": 150,
+      "droppedVideoFrames": 3,
+      "mediaError": null
+    },
+    {
+      "id": "platform-hinge-rise",
+      "status": "ended",
+      "duration": 7,
+      "currentTime": 7,
+      "totalVideoFrames": 210,
+      "droppedVideoFrames": 3,
+      "mediaError": null
+    },
+    {
+      "id": "source-converge",
+      "status": "ended",
+      "duration": 7.166667,
+      "currentTime": 7.166667,
+      "totalVideoFrames": 215,
+      "droppedVideoFrames": 0,
+      "mediaError": null
+    },
+    {
+      "id": "diagram-cascade",
+      "status": "ended",
+      "duration": 6,
+      "currentTime": 6,
+      "totalVideoFrames": 180,
+      "droppedVideoFrames": 0,
+      "mediaError": null
+    },
+    {
+      "id": "lead-word-assemble",
+      "status": "ended",
+      "duration": 5,
+      "currentTime": 5,
+      "totalVideoFrames": 150,
+      "droppedVideoFrames": 0,
+      "mediaError": null
+    },
+    {
+      "id": "brace-expand",
+      "status": "ended",
+      "duration": 2.333333,
+      "currentTime": 2.333333,
+      "totalVideoFrames": 70,
+      "droppedVideoFrames": 0,
+      "mediaError": null
+    },
+    {
+      "id": "pill-slot-cycle",
+      "status": "ended",
+      "duration": 7.333333,
+      "currentTime": 7.333333,
+      "totalVideoFrames": 220,
+      "droppedVideoFrames": 0,
+      "mediaError": null
+    },
+    {
+      "id": "word-roll",
+      "status": "ended",
+      "duration": 7.333333,
+      "currentTime": 7.333333,
+      "totalVideoFrames": 220,
+      "droppedVideoFrames": 0,
+      "mediaError": null
+    },
+    {
+      "id": "text-column-converge",
+      "status": "ended",
+      "duration": 10.5,
+      "currentTime": 10.5,
+      "totalVideoFrames": 315,
+      "droppedVideoFrames": 0,
+      "mediaError": null
+    },
+    {
+      "id": "evidence-relay",
+      "status": "ended",
+      "duration": 3.666667,
+      "currentTime": 3.666667,
+      "totalVideoFrames": 110,
+      "droppedVideoFrames": 2,
+      "mediaError": null
+    },
+    {
+      "id": "row-embed",
+      "status": "ended",
+      "duration": 7.333333,
+      "currentTime": 7.333333,
+      "totalVideoFrames": 220,
+      "droppedVideoFrames": 5,
+      "mediaError": null
+    },
+    {
+      "id": "structure-then-text",
+      "status": "ended",
+      "duration": 6.5,
+      "currentTime": 6.5,
+      "totalVideoFrames": 195,
+      "droppedVideoFrames": 5,
+      "mediaError": null
+    },
+    {
+      "id": "timeline-travel",
+      "status": "ended",
+      "duration": 6.166667,
+      "currentTime": 6.166667,
+      "totalVideoFrames": 185,
+      "droppedVideoFrames": 5,
+      "mediaError": null
+    },
+    {
+      "id": "odometer-roll",
+      "status": "ended",
+      "duration": 4.5,
+      "currentTime": 4.5,
+      "totalVideoFrames": 135,
+      "droppedVideoFrames": 6,
+      "mediaError": null
+    },
+    {
+      "id": "marker-underline",
+      "status": "ended",
+      "duration": 3,
+      "currentTime": 3,
+      "totalVideoFrames": 90,
+      "droppedVideoFrames": 6,
+      "mediaError": null
+    },
+    {
+      "id": "outline-trace",
+      "status": "ended",
+      "duration": 6.5,
+      "currentTime": 6.5,
+      "totalVideoFrames": 195,
+      "droppedVideoFrames": 6,
+      "mediaError": null
+    },
+    {
+      "id": "paper-tape",
+      "status": "ended",
+      "duration": 7.333333,
+      "currentTime": 7.333333,
+      "totalVideoFrames": 220,
+      "droppedVideoFrames": 6,
+      "mediaError": null
+    },
+    {
+      "id": "card-flip",
+      "status": "ended",
+      "duration": 6.333333,
+      "currentTime": 6.333333,
+      "totalVideoFrames": 190,
+      "droppedVideoFrames": 7,
+      "mediaError": null
+    },
+    {
+      "id": "blinds-wipe",
+      "status": "ended",
+      "duration": 11.4,
+      "currentTime": 11.4,
+      "totalVideoFrames": 342,
+      "droppedVideoFrames": 0,
+      "mediaError": null
+    },
+    {
+      "id": "bottom-push",
+      "status": "ended",
+      "duration": 11.4,
+      "currentTime": 11.4,
+      "totalVideoFrames": 342,
+      "droppedVideoFrames": 0,
+      "mediaError": null
+    },
+    {
+      "id": "card-stack-tape",
+      "status": "ended",
+      "duration": 7.166667,
+      "currentTime": 7.166667,
+      "totalVideoFrames": 215,
+      "droppedVideoFrames": 0,
+      "mediaError": null
+    },
+    {
+      "id": "concept-matrix-wireframe",
+      "status": "ended",
+      "duration": 5,
+      "currentTime": 5,
+      "totalVideoFrames": 150,
+      "droppedVideoFrames": 0,
+      "mediaError": null
+    }
+  ],
+  "samples": [
+    {
+      "id": "semantic-default",
+      "video": "media/scene-semantic-default.mp4"
+    },
+    {
+      "id": "paper-title",
+      "video": "media/scene-paper-title.mp4"
+    },
+    {
+      "id": "title-to-label",
+      "video": "media/scene-title-to-label.mp4"
+    },
+    {
+      "id": "document-conclusions",
+      "video": "media/scene-document-conclusions.mp4"
+    },
+    {
+      "id": "list-reveal",
+      "video": "media/scene-list-reveal.mp4"
+    },
+    {
+      "id": "compare-reveal",
+      "video": "media/scene-compare-reveal.mp4"
+    },
+    {
+      "id": "network-expand",
+      "video": "media/scene-network-expand.mp4"
+    },
+    {
+      "id": "blur-slide",
+      "video": "media/scene-blur-slide.mp4"
+    },
+    {
+      "id": "split-text-stagger",
+      "video": "media/scene-split-text-stagger.mp4"
+    },
+    {
+      "id": "card-stack",
+      "video": "media/scene-card-stack.mp4"
+    },
+    {
+      "id": "concept-matrix",
+      "video": "media/scene-concept-matrix.mp4"
+    },
+    {
+      "id": "platform-hinge-rise",
+      "video": "media/scene-platform-hinge-rise.mp4"
+    },
+    {
+      "id": "source-converge",
+      "video": "media/scene-source-converge.mp4"
+    },
+    {
+      "id": "diagram-cascade",
+      "video": "media/scene-diagram-cascade.mp4"
+    },
+    {
+      "id": "lead-word-assemble",
+      "video": "media/scene-lead-word-assemble.mp4"
+    },
+    {
+      "id": "brace-expand",
+      "video": "media/scene-brace-expand.mp4"
+    },
+    {
+      "id": "pill-slot-cycle",
+      "video": "media/scene-pill-slot-cycle.mp4"
+    },
+    {
+      "id": "word-roll",
+      "video": "media/scene-word-roll.mp4"
+    },
+    {
+      "id": "text-column-converge",
+      "video": "media/scene-text-column-converge.mp4"
+    },
+    {
+      "id": "evidence-relay",
+      "video": "media/scene-evidence-relay.mp4"
+    },
+    {
+      "id": "row-embed",
+      "video": "media/scene-row-embed.mp4"
+    },
+    {
+      "id": "structure-then-text",
+      "video": "media/scene-structure-then-text.mp4"
+    },
+    {
+      "id": "timeline-travel",
+      "video": "media/scene-timeline-travel.mp4"
+    },
+    {
+      "id": "odometer-roll",
+      "video": "media/scene-odometer-roll.mp4"
+    },
+    {
+      "id": "marker-underline",
+      "video": "media/hosted-action-marker-underline.mp4"
+    },
+    {
+      "id": "outline-trace",
+      "video": "media/hosted-action-outline-trace.mp4"
+    },
+    {
+      "id": "paper-tape",
+      "video": "media/hosted-action-paper-tape.mp4"
+    },
+    {
+      "id": "card-flip",
+      "video": "media/hosted-action-card-flip.mp4"
+    },
+    {
+      "id": "blinds-wipe",
+      "video": "media/cross-scene-transition-blinds-wipe.mp4"
+    },
+    {
+      "id": "bottom-push",
+      "video": "media/cross-scene-transition-bottom-push.mp4"
+    },
+    {
+      "id": "card-stack-tape",
+      "video": "media/style-card-stack-tape.mp4"
+    },
+    {
+      "id": "concept-matrix-wireframe",
+      "video": "media/style-concept-matrix-wireframe.mp4"
+    }
+  ],
+  "widths": [
+    {
+      "width": 375,
+      "scrollWidth": 375,
+      "overflow": false,
+      "cards": 24
+    },
+    {
+      "width": 768,
+      "scrollWidth": 768,
+      "overflow": false,
+      "cards": 24
+    },
+    {
+      "width": 1024,
+      "scrollWidth": 1024,
+      "overflow": false,
+      "cards": 24
+    },
+    {
+      "width": 1440,
+      "scrollWidth": 1440,
+      "overflow": false,
+      "cards": 24
+    }
+  ],
+  "categories": [
+    {
+      "category": "全部镜头",
+      "count": 24
+    },
+    {
+      "category": "标题",
+      "count": 4
+    },
+    {
+      "category": "文字",
+      "count": 5
+    },
+    {
+      "category": "证据",
+      "count": 3
+    },
+    {
+      "category": "结构",
+      "count": 5
+    },
+    {
+      "category": "关系",
+      "count": 4
+    },
+    {
+      "category": "时间与数据",
+      "count": 2
+    },
+    {
+      "category": "基础",
+      "count": 1
+    },
+    {
+      "category": "辅助动作",
+      "count": 4
+    },
+    {
+      "category": "换章转场",
+      "count": 2
+    }
+  ],
+  "originalState": "{\"style\":\"retro-zine\",\"canvas\":\"landscape\",\"selected\":[],\"production\":{\"goal\":\"narrated\",\"audio\":\"tts\",\"ttsPreset\":\"configured\",\"review\":false}}",
+  "selection": {
+    "hasSelection": true,
+    "versionless": true
+  },
+  "stateRestored": true,
+  "reducedMotion": true
+}

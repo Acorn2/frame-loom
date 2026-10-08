@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   },
   "scripts": {
     "dev": "remotion studio src/index.ts",
@@ -18,14 +18,21 @@
     "test:storyboard": "vitest run --dir tests storyboard-validator.test.ts",
     "test:styles": "vitest run --dir tests style-workflow.test.mjs",
     "generate:schemas": "node --import tsx/esm scripts/generate-schemas.mjs",
+    "validate:fonts": "node --import tsx/esm scripts/validate-fonts.mjs",
+    "preview:fonts": "node --import tsx/esm scripts/preview-fonts.mjs",
+    "test:fonts": "vitest run --dir tests font-selection.test.mjs",
     "validate:styles": "node --import tsx/esm scripts/validate-styles.mjs",
     "validate:assets": "node --import tsx/esm scripts/validate-assets.mjs",
     "list:styles": "node scripts/list-styles.mjs",
     "preview:styles": "node scripts/preview-styles.mjs",
+    "library": "node --import tsx/esm scripts/serve-library.mjs",
+    "build:library": "node --import tsx/esm scripts/build-library.mjs",
+    "test:library": "vitest run --dir tests library.test.mjs",
+    "preview:library": "node --import tsx/esm scripts/render-library-previews.mjs",
     "preview:templates": "node --import tsx/esm scripts/preview-template-families.mjs",
     "preview:semantic": "node --import tsx/esm scripts/preview-semantic-visuals.mjs",
     "preview:shot": "node --import tsx/esm scripts/preview-storyboard-shot.mjs",
-    "init:project": "node scripts/init-project.mjs",
+    "init:project": "node --import tsx/esm scripts/init-project.mjs",
     "validate:storyboard": "node --import tsx/esm scripts/validate-storyboard.mjs",
     "produce": "node --import tsx/esm scripts/produce.mjs",
     "approve:delivery": "node --import tsx/esm scripts/approve-delivery.mjs",
@@ -41,7 +48,12 @@
     "test:visual-regression": "node --import tsx/esm scripts/test-visual-regression.mjs",
     "check:safe-area": "node scripts/check-safe-area.mjs",
     "extract:review-frames": "node scripts/extract-review-frames.mjs",
-    "qa:storyboard": "node --import tsx/esm scripts/qa-storyboard.mjs"
+    "qa:storyboard": "node --import tsx/esm scripts/qa-storyboard.mjs",
+    "validate:shots": "node --import tsx/esm scripts/validate-shot-catalog.mjs",
+    "list:video-templates": "node --import tsx/esm scripts/list-video-templates.mjs",
+    "list:shots": "node --import tsx/esm scripts/list-shots.mjs",
+    "migrate:storyboard": "node --import tsx/esm scripts/migrate-storyboard.mjs",
+    "test:shots": "vitest run --dir tests shot-recipes.test.mjs shortlist-recipes.test.mjs p1-recipes.test.mjs"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.522",

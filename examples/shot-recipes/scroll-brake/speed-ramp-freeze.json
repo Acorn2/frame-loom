@@ -1,0 +1,144 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "scroll-brake",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "在记录中定位重点",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 8.133333333333333,
+    "durationFrames": 244,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "scroll-brake",
+      "template": "graph-explainer",
+      "purpose": "claim",
+      "title": "在记录中定位重点",
+      "primaryClaim": "从长列表定位关键条目",
+      "visual": {
+        "kind": "sequence",
+        "explanation": "FrameLoom 自写公开示意资料，不代表真实产品、用户或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "scroll-brake",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "item1",
+            "item2",
+            "item3",
+            "item4",
+            "item5"
+          ]
+        },
+        "focusId": "item4",
+        "effects": [
+          {
+            "id": "speed-ramp-freeze",
+            "target": "item4"
+          }
+        ]
+      },
+      "narration": "从长列表定位关键条目",
+      "durationFrames": 244,
+      "layers": [
+        {
+          "id": "item1",
+          "type": "card",
+          "label": "记录输入",
+          "text": "保留原始资料"
+        },
+        {
+          "id": "item2",
+          "type": "card",
+          "label": "拆分内容",
+          "text": "区分并列与因果"
+        },
+        {
+          "id": "item3",
+          "type": "card",
+          "label": "检查来源",
+          "text": "检查每条引用"
+        },
+        {
+          "id": "item4",
+          "type": "card",
+          "label": "复核重点",
+          "text": "回到关键判断"
+        },
+        {
+          "id": "item5",
+          "type": "card",
+          "label": "归档输出",
+          "text": "保存复核结果"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "item1-enter",
+          "target": "item1",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item2-enter",
+          "target": "item2",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item3-enter",
+          "target": "item3",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item4-enter",
+          "target": "item4",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item5-enter",
+          "target": "item5",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "item4-focus",
+          "target": "item4",
+          "action": "focus",
+          "start": 36,
+          "duration": 160
+        },
+        {
+          "id": "speed-ramp-freeze-phase",
+          "target": "item4",
+          "action": "highlight",
+          "start": 75,
+          "duration": 45
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

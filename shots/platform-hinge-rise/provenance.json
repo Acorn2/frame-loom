@@ -1,0 +1,31 @@
+{
+  "id": "platform-hinge-rise",
+  "mode": "method-reference",
+  "repository": "https://github.com/Acorn2/video-shotcraft",
+  "commit": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab",
+  "recipe": "references/shots/ui-entrance/platform-hinge-rise.md",
+  "implementation": "demos/ui-entrance/platform-hinge-rise/PlatformHingeRise.tsx",
+  "upstreamLicense": "Apache-2.0",
+  "implementationLicense": "MIT",
+  "notice": "No applicable NOTICE found in the local upstream snapshot. Independently implemented; no upstream code, copy, fixtures or external media copied.",
+  "retained": [
+    "表达目的",
+    "阶段顺序",
+    "2026-10-02 对照所选 Markdown 和 TSX 重建的配方特征：水平平台先建立，两组证据从各自底边支点立入，再把结论从平台下方推出。"
+  ],
+  "omitted": [
+    "固定帧数",
+    "固定坐标与配色",
+    "独立字幕",
+    "持续漂移",
+    "占位事实",
+    "自动音效"
+  ],
+  "externalAttribution": "Upstream attribution is research provenance, not media authorization.",
+  "shortlist": "A16",
+  "dependenciesReviewed": [
+    "demos/_fixtures/Motion.tsx",
+    "demos/_fixtures/Fixtures.tsx"
+  ],
+  "adaptationNotes": "平台占首条入场的前25%；证据 bezier(.16,1,.3,1)、y=90→0与反向18°→0；结论独立入场。 上游此配方是平面旋转支点而不是立体书rotateX；最终证据可读，结论不可抢读。"
+}

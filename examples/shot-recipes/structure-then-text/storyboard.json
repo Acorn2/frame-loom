@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "structure-then-text",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "先搭框架再写内容",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 5.833333333333333,
+    "durationFrames": 175,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "structure-then-text",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "先搭框架再写内容",
+      "primaryClaim": "先确定开篇、展开与收束，再填入文字",
+      "visual": {
+        "kind": "statement",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "structure-then-text",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "i0",
+            "i1",
+            "i2"
+          ]
+        }
+      },
+      "narration": "先确定开篇、展开与收束，再填入文字",
+      "durationFrames": 175,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "card",
+          "label": "开篇",
+          "text": "提出一个问题"
+        },
+        {
+          "id": "i1",
+          "type": "card",
+          "label": "展开",
+          "text": "给出事实与解释"
+        },
+        {
+          "id": "i2",
+          "type": "card",
+          "label": "收束",
+          "text": "回到核心观点"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "i0-trace",
+          "target": "i0",
+          "action": "trace",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "i1-trace",
+          "target": "i1",
+          "action": "trace",
+          "start": 18,
+          "duration": 24
+        },
+        {
+          "id": "i2-trace",
+          "target": "i2",
+          "action": "trace",
+          "start": 36,
+          "duration": 24
+        },
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 60,
+          "duration": 24
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 84,
+          "duration": 24
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 108,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

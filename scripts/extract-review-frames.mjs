@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {pathToFileURL} from 'node:url';
+import {compileStoryboardShots} from '../src/shots/compile-shot.ts';
 import {getSceneTimeline} from '../src/timeline/scene-timeline.ts';
 
 function run(command, args) {
@@ -33,6 +34,7 @@ export function selectReviewFrames(storyboard) {
     {label: 'opening', timeSec: 0},
     {label: 'opening-title-stable', timeSec: Math.min(1.2, durationSec * 0.08)}
   ];
+  const plans = compileStoryboardShots(storyboard);
   const timeline = getSceneTimeline(storyboard);
   for (const {scene, startFrame, endFrame, overlapOutFrames} of timeline) {
     const startSec = startFrame / fps;
@@ -43,7 +45,8 @@ export function selectReviewFrames(storyboard) {
       candidates.push({label: `${scene.id}-first-action-mid`, timeSec: (startFrame + firstAction.start + firstAction.duration / 2) / fps});
       candidates.push({label: `${scene.id}-first-action`, timeSec: (startFrame + firstAction.start + firstAction.duration) / fps});
     }
-    if (storyboard.schemaVersion === '2.3') {
+    for (const checkpoint of plans.find((plan) => plan.sceneId === scene.id)?.checkpoints ?? []) candidates.push({label: `${scene.id}-shot-${checkpoint.id}`, required: true, timeSec: (startFrame + checkpoint.frame) / fps});
+    if (['2.3', '2.4'].includes(storyboard.schemaVersion)) {
       const lastActionEnd = Math.max(0, ...scene.beats.map((beat) => beat.start + beat.duration), scene.visual?.mediaFocus ? scene.visual.mediaFocus.start + scene.visual.mediaFocus.duration : 0);
       candidates.push({label: `${scene.id}-complete`, required: true, timeSec: (startFrame + Math.min(scene.durationFrames - 1, lastActionEnd + 2)) / fps});
       const fadeFrames = scene.outro?.fadeFrames ?? (overlapOutFrames === 0 && scene.transitionOut ? 12 : 0);
@@ -69,7 +72,7 @@ export function selectReviewFrames(storyboard) {
   }
   candidates.push({label: 'ending', timeSec: Math.max(0, durationSec - 0.5)});
   const unique = uniqueCandidates(candidates, durationSec);
-  const limit = storyboard.schemaVersion === '2.3' ? 48 : 24;
+  const limit = ['2.3', '2.4'].includes(storyboard.schemaVersion) ? 48 : 24;
   if (unique.length <= limit) return unique;
   const sampled = unique.filter((item) => item.required);
   const optional = unique.filter((item) => !item.required);

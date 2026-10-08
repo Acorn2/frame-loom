@@ -1,0 +1,22 @@
+{
+  "id": "speed-ramp-freeze",
+  "mode": "method-reference",
+  "repository": "https://github.com/Acorn2/video-shotcraft",
+  "commit": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab",
+  "recipe": "references/shots/rhythm/speed-ramp-freeze.md",
+  "implementation": "demos/rhythm/speed-ramp-freeze/FreezeAnnotateReal.tsx",
+  "shortlist": "C07",
+  "upstreamLicense": "Apache-2.0",
+  "implementationLicense": "MIT",
+  "notice": "Independent implementation; upstream fixtures and assets excluded.",
+  "retained": [
+    "停在重点并标注",
+    "优先FreezeAnnotateReal的思路；重做文本版，避免直接引入motion-blur；SFX用输出帧"
+  ],
+  "omitted": [
+    "upstream media",
+    "fixed frames",
+    "continuous drift",
+    "automatic sound"
+  ]
+}

@@ -1,4 +1,7 @@
 import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+import {resolveProductionLock} from './production-lock.mjs';
+import {fontAssetFiles} from '../../src/fonts/assets.ts';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {collectManifestAssetFiles, fingerprintFiles} from './input-fingerprint.mjs';
@@ -19,6 +22,7 @@ export function storyboardApprovalFingerprint(projectPath) {
   if (fs.existsSync(handoffPath)) files.push(handoffPath);
   try {
     const storyboard = JSON.parse(fs.readFileSync(path.join(projectPath, 'storyboard.json'), 'utf8'));
+    if (storyboard.font) files.push(...fontAssetFiles(storyboard.font));
     const styleId = storyboard.style?.id;
     if (typeof styleId === 'string' && /^[a-z0-9-]+$/u.test(styleId)) {
       const styleRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'styles');
@@ -27,7 +31,10 @@ export function storyboardApprovalFingerprint(projectPath) {
   } catch {
     // The storyboard validator reports malformed JSON separately.
   }
-  return fingerprintFiles(files, projectPath);
+  const fingerprint = fingerprintFiles(files, projectPath);
+  const storyboard = JSON.parse(fs.readFileSync(path.join(projectPath, 'storyboard.json'), 'utf8'));
+  if (storyboard.schemaVersion === '2.4') return createHash('sha256').update(fingerprint).update(resolveProductionLock(storyboard).lock.hash).digest('hex');
+  return fingerprint;
 }
 
 export function assertStoryboardApproval(projectPath) {

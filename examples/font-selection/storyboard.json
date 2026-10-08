@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "2.3",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "project": {
+    "title": "风格与全片字体组合样片",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 6,
+    "durationFrames": 180,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "opening",
+      "template": "statement",
+      "purpose": "opening",
+      "title": "把材料变成可检查的画面",
+      "primaryClaim": "风格与字体可以独立选择。",
+      "visual": {
+        "kind": "statement",
+        "explanation": "同一份文字，比较字体形态；没有产品事实或外部素材。",
+        "representation": "diagram"
+      },
+      "narration": "同一份文字，比较不同字体在标题、正文和字幕中的效果。",
+      "durationFrames": 180,
+      "layers": [
+        {
+          "id": "article",
+          "type": "label",
+          "label": "文章"
+        },
+        {
+          "id": "script",
+          "type": "label",
+          "label": "讲稿"
+        },
+        {
+          "id": "brief",
+          "type": "label",
+          "label": "产品说明"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "article-enter-10",
+          "target": "article",
+          "action": "enter",
+          "start": 10,
+          "duration": 18
+        },
+        {
+          "id": "script-enter-60",
+          "target": "script",
+          "action": "enter",
+          "start": 32,
+          "duration": 18
+        },
+        {
+          "id": "brief-enter-110",
+          "target": "brief",
+          "action": "enter",
+          "start": 54,
+          "duration": 18
+        }
+      ],
+      "captions": [
+        {
+          "id": "font-caption",
+          "text": "标题、正文与字幕，统一使用所选字体",
+          "start": 30,
+          "end": 175
+        }
+      ]
+    }
+  ]
+}

@@ -1,8 +1,11 @@
+import {ChapterPage, isChapterTransition, chapterWindows, assertChapterCaptions} from '../shots/shortlist/chapter-transitions';
 import React from 'react';
-import {AbsoluteFill, Audio, Sequence, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Audio, Sequence, useVideoConfig, useCurrentFrame} from 'remotion';
+import {captionTokensAtFrame} from '../shots/appearance';
 import type {Storyboard} from '../schemas/storyboard';
 import {RenderScene} from '../renderer/render-scene';
-import {getDefaultStyleTokens, type StyleTokens} from '../styles/style-loader';
+import {applyProjectFont, getDefaultStyleTokens, type StyleTokens} from '../styles/style-loader';
+import {useProjectFont} from '../fonts/use-project-font';
 import {CaptionOverlay} from '../audio/CaptionOverlay';
 import type {CaptionCue} from '../audio/captions';
 import {getMusicVolumeAtFrame, type MusicDucking} from '../audio/ducking';
@@ -42,18 +45,23 @@ export function shouldRenderReviewMarker(profile?: DataDrivenVideoProps['renderP
 }
 
 export function DataDrivenVideo({storyboard, styleTokens, audioRuntime, renderProfile}: DataDrivenVideoProps) {
-  const tokens = styleTokens ?? getDefaultStyleTokens(storyboard.project.width, storyboard.project.height);
+  const tokens = applyProjectFont(styleTokens ?? getDefaultStyleTokens(storyboard.project.width, storyboard.project.height), storyboard.font);
+  const fontReady = useProjectFont(storyboard.font);
+  const captionTokens = captionTokensAtFrame(storyboard, useCurrentFrame(), tokens);
   const cleanMaster = renderProfile?.purpose === 'visual-master';
   const showSceneCaptions = !cleanMaster && shouldRenderSceneCaptions(audioRuntime);
   const musicVolume = audioRuntime?.musicVolume ?? 0.2;
   const timeline = getSceneTimeline(storyboard);
+  if (chapterWindows(storyboard).length && audioRuntime?.voiceoverDataUri && !audioRuntime.captions?.length) throw new Error('有声换章需要字幕时间轴以检查关键词窗口。');
+  assertChapterCaptions(storyboard, audioRuntime?.captions ?? []);
   const scale = cleanMaster ? Math.min(
     1 - (renderProfile?.facecamRightFraction ?? 0),
     1 - (renderProfile?.subtitleBottomFraction ?? 0)
   ) : 1;
 
+  if (!fontReady) return null;
   return (
-    <AbsoluteFill style={{backgroundColor: tokens.background}}>
+    <AbsoluteFill data-font-id={storyboard.font?.id} style={{backgroundColor: tokens.background, fontFamily: storyboard.font ? tokens.bodyFont : undefined}}>
       {audioRuntime?.voiceoverDataUri ? <Audio src={audioRuntime.voiceoverDataUri} volume={audioRuntime.voiceoverVolume ?? 1} /> : null}
       {audioRuntime?.musicDataUri ? (
         <Audio
@@ -75,12 +83,13 @@ export function DataDrivenVideo({storyboard, styleTokens, audioRuntime, renderPr
           <Audio src={item.dataUri} volume={item.volume} />
         </Sequence>
       ))}
-      {timeline.map(({scene, startFrame, overlapOutFrames}) => {
+      {timeline.map(({scene, startFrame, overlapOutFrames}, index) => {
+        const outgoing = timeline[index + 1]?.scene.transitionIn?.type;
         return (
           <Sequence key={scene.id} from={startFrame} durationInFrames={scene.durationFrames}>
-            <div style={{position: 'absolute', width: '100%', height: '100%', transform: scale < 1 ? `scale(${scale})` : undefined, transformOrigin: 'top left'}}>
-              <RenderScene scene={scene} tokens={tokens} showSceneCaptions={showSceneCaptions} externalCaptions={!cleanMaster && Boolean(audioRuntime?.captions?.length)} overlapOutFrames={overlapOutFrames} />
-            </div>
+            <ChapterPage scene={scene} outgoing={outgoing} outgoingFrames={overlapOutFrames} seamInk={tokens.accentAlt}><div style={{position: 'absolute', width: '100%', height: '100%', transform: scale < 1 ? `scale(${scale})` : undefined, transformOrigin: 'top left'}}>
+              <RenderScene scene={scene} styleVersion={storyboard.style.version} tokens={tokens} showSceneCaptions={showSceneCaptions} externalCaptions={!cleanMaster && Boolean(audioRuntime?.captions?.length)} overlapOutFrames={overlapOutFrames} chapterTransitionOut={isChapterTransition(outgoing)} />
+            </div></ChapterPage>
           </Sequence>
         );
       })}
@@ -95,7 +104,7 @@ export function DataDrivenVideo({storyboard, styleTokens, audioRuntime, renderPr
       }}>
         {audioRuntime?.voiceoverDataUri || audioRuntime?.musicDataUri || audioRuntime?.sfx?.length ? 'AUDIO PILOT' : 'SILENT PREVIEW'}
       </div> : null}
-      {!cleanMaster && audioRuntime?.captions ? <CaptionOverlay captions={audioRuntime.captions} tokens={tokens} /> : null}
+      {!cleanMaster && audioRuntime?.captions ? <CaptionOverlay captions={audioRuntime.captions} tokens={captionTokens} /> : null}
     </AbsoluteFill>
   );
 }

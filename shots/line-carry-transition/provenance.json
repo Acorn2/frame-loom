@@ -1,0 +1,22 @@
+{
+  "id": "line-carry-transition",
+  "mode": "method-reference",
+  "repository": "https://github.com/Acorn2/video-shotcraft",
+  "commit": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab",
+  "recipe": "references/shots/transition/line-carry-transition.md",
+  "implementation": "demos/transition/line-carry-transition/LineCarryTransition.tsx",
+  "shortlist": "C09",
+  "upstreamLicense": "Apache-2.0",
+  "implementationLicense": "MIT",
+  "notice": "Independent implementation; upstream fixtures and assets excluded.",
+  "retained": [
+    "线条连接前后表达",
+    "既有下划线/轴自然延伸，不凭空造线；声音与跨场时间另校验"
+  ],
+  "omitted": [
+    "upstream media",
+    "fixed frames",
+    "continuous drift",
+    "automatic sound"
+  ]
+}

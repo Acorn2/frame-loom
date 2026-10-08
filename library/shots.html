@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>镜头配方 · FrameLoom</title>
+  <link rel="stylesheet" href="library.css">
+</head>
+<body data-page="shots">
+  <a class="skip" href="#main">跳到主要内容</a>
+  <header class="masthead">
+    <a class="brand" href="index.html" aria-label="FrameLoom 视频风格"><span class="brand-mark" aria-hidden="true">F<span></span></span><span>FrameLoom<small>视频创作配方库</small></span></a>
+    <nav class="page-nav" aria-label="配方库导航"><a href="index.html"><span class="nav-step">01</span>视频风格</a><a href="shots.html" aria-current="page"><span class="nav-step">02</span>镜头配方</a><a href="selection.html"><span class="nav-step">03</span>制作组合<span id="nav-count" class="nav-count">0</span></a></nav>
+    <span class="header-note">看效果 · 选组合 · 本地制作</span>
+  </header>
+  <main id="main" data-screen-label="镜头配方">
+    <section class="page-heading"><div><p class="eyebrow">02 / SHOT RECIPES</p><h1>挑选内容的表达方式</h1><p class="page-description">看真实样片，勾选适合内容的镜头。同一配方可以在视频中重复使用。</p></div><div class="canvas-label"><label for="canvas">制作画幅</label><select id="canvas"><option value="landscape">16:9 横屏</option><option value="portrait">9:16 竖屏</option></select></div></section>
+    <div class="catalog-layout">
+      <aside class="filters"><div class="current-style"><span class="meta-label">当前风格</span><strong id="current-style"></strong><p id="current-font" class="section-note"></p><a href="index.html">更换风格 <span aria-hidden="true">↗</span></a></div><div class="filter-heading">镜头分类 <span id="catalog-count"></span></div><nav id="categories" aria-label="镜头分类"></nav><p class="aside-note">辅助动作与换章转场可单独查看，不计入镜头选择。</p></aside>
+      <section class="catalog-main" aria-label="镜头配方">
+        <div class="search-row"><label class="search-box"><span class="search-icon" aria-hidden="true"></span><input id="search" type="search" placeholder="搜索名称、用途或配方 ID" aria-label="搜索镜头"><kbd>⌘ K</kbd></label><label class="check-filter"><input id="compatible-only" type="checkbox">只看兼容</label></div>
+        <p id="compatibility" class="compatibility" role="status"></p><p class="section-note">镜头样片使用当前风格的原始字体。所选全片字体用于实际制作，组合样片可在风格页查看。</p><div id="cards" class="cards"></div><div id="empty" class="empty" hidden><strong>没有找到匹配的镜头</strong><p>试试其他关键词，或关闭“只看兼容”。</p></div>
+      </section>
+    </div>
+  </main>
+  <footer class="page-footer"><span>FrameLoom / 风格与镜头配方库</span><span>公开样片仅供选型参考 · experimental</span></footer>
+  <div class="selection-bar"><div class="bar-inner"><div class="bar-summary"><span class="bar-dot" aria-hidden="true"></span><div><strong id="bar-count">正在加载组合</strong><span id="bar-style"></span></div></div><a href="selection.html" class="button">查看制作组合 <span aria-hidden="true">→</span></a></div></div>
+  <dialog id="detail" class="recipe-detail" aria-labelledby="detail-title" aria-describedby="detail-description">
+    <header class="dialog-top">
+      <div class="detail-heading"><p id="detail-category" class="detail-kicker"></p><h2 id="detail-title"></h2><div class="detail-id-row"><p id="detail-id" class="detail-id" lang="en"></p><button id="detail-copy-id" class="detail-copy-button" title="在当前项目中使用">复制 ID</button></div><p id="detail-copy-status" class="detail-copy-status" role="status" aria-live="polite"></p></div>
+      <button id="detail-close" class="close" aria-label="关闭配方详情" autofocus>×</button>
+    </header>
+    <div class="detail-layout">
+      <section class="detail-stage" aria-label="动态预览">
+        <div class="detail-player">
+          <div id="detail-media" class="detail-media"></div>
+          <div id="detail-controls" class="detail-controls">
+            <button id="detail-play" class="player-button" aria-label="播放样片"><span aria-hidden="true">▶</span></button>
+            <label class="sr-only" for="detail-progress">样片播放进度</label><input id="detail-progress" class="player-progress" type="range" min="0" max="100" value="0" step="0.1" disabled>
+            <output id="detail-time" class="player-time" for="detail-progress">0:00 / 0:00</output>
+            <button id="detail-replay" class="player-button" aria-label="重新播放"><span aria-hidden="true">↻</span></button>
+            <button id="detail-fullscreen" class="player-button" aria-label="全屏播放样片"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5"></path></svg></button>
+          </div>
+        </div>
+        <div id="detail-variants" class="preview-variants" aria-label="效果变体" hidden></div>
+        <div id="detail-facts" class="detail-facts"></div><p id="detail-preview-note" class="detail-preview-note"></p>
+      </section>
+      <section class="detail-reading" aria-label="配方说明">
+        <div class="detail-tabs" role="tablist" aria-label="配方信息">
+          <button id="detail-tab-overview" role="tab" aria-selected="true" aria-controls="detail-panel-overview" data-detail-tab="overview">概览</button>
+          <button id="detail-tab-guide" role="tab" aria-selected="false" aria-controls="detail-panel-guide" data-detail-tab="guide" tabindex="-1">制作要点</button>
+          <button id="detail-tab-source" role="tab" aria-selected="false" aria-controls="detail-panel-source" data-detail-tab="source" tabindex="-1">来源</button>
+        </div>
+        <div class="detail-panels">
+          <section id="detail-panel-overview" role="tabpanel" aria-labelledby="detail-tab-overview" tabindex="0"><p id="detail-description" class="detail-description"></p><div id="detail-overview"></div></section>
+          <section id="detail-panel-guide" role="tabpanel" aria-labelledby="detail-tab-guide" tabindex="0" hidden><div id="detail-copy-guide" class="detail-copy-guide"><div><strong>在其他项目复用</strong><p>复制输入、动作、参数与来源，交给 Agent 实现。</p></div><button id="detail-copy-recipe" class="detail-copy-button">复制动效配方</button></div><details id="detail-portable-preview" class="detail-portable-preview"><summary>查看将复制的内容</summary><pre id="detail-portable-text"></pre></details><div id="detail-doc" class="recipe-doc"></div></section>
+          <section id="detail-panel-source" role="tabpanel" aria-labelledby="detail-tab-source" tabindex="0" hidden><div id="detail-attribution" class="detail-attribution"></div><details class="detail-source-record"><summary>完整来源记录</summary><pre id="detail-source"></pre></details></section>
+        </div>
+      </section>
+    </div>
+    <footer class="detail-footer"><p id="detail-selection-note" role="status"></p><div class="detail-footer-actions"><a href="selection.html" class="detail-next">查看制作组合 <span aria-hidden="true">↗</span></a><button id="detail-select" class="button" aria-pressed="false">选择镜头</button></div></footer>
+  </dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <noscript>请启用 JavaScript 浏览和勾选配方。命令行入口：npm run list:shots。</noscript>
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>

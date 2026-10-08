@@ -1,0 +1,139 @@
+{
+  "schemaVersion": "1.0",
+  "recommended": {
+    "retro-zine": "source-han-serif-sc",
+    "scatterbrain": "lxgw-wenkai",
+    "signal": "source-han-sans-sc",
+    "archive-grid": "source-han-sans-sc",
+    "signal-noir": "source-han-sans-sc",
+    "studio-frame": "source-han-sans-sc",
+    "retro-windows": "source-han-sans-sc"
+  },
+  "fonts": [
+    {
+      "id": "source-han-sans-sc",
+      "name": "思源黑体",
+      "family": "FrameLoom Source Han Sans SC",
+      "version": "2.005",
+      "category": "黑体",
+      "description": "清晰规整，适合讲解、产品与技术内容",
+      "source": "https://github.com/adobe-fonts/source-han-sans",
+      "revision": "a4f7cf94edfb9d7ffbdfc4841de276358bd7e0f2",
+      "faces": [
+        {
+          "file": "fonts/source-han-sans-sc/SourceHanSansCN-VF.woff2",
+          "weight": "250 900",
+          "format": "woff2",
+          "download": "https://raw.githubusercontent.com/adobe-fonts/source-han-sans/a4f7cf94edfb9d7ffbdfc4841de276358bd7e0f2/Variable/WOFF2/TTF/Subset/SourceHanSansCN-VF.ttf.woff2",
+          "sha256": "f971e3bff46f76b49e1d5510556c2297c618ec4b491a295a4e741cdd38257799",
+          "bytes": 7711988
+        }
+      ],
+      "license": "SIL-OFL-1.1",
+      "licenseFile": "fonts/source-han-sans-sc/OFL.txt",
+      "licenseSha256": "fcac737e761ec63dbfbdce11030a1780161920d80315edba9c8beff1c2bac5a2"
+    },
+    {
+      "id": "source-han-serif-sc",
+      "name": "思源宋体",
+      "family": "FrameLoom Source Han Serif SC",
+      "version": "2.003",
+      "category": "宋体",
+      "description": "书刊气质，适合知识、历史与观点叙事",
+      "source": "https://github.com/adobe-fonts/source-han-serif",
+      "revision": "7889f11bf31170b5d092a083b357c8c8130f89e0",
+      "faces": [
+        {
+          "file": "fonts/source-han-serif-sc/SourceHanSerifCN-VF.woff2",
+          "weight": "200 900",
+          "format": "woff2",
+          "download": "https://raw.githubusercontent.com/adobe-fonts/source-han-serif/7889f11bf31170b5d092a083b357c8c8130f89e0/Variable/WOFF2/TTF/Subset/SourceHanSerifCN-VF.ttf.woff2",
+          "sha256": "556749ba783b148fa1f48644e8883e5b9351f01abd0d1faad0ba24a21185e76a",
+          "bytes": 11035128
+        }
+      ],
+      "license": "SIL-OFL-1.1",
+      "licenseFile": "fonts/source-han-serif-sc/OFL.txt",
+      "licenseSha256": "9ff5bb567e1b92c801fc1069e5fbf992ff8efccacb9db94e5959a5b3ba9bb903"
+    },
+    {
+      "id": "lxgw-wenkai",
+      "name": "霞鹜文楷",
+      "family": "FrameLoom LXGW WenKai",
+      "version": "1.522",
+      "category": "手写",
+      "description": "柔和的手写感，适合笔记、教程与方法拆解",
+      "source": "https://github.com/lxgw/LxgwWenKai",
+      "revision": "v1.522",
+      "faces": [
+        {
+          "file": "fonts/lxgw-wenkai/LXGWWenKai-Regular.ttf",
+          "weight": "400",
+          "format": "truetype",
+          "download": "https://github.com/lxgw/LxgwWenKai/releases/download/v1.522/LXGWWenKai-Regular.ttf",
+          "sha256": "39ad71264b588165b469e35e6afb162a378dacd1f95348160240ba9038ac3009",
+          "bytes": 25575676
+        },
+        {
+          "file": "fonts/lxgw-wenkai/LXGWWenKai-Medium.ttf",
+          "weight": "500 900",
+          "format": "truetype",
+          "download": "https://github.com/lxgw/LxgwWenKai/releases/download/v1.522/LXGWWenKai-Medium.ttf",
+          "sha256": "d4bdeb38a39151d74d084cba5090f8cb7d20bf83eedb78c35939ae70b9f4e3f6",
+          "bytes": 25379848
+        }
+      ],
+      "license": "SIL-OFL-1.1",
+      "licenseFile": "fonts/lxgw-wenkai/OFL.txt",
+      "licenseSha256": "c38b1994a5e48ac30ac7d1da7d0409fd8fd8127dfe28a13d6e787d5b1ef34a5e"
+    },
+    {
+      "id": "smiley-sans",
+      "name": "得意黑",
+      "family": "FrameLoom Smiley Sans",
+      "version": "2.0.1",
+      "category": "窄斜黑体",
+      "description": "窄而醒目的斜体字形，适合短句、标题与节奏明快的视频",
+      "source": "https://github.com/atelier-anchor/smiley-sans",
+      "revision": "67e3821f4b06cbd7155fa6fa69daff4b6f311b76",
+      "faces": [
+        {
+          "file": "fonts/smiley-sans/SmileySans-Oblique.woff2",
+          "weight": "400",
+          "format": "woff2",
+          "download": "https://github.com/atelier-anchor/smiley-sans/releases/download/v2.0.1/smiley-sans-v2.0.1.zip",
+          "archiveMember": "SmileySans-Oblique.ttf.woff2",
+          "archiveSha256": "299c0be6c960ae37361762eca76f7d0cd516615435bb96c0d4b98a1e70178a07",
+          "sha256": "731f22973349404b15a88a99ef3b5dd4104c0965c23b7e485c1f11e84fea99e2",
+          "bytes": 1150924
+        }
+      ],
+      "license": "SIL-OFL-1.1",
+      "licenseFile": "fonts/smiley-sans/OFL.txt",
+      "licenseSha256": "9401f4050f1b66c26b6ccdc8b0e14a3c1cc37aac122eda84386f25854a9bec72"
+    },
+    {
+      "id": "xiaolai",
+      "name": "小赖字体",
+      "family": "FrameLoom Xiaolai",
+      "version": "3.126",
+      "category": "手写",
+      "description": "轻松亲切的手写字形，适合创作分享与轻量教程",
+      "source": "https://github.com/lxgw/kose-font",
+      "revision": "58beef8eceeab3ed51d5da173e016842dd5681fd",
+      "faces": [
+        {
+          "file": "fonts/xiaolai/Xiaolai-Regular.ttf",
+          "weight": "400",
+          "format": "truetype",
+          "download": "https://github.com/lxgw/kose-font/releases/download/v3.126/Xiaolai-Regular.ttf",
+          "sha256": "e2f68daf0e72777a8cf58bc83de1b98634b251e537ddbfca24b0ae50d1802da2",
+          "bytes": 22220806
+        }
+      ],
+      "license": "SIL-OFL-1.1",
+      "licenseFile": "fonts/xiaolai/OFL.txt",
+      "licenseSha256": "0df7e09be4c2c850a48bd8beb9cd64b343aad49cd5d3f6cfb2ad2e3d28a56ca4"
+    }
+  ]
+}

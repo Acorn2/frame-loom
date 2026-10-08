@@ -1,0 +1,138 @@
+{
+  "generatedAt": "2026-10-04T03:44:27.478Z",
+  "storyboard": "/Users/ankanghao/ai_code/frame-loom/examples/shot-recipes/chapter-transitions/line-carry-transition.json",
+  "video": "/Users/ankanghao/ai_code/frame-loom/.tmp/p2-recipes/carry-final.mp4",
+  "executionMode": "fast",
+  "outputPurpose": "visual-preview",
+  "mode": "silent-preview",
+  "automatedPassed": true,
+  "releaseReady": false,
+  "checks": {
+    "schema": {
+      "passed": true
+    },
+    "productionLock": {
+      "passed": true,
+      "hash": "0bbe8853fefa47697b63624ed050b86877d7d72a449808d8c11a106e12751153"
+    },
+    "storyboard": {
+      "passed": true,
+      "issues": []
+    },
+    "timeline": {
+      "passed": true,
+      "scenes": [
+        {
+          "id": "carry-out",
+          "startFrame": 0,
+          "endFrame": 240,
+          "overlapInFrames": 0,
+          "overlapOutFrames": 60,
+          "primaryClaim": "代码/配置逐行或逐字符揭示",
+          "visualKind": "statement",
+          "visualExplanation": "FrameLoom 自写公开示意资料，不代表真实产品、用户或研究结果",
+          "attentionTarget": null,
+          "lastActionEnd": 120,
+          "stableHoldFrames": 60,
+          "peakCurrentNodes": 0
+        },
+        {
+          "id": "carry-in",
+          "startFrame": 180,
+          "endFrame": 420,
+          "overlapInFrames": 60,
+          "overlapOutFrames": 0,
+          "primaryClaim": "代码/配置逐行或逐字符揭示",
+          "visualKind": "statement",
+          "visualExplanation": "FrameLoom 自写公开示意资料，不代表真实产品、用户或研究结果",
+          "attentionTarget": null,
+          "lastActionEnd": 180,
+          "stableHoldFrames": 60,
+          "peakCurrentNodes": 0
+        }
+      ]
+    },
+    "assets": {
+      "passed": true,
+      "issues": []
+    },
+    "safeArea": {
+      "passed": true,
+      "orientation": "landscape",
+      "canvas": {
+        "width": 1920,
+        "height": 1080
+      },
+      "safeArea": {
+        "top": 100,
+        "right": 120,
+        "bottom": 100,
+        "left": 120
+      },
+      "content": {
+        "width": 1680,
+        "height": 880
+      },
+      "issues": []
+    },
+    "textLayout": {
+      "passed": true,
+      "issues": []
+    },
+    "output": {
+      "passed": true,
+      "path": "/Users/ankanghao/ai_code/frame-loom/.tmp/p2-recipes/carry-final.mp4",
+      "bytes": 693351,
+      "codec": "h264",
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "durationSec": 14,
+      "expectedDurationSec": 14,
+      "durationDeltaSec": 0,
+      "durationToleranceSec": 0.05,
+      "audioStreams": 0,
+      "pixelFormat": "yuvj420p",
+      "formatName": "mov,mp4,m4a,3gp,3g2,mj2",
+      "bitRate": 396200,
+      "orientation": "landscape"
+    },
+    "audio": {
+      "passed": true,
+      "skipped": true,
+      "reason": "本次输出无需音轨"
+    },
+    "reviewFrames": {
+      "passed": true,
+      "count": 25,
+      "missingRequired": [],
+      "contactSheet": "/Users/ankanghao/ai_code/frame-loom/.tmp/p2-recipes/carry-qa/contact-sheet.png",
+      "contactSheets": [
+        "contact-sheet.png"
+      ],
+      "pages": [
+        {
+          "file": "contact-sheet.png",
+          "firstFrame": 1,
+          "lastFrame": 25,
+          "startSec": 0,
+          "endSec": 13.933333333333334
+        }
+      ]
+    }
+  },
+  "manualReview": {
+    "required": true,
+    "fullPlaybackPassed": false,
+    "visualHierarchyPassed": false,
+    "textReadabilityPassed": false,
+    "transitionTimingPassed": false,
+    "audioQualityPassed": false,
+    "captionReadabilityPassed": false,
+    "assetRightsPassed": false,
+    "reviewer": "",
+    "reviewedAt": null,
+    "notes": ""
+  },
+  "errors": []
+}

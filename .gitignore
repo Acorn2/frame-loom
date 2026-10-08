@@ -1,6 +1,9 @@
 node_modules/
 dist/
 dist-types/
+library/previews/
+library/font-previews/
+designs/library-redesign/
 .tmp/
 .idea/
 .DS_Store
