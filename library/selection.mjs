@@ -13,7 +13,16 @@ export function normalizeSelection(catalog, value = {}) {
   const fontMode = validFont && value.fontMode !== 'recommended' ? 'manual' : 'recommended';
   const recommended = catalog.styles.find(item => item.id === style)?.recommendedFont ?? fonts[0]?.id;
   const font = fontMode === 'manual' ? value.font : recommended;
-  return {style, canvas, selected, ...(fonts.length ? {font, fontMode} : {}), production: normalizeProduction(catalog, value.production)};
+  // Keep existing hand-picked pools; new visitors can start from a document alone.
+  const shotSelection = ['auto', 'manual'].includes(value.shotSelection) ? value.shotSelection
+    : Array.isArray(value.selected) && value.selected.length ? 'manual' : 'auto';
+  return {style, canvas, selected, shotSelection, ...(fonts.length ? {font, fontMode} : {}), production: normalizeProduction(catalog, value.production)};
+}
+export function shotSelectionWarning(catalog, selection) {
+  const state = normalizeSelection(catalog, selection);
+  const recipes = state.selected.map(id => catalog.recipes.find(item => item.id === id));
+  return state.shotSelection === 'manual' && recipes.length && recipes.every(item => item.category === '标题')
+    ? '当前集合只有标题镜头，适合短标题或章节路标；长篇讲解可能变成重复字卡。建议根据文档自动选镜头，或补充能解释正文的配方。' : '';
 }
 // The user chooses a deliverable and a voice route; the Agent owns files and project naming.
 export function normalizeProduction(catalog, value = {}) {
@@ -27,7 +36,9 @@ export function normalizeProduction(catalog, value = {}) {
 }
 export function createExports(catalog, selection) {
   const state = normalizeSelection(catalog, selection);
-  if (!state.selected.length || state.selected.length !== selection.selected.length) throw new Error('请至少选择一个兼容镜头；组合中不能含无效镜头。');
+  if (selection.shotSelection !== undefined && !['auto', 'manual'].includes(selection.shotSelection)) throw new Error('镜头选择方式已失效，请重新选择。');
+  if (state.shotSelection === 'manual' && (!state.selected.length || state.selected.length !== selection.selected?.length)) throw new Error('请至少选择一个兼容镜头；组合中不能含无效镜头。');
+  if (!catalog.recipes.some(recipe => compatible(recipe, state.style, state.canvas))) throw new Error('当前风格与画幅没有兼容镜头，请更换组合。');
   if (selection.font !== undefined && selection.font !== state.font) throw new Error('字体选项已失效，请重新选择。');
   if (selection.fontMode !== undefined && !['manual', 'recommended'].includes(selection.fontMode)) throw new Error('字体选择方式已失效，请重新选择。');
   const {goal, audio, ttsPreset, review} = state.production;
@@ -39,11 +50,21 @@ export function createExports(catalog, selection) {
   const mode = review ? 'review' : 'fast';
   const prompt = [`请使用 frame-loom Skill，根据我在对话中提供的文档与素材，制作${goal === 'master' ? '供后期剪辑的干净画面底片' : '带旁白的待审视频'}。尚未提供文档时先请我提供，不生成占位内容。`,
     `视频风格：${state.style}`, ...(state.font ? [`全片字体：${state.font}；初始化时使用 --font ${state.font}，标题、正文、图解和旁白字幕统一使用该字体家族。`] : []), `画幅：${state.canvas === 'landscape' ? '16:9 横屏' : '9:16 竖屏'}`,
-    `可用镜头配方：${state.selected.join('、')}`,
+    ...(state.shotSelection === 'auto' ? [
+      '镜头选择方式：根据文档自动推荐。先读取文档，再推荐组合并逐场编排。',
+      `先读取文档，再运行 list:shots -- --style ${state.style} --canvas ${state.canvas}，从实际兼容配方中选择互补集合；选定后初始化时显式传入 --shots。`,
+      '先说明每场的来源、观众要理解的内容、画面表达、配方与选择理由，以及素材需求，写入 shot-map.md；不按分类凑齐，不为增加种类补造关系、日期或数据。'
+    ] : [
+      '镜头选择方式：使用用户指定集合，严格限定。',
+      `可用镜头配方：${state.selected.join('、')}`,
+      '仅在指定集合内按文档编排，可重复或只使用其中一部分；不足时说明具体缺口，不擅自添加配方。',
+      ...(shotSelectionWarning(catalog, state) ? [shotSelectionWarning(catalog, state)] : [])
+    ]),
     '根据原文自动生成简短项目主题，按项目规则创建带日期的生产目录，不要求我填写目录名。',
     `制作参数：--output-purpose ${purpose} --audio-mode ${audioMode} --mode ${mode}。`,
-    '完整保留原文和来源；只在上述配方集合内编排，可重复、调整顺序或只用其中一部分，不补造事实。',
-    review ? '先展示讲稿、分镜和时间安排，等我审核后再渲染。' : '完成讲稿、分镜、校验、渲染和 QA。'];
+    `完整保留原文和来源；只在${state.shotSelection === 'auto' ? '根据文档选定并记录的' : '上述'}配方集合内编排，可重复、调整顺序或只用其中一部分，不补造事实。`,
+    '渲染前检查重复构图、正文是否只有标题、关键步骤与差异是否有对应画面、动作是否过早完成；按讲解顺序安排有意义的变化，必要阅读停留可保留并说明理由。不要用装饰动画消除警告，手动集合不足时说明限制，不擅自加配方。',
+    review ? `先展示${state.shotSelection === 'auto' ? '推荐组合' : '指定集合内的镜头安排'}、讲稿、分镜和时间安排，等我审核后再渲染。` : `简要展示${state.shotSelection === 'auto' ? '推荐组合与逐场选择理由' : '指定集合内的逐场安排与选择理由'}后直接继续，完成讲稿、分镜、校验、渲染和 QA；不新增组合确认步骤。`];
   if (goal === 'master') {
     prompt.push('底片无音轨、无旁白字幕和审片标记，保留画面标题与必要图解文字；同时提供讲稿与逐镜时间表，供后期配音和剪辑。');
   } else if (audio === 'external') {

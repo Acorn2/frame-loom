@@ -36,3 +36,5 @@ P2 继续使用现有 React / Remotion / Zod；SVG 滤镜与确定性闭式粒�
 跨风格镜头继续使用现有静态 renderer、Zod 校验及 Remotion，不新增依赖。公开样片生成覆盖 53 个示例 × 6 套风格，构建复制对应媒体并检验完整性。深色原生画布依据背景亮度确定文字颜色。
 
 独立字体选择使用浏览器原生 FontFace/FontFaceSet 与现有 Remotion delayRender，不新增运行时依赖。思源黑体／宋体使用官方 CN 可变 WOFF2，霞鹜文楷使用官方 Regular/Medium TTF；得意黑使用官方 WOFF2，小赖字体使用比例版 Regular TTF。清单固定版本和 SHA-256，保留 SIL OFL 1.1。DOM.Iterable 补全 FontFaceSet 的标准集合方法类型。网页字形示例与 renderer 共用项目字体文件，字重映射在清单记录；组合样片由同一正式 composition 生成。
+
+镜头自动/手动入口沿用原生radio与ES module，选择方式随既有localStorage/URL保存，无新增依赖或生产API。Agent承担文档语义推荐；Node.js共享预检仅做重复率与标题停留警告，复用现有分镜时间线，不改生产schema或renderer。

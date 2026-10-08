@@ -26,7 +26,7 @@ A local document-to-video Skill for Codex, Claude Code, and other coding agents
 
 It is suited to knowledge explainers, product walkthroughs, report summaries, and data explanations. **v0.5 is a public beta.** The creator must review generated claims and facts. A clean visual handoff or narrated delivery also requires a full human playback review after automated QA.
 
-**[Explore styles and shot recipes →](https://acorn2.github.io/frame-loom/)** Watch public samples, choose a combination, copy the production prompt, and give your document to a local agent. The website does not upload documents or produce videos.
+**[Explore styles and shot recipes →](https://acorn2.github.io/frame-loom/)** Choose a style, copy the production prompt, and give your document to a local agent. It recommends recipes from the document by default; manual pools remain available. The website does not upload documents or produce videos.
 
 ```text
 Document / document + images → Agent-written script and storyboard → validation and Remotion render → preview / visual master / narrated video → QA and human review
@@ -70,24 +70,24 @@ The first render may download the browser used by Remotion. For environment chec
 
 ### 2. Give the agent a document
 
-Paste this into the **agent chat** and replace the placeholder with the absolute path to an existing Markdown or plain-text document. The style and shot IDs below are an example that works with the current landscape catalog:
+Paste this into the **agent chat** and replace the placeholder with the absolute path to an existing Markdown or plain-text document. The example specifies a style and lets the agent choose compatible recipes from the document:
 
 ```text
 Use the frame-loom Skill to turn <absolute document path> into a 16:9 silent review preview.
 Video style: retro-zine
-Available shot recipes: paper-title, document-conclusions, list-reveal, concept-matrix, compare-reveal, semantic-default
-Choose, repeat, and arrange recipes according to the source; you do not need to use every recipe. Explain each scene's selection.
+Recommend compatible recipes from the source and plan each scene with its source, visible explanation, and selection reason. Do not fill every library category.
+Briefly show the combination and continue production without an additional confirmation.
 Use fast mode. Preserve the original source and complete the script, Storyboard 2.4, validation, render, and QA.
 Report the project path, preview-silent.mp4 path, actual duration, and QA result.
 ```
 
 You do not need to write JSON, create a project directory, or configure audio for this first preview. The agent creates a `YYYYMMDD-topic` project and returns the actual path to `preview-silent.mp4`, representative frames, duration, and QA result. The video has a review marker and is for checking visuals. You can continue in the same project to make a visual master or narrated version.
 
-To let the agent choose, replace the style and recipe lines with: “Recommend a compatible style and recipe pool from the source, and explain your choices.” Provide local paths for images or exact URLs for screenshots. To review the script and storyboard first, request **review mode** and ask the agent to wait for your approval before rendering.
+To constrain the agent, provide an explicit “Available shot recipes” list. See [document-driven shot planning](references/shot-planning.md) for selection and content review. Provide local paths for images or exact URLs for screenshots. To review the script and storyboard first, request **review mode** and ask the agent to wait for your approval before rendering.
 
 ### Optional: choose a look in the browser
 
-In the [online recipe library](https://acorn2.github.io/frame-loom/), choose **video style → shot recipes → delivery result**. Copy the production prompt into your local agent chat and provide the document there. You do not need to start the library's local web server to produce a video; your document and video production stay in the local project.
+In the [online recipe library](https://acorn2.github.io/frame-loom/), choose **video style → production settings**. Document-driven shot selection is the default; you can optionally choose a manual recipe pool. Copy the production prompt into your local agent chat and provide the document there. You do not need to start the library's local web server to produce a video; your document and video production stay in the local project.
 
 ## What is included
 

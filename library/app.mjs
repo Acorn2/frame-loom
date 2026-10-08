@@ -1,5 +1,5 @@
 /* global document, window, localStorage, navigator, fetch, setTimeout, clearTimeout, HTMLElement, URLSearchParams */
-import {compatible, normalizeSelection, createExports} from './selection.mjs';
+import {compatible, normalizeSelection, createExports, shotSelectionWarning} from './selection.mjs';
 import {enhanceDropdowns, syncDropdowns} from './dropdown.mjs';
 import {styleCardInfo, createStyleCardPlayback} from './style-cards.mjs';
 import {createDetailView} from './detail.mjs';
@@ -24,7 +24,7 @@ function persist() {
   try {localStorage.setItem(storageKey, JSON.stringify(state));}
   catch {
     // Carry only public selections between pages when browser storage is blocked.
-    const query = new URLSearchParams({style: state.style, font: state.font, fontMode: state.fontMode, canvas: state.canvas, shots: state.selected.join(','), ...state.production, review: String(state.production.review)});
+    const query = new URLSearchParams({style: state.style, font: state.font, fontMode: state.fontMode, canvas: state.canvas, shots: state.selected.join(','), shotSelection: state.shotSelection, ...state.production, review: String(state.production.review)});
     for (const link of document.querySelectorAll('a[href]')) {
       const file = link.getAttribute('href').split('?')[0];
       if (['index.html', 'shots.html', 'selection.html'].includes(file)) link.setAttribute('href', `${file}?${query}`);
@@ -138,12 +138,22 @@ function renderCards() {
 function renderExports() {
   if (!$('prompt')) return;
   const {goal, audio, ttsPreset, review} = state.production;
+  for (const input of document.querySelectorAll('input[name="shot-selection"]')) input.checked = input.value === state.shotSelection;
+  $('manual-shots').hidden = state.shotSelection !== 'manual';
+  $('auto-shots-note').hidden = state.shotSelection !== 'auto';
+  const warning = shotSelectionWarning(catalog, state);
+  $('shot-selection-warning').textContent = warning;
+  $('shot-selection-warning').hidden = !warning;
+  $('handoff-shot-summary').textContent = state.shotSelection === 'auto'
+    ? '当前：根据文档推荐镜头组合。无需预选配方，Agent 读取文档后推荐并编排。'
+    : `当前：仅使用已选的 ${state.selected.length} 个配方。可重复或只用其中一部分，不会自动添加其他配方。`;
+  $('copy-prompt-label').textContent = state.shotSelection === 'auto' ? '复制自动编排指令' : '复制指定镜头指令';
   for (const input of document.querySelectorAll('input[name="goal"]')) input.checked = input.value === goal;
   for (const input of document.querySelectorAll('input[name="audio"]')) input.checked = input.value === audio;
   $('tts-preset').value = ttsPreset; $('review-first').checked = review;
   $('voice-section').hidden = goal === 'master'; $('master-note').hidden = goal !== 'master';
   $('tts-section').hidden = audio !== 'tts'; $('external-note').hidden = audio !== 'external';
-  $('handoff-step').textContent = goal === 'master' ? '2' : '3';
+  $('handoff-step').textContent = goal === 'master' ? '3' : '4';
   const preset = catalog.ttsPresets.find(item => item.id === ttsPreset);
   $('tts-summary').replaceChildren();
   if (preset) {
@@ -154,14 +164,14 @@ function renderExports() {
   } else {
     const note = document.createElement('p'); note.textContent = 'Agent 读取本地已启用配置：只有一个时直接使用；多个时列出服务、模型与音色供你选择。'; $('tts-summary').append(note);
   }
-  $('production-summary').textContent = `${goal === 'master' ? '仅画面 · 后期剪辑' : `带旁白的视频 · ${audio === 'external' ? '已有旁白' : preset?.name ?? '本地 TTS 配置'}`} · ${review ? '先确认讲稿与分镜' : '直接制作，出片后复核'}`;
+  $('production-summary').textContent = `${state.shotSelection === 'auto' ? '根据文档选镜头' : '使用手动镜头集合'} · ${goal === 'master' ? '仅画面 · 后期剪辑' : `带旁白的视频 · ${audio === 'external' ? '已有旁白' : preset?.name ?? '本地 TTS 配置'}`} · ${review ? '先确认讲稿与分镜' : '直接制作，出片后复核'}`;
   try {
     const value = createExports(catalog, state);
     $('prompt').value = value.prompt; $('export-error').textContent = ''; $('copy-prompt').disabled = false;
   } catch (error) {
     $('prompt').value = '';
-    $('prompt').placeholder = '选好镜头后，这里会生成可直接给 Agent 的制作指令。';
-    $('export-error').textContent = state.selected.length ? error.message : '请先勾选至少一个镜头。';
+    $('prompt').placeholder = '选择自动推荐，或勾选兼容镜头后生成制作指令。';
+    $('export-error').textContent = error.message;
     $('copy-prompt').disabled = true;
   }
   syncDropdowns();
@@ -196,8 +206,8 @@ function renderSelection(save = true) {
     }
   }
   if ($('selected-count')) $('selected-count').textContent = `${state.selected.length} 个`;
-  $('nav-count').textContent = state.selected.length;
-  if ($('bar-count')) $('bar-count').textContent = document.body.dataset.page === 'styles' ? `已选风格：${style.name}` : state.selected.length ? `已选 ${state.selected.length} 个镜头` : '尚未选择镜头';
+  $('nav-count').textContent = state.shotSelection === 'auto' ? '自动' : state.selected.length;
+  if ($('bar-count')) $('bar-count').textContent = document.body.dataset.page === 'styles' ? `已选风格：${style.name}` : state.shotSelection === 'auto' ? '根据文档自动选镜头' : state.selected.length ? `已选 ${state.selected.length} 个镜头` : '尚未选择手动镜头';
   if ($('bar-style')) $('bar-style').textContent = `${style.subtitle} · ${font.name} · ${state.canvas === 'landscape' ? '16:9 横屏' : '9:16 竖屏'}`;
   if ($('current-style')) $('current-style').textContent = style.name;
   if ($('selected-style-poster')) $('selected-style-poster').src = style.poster;
@@ -222,7 +232,7 @@ const detailView = createDetailView({
   styleName: id => catalog.styles.find(style => style.id === id)?.name ?? id,
   onSelect: (item, isStyle) => {
     if (isStyle) switchCombination({style: item.id});
-    else {state.selected = state.selected.includes(item.id) ? state.selected.filter(id => id !== item.id) : [...state.selected, item.id]; renderCards(); renderSelection();}
+    else {state.shotSelection = 'manual'; state.selected = state.selected.includes(item.id) ? state.selected.filter(id => id !== item.id) : [...state.selected, item.id]; renderCards(); renderSelection();}
   },
   onVariant: (id, variantId) => {
     const item = catalog.recipes.find(item => item.id === id);
@@ -255,7 +265,7 @@ async function start() {
   try {saved = JSON.parse(localStorage.getItem(storageKey) ?? '{}');} catch {saved = {};}
   state = normalizeSelection(catalog, saved ?? {});
   const query = new URLSearchParams(window.location.search);
-  if (query.has('style')) state = normalizeSelection(catalog, {style: query.get('style'), font: query.get('font'), fontMode: query.get('fontMode'), canvas: query.get('canvas'), selected: (query.get('shots') ?? '').split(','),
+  if (query.has('style')) state = normalizeSelection(catalog, {style: query.get('style'), font: query.get('font'), fontMode: query.get('fontMode'), canvas: query.get('canvas'), selected: (query.get('shots') ?? '').split(',').filter(Boolean), shotSelection: query.get('shotSelection'),
     production: query.has('goal') ? {goal: query.get('goal'), audio: query.get('audio'), ttsPreset: query.get('ttsPreset'), review: query.get('review') === 'true'} : state.production});
   if ($('tts-preset')) {
     for (const preset of catalog.ttsPresets) {const option = document.createElement('option'); option.value = preset.id; option.textContent = `${preset.name} · 项目内置预设`; $('tts-preset').append(option);}
@@ -290,6 +300,7 @@ async function start() {
   $('cards')?.addEventListener('change', event => {
     const id = event.target.dataset.pick;
     if (!id || !compatible(catalog.recipes.find(item => item.id === id), state.style, state.canvas)) return;
+    state.shotSelection = 'manual';
     state.selected = event.target.checked ? [...new Set([...state.selected, id])] : state.selected.filter(item => item !== id);
     event.target.closest('.shot-card').classList.toggle('selected', event.target.checked); renderSelection();
   });
@@ -325,6 +336,7 @@ async function start() {
   $('compatible-only')?.addEventListener('change', renderCards);
   document.querySelector('.export-main')?.addEventListener('change', event => {
     const input = event.target;
+    if (input.name === 'shot-selection') {state.shotSelection = input.value; renderSelection(); return;}
     if (input.name === 'goal') state.production.goal = input.value;
     else if (input.name === 'audio') state.production.audio = input.value;
     else if (input.id === 'tts-preset') state.production.ttsPreset = input.value;

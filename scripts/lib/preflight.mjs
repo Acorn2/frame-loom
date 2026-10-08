@@ -6,9 +6,11 @@ import {checkSafeArea} from '../check-safe-area.mjs';
 import {inspectAudio} from '../inspect-audio.mjs';
 import {validateAssets} from '../validate-assets.mjs';
 import {checkExternalCaptionLayout, checkTextLayout} from './text-layout.mjs';
+import {checkContentQuality} from './content-quality.mjs';
 
 export function checkStoryboardInput(storyboard, {storyboardPath, styleRoot, executionMode}) {
-  return validateStoryboard(storyboard, {storyboardPath, styleRoot, executionMode});
+  const issues = validateStoryboard(storyboard, {storyboardPath, styleRoot, executionMode});
+  return issues.some(item => item.severity === 'error') ? issues : [...issues, ...checkContentQuality(storyboard)];
 }
 
 export function checkAssetInput(storyboardPath) {

@@ -6,7 +6,7 @@ import {afterAll, describe, expect, it} from 'vitest';
 import {buildLibraryCatalog, libraryFixtures, previewFingerprint} from '../scripts/lib/library-catalog.mjs';
 import {createLibraryServer} from '../scripts/serve-library.mjs';
 import {buildLibrary, assertLibraryPreviews} from '../scripts/build-library.mjs';
-import {compatible, normalizeSelection, createExports} from '../library/selection.mjs';
+import {compatible, normalizeSelection, createExports, shotSelectionWarning} from '../library/selection.mjs';
 import {recipeDisplayText, previewStatusText} from '../library/presentation.mjs';
 import {styleCardInfo} from '../library/style-cards.mjs';
 import {portableRecipe} from '../library/recipe-copy.mjs';
@@ -47,13 +47,48 @@ describe('local library capabilities and selection', () => {
   });
   it('restores only unique, current and compatible selected scene recipes', () => {
     expect(normalizeSelection(catalog, {style: 'signal', canvas: 'portrait', selected: ['semantic-default', 'paper-title', 'missing', 'marker-underline', 'semantic-default']}))
-      .toEqual({style: 'signal', font: 'source-han-sans-sc', fontMode: 'recommended', canvas: 'portrait', selected: ['semantic-default'], production: defaultProduction});
+      .toEqual({style: 'signal', font: 'source-han-sans-sc', fontMode: 'recommended', canvas: 'portrait', selected: ['semantic-default'], shotSelection: 'manual', production: defaultProduction});
+  });
+  it('defaults a new visit to document-driven selection and preserves legacy manual intent', () => {
+    expect(normalizeSelection(catalog).shotSelection).toBe('auto');
+    expect(normalizeSelection(catalog, {selected: ['paper-title']}).shotSelection).toBe('manual');
+    expect(normalizeSelection(catalog, {selected: ['missing']}).shotSelection).toBe('manual');
+    const automatic = normalizeSelection(catalog, {shotSelection: 'auto', selected: ['paper-title']});
+    expect(normalizeSelection(catalog, JSON.parse(JSON.stringify(automatic)))).toEqual(automatic);
+    expect(createExports(catalog, automatic).prompt).not.toContain('可用镜头配方：paper-title');
+  });
+  it.each(['landscape', 'portrait'])('exports automatic planning without a preselected pool for %s', canvas => {
+    const value = createExports(catalog, {style: 'retro-zine', canvas, selected: []});
+    expect(value.prompt).toContain('镜头选择方式：根据文档自动推荐。');
+    expect(value.prompt).not.toContain('镜头选择方式：使用用户指定集合');
+    expect(value.prompt).toContain(`list:shots -- --style retro-zine --canvas ${canvas}`);
+    expect(value.prompt).toContain('选定后初始化时显式传入 --shots');
+    expect(value.prompt).toContain('不按分类凑齐');
+    expect(value.prompt).toContain('不新增组合确认步骤');
+    expect(value.prompt).not.toContain('可用镜头配方：');
+    expect(value).toMatchObject({mode: 'fast', audioMode: 'tts'});
+  });
+  it('warns for manual title-only pools without blocking or expanding them', () => {
+    const selection = {style: 'retro-zine', canvas: 'landscape', selected: ['paper-title', 'blur-slide']};
+    expect(shotSelectionWarning(catalog, selection)).toContain('只有标题镜头');
+    expect(createExports(catalog, selection).prompt).toContain('只有标题镜头');
+    expect(shotSelectionWarning(catalog, {...selection, selected: ['paper-title', 'semantic-default']})).toBe('');
+    expect(shotSelectionWarning(catalog, {...selection, shotSelection: 'auto'})).toBe('');
+  });
+  it('requires review only when requested and rejects stale selection modes', () => {
+    const value = createExports(catalog, {selected: [], production: {...defaultProduction, review: true}});
+    expect(value.prompt).toContain('先展示推荐组合、讲稿、分镜和时间安排，等我审核后再渲染');
+    expect(value.prompt).not.toContain('不新增组合确认步骤');
+    expect(() => createExports(catalog, {shotSelection: 'invalid', selected: []})).toThrow('镜头选择方式');
   });
   it('exports a chosen pool without adding a fallback or forcing every recipe into the video', () => {
     const value = createExports(catalog, {style: 'retro-zine', canvas: 'landscape', selected: ['paper-title', 'concept-matrix']});
     expect(value.prompt).toContain('在对话中提供的文档'); expect(value.prompt).toContain('可重复、调整顺序或只用其中一部分');
     expect(value.prompt).toContain('视频风格：retro-zine\n');
     expect(value.prompt).toContain('可用镜头配方：paper-title、concept-matrix\n');
+    expect(value.prompt).toContain('镜头选择方式：使用用户指定集合，严格限定。');
+    expect(value.prompt).toContain('不足时说明具体缺口，不擅自添加配方');
+    expect(value.prompt).not.toContain('镜头选择方式：根据文档自动推荐');
     expect(value.prompt).not.toMatch(/@\d+\.\d+\.\d+|Storyboard \d+\.\d+/u); expect(value.prompt).not.toContain('semantic-default');
     expect(value).not.toHaveProperty('command');
   });
@@ -76,10 +111,12 @@ describe('local library capabilities and selection', () => {
   it('produces review and real-TTS instructions without claiming approval or configured credentials', () => {
     const value = createExports(catalog, {style: 'retro-zine', canvas: 'landscape', selected: ['paper-title'], production: {...defaultProduction, review: true}});
     expect(value.prompt).toContain('等我审核后再渲染'); expect(value.prompt).toContain('无可用配置时说明缺口'); expect(value.prompt).not.toContain('approve:delivery');
+    expect(value.prompt).toContain('先展示指定集合内的镜头安排');
+    expect(value.prompt).not.toContain('先展示推荐组合');
     expect(value).toMatchObject({purpose: 'in-project-video', audioMode: 'tts', mode: 'review'});
   });
   it.each([[], ['missing'], ['marker-underline'], ['blinds-wipe'], ['paper-title', 'paper-title']])('refuses empty, unregistered, hosted or duplicate pools: %j', selected => {
-    expect(() => createExports(catalog, {style: 'retro-zine', canvas: 'landscape', selected})).toThrow();
+    expect(() => createExports(catalog, {style: 'retro-zine', canvas: 'landscape', shotSelection: 'manual', selected})).toThrow();
   });
   it.each([{goal:'unknown'}, {audio:'auto'}, {ttsPreset:'missing'}, {review:'true'}, {ttsPreset:'$(touch foo)'}])('rejects invalid production choices: %j', production => {
     expect(() => createExports(catalog, {style: 'retro-zine', canvas: 'landscape', selected: ['paper-title'], production})).toThrow();

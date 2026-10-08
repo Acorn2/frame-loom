@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {validateStoryboard} from '../src/validation/storyboard-validator.ts';
+import {checkStoryboardInput} from './lib/preflight.mjs';
 
 const args = process.argv.slice(2);
 const modeIndex = args.indexOf('--mode');
@@ -30,7 +30,7 @@ try {
 }
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const issues = validateStoryboard(value, {
+const issues = checkStoryboardInput(value, {
   storyboardPath: resolvedPath,
   styleRoot: path.join(projectRoot, 'styles'),
   executionMode

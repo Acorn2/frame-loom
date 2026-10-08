@@ -2,6 +2,12 @@
 
 FrameLoom 把语义决策与确定性渲染分开。Agent 读取来源、拆分主张、选择画面工作并写入 JSON；CLI 不从文档自动推断事实或关系。
 
+## 根据文档选镜头
+
+浏览器保存公开的auto/manual选择方式；新访客默认auto，旧手动集合保持manual。网页生成指令，不接收文档。Agent读取原文、查询兼容配方、记录逐场来源与画面任务，再通过现有--shots初始化2.4。手动选择仍是严格白名单；推荐不新增fast确认。
+
+`scripts/lib/content-quality.mjs`提供确定性警告，共享preflight由validate:storyboard、produce和QA调用。检测长片中的同配方同语义高重复及只有标题的长停留，不强制多样性、不改变renderer、schema或交付门槛。语义覆盖与合理取舍由Agent依据[镜头编排流程](references/shot-planning.md)复查。
+
 ## 字体流
 
 `fonts/font-index.json` 保存字体 ID、固定版本、文件来源、SHA-256、原始许可及风格推荐。公开字体文件位于 `public/fonts/`。浏览库读取相同清单，保存单选字体及跟随推荐／手动模式；静态构建只复制清单声明的字体、许可与公开组合样片。选择进入 Agent 指令和 `init:project --font`，最终分镜写入可选 `font: {id, version}`。

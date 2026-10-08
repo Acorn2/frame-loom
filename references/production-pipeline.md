@@ -66,6 +66,7 @@ Output: `production-brief.md`, `route-card.md`, `content-gaps.md`, and an initia
 - Preserve source facts and mark uncertain claims.
 - Define the one-sentence outcome and visible targets.
 - Choose a route before following `style-selection.md`; record whether the route was creator-reviewed or selected only for an automated preview.
+- Default to [document-driven shot planning](shot-planning.md): after reading the source, map claims to visible jobs and recommend compatible recipes. Initialize with the adopted pool through `--shots`. Do not fill every library category. Manual pools remain strict; explain title-only or other expression gaps before committing to a long explainer. In fast mode, present the choice briefly and continue; review mode includes it in the existing storyboard gate.
 
 Output: `content-brief.md` and a selected Style Pack.
 
@@ -179,6 +180,8 @@ Output: a timing-compatible audio contract, a script handoff, a visual preview,
 or a clean picture master, according to the selected route.
 
 ## Stage 07 — Validate and preview
+
+Before rendering and after audio retiming, inspect whether key steps, differences and quantities have visible explanations; review repeated layouts and actions that finish far ahead of speech. Record justified holds or manual-pool limitations in `shot-map.md`. Shared preflight adds warning-only content checks to validation, run records and QA; these neither prove narrative quality nor require an extra approval. See [thresholds and semantic review](shot-planning.md).
 
 For a new 2.3 production, promote a checked draft to `storyboard.json` with
 `status: generated` (or use the reviewed file in review mode), then test one

@@ -67,6 +67,9 @@ npm run qa:storyboard -- <storyboard.json> <preview.mp4> [output-dir]
 
 ## Visual QA
 
+- [ ] Every key claim has a visible explanation; steps, comparisons and quantities are not carried only by narration and bottom captions.
+- [ ] Repeated layouts and long title holds have a content or creator-constraint reason in `shot-map.md`; content-quality warnings were examined before rendering and after audio retiming.
+- [ ] Meaningful cues follow the explanation; decorative motion was not added to hide a warning, and no library-category quota forced unsupported facts.
 - [ ] Contact sheet includes opening, content, transitions and ending.
 - [ ] Review each scene's entrance midpoint, completed state and frame before the cut; check that relationships are visible after all elements enter.
 - [ ] Overlap handoffs fade the old information out, then fade and move the new information in; no frame shows competing titles. For narrated scenes, check speech begins when the new shot is visible.
