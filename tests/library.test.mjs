@@ -136,6 +136,22 @@ describe('read-only library serving', () => {
     const pageUrl = `${base}/frame-loom/`;
     const html = await (await fetch(pageUrl)).text();
     expect(html).toContain('src="app.mjs"'); expect(html).toContain('href="library.css"');
+    for (const name of ['index.html', 'shots.html', 'selection.html']) {
+      const page = await (await fetch(new URL(name, pageUrl))).text();
+      expect(page).toContain('<small>AI 文档转视频</small>');
+      expect(page).toContain('src="brand/logo.svg"');
+      for (const [asset, type] of [['favicon.svg', 'image/svg+xml'], ['favicon.ico', 'image/vnd.microsoft.icon'], ['apple-touch-icon.png', 'image/png']]) {
+        expect(page).toContain(`href="brand/${asset}"`);
+        const icon = await fetch(new URL(`brand/${asset}`, pageUrl));
+        expect(icon.status).toBe(200);
+        expect(icon.headers.get('Content-Type')).toBe(type);
+        expect((await icon.arrayBuffer()).byteLength).toBeGreaterThan(0);
+      }
+    }
+    const logo = await fetch(new URL('brand/logo.svg', pageUrl));
+    expect(logo.status).toBe(200);
+    expect(logo.headers.get('Content-Type')).toBe('image/svg+xml');
+    expect(await logo.text()).toContain('viewBox="0 0 64 64"');
     for (const file of ['shots.html', 'selection.html', 'app.mjs', 'selection.mjs', 'dropdown.mjs', 'presentation.mjs', 'detail.mjs', 'recipe-copy.mjs', 'style-cards.mjs', 'playback.mjs', 'library.css']) expect((await fetch(new URL(file, pageUrl))).status).toBe(200);
     const data = await (await fetch(new URL('catalog.json', pageUrl))).json();
     expect(data.fonts).toHaveLength(5);

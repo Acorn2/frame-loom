@@ -58,6 +58,10 @@ export async function buildLibrary(output = path.join(projectRoot, 'dist/library
   for (const name of ['index.html', 'shots.html', 'selection.html', 'library.css', 'app.mjs', 'selection.mjs', 'dropdown.mjs', 'presentation.mjs', 'detail.mjs', 'recipe-copy.mjs', 'style-cards.mjs', 'font-picker.mjs', 'playback.mjs']) {
     fs.copyFileSync(path.join(projectRoot, 'library', name), path.join(output, name));
   }
+  fs.mkdirSync(path.join(output, 'brand'), {recursive: true});
+  for (const name of ['logo.svg', 'favicon.svg', 'favicon.ico', 'apple-touch-icon.png']) {
+    fs.copyFileSync(path.join(projectRoot, 'library/brand', name), path.join(output, 'brand', name));
+  }
   for (const font of catalog.fonts) {
     for (const file of [font.licenseFile, ...font.faces.map(face => face.file)]) {
       const target = path.join(output, file);
