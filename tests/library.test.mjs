@@ -304,12 +304,23 @@ describe('recipe preview invalidation', () => {
     }
   });
   it('publishes only completed pairs while an updated render is still in progress', () => {
-    const partial = buildLibraryCatalog({previewManifest: {fingerprint: previewFingerprint(), samples: [{id: 'blur-slide'}]}});
-    const complete = partial.recipes.find(item => item.id === 'blur-slide');
-    expect(complete).toMatchObject({posterSource: 'library/previews/blur-slide.png', videoSource: 'library/previews/blur-slide.mp4', previewStatus: 'ready'});
-    expect(partial.recipes.find(item => item.id === 'paper-title')).toMatchObject({posterSource: null, videoSource: null, previewStatus: 'missing'});
-    expect(() => assertLibraryPreviews(partial)).toThrow(/paper-title\/poster/u);
-    expect(previewStatusText({previewStatus: 'stale'})).toBe('样片待更新');
-    expect(previewStatusText({previewStatus: 'missing'})).toBe('样片待生成');
+    const previewFilesRoot = fs.mkdtempSync(path.join(directory, 'partial-previews-'));
+    const files = ['blur-slide.png', 'blur-slide.mp4', 'paper-title.png'];
+    try {
+      for (const file of files) fs.writeFileSync(path.join(previewFilesRoot, file), 'fixture');
+      const partial = buildLibraryCatalog({previewManifest: {fingerprint: previewFingerprint(), samples: [{id: 'blur-slide'}, {id: 'paper-title'}]}, previewFilesRoot});
+      const complete = partial.recipes.find(item => item.id === 'blur-slide');
+      expect(complete).toMatchObject({posterSource: 'library/previews/blur-slide.png', videoSource: 'library/previews/blur-slide.mp4', previewStatus: 'ready'});
+      expect(partial.recipes.find(item => item.id === 'paper-title')).toMatchObject({posterSource: null, videoSource: null, previewStatus: 'missing'});
+      expect(() => assertLibraryPreviews(partial)).toThrow(/paper-title\/poster/u);
+      expect(previewStatusText({previewStatus: 'stale'})).toBe('样片待更新');
+      expect(previewStatusText({previewStatus: 'missing'})).toBe('样片待生成');
+    } finally {
+      for (const file of files) {
+        const fixture = path.join(previewFilesRoot, file);
+        if (fs.existsSync(fixture)) fs.unlinkSync(fixture);
+      }
+      fs.rmdirSync(previewFilesRoot);
+    }
   });
 });

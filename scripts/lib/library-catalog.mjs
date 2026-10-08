@@ -69,14 +69,14 @@ function readPreviewManifest() {
   return fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, 'utf8')) : null;
 }
 // Invalid previews must not silently substitute historical fixture screenshots.
-export function buildLibraryCatalog({previewManifest = readPreviewManifest()} = {}) {
+export function buildLibraryCatalog({previewManifest = readPreviewManifest(), previewFilesRoot = previewRoot} = {}) {
   const fresh = previewManifest?.fingerprint === previewFingerprint();
   function preview(id) {
     const sample = fresh && previewManifest.samples?.some(item => item.id === id);
     const posterSource = `library/previews/${id}.png`;
     const videoSource = `library/previews/${id}.mp4`;
     const complete = sample && [posterSource, videoSource].every(source => {
-      const file = path.join(projectRoot, source);
+      const file = path.join(previewFilesRoot, path.basename(source));
       return fs.existsSync(file) && fs.statSync(file).isFile() && fs.statSync(file).size > 0;
     });
     return complete ? {posterSource, videoSource, previewStatus: 'ready'}
