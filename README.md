@@ -1,5 +1,7 @@
 <div align="center">
 
+[简体中文](README.md) · [English](README.en.md)
+
 <img src="./library/brand/logo.svg" alt="FrameLoom Logo：文档与播放符号" width="112" height="112">
 
 <h1>FrameLoom</h1>
@@ -20,11 +22,11 @@ Document-to-Video Skill for Coding Agents
 
 </div>
 
-**FrameLoom** 是以 Codex 为主要入口、兼容 Claude Code 等 Coding Agent 的本地视频生产 Skill。给它一篇文章、讲稿或产品说明，Agent 提炼内容并编排分镜，Remotion 校验和渲染画面；你可以先看静音预览、导出供剪辑软件配音的干净底片，或接入 TTS／已有旁白制作有声视频。
+**FrameLoom** 是以 Codex 为主要入口、兼容 Claude Code 等 Coding Agent 的本地视频生产 Skill。提供文章、讲稿或产品说明后，Agent 负责理解内容、编写讲稿和分镜，Remotion 负责校验与渲染。你可以先看静音预览，再决定导出供剪辑软件使用的干净画面底片，或接入 TTS／已有旁白制作项目内有声视频。
 
-适合知识讲解、产品说明、报告摘要和数据解释。当前为 **v0.5 公开测试阶段**；内容判断与事实核对需要创作者审阅，成片交付需要完整播放复核。
+适合知识讲解、产品说明、报告摘要和数据解释。当前为 **v0.5 公开测试阶段**。Agent 生成的观点与事实需要创作者核对；自动 QA 后，底片交接和有声成片仍需要人工完整播放复核。
 
-**[浏览风格与镜头配方 →](https://acorn2.github.io/frame-loom/)** 先看效果、选组合、复制制作指令，再回到本地 Agent 提供文档。网页只展示公开样例，不上传文档或执行视频生产。
+**[浏览风格与镜头配方 →](https://acorn2.github.io/frame-loom/)** 先看样片、选组合、复制制作指令，再回到本地 Agent 提供文档。网页只展示公开样例，不上传文档或执行视频生产。
 
 ```text
 文档 / 文档＋图片 → Agent 编写讲稿与分镜 → 校验与 Remotion 渲染 → 预览 / 底片 / 有声视频 → QA 与人工复核
@@ -68,7 +70,7 @@ npm ci
 
 ### 2. 给 Agent 一篇文档
 
-在 **Agent 对话框**中输入下面的指令，将路径换成现有 Markdown 或纯文本文档的绝对路径：
+在 **Agent 对话框**中输入下面的指令，将占位路径换成现有 Markdown 或纯文本文档的绝对路径。下面的风格与镜头只是可运行示例：
 
 ```text
 请使用 frame-loom Skill，将 <文档绝对路径> 制作成 16:9 横屏静音审片预览。
@@ -79,19 +81,13 @@ npm ci
 完成后告诉我实际项目路径、preview-silent.mp4 路径、视频时长和 QA 结果。
 ```
 
-你不需要先写 JSON、创建项目目录或配置配音。Agent 会按 `YYYYMMDD-内容主题` 建立新项目；成功后得到这篇文档的 `preview-silent.mp4`、代表帧、实际时长和 QA 结论。首次体验先检查画面，之后可在同一项目继续制作底片或有声版。
+你不需要先写 JSON、创建项目目录或配置配音。Agent 会按 `YYYYMMDD-内容主题` 建立新项目；成功后返回 `preview-silent.mp4` 的实际路径、代表帧、时长和 QA 结论。这个带审片标记的视频仅供检查画面。之后可在同一项目继续制作底片或有声版。
 
-希望 Agent 推荐组合时，把风格与配方两行替换为“请根据原文推荐兼容的风格和配方集合，并说明选择理由”。有图片时附上本地路径；需要截图时提供准确网址。要先审分镜，把“fast 模式”改为“先给我审核讲稿和分镜，确认后再渲染”。
+希望 Agent 推荐组合时，把风格与配方两行替换为“请根据原文推荐兼容的风格和配方集合，并说明选择理由”。有图片时附上本地路径；需要截图时提供准确网址。要先审分镜，把“fast 模式”改为“使用 review 模式，先给我审核讲稿、分镜和时间安排；我确认后再渲染”。
 
-### 3. 先选效果，再开始制作
+### 可选：先从网页挑选效果
 
-打开[在线配方库](https://acorn2.github.io/frame-loom/)，依次选择 **视频风格 → 镜头配方 → 制作组合**，复制制作指令并粘贴到 Agent 对话框，再附上文档。也可以在本机运行：
-
-```bash
-npm run library
-```
-
-访问命令打印的 **http://127.0.0.1:4318**。本地镜头预览缺失或过期时，运行 `npm run preview:library`；字体组合预览使用 `npm run preview:fonts`，生成后重新启动页面服务。端口冲突可用 `npm run library -- --port 4319`。完整说明见[配方库文档](library/README.md)。
+打开[在线配方库](https://acorn2.github.io/frame-loom/)，依次选择 **视频风格 → 镜头配方 → 交付结果**，复制制作指令并粘贴到本地 Agent 对话框，再附上文档。只使用本项目制作视频，无需启动配方库的本地网页服务；文档和视频生产仍在本地进行。
 
 ## 包含哪些能力
 
@@ -161,7 +157,7 @@ frame-loom/
 - [使用指南](references/usage-guide.md)：制作路线、字体选择、CLI、配音配置与交付审核。
 - [Skill 流程](SKILL.md)与[Storyboard 契约](references/storyboard-schema.md)：Agent 编排与渲染输入约束。
 - [质量生产说明](references/quality-production.md)：实测音频时间、字幕调整与镜头质量。
-- [配方库与 Pages 发布](library/README.md#github-pages-发布)：本地浏览、预览生成及静态站点部署。
+- [配方库本地运行与 Pages 发布](library/README.md)：需要本地浏览或维护配方库时，查看服务启动、预览生成及静态站点部署说明。
 - [贡献说明](CONTRIBUTING.md)、[变更记录](CHANGELOG.md)与[安全反馈](SECURITY.md)。
 
 本地修改可先运行 `npm run check:docs`、`npm run validate:shots`、`npm run typecheck`、`npm run lint` 和 `npm test`。Runtime 改动还需渲染对应示例并复核实际画面；完整开发检查见贡献说明。
