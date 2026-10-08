@@ -19,7 +19,7 @@ const catalog = {...buildLibraryCatalog(), ttsPresets: publicTtsPresets()};
 const defaultProduction = {goal: 'narrated', audio: 'tts', ttsPreset: 'configured', review: false};
 fs.mkdirSync(path.join(projectRoot, '.tmp'), {recursive: true});
 const directory = fs.mkdtempSync(path.join(projectRoot, '.tmp/library-test-'));
-const output = buildLibrary(path.join(directory, 'site'));
+const output = await buildLibrary(path.join(directory, 'site'));
 const server = createLibraryServer(output);
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
 const base = `http://127.0.0.1:${server.address().port}`;
@@ -132,14 +132,20 @@ describe('read-only library serving', () => {
     }
   });
   it('loads the page, modules, catalog and media under a GitHub Pages project subpath', async () => {
-    buildLibrary(path.join(output, 'frame-loom'));
+    await buildLibrary(path.join(output, 'frame-loom'));
     const pageUrl = `${base}/frame-loom/`;
     const html = await (await fetch(pageUrl)).text();
     expect(html).toContain('src="app.mjs"'); expect(html).toContain('href="library.css"');
-    for (const file of ['shots.html', 'selection.html', 'app.mjs', 'selection.mjs', 'dropdown.mjs', 'presentation.mjs', 'detail.mjs', 'recipe-copy.mjs', 'style-cards.mjs', 'library.css']) expect((await fetch(new URL(file, pageUrl))).status).toBe(200);
+    for (const file of ['shots.html', 'selection.html', 'app.mjs', 'selection.mjs', 'dropdown.mjs', 'presentation.mjs', 'detail.mjs', 'recipe-copy.mjs', 'style-cards.mjs', 'playback.mjs', 'library.css']) expect((await fetch(new URL(file, pageUrl))).status).toBe(200);
     const data = await (await fetch(new URL('catalog.json', pageUrl))).json();
     expect(data.fonts).toHaveLength(5);
+    expect(data.fontSampleText).toBe('把材料变成可检查的画面');
     for (const font of data.fonts) {
+      const sample = await fetch(new URL(font.sampleFace.file, pageUrl), {method: 'HEAD'});
+      expect(sample.status).toBe(200);
+      expect(sample.headers.get('Content-Type')).toBe('font/woff2');
+      expect(Number(sample.headers.get('Content-Length'))).toBeGreaterThan(0);
+      expect(Number(sample.headers.get('Content-Length'))).toBeLessThan(100_000);
       for (const face of font.faces) {
         const response = await fetch(new URL(face.file, pageUrl), {method: 'HEAD'});
         expect(response.status).toBe(200);
@@ -283,7 +289,8 @@ describe('style card capability and preview evidence', () => {
       expect(style.displayColors.map(color => color.color)).toEqual([tokens.background, tokens.ink, tokens.accent]);
       expect(style.displayColors.map(color => color.role)).toEqual(['背景','文字','强调']);
       const cover = await fetch(`${base}/${style.poster}`);
-      expect(cover.headers.get('Content-Type')).toContain('image/png');
+      expect(style.poster).toMatch(/\.webp$/u);
+      expect(cover.headers.get('Content-Type')).toContain('image/webp');
       expect(cover.status).toBe(200);
       expect(style.video).toBe(`media/style-${style.id}.mp4`);
     }

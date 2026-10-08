@@ -27,7 +27,7 @@
     "preview:styles": "node scripts/preview-styles.mjs",
     "library": "node --import tsx/esm scripts/serve-library.mjs",
     "build:library": "node --import tsx/esm scripts/build-library.mjs",
-    "test:library": "vitest run --dir tests library.test.mjs",
+    "test:library": "vitest run --dir tests library.test.mjs library-playback.test.mjs",
     "preview:library": "node --import tsx/esm scripts/render-library-previews.mjs",
     "preview:templates": "node --import tsx/esm scripts/preview-template-families.mjs",
     "preview:semantic": "node --import tsx/esm scripts/preview-semantic-visuals.mjs",

@@ -77,6 +77,10 @@ main {max-width: 1440px; margin: auto; padding: 0 1.25rem; min-height: 70vh;}
 .font-loading, .font-description {color: var(--muted); font-size: .875rem; line-height: 1.65;}
 .font-combination-preview {display: grid; grid-template-columns: 1fr; gap: 1.25rem; padding: 1.5rem; background: var(--paper); border: 1px solid var(--line); border-radius: .85rem;}
 .font-preview-media {aspect-ratio: 16 / 9; background: var(--bg); border-radius: .5rem; overflow: hidden; display: grid; place-items: center; text-align: center; color: var(--muted); padding: 0;}
+.font-preview-play {position: relative; width: 100%; height: 100%; border: 0; padding: 0; background: var(--bg); cursor: pointer;}
+.font-preview-play img {display: block; width: 100%; height: 100%; object-fit: contain;}
+.font-preview-play span {position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 3.5rem; height: 3.5rem; border-radius: 50%; background: #172236d9; color: white; font-size: 1.25rem;}
+.font-preview-play:focus-visible {outline: 3px solid var(--accent); outline-offset: -3px;}
 .font-preview-media video {display: block; width: 100%; height: 100%;}
 @media (min-width: 768px) {.font-grid {grid-template-columns: repeat(3, minmax(0, 1fr));} .font-combination-preview {grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); align-items: center;}}
 .style-card {border: 1px solid var(--line); background: var(--paper); border-radius: .85rem; overflow: hidden; min-width: 0; transition: border-color .18s, box-shadow .18s;}

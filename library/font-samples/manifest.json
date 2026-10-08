@@ -1,0 +1,35 @@
+{
+  "sampleText": "把材料变成可检查的画面",
+  "fonts": [
+    {
+      "id": "source-han-sans-sc",
+      "sourceSha256": "f971e3bff46f76b49e1d5510556c2297c618ec4b491a295a4e741cdd38257799",
+      "sha256": "744cbd8055f993d0e4c4af8008213a75d566af05ab6e394f7882e7257b383e23",
+      "bytes": 4312
+    },
+    {
+      "id": "source-han-serif-sc",
+      "sourceSha256": "556749ba783b148fa1f48644e8883e5b9351f01abd0d1faad0ba24a21185e76a",
+      "sha256": "2354e599cd67153bce8684512db81a979a5ce4185000a950c4bc9e50449ed6a1",
+      "bytes": 5204
+    },
+    {
+      "id": "lxgw-wenkai",
+      "sourceSha256": "39ad71264b588165b469e35e6afb162a378dacd1f95348160240ba9038ac3009",
+      "sha256": "7732e9655cb700325eb1378215fc7eb78ec7ad3df8a8e6221b3c67eaa7ebd8f8",
+      "bytes": 3324
+    },
+    {
+      "id": "smiley-sans",
+      "sourceSha256": "731f22973349404b15a88a99ef3b5dd4104c0965c23b7e485c1f11e84fea99e2",
+      "sha256": "644ab78366f8053f35a628b5af9c860e916fbc671be2f9ff28a2e087614c070e",
+      "bytes": 2100
+    },
+    {
+      "id": "xiaolai",
+      "sourceSha256": "e2f68daf0e72777a8cf58bc83de1b98634b251e537ddbfca24b0ae50d1802da2",
+      "sha256": "d91fcd2f59b159ecfdb06fbe1279114ce16ffae9b8f58e6699e525374fbcbe53",
+      "bytes": 3280
+    }
+  ]
+}

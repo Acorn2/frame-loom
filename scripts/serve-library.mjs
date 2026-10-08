@@ -4,7 +4,7 @@ import http from 'node:http';
 import {pathToFileURL, URL} from 'node:url';
 import {buildLibrary} from './build-library.mjs';
 
-const contentTypes = {'.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.mp4': 'video/mp4', '.woff2': 'font/woff2', '.ttf': 'font/ttf', '.txt': 'text/plain; charset=utf-8'};
+const contentTypes = {'.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.webp': 'image/webp', '.mp4': 'video/mp4', '.woff2': 'font/woff2', '.ttf': 'font/ttf', '.txt': 'text/plain; charset=utf-8'};
 export function createLibraryServer(root) {
   return http.createServer((request, response) => {
     if (!['GET', 'HEAD'].includes(request.method)) {response.writeHead(405); response.end(); return;}
@@ -34,7 +34,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
   const args = process.argv.slice(2);
   const port = args.length === 0 ? 4318 : args.length === 2 && args[0] === '--port' ? Number(args[1]) : NaN;
   if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error('Usage: npm run library -- [--port 4318]');
-  const server = createLibraryServer(buildLibrary());
+  const server = createLibraryServer(await buildLibrary());
   server.on('error', (error) => {console.error(`配方库启动失败：${error.message}；可用 --port 指定另一个端口。`); process.exitCode = 1;});
   server.listen(port, '127.0.0.1', () => console.log(`FRAMELOOM LIBRARY http://127.0.0.1:${port}\n仅浏览与选择；Ctrl+C 停止。`));
 }

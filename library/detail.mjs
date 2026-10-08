@@ -1,5 +1,6 @@
 /* global document, window, localStorage, navigator */
 import {recipeDisplayText, previewStatusText} from './presentation.mjs';
+import {releaseVideo} from './playback.mjs';
 
 import {recipeSections, recipeOverview, portableRecipe} from './recipe-copy.mjs';
 export {recipeSections, recipeOverview} from './recipe-copy.mjs';
@@ -25,6 +26,12 @@ const clock = seconds => `${Math.floor((seconds || 0) / 60)}:${String(Math.floor
 export function createDetailView({selected, available, styleName, onSelect, onVariant, onToast, onClose}) {
   const dialog = byId('detail'); let current; let isStyle = false;
   const media = () => byId('detail-media').querySelector('video');
+  let saveProgress = () => {}; let disposeProgress = () => {};
+  function clearMedia() {
+    disposeProgress(); disposeProgress = () => {}; saveProgress = () => {};
+    releaseVideo(media()); byId('detail-media').replaceChildren();
+  }
+  window.addEventListener('pagehide', () => saveProgress(true));
   function tab(name, focus = false) {
     for (const button of dialog.querySelectorAll('[data-detail-tab]')) {
       const active = button.dataset.detailTab === name;
@@ -53,7 +60,7 @@ export function createDetailView({selected, available, styleName, onSelect, onVa
     byId('detail-selection-note').textContent = isStyle ? '选择风格后，再挑选适合内容的镜头。' : !selectable ? (current.kind === 'hosted-action' ? '辅助动作依附于宿主镜头，由 Agent 按条件编排。' : '转场用于章节交接，不单独计入镜头集合。') : !canSelect ? '此镜头不支持当前风格或画幅，可调整组合后选择。' : isSelected ? '已加入制作组合，可重复使用。' : '按内容选择，Agent 会安排镜头顺序与时长。';
   }
   function show(item, style = false) {
-    media()?.pause(); current = item; isStyle = style;
+    clearMedia(); current = item; isStyle = style;
     byId('detail-copy-status').textContent = '';
     dialog.querySelector('.detail-copy-fallback')?.remove();
     byId('detail-copy-id').textContent = style ? '复制风格 ID' : '复制镜头 ID';
@@ -74,13 +81,25 @@ export function createDetailView({selected, available, styleName, onSelect, onVa
     if (item.video) {
       element.poster = item.poster; element.muted = true; element.loop = true; element.playsInline = true; element.preload = 'metadata'; element.setAttribute('aria-label', `${item.name} 动态样片`);
       const key = `frame-loom-preview-position:${style ? 'style' : 'recipe'}:${item.variantId ?? item.id}`;
+      let disposed = false; let lastSaved = Date.now();
+      const save = (force = false) => {
+        if (disposed || element.readyState < 1) return;
+        const now = Date.now();
+        if (!force && now - lastSaved < 2000) return;
+        lastSaved = now;
+        try {localStorage.setItem(key, String(element.currentTime));} catch { /* Storage is optional. */ }
+      };
+      saveProgress = save;
+      disposeProgress = () => {save(true); disposed = true;};
       element.addEventListener('loadedmetadata', () => {
+        if (disposed) return;
         try {const time = Number(localStorage.getItem(key)); if (Number.isFinite(time) && time >= 0 && time < element.duration) element.currentTime = time;} catch { /* Storage is optional. */ }
         syncPlayer();
       }, {once: true});
-      for (const event of ['timeupdate', 'play', 'pause', 'ended', 'durationchange']) element.addEventListener(event, syncPlayer);
-      element.addEventListener('timeupdate', () => {try {localStorage.setItem(key, String(element.currentTime));} catch { /* Storage is optional. */ }});
-      element.addEventListener('error', () => {byId('detail-controls').hidden = true; byId('detail-preview-note').textContent = '样片加载失败，请重新打开或查看静态参考。';});
+      for (const event of ['timeupdate', 'play', 'pause', 'ended', 'durationchange']) element.addEventListener(event, () => {if (!disposed) syncPlayer();});
+      element.addEventListener('timeupdate', () => save());
+      for (const event of ['pause', 'ended']) element.addEventListener(event, () => save(true));
+      element.addEventListener('error', () => {if (!disposed) {byId('detail-controls').hidden = true; byId('detail-preview-note').textContent = '样片加载失败，请重新打开或查看静态参考。';}});
     } else if (item.poster) element.alt = `${item.name} 参考画面`;
     byId('detail-media').replaceChildren(element); byId('detail-controls').hidden = !item.video;
     byId('detail-progress').value = 0; byId('detail-progress').disabled = true; byId('detail-time').textContent = '0:00 / 0:00';
@@ -163,7 +182,7 @@ export function createDetailView({selected, available, styleName, onSelect, onVa
   byId('detail-close').addEventListener('click', () => dialog.close());
   dialog.addEventListener('close', () => {
     if (document.fullscreenElement && dialog.contains(document.fullscreenElement)) document.exitFullscreen().catch(() => {});
-    media()?.pause(); byId('detail-media').replaceChildren(); const item = current; current = undefined; onClose(item, isStyle);
+    clearMedia(); const item = current; current = undefined; onClose(item, isStyle);
   });
   return {show, refreshSelection};
 }

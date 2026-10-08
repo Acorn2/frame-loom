@@ -5,11 +5,14 @@ import {styleCardInfo, createStyleCardPlayback} from './style-cards.mjs';
 import {createDetailView} from './detail.mjs';
 import {recipePreview, previewStatusText} from './presentation.mjs';
 import {createFontPicker} from './font-picker.mjs';
+import {createPlaybackCoordinator, releaseVideo} from './playback.mjs';
+
+createPlaybackCoordinator();
 
 const $ = (id) => document.getElementById(id);
 const escape = (value) => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
 const storageKey = 'frame-loom-library-selection-v1';
-let catalog; let state; let category = '全部镜头'; let toastTimer; let fontPicker;
+let catalog; let state; let category = '全部镜头'; let toastTimer; let fontPicker; let searchTimer; let cardsKey;
 const categoryOrder = ['全部镜头', '标题', '文字', '证据', '结构', '关系', '时间与数据', '基础', '辅助动作', '换章转场'];
 const featuredRecipes = ['blur-slide', 'paper-title', 'title-to-label', 'card-stack', 'source-converge', 'concept-matrix'];
 
@@ -55,31 +58,52 @@ function renderCategories() {
     return `<button class="category ${category === name ? 'active' : ''}" data-category="${escape(name)}" aria-pressed="${category === name}">${escape(name)}<small>${items.length}</small></button>`;
   }).join('');
 }
-let previewObserver;
-const visibleVideos = new Set();
+let previewObserver; let posterObserver; let activePreview;
+const visibleVideos = new Map();
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
 function updatePreviewPlayback() {
-  for (const video of document.querySelectorAll('.shot-poster video')) {
-    if (visibleVideos.has(video) && !reducedMotion.matches && !document.hidden && !$('detail').open) video.play().catch(() => {});
-    else video.pause();
+  const allowed = !reducedMotion.matches && finePointer.matches && !navigator.connection?.saveData;
+  const available = !document.hidden && !$('detail').open;
+  const manual = [...document.querySelectorAll('.shot-poster video')].find(video => video.controls);
+  const next = available ? manual ?? (allowed ? [...visibleVideos].sort((a, b) => b[1] - a[1])[0]?.[0] : undefined) : undefined;
+  if (activePreview === next) return;
+  const previous = activePreview;
+  activePreview = next;
+  releaseVideo(previous);
+  if (next) {
+    if (!next.getAttribute('src')) {next.src = next.dataset.src; next.load();}
+    next.play().then(() => {if (activePreview !== next) next.pause();}).catch(() => {});
   }
 }
 function observePreviews() {
-  previewObserver?.disconnect(); visibleVideos.clear();
+  previewObserver?.disconnect(); posterObserver?.disconnect(); visibleVideos.clear();
+  // Native video posters load eagerly, so assign them only near the viewport.
+  posterObserver = new window.IntersectionObserver(entries => {
+    for (const {target, isIntersecting} of entries) {
+      if (!isIntersecting) continue;
+      target.poster = target.dataset.poster; posterObserver.unobserve(target);
+    }
+  }, {rootMargin: '180px 0px'});
   previewObserver = new window.IntersectionObserver(entries => {
     for (const {target, isIntersecting, intersectionRatio} of entries) {
-      if (isIntersecting && !target.src) {target.src = target.dataset.src; target.load();}
-      if (isIntersecting && intersectionRatio >= .55) visibleVideos.add(target);
+      if (isIntersecting && intersectionRatio >= .55) visibleVideos.set(target, intersectionRatio);
       else visibleVideos.delete(target);
     }
     updatePreviewPlayback();
-  }, {rootMargin: '0px', threshold: [0, .55]});
-  for (const video of document.querySelectorAll('.shot-poster video')) previewObserver.observe(video);
+  }, {rootMargin: '0px', threshold: [0, .55, .75, 1]});
+  for (const video of document.querySelectorAll('.shot-poster video')) {
+    posterObserver.observe(video); previewObserver.observe(video);
+  }
+  updatePreviewPlayback();
 }
 const stylePlayback = $('styles') ? createStyleCardPlayback($('styles'), reducedMotion) : null;
 reducedMotion.addEventListener('change', updatePreviewPlayback);
+finePointer.addEventListener('change', updatePreviewPlayback);
+navigator.connection?.addEventListener('change', updatePreviewPlayback);
 document.addEventListener('visibilitychange', updatePreviewPlayback);
 function renderCards() {
+  clearTimeout(searchTimer);
   if (!$('cards')) return;
   const query = $('search').value.trim().toLowerCase();
   const scenes = catalog.recipes.filter(item => item.kind === 'scene');
@@ -93,7 +117,11 @@ function renderCards() {
     const rank = id => featuredRecipes.includes(id) ? featuredRecipes.indexOf(id) : featuredRecipes.length;
     items.sort((a, b) => rank(a.id) - rank(b.id));
   }
-  for (const video of $('cards').querySelectorAll('video')) video.pause();
+  const key = JSON.stringify([state.style, state.canvas, state.selected, items.map(item => item.id)]);
+  if (key === cardsKey) return;
+  cardsKey = key;
+  for (const video of $('cards').querySelectorAll('video')) releaseVideo(video);
+  activePreview = undefined;
   $('cards').innerHTML = items.map((recipe, index) => {
     const item = recipePreview(recipe, state.style);
     const available = compatible(item, state.style, state.canvas);
@@ -101,7 +129,7 @@ function renderCards() {
     const status = item.kind !== 'scene' ? `${item.kind === 'hosted-action' ? `宿主：${item.hosts.join(' / ')}` : `独立换章窗口 · ${item.minSec}–${item.maxSec} 秒`}` : available ? '支持当前组合' : '当前风格或画幅不兼容';
     return `<article class="shot-card ${selected ? 'selected' : ''} ${available ? '' : 'incompatible'}" data-recipe="${escape(item.id)}">
       <div class="shot-preview"><button class="shot-poster" data-detail="${escape(item.id)}" aria-label="预览 ${escape(item.name)}">
-        ${item.video ? `<video data-src="${escape(item.video)}" poster="${escape(item.poster)}" muted loop playsinline preload="none" width="960" height="540" aria-label="${escape(item.name)} 动态参考"></video>` : item.poster ? `<img src="${escape(item.poster)}" alt="${escape(item.name)} 配方示例画面" loading="lazy" width="960" height="540">` : `<span class="preview-unavailable"><strong>${previewStatusText(item)}</strong><span>可查看配方说明</span></span>`}<span class="shot-number">${String(index + 1).padStart(2, '0')}</span><span class="play-label">${item.video ? '查看动效与配方 ↗' : item.poster ? '查看画面与用法 ↗' : '查看配方说明 ↗'}</span></button>${item.video ? `<button class="preview-expand" data-fullscreen="${escape(item.id)}" aria-label="全屏播放 ${escape(item.name)}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5"/></svg></button>` : ''}</div>
+        ${item.video ? `<video data-src="${escape(item.video)}" data-poster="${escape(item.poster)}" muted loop playsinline preload="none" width="960" height="540" aria-label="${escape(item.name)} 动态参考"></video>` : item.poster ? `<img src="${escape(item.poster)}" alt="${escape(item.name)} 配方示例画面" loading="lazy" width="960" height="540">` : `<span class="preview-unavailable"><strong>${previewStatusText(item)}</strong><span>可查看配方说明</span></span>`}<span class="shot-number">${String(index + 1).padStart(2, '0')}</span><span class="play-label">${item.video ? '查看动效与配方 ↗' : item.poster ? '查看画面与用法 ↗' : '查看配方说明 ↗'}</span></button>${item.video ? `<button class="preview-expand" data-fullscreen="${escape(item.id)}" aria-label="全屏播放 ${escape(item.name)}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5"/></svg></button>` : ''}</div>
       <div class="shot-body"><p class="shot-category">${escape(item.category)}</p><h3>${escape(item.name)}</h3><p class="shot-id">${escape(item.id)}</p><p class="shot-desc">${escape(item.description)}</p><p class="shot-compat">${escape(status)}</p><div class="shot-actions">${item.kind === 'scene' ? `<label class="pick-label"><input type="checkbox" data-pick="${escape(item.id)}" aria-label="选择镜头 ${escape(item.name)}" ${selected ? 'checked' : ''} ${available ? '' : 'disabled'}>选择镜头</label>` : '<span class="section-note">附属能力 · 不计入镜头集合</span>'}<button class="text-button" data-detail="${escape(item.id)}">配方说明</button></div></div></article>`;
   }).join('');
   $('empty').hidden = items.length > 0;
@@ -149,12 +177,20 @@ function renderSelection(save = true) {
   const fontPreview = $('font-preview-media');
   const previewKey = `${state.style}--${state.font}`;
   if (fontPreview && fontPreview.dataset.key !== previewKey) {
-    fontPreview.querySelector('video')?.pause(); fontPreview.replaceChildren(); fontPreview.dataset.key = previewKey;
+    releaseVideo(fontPreview.querySelector('video')); fontPreview.replaceChildren(); fontPreview.dataset.key = previewKey;
     const sample = catalog.fontPreviews.find(item => item.style === state.style && item.font === state.font);
     if (sample?.video && sample.poster) {
-      const video = document.createElement('video'); video.src = sample.video; video.poster = sample.poster;
-      video.controls = true; video.muted = true; video.playsInline = true; video.preload = 'none';
-      video.setAttribute('aria-label', `${style.subtitle}与${font.name}的实际字体组合样片`); fontPreview.append(video);
+      const play = document.createElement('button'); play.type = 'button'; play.className = 'font-preview-play';
+      play.setAttribute('aria-label', `播放${style.subtitle}与${font.name}的实际字体组合样片`);
+      const poster = document.createElement('img'); poster.src = sample.poster; poster.alt = ''; poster.loading = 'lazy';
+      const icon = document.createElement('span'); icon.setAttribute('aria-hidden', 'true'); icon.textContent = '▶';
+      play.append(poster, icon); fontPreview.append(play);
+      play.addEventListener('click', () => {
+        const video = document.createElement('video'); video.src = sample.video; video.poster = sample.poster;
+        video.controls = true; video.muted = true; video.playsInline = true; video.preload = 'none';
+        video.setAttribute('aria-label', `${style.subtitle}与${font.name}的实际字体组合样片`);
+        fontPreview.replaceChildren(video); video.play().catch(() => {});
+      });
     } else {
       const note = document.createElement('p'); note.textContent = '当前组合样片待生成或更新；仍可选择字体用于制作'; fontPreview.append(note);
     }
@@ -242,9 +278,10 @@ async function start() {
     if (element.dataset.category) {category = element.dataset.category; renderCategories(); renderCards();}
     if (element.dataset.fullscreen) {
       const video = element.closest('.shot-preview').querySelector('video');
-      if (!video.src) {video.src = video.dataset.src; video.load();}
-      video.controls = true; video.play().catch(() => {});
-      if (video.requestFullscreen) video.requestFullscreen().catch(() => toast('浏览器未允许全屏，请点击卡片查看大图预览。'));
+      video.controls = true; updatePreviewPlayback();
+      // Retry under the user gesture if the browser declined automatic playback.
+      if (video.paused) video.play().catch(() => {});
+      if (video.requestFullscreen) video.requestFullscreen().catch(() => {video.controls = false; updatePreviewPlayback(); toast('浏览器未允许全屏，请点击卡片查看大图预览。');});
       else showDetail(catalog.recipes.find(item => item.id === element.dataset.fullscreen));
     }
     if (element.dataset.detail) showDetail(catalog.recipes.find(item => item.id === element.dataset.detail));
@@ -273,7 +310,19 @@ async function start() {
     renderStyles(); renderCards(); renderSelection(false);
   });
   $('canvas').addEventListener('change', () => switchCombination({canvas: $('canvas').value}));
-  $('search')?.addEventListener('input', renderCards); $('compatible-only')?.addEventListener('change', renderCards);
+  let composing = false;
+  const search = $('search');
+  function scheduleSearch(event) {
+    clearTimeout(searchTimer);
+    if (composing || event?.isComposing) return;
+    if (!search.value.trim()) renderCards();
+    else searchTimer = setTimeout(renderCards, 150);
+  }
+  search?.addEventListener('input', scheduleSearch);
+  search?.addEventListener('compositionstart', () => {composing = true; clearTimeout(searchTimer);});
+  search?.addEventListener('compositionend', () => {composing = false; scheduleSearch();});
+  search?.addEventListener('keydown', event => {if (event.key === 'Enter' && !composing && !event.isComposing) renderCards();});
+  $('compatible-only')?.addEventListener('change', renderCards);
   document.querySelector('.export-main')?.addEventListener('change', event => {
     const input = event.target;
     if (input.name === 'goal') state.production.goal = input.value;
