@@ -13,14 +13,14 @@ function mediaEntries(catalog) {
 }
 export function assertLibraryPreviews(catalog) {
   const missing = [];
-  for (const entry of mediaEntries(catalog).filter(entry => entry.kind !== 'font-combination')) {
+  for (const entry of mediaEntries(catalog)) {
     for (const type of ['poster', 'video']) {
       const source = entry[`${type}Source`];
       const file = source && path.join(projectRoot, source);
       if (!file || !fs.existsSync(file) || !fs.statSync(file).isFile() || fs.statSync(file).size === 0) missing.push(`${entry.id}/${type}`);
     }
   }
-  if (missing.length) throw new Error(`发布构建需要完整、当前有效的公开预览：${missing.join(', ')}。请先运行 npm run preview:library。`);
+  if (missing.length) throw new Error(`发布构建需要完整、当前有效的公开预览：${missing.join(', ')}。请先运行 npm run preview:library 和 npm run preview:fonts。`);
 }
 
 export function buildLibrary(output = path.join(projectRoot, 'dist/library'), {requirePreviews = false} = {}) {

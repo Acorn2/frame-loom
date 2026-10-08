@@ -205,6 +205,10 @@ describe('detail guide presentation', () => {
 });
 
 describe('Pages publication gate', () => {
+  it('refuses missing font combinations instead of publishing an empty preview panel', () => {
+    const incomplete = {styles: [], recipes: [], fontPreviews: [{id: 'scatterbrain--lxgw-wenkai', kind: 'font-combination', posterSource: null, videoSource: null}]};
+    expect(() => assertLibraryPreviews(incomplete)).toThrow(/scatterbrain--lxgw-wenkai\/poster/u);
+  });
   it('rejects missing media for a selected style even when the default sample exists', () => {
     const source = {posterSource: 'library/previews/research-stack.png', videoSource: 'library/previews/research-stack.mp4'};
     const incomplete = {styles: [], recipes: [{id: 'research-stack', ...source, stylePreviews: [{id: 'research-stack--signal', ...source, videoSource: null}]}]};

@@ -9,8 +9,11 @@ on:
       - 'src/**'
       - 'shots/**'
       - 'styles/**'
+      - 'fonts/**'
+      - 'public/fonts/**'
       - 'video-templates/**'
       - 'examples/shot-recipes/**'
+      - 'examples/font-selection/**'
       - 'examples/template-families/**'
       - 'examples/article-video/**'
       - 'scripts/**'
@@ -24,8 +27,11 @@ on:
       - 'src/**'
       - 'shots/**'
       - 'styles/**'
+      - 'fonts/**'
+      - 'public/fonts/**'
       - 'video-templates/**'
       - 'examples/shot-recipes/**'
+      - 'examples/font-selection/**'
       - 'examples/template-families/**'
       - 'examples/article-video/**'
       - 'scripts/**'
@@ -43,7 +49,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v6
         with:
@@ -73,6 +79,17 @@ jobs:
           key: library-previews-${{ runner.os }}-${{ runner.arch }}-${{ steps.previews.outputs.fingerprint }}
       - name: Render public recipe samples
         run: npm run preview:library
+      - name: Calculate font preview fingerprint
+        id: fonts
+        run: |
+          node --import tsx/esm --input-type=module -e 'import {fontPreviewFingerprint} from "./scripts/lib/font-previews.mjs"; console.log("fingerprint=" + fontPreviewFingerprint());' >> "$GITHUB_OUTPUT"
+      - name: Restore font preview cache
+        uses: actions/cache@v5
+        with:
+          path: library/font-previews
+          key: font-previews-${{ runner.os }}-${{ runner.arch }}-${{ steps.fonts.outputs.fingerprint }}
+      - name: Render public font combinations
+        run: npm run preview:fonts
       - name: Build complete static library
         run: npm run build:library -- --require-previews
       - name: Upload library site only

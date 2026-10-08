@@ -76,7 +76,7 @@ npm run library
 
 配方库可以直接由本仓库的 GitHub Pages 托管，浏览者无需安装项目或启动本地服务。启用发布后，当前 `Acorn2/frame-loom` 仓库的默认访问地址为 [https://acorn2.github.io/frame-loom/](https://acorn2.github.io/frame-loom/)；这里是预期发布地址，不代表已上线。视频制作仍在使用者本机进行。
 
-本仓库的 [Library Pages 工作流](.github/workflows/library-pages.yml)会在 `main` 上相关代码更新或手动运行时，校验代码、生成公开动画预览，再构建并发布 `dist/library/`；PR 只构建验证，不发布。构建会检查六套风格及所有已注册配方的图片、动画是否完整且有效，缺失或过期时阻止发布。预览通过输入指纹缓存，生成文件无需提交到 Git。
+本仓库的 [Library Pages 工作流](.github/workflows/library-pages.yml)会在 `main` 上相关代码更新或手动运行时，校验代码、生成公开配方与字体组合动画预览，再构建并发布 `dist/library/`；PR 只构建验证，不发布。构建会检查六套风格、所有已注册配方及 30 组风格与字体组合的图片、动画是否完整且有效，缺失或过期时阻止发布。预览通过输入指纹缓存，生成文件无需提交到 Git。
 
 首次启用时，在仓库 **Settings → Pages → Build and deployment → Source** 中选择 **GitHub Actions**；提交并推送页面、配方和工作流源码后，在 **Actions → Library Pages** 查看结果，必要时选择 `main` 手动运行。默认 `github-pages` 环境如设置了审核门禁，还需完成该环境要求的批准。远端启用和发布需由有权限的维护者操作；本地修改不会自动上线。
 
@@ -84,6 +84,7 @@ npm run library
 
 ```bash
 npm run preview:library
+npm run preview:fonts
 npm run build:library -- --require-previews
 ```
 

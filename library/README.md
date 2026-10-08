@@ -41,7 +41,7 @@ npm run library
 - `scripts/lib/library-tts-catalog.mjs` 只从四份公开样例提取服务、模型、音色元数据，不读取projects、环境变量值或凭据；构建将其加入catalog。
 - `selection.mjs` 负责兼容性、选择恢复与指令导出；不会读文章或编排生产分镜。
 - `npm run build:library` 生成含三个 HTML 入口的 `dist/library/`，只复制页面、公开文案和样例媒体，可作为静态站点文件使用。每次启动会重新构建，避免 catalog 漂移。
-- `npm run build:library -- --require-previews` 用于发布，要求六套风格及全部已注册配方都有有效的非空图片和动画。缺少当前指纹的预览时，在写入站点前失败；本地普通构建允许带明确待生成／待更新状态的中性占位。
+- `npm run build:library -- --require-previews` 用于发布，要求六套风格、全部已注册配方及 30 组风格与字体组合都有有效的非空图片和动画。缺少当前指纹的预览时，在写入站点前失败；本地普通构建允许带明确待生成／待更新状态的中性占位。
 - `scripts/serve-library.mjs` 只提供构建目录中的文件，支持视频 Range 请求；没有文件写入、生产 API 或项目目录入口。
 
 验证：`npm run test:library`、`npm run typecheck`、`npm run lint` 和 `npm run check:docs`。页面交互还需检查多选、切换兼容性、搜索、恢复、复制、样片播放及窄屏布局。
@@ -54,18 +54,18 @@ npm run library
 
 1. `main` 上页面或依赖代码的 push、面向 `main` 的相关 PR，以及手动运行触发构建。手动发布选择 `main`；其他分支只构建。
 2. Ubuntu 24.04 / Node.js 24 安装 FFmpeg、公开 Noto CJK 与 Liberation 字体，运行 `npm ci`、类型/lint/文档/配方校验和页面测试。
-3. 用源码、风格、配方、公开 fixture、预览生成脚本与 lockfile 的指纹恢复 `library/previews/` 缓存；总会运行 `preview:library` 补齐缺失样片。没有缓存时从公开样例完整生成，不依赖开发者机器上的文件。
-4. 运行 `build:library -- --require-previews`，仅上传 `dist/library/` 为 Pages artifact。完整样片生成或站点构建失败时不会进入部署。
+3. 分别按输入指纹恢复 `library/previews/` 和 `library/font-previews/` 缓存，再运行 `preview:library` 与 `preview:fonts` 补齐缺失样片。没有缓存时从公开样例完整生成，不依赖开发者机器上的文件。
+4. 运行 `build:library -- --require-previews`，仅上传 `dist/library/` 为 Pages artifact。配方或字体组合样片不完整、站点构建失败时不会进入部署。
 5. 仅 `main` 的非 PR 运行执行部署，使用 `github-pages` 环境。构建任务只有读取源码权限，Pages 与 OIDC 写权限只给部署任务；部署期间新的推送排队，不中断正在发布的版本。
 
 首次使用，在 [仓库 Pages 设置](https://github.com/Acorn2/frame-loom/settings/pages)中将 **Source** 设为 **GitHub Actions**，提交并推送本轮页面及其依赖源码后运行工作流。默认站点地址为 [https://acorn2.github.io/frame-loom/](https://acorn2.github.io/frame-loom/)，实际发布结果以工作流 `deploy` 环境输出和 Pages 的 **Visit site** 为准。没有配置远端 Pages 或没有推送源码时，该地址不保证可访问。远端设置、推送和实际公开发布不是本地构建的一部分。
 
-`dist/` 与 `library/previews/` 继续保持 Git 忽略，不需要提交 MP4 或改用专门的部署分支。发布源不能只选择原始 `library/` 目录，因为 catalog 和媒体由构建产生。`build:library` 也生成 `.nojekyll`，供使用其他静态发布方式时跳过 Jekyll；Actions 直接发布静态 artifact。
+`dist/`、`library/previews/` 与 `library/font-previews/` 继续保持 Git 忽略，不需要提交 MP4 或改用专门的部署分支。发布源不能只选择原始 `library/` 目录，因为 catalog 和媒体由构建产生。`build:library` 也生成 `.nojekyll`，供使用其他静态发布方式时跳过 Jekyll；Actions 直接发布静态 artifact。
 
 故障定位：
 
 - `configure-pages` 找不到站点：核对仓库 Pages Source、账号计划及仓库权限。
-- 发布构建提示预览缺失：检查之前的 `preview:library` 渲染日志、字体与 FFmpeg；不要用普通构建绕过完整性检查。
+- 发布构建提示预览缺失：检查之前的 `preview:library`、`preview:fonts` 渲染日志、字体与 FFmpeg；不要用普通构建绕过完整性检查。
 - `deploy` 等待或被拒绝：核对 `github-pages` 环境的允许分支和人工批准要求。
 - 页面正常但更新未出现：核对最新工作流的部署结果，刷新缓存；本地 127.0.0.1 的选择与线上站点的选择分别保存。
 
@@ -97,4 +97,4 @@ npm run library
 
 `npm run validate:fonts` 检查固定文件与许可指纹；`npm run preview:fonts` 生成 30 段横屏组合样片，再运行 `npm run library` 重建目录。字形卡片使用真实项目字体文件，组合样片使用正式 renderer；原风格／镜头样片标明原始字体。字体样片缺失或过期时提示，不用其他组合替代。
 
-静态构建复制 `fonts/font-index.json` 声明的公开字体及原始 OFL 文件，使用相对路径，兼容 GitHub Pages 项目子路径。无需系统安装或远程 CDN。字体组合样片独立于原配方样片，可选生成；发布原配方的严格检查仍保持，字体组合未生成时页面明确提示。
+静态构建复制 `fonts/font-index.json` 声明的公开字体及原始 OFL 文件，使用相对路径，兼容 GitHub Pages 项目子路径。无需系统安装或远程 CDN。本地普通构建可在字体组合样片缺失时显示明确提示；Pages 发布构建必须生成并校验全部组合样片。
