@@ -49,7 +49,7 @@ function surface(tokens: StyleTokens, active: boolean, index: number): React.CSS
   const zine = tokens.id === 'retro-zine';
   return {
     background: active ? tokens.accent : tokens.paper,
-    color: active ? contrastInk(tokens.accent) : tokens.paper === '#ffffff' ? '#192330' : tokens.ink,
+    color: active ? (tokens.onAccent ?? contrastInk(tokens.accent)) : tokens.paperInk ?? (tokens.paper === '#ffffff' ? '#192330' : tokens.ink),
     border: tokens.surfaceBorder,
     borderRadius: tokens.surfaceRadius,
     boxShadow: active
@@ -128,10 +128,10 @@ function DiagramNode({layer, scene, tokens, frame, scale, active, compact = fals
   const cardInk = contrastInk(tokens.paper);
   const diameter = (neutral ? horizontal ? 64 : compact ? 84 : 104 : horizontal ? 70 : compact ? 122 : 158) * scale;
   const heading = <strong style={{fontFamily: tokens.displayFont, fontSize: (neutral ? horizontal ? 48 : compact ? 52 : 64 : horizontal ? 30 : compact ? 38 : 48) * scale, lineHeight: 1.1, overflowWrap: 'anywhere'}}>{layerHeading(layer)}</strong>;
-  const detail = layer.label && layer.text ? <span style={{fontSize: (neutral ? compact ? 30 : 38 : compact ? 23 : 27) * scale, lineHeight: 1.2, color: tokens.muted, overflowWrap: 'anywhere'}}>{layer.text}</span> : null;
+  const detail = layer.label && layer.text ? <span style={{fontSize: (neutral ? compact ? 30 : 38 : compact ? 23 : 27) * scale, lineHeight: 1.2, color: framed && tokens.palette ? tokens.paperMuted : tokens.muted, overflowWrap: 'anywhere'}}>{layer.text}</span> : null;
   return <div style={{...entranceStyle(progress, tokens, scale), width: '100%', height: '100%', display: 'flex', flexDirection: horizontal ? 'row' : 'column', justifyContent: 'center', alignItems: 'center', textAlign: horizontal ? 'left' : 'center', gap: 14 * scale, color: framed ? cardInk : tokens.ink, boxSizing: 'border-box', padding: framed ? 18 * scale : undefined, background: framed ? tokens.paper : undefined, border: framed ? tokens.surfaceBorder : undefined, borderRadius: framed ? tokens.surfaceRadius * scale : undefined, boxShadow: framed ? tokens.surfaceShadow : undefined, rotate: family === 'notes' ? `${layer.id.length % 2 ? 1.2 : -1.2}deg` : undefined, opacity: clamp(progress) * (framed ? 1 : getAttentionOpacity(scene, layer.id, frame))}}>
     <div style={{width: diameter, height: diameter, flexShrink: 0, borderRadius: family === 'swiss' || family === 'blueprint' ? 0 : family === 'signal' ? '50%' : neutral ? tokens.surfaceRadius * scale : '50%', border: `${(neutral ? 1.5 : 4) * scale}px solid ${active ? tokens.accent : tokens.grid}`, background: active ? tokens.accent : tokens.paper, boxShadow: active && family === 'signal' ? `0 0 0 ${12 * scale}px ${tokens.accent}18` : undefined, display: 'grid', placeItems: 'center', boxSizing: 'border-box'}}>
-      {layer.glyph ? <ConceptGlyph glyph={layer.glyph} color={active ? contrastInk(tokens.accent) : tokens.accentAlt} size={diameter * 0.54} /> : <span style={{fontFamily: tokens.displayFont, fontSize: 57 * scale}}>{[...layerHeading(layer)][0]}</span>}
+      {layer.glyph ? <ConceptGlyph glyph={layer.glyph} color={active ? (tokens.onAccent ?? contrastInk(tokens.accent)) : tokens.paperAccent ?? tokens.accentAlt} size={diameter * 0.54} /> : <span style={{fontFamily: tokens.displayFont, fontSize: 57 * scale, color: tokens.palette ? active ? tokens.onAccent : tokens.paperInk : undefined}}>{[...layerHeading(layer)][0]}</span>}
     </div>
     {horizontal ? <div style={{minWidth: 0, flex: 1, display: 'flex', flexDirection: 'column', gap: 10 * scale}}>{heading}{detail}</div> : <>{heading}{detail}</>}
   </div>;
@@ -156,7 +156,7 @@ function CompareVisual({scene, tokens, frame, scale}: {scene: StoryboardScene; t
   const neutral = scene.shot?.id === 'compare-reveal';
   return <div style={{height: '100%', display: 'grid', gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))`, gap: 14 * scale, alignItems: 'stretch'}}>
     {items.map((layer, index) => <div key={layer.id} style={{minWidth: 0, position: 'relative', borderTop: neutral ? undefined : `${7 * scale}px solid ${focused === layer.id ? tokens.accent : tokens.grid}`, borderRight: !neutral && index < items.length - 1 ? `2px solid ${tokens.grid}` : undefined, padding: neutral ? undefined : `0 ${26 * scale}px`}}>
-      <span style={{position: 'absolute', left: (neutral ? 20 : 26) * scale, top: 17 * scale, zIndex: 1, color: tokens.accentAlt, fontSize: 28 * scale, fontWeight: 800}}>0{index + 1}</span>
+      <span style={{position: 'absolute', left: (neutral ? 20 : 26) * scale, top: 17 * scale, zIndex: 1, color: tokens.paperAccent ?? tokens.accentAlt, fontSize: 28 * scale, fontWeight: 800}}>0{index + 1}</span>
       <DiagramNode layer={layer} scene={scene} tokens={tokens} frame={frame} scale={scale} active={focused === layer.id} />
     </div>)}
   </div>;
@@ -254,7 +254,7 @@ function ChangeVisual({scene, tokens, frame, scale}: {scene: StoryboardScene; to
     const current = change < 0.5 ? before : after;
     const entrance = beatProgress(scene, before.id, frame, ['enter', 'reveal']);
     return <div style={{height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 24 * scale, opacity: entrance}}>
-      <div style={{width: 210 * scale, height: 210 * scale, borderRadius: 28 * scale, border: `${5 * scale}px solid ${tokens.accent}`, background: change < 0.5 ? tokens.paper : tokens.accent, display: 'grid', placeItems: 'center', transform: `scale(${1 + 0.06 * Math.sin(change * Math.PI)})`}}><ConceptGlyph glyph={before.glyph ?? 'document'} color={change < 0.5 ? tokens.accent : contrastInk(tokens.accent)} size={120 * scale} /></div>
+      <div style={{width: 210 * scale, height: 210 * scale, borderRadius: 28 * scale, border: `${5 * scale}px solid ${tokens.accent}`, background: change < 0.5 ? tokens.paper : tokens.accent, display: 'grid', placeItems: 'center', transform: `scale(${1 + 0.06 * Math.sin(change * Math.PI)})`}}><ConceptGlyph glyph={before.glyph ?? 'document'} color={change < 0.5 ? tokens.accent : (tokens.onAccent ?? contrastInk(tokens.accent))} size={120 * scale} /></div>
       <strong style={{fontSize: 44 * scale, textAlign: 'center'}}>{current.label}</strong>
       <span style={{fontSize: 27 * scale, textAlign: 'center', maxWidth: '85%', color: tokens.muted}}>{current.text}</span>
       <span style={{fontSize: 20 * scale, color: tokens.accentAlt}}>{change < 0.5 ? '之前' : '之后'}</span>

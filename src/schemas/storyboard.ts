@@ -2,6 +2,7 @@ import {z} from 'zod';
 import {ShotSchema, ShotSelectionSchema} from './shot-recipe';
 import {VideoTemplateRefSchema} from './video-template';
 import {FontRefSchema} from './font';
+import {ProjectPaletteSchema, PROJECT_PALETTE_STYLES} from './project-palette';
 
 export const STORYBOARD_SCHEMA_VERSION = '2.4' as const;
 export const VISUAL_KINDS = ['statement', 'compare', 'sequence', 'network', 'change', 'metric', 'media'] as const;
@@ -136,11 +137,21 @@ export const StoryboardSchema = z.object({
   schemaVersion: z.enum(['2.1', '2.2', '2.3', STORYBOARD_SCHEMA_VERSION]),
   style: StoryboardStyleRefSchema,
   font: FontRefSchema.optional(),
+  palette: ProjectPaletteSchema.optional(),
   videoTemplate: VideoTemplateRefSchema.optional(),
   shotRecipes: ShotSelectionSchema.optional(),
   project: StoryboardProjectSchema,
   scenes: z.array(StoryboardSceneSchema).min(1)
 }).strict().superRefine((board, ctx) => {
+  if (board.palette) {
+    if (board.schemaVersion !== '2.4') ctx.addIssue({code: 'custom', path: ['palette'], message: '项目配色仅支持 2.4。'});
+    if (board.project.width <= board.project.height) ctx.addIssue({code: 'custom', path: ['palette'], message: '项目配色首版仅支持横屏。'});
+    if (!(PROJECT_PALETTE_STYLES as readonly string[]).includes(board.style.id)) ctx.addIssue({code: 'custom', path: ['palette'], message: '当前风格未声明项目配色能力。'});
+    for (const scene of board.scenes) {
+      const native = scene.shot && ['semantic-default', 'compare-reveal', 'network-expand'].includes(scene.shot.id);
+      if (!scene.shot || scene.shot.version !== (native ? '1.0.0' : '1.2.0')) ctx.addIssue({code: 'custom', path: ['palette'], message: '项目配色不能用于历史镜头版本。'});
+    }
+  }
   if (board.schemaVersion !== '2.4' && board.videoTemplate) ctx.addIssue({code: 'custom', path: ['videoTemplate'], message: 'videoTemplate 仅支持 2.4。'});
   if (board.schemaVersion !== '2.4' && board.shotRecipes) ctx.addIssue({code: 'custom', path: ['shotRecipes'], message: 'shotRecipes 仅支持 2.4。'});
   board.scenes.forEach((scene, index) => {

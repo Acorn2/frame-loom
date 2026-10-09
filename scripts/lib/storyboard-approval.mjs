@@ -22,6 +22,9 @@ export function storyboardApprovalFingerprint(projectPath) {
   if (fs.existsSync(handoffPath)) files.push(handoffPath);
   try {
     const storyboard = JSON.parse(fs.readFileSync(path.join(projectPath, 'storyboard.json'), 'utf8'));
+    const inputPath = path.join(projectPath, 'project-input.json');
+    const input = fs.existsSync(inputPath) ? JSON.parse(fs.readFileSync(inputPath, 'utf8')) : {};
+    if (storyboard.palette || input.colorMode) files.push(inputPath, path.join(projectPath, 'visual-sources.md'));
     if (storyboard.font) files.push(...fontAssetFiles(storyboard.font));
     const styleId = storyboard.style?.id;
     if (typeof styleId === 'string' && /^[a-z0-9-]+$/u.test(styleId)) {
@@ -33,7 +36,7 @@ export function storyboardApprovalFingerprint(projectPath) {
   }
   const fingerprint = fingerprintFiles(files, projectPath);
   const storyboard = JSON.parse(fs.readFileSync(path.join(projectPath, 'storyboard.json'), 'utf8'));
-  if (storyboard.schemaVersion === '2.4') return createHash('sha256').update(fingerprint).update(resolveProductionLock(storyboard).lock.hash).digest('hex');
+  if (storyboard.schemaVersion === '2.4') return createHash('sha256').update(fingerprint).update(resolveProductionLock(storyboard, undefined, projectPath).lock.hash).digest('hex');
   return fingerprint;
 }
 

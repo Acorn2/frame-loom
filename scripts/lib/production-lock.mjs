@@ -10,6 +10,7 @@ import {assertTemplateCompatibility} from '../../src/video-templates/resolve-tem
 import {ShotManifestSchema} from '../../src/schemas/shot-recipe.ts';
 import {VideoTemplateSchema} from '../../src/schemas/video-template.ts';
 import {verifyFontAssets} from '../../src/fonts/assets.ts';
+import {resolvePaletteEvidence} from './project-palette.mjs';
 
 const defaultRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 function stable(value) {
@@ -29,7 +30,7 @@ function manifestFile(root, directory, id, version, name) {
   const current = path.join(root, directory, id, `${name}.json`);
   return JSON.parse(fs.readFileSync(current, 'utf8')).version === version ? current : path.join(root, directory, id, 'history', `${version}.${name}.json`);
 }
-export function resolveProductionLock(input, root = defaultRoot) {
+export function resolveProductionLock(input, root = defaultRoot, projectPath) {
   if (input?.schemaVersion !== '2.4') return undefined;
   const storyboard = StoryboardSchema.parse(input);
   assertTemplateCompatibility(storyboard);
@@ -52,6 +53,7 @@ export function resolveProductionLock(input, root = defaultRoot) {
   const runtime = [...files(path.join(root, 'src')), ...rendererScripts.map((name) => path.join(root, name)), path.join(root, 'package-lock.json'), path.join(root, 'tsconfig.json')].sort().map((file) => [path.relative(root, file), fileHash(file)]);
   const style = {...storyboard.style, contentHash: hashValue(['style.json', 'motion.json'].map((name) => fileHash(path.join(root, 'styles', storyboard.style.id, name))))};
   const font = storyboard.font ? verifyFontAssets(storyboard.font, root) : undefined;
+  const palette = resolvePaletteEvidence(storyboard.palette, projectPath);
   const auxiliaries = [...new Map(storyboard.scenes.flatMap(sceneAuxiliaries).map((recipe) => [recipe.id, recipe])).values()].map(({id, version}) => {
     const file = manifestFile(root, 'shots', id, version, 'manifest');
     const manifest = AuxiliaryManifestSchema.parse(JSON.parse(fs.readFileSync(file, 'utf8')));
@@ -65,6 +67,7 @@ export function resolveProductionLock(input, root = defaultRoot) {
     return {id, version, manifestHash: fileHash(file), provenanceHash: fileHash(path.join(root, 'shots', id, 'provenance.json'))};
   });
   const lock = {transitions, schemaVersion: '1.0', template, style, ...(font ? {font: {id: font.id, version: font.version, manifestHash: fileHash(path.join(root, 'fonts/font-index.json')), faces: font.faces.map(({file, sha256}) => ({file, sha256})), licenseSha256: font.licenseSha256}} : {}), shots, auxiliaries, rendererBuildHash: hashValue(runtime), storyboardHash: hashValue(storyboard), planHash: hashValue(plans)};
+  if (palette) lock.palette = palette;
   return {lock: {...lock, hash: hashValue(lock)}, plans};
 }
 export const productionDirectory = (videoPath) => `${videoPath}.production`;
@@ -75,8 +78,8 @@ export function writeProductionLock(storyboard, directory, resolved = resolvePro
   fs.writeFileSync(path.join(directory, 'production-lock.json'), `${JSON.stringify(resolved.lock, null, 2)}\n`);
   return resolved.lock;
 }
-export function assertProductionLock(storyboard, videoPath, directory = productionDirectory(videoPath)) {
-  const expected = resolveProductionLock(storyboard);
+export function assertProductionLock(storyboard, videoPath, directory = productionDirectory(videoPath), projectPath) {
+  const expected = resolveProductionLock(storyboard, defaultRoot, projectPath);
   if (!expected) return undefined;
   const lock = JSON.parse(fs.readFileSync(path.join(directory, 'production-lock.json'), 'utf8'));
   const plans = JSON.parse(fs.readFileSync(path.join(directory, 'resolved-shot-plan.json'), 'utf8'));

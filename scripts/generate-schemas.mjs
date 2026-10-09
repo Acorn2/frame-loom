@@ -11,9 +11,11 @@ import {MotionPackSchema, StylePackSchema} from '../src/schemas/style-pack.ts';
 import {AudioConfigSchema} from '../src/schemas/audio-config.ts';
 import {AudioManifestSchema} from '../src/schemas/audio-manifest.ts';
 import {ProjectInputSchema} from '../src/schemas/project-input.ts';
+import {ProjectPaletteSchema} from '../src/schemas/project-palette.ts';
 import {TtsConfigSchema} from '../src/schemas/tts-config.ts';
 
 const schemas = [
+  ['project-palette.schema.json', 'FrameLoom Project Palette', ProjectPaletteSchema],
   ['auxiliary-recipe.schema.json', 'FrameLoom Hosted Action Recipe', AuxiliaryManifestSchema],
   ['chapter-transition.schema.json', 'FrameLoom Chapter Transition Recipe', ChapterManifestSchema],
   ['shot.schema.json', 'FrameLoom Shot Selection', ShotSchema],
@@ -35,7 +37,7 @@ for (const [fileName, title, schema] of schemas) {
   const jsonSchema = z.toJSONSchema(schema);
   if (fileName === 'storyboard.schema.json') {
     jsonSchema.allOf = [
-      {if: {properties: {schemaVersion: {const: '2.4'}}}, then: {properties: {shotRecipes: {uniqueItems: true}, scenes: {items: {required: ['shot', 'visual'], properties: {visual: {not: {required: ['shotPattern']}}}}}}}, else: {not: {anyOf: [{required: ['videoTemplate']}, {required: ['shotRecipes']}]}, properties: {scenes: {items: {not: {required: ['shot']}, properties: {transitionIn: {properties: {type: {not: {enum: ['overlap-blinds', 'overlap-push-stack', 'overlap-line-carry', 'overlap-ink', 'overlap-barn-door']}}}}, beats: {items: {properties: {action: {not: {enum: ['dock', 'demote', 'trace', 'tape']}}}}}}}}}}}
+      {if: {properties: {schemaVersion: {const: '2.4'}}}, then: {properties: {shotRecipes: {uniqueItems: true}, scenes: {items: {required: ['shot', 'visual'], properties: {visual: {not: {required: ['shotPattern']}}}}}}}, else: {not: {anyOf: [{required: ['videoTemplate']}, {required: ['shotRecipes']}, {required: ['palette']}]}, properties: {scenes: {items: {not: {required: ['shot']}, properties: {transitionIn: {properties: {type: {not: {enum: ['overlap-blinds', 'overlap-push-stack', 'overlap-line-carry', 'overlap-ink', 'overlap-barn-door']}}}}, beats: {items: {properties: {action: {not: {enum: ['dock', 'demote', 'trace', 'tape']}}}}}}}}}}}
     ];
   }
   fs.writeFileSync(path.join(schemaRoot, fileName), `${JSON.stringify({

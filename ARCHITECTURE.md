@@ -81,3 +81,11 @@ P2 对开换章使用互补中央裁切与旧页左右半页位移，防止新�
 ## 横屏风格与镜头自由组合
 
 当前配方 manifest 声明六套风格的横屏组合；动作、槽位与时长归配方，强调色归风格，全片字体独立选择。历史 manifest 保持原兼容边界。公开预览按配方 × 风格索引，卡片、详情与变体读取当前选择对应的实际 renderer 产物并标明原始字体；缺失或失效样片显示占位，不能借用其他风格样片。
+
+## 项目配色流
+
+选择页将 colorMode（auto/style/source）随公开制作选项保存和导出；init:project 写入 project-input.json。Agent 判断素材代表主体品牌还是引用证据，网址先采集为本地图片。asset-manifest 的可选 usage 将 scene-media、palette-reference、both 区分；document 允许仅取色参考，不允许媒体层，document-images 仍要求可见媒体。
+
+Agent 选择语义区域，sample:palette 用本地 FFmpeg 采样，不采用颜色。最终 storyboard.palette 是唯一生产输入：assets 引用 manifest ID，custom 记录用户指定色值。共享 project-palette 解析器生成浅深配色；style-loader、composition、镜头外观及字幕使用同一解析结果，字体、动作和真实图像不改变。仅显式启用的当前横屏配方应用新颜色，缺字段保留原路径。
+
+production lock 存采用色、派生色及参考素材 SHA-256；渲染开始与结束重新核对，QA 与批准传入相同项目路径校验实际字节。生产指纹与分镜批准也覆盖原素材。参考图不进入公开站点，公开样片继续展示默认风格。详见 [契约与执行流程](references/project-palette.md)。

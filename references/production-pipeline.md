@@ -98,7 +98,7 @@ when the fast execution policy is explicitly selected.
 
 ## Stage 05 — Selected image inputs and provenance
 
-- In `document` mode, use text and CSS graphics. `asset-manifest.json` can have an empty `assets` array; image/screenshot layers and image/screenshot manifest entries are rejected.
+- In `document` mode, use text and CSS graphics. `asset-manifest.json` can have an empty `assets` array; image/screenshot layers and scene-media manifest entries are rejected; palette-reference images are allowed and need not appear on screen.
 - In `document-images` mode, fill `visual-sources.md` with a stable visual ID, the creator's image path or exact URL, intended claim and shot, local file path, and rights/review state. Copy supplied local images into `assets/` when appropriate; do not alter originals.
 - For each creator-provided URL, open it in the browser, capture the actual visible page into `assets/`, and record the original and final URL, capture time, viewport, and visible state in `visual-sources.md`. If the page cannot be accessed or captured, mark the image route blocked and tell the creator; do not substitute a fabricated screen or silently fall back to `document` mode.
 - Register each used file in `asset-manifest.json` with source, license/permission state and intended use. Use `type: "screenshot"` for webpage captures and `type: "image"` for other images; mark unverified rights as unverified rather than inventing permission. Map the visual/asset ID to the claim and scene in `shot-map.md`.
@@ -241,3 +241,7 @@ npm run approve:delivery -- projects/<video-id> projects/<video-id>/output/manua
 This checks the recorded input and video fingerprints, current audio stream,
 and automated QA before setting `releaseReady=true` and
 `deliveryStatus=release-ready`. The mock TTS test tone cannot pass this gate.
+
+## Project colors
+
+Follow [project colors](project-palette.md) before finalizing the storyboard when product sources or brand colors are supplied. Palette intent is independent of visible input mode. Capture, register and sample first; the final palette is adopted in the storyboard, never inferred during rendering. Use the existing review/fast route, then inspect actual light, dark and source-media representative shots.

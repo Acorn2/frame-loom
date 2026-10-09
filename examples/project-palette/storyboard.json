@@ -1,0 +1,266 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "studio-frame",
+    "version": "1.0.0"
+  },
+  "font": {
+    "id": "source-han-sans-sc",
+    "version": "2.005"
+  },
+  "shotRecipes": [
+    {
+      "id": "paper-title",
+      "version": "1.2.0"
+    },
+    {
+      "id": "card-stack",
+      "version": "1.2.0"
+    },
+    {
+      "id": "semantic-default",
+      "version": "1.0.0"
+    }
+  ],
+  "palette": {
+    "schemaVersion": "1.0",
+    "source": "assets",
+    "referenceAssets": [
+      "product-home"
+    ],
+    "colors": {
+      "accent": "#3454d1",
+      "accentAlt": "#3454d1",
+      "lightBackground": "#f4f6f8",
+      "darkBackground": "#151a22",
+      "surface": "#ffffff"
+    }
+  },
+  "project": {
+    "title": "项目配色闭环示例",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 11.5,
+    "durationFrames": 345,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "opening",
+      "template": "statement",
+      "purpose": "opening",
+      "title": "画面配色跟随产品",
+      "primaryClaim": "以产品截图的主操作颜色统一生成画面",
+      "visual": {
+        "kind": "statement",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "paper-title",
+        "version": "1.2.0",
+        "slots": {
+          "phrases": [
+            "p0",
+            "p1"
+          ],
+          "emphasis": "p1"
+        }
+      },
+      "narration": "画面配色参考产品截图",
+      "durationFrames": 85,
+      "layers": [
+        {
+          "id": "p0",
+          "type": "label",
+          "label": "画面配色"
+        },
+        {
+          "id": "p1",
+          "type": "label",
+          "label": "跟随产品"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "p0-enter",
+          "target": "p0",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "p1-enter",
+          "target": "p1",
+          "action": "enter",
+          "start": 10,
+          "duration": 18
+        },
+        {
+          "id": "p1-highlight",
+          "target": "p1",
+          "action": "highlight",
+          "start": 32,
+          "duration": 12
+        }
+      ],
+      "captions": [
+        {
+          "id": "opening-caption",
+          "text": "画面配色参考产品截图",
+          "start": 12,
+          "end": 80
+        }
+      ]
+    },
+    {
+      "id": "card-stack",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "浅深镜头使用同一套配色",
+      "primaryClaim": "浅深画布和字幕共享一套已采用的产品配色",
+      "visual": {
+        "kind": "statement",
+        "explanation": "项目自写的公开示例，用于说明镜头表达方式，不代表真实产品或研究结果",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "card-stack",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "i0",
+            "i1",
+            "i2",
+            "i3"
+          ]
+        }
+      },
+      "narration": "浅深镜头使用同一套产品强调色",
+      "durationFrames": 140,
+      "layers": [
+        {
+          "id": "i0",
+          "type": "card",
+          "label": "主色",
+          "text": "来自产品按钮"
+        },
+        {
+          "id": "i1",
+          "type": "card",
+          "label": "浅色画布",
+          "text": "保持清晰阅读"
+        },
+        {
+          "id": "i2",
+          "type": "card",
+          "label": "深色画布",
+          "text": "延续品牌强调"
+        },
+        {
+          "id": "i3",
+          "type": "card",
+          "label": "字幕",
+          "text": "随背景变化"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "i0-enter",
+          "target": "i0",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "i1-enter",
+          "target": "i1",
+          "action": "enter",
+          "start": 18,
+          "duration": 18
+        },
+        {
+          "id": "i2-enter",
+          "target": "i2",
+          "action": "enter",
+          "start": 36,
+          "duration": 18
+        },
+        {
+          "id": "i3-enter",
+          "target": "i3",
+          "action": "enter",
+          "start": 54,
+          "duration": 18
+        },
+        {
+          "id": "i0-focus",
+          "target": "i0",
+          "action": "focus",
+          "start": 74,
+          "duration": 26
+        }
+      ],
+      "captions": [
+        {
+          "id": "dark-caption",
+          "text": "浅深镜头使用同一套产品强调色",
+          "start": 12,
+          "end": 130
+        }
+      ]
+    },
+    {
+      "id": "product-media",
+      "template": "interaction-flow",
+      "purpose": "media",
+      "title": "真实界面保留原貌",
+      "primaryClaim": "截图中的界面不被染色",
+      "visual": {
+        "kind": "media",
+        "explanation": "展示 FrameLoom 本地制作组合页的实际截图，保留原始界面颜色与字体",
+        "representation": "source-media",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "semantic-default",
+        "version": "1.0.0",
+        "slots": {}
+      },
+      "narration": "真实界面保留原貌",
+      "durationFrames": 120,
+      "layers": [
+        {
+          "id": "product-screen",
+          "type": "screenshot",
+          "asset": "assets/frameloom-library.png",
+          "label": "FrameLoom 制作组合页",
+          "fit": "contain"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "screen-enter",
+          "target": "product-screen",
+          "action": "enter",
+          "start": 0,
+          "duration": 18
+        }
+      ],
+      "captions": [
+        {
+          "id": "media-caption",
+          "text": "真实界面保留原貌",
+          "start": 12,
+          "end": 110
+        }
+      ]
+    }
+  ]
+}

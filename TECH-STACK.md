@@ -38,3 +38,7 @@ P2 继续使用现有 React / Remotion / Zod；SVG 滤镜与确定性闭式粒�
 独立字体选择使用浏览器原生 FontFace/FontFaceSet 与现有 Remotion delayRender，不新增运行时依赖。思源黑体／宋体使用官方 CN 可变 WOFF2，霞鹜文楷使用官方 Regular/Medium TTF；得意黑使用官方 WOFF2，小赖字体使用比例版 Regular TTF。清单固定版本和 SHA-256，保留 SIL OFL 1.1。DOM.Iterable 补全 FontFaceSet 的标准集合方法类型。网页字形示例与 renderer 共用项目字体文件，字重映射在清单记录；组合样片由同一正式 composition 生成。
 
 镜头自动/手动入口沿用原生radio与ES module，选择方式随既有localStorage/URL保存，无新增依赖或生产API。Agent承担文档语义推荐；Node.js共享预检仅做重复率与标题停留警告，复用现有分镜时间线，不改生产schema或renderer。
+
+## 项目配色
+
+继续使用 TypeScript/Zod、Node.js 原生文件与 SHA-256、既有 FFmpeg/ffprobe、原生页面控件，无新增依赖、服务或环境配置。Agent 处理素材语义，sample:palette 对显式区域输出像素候选；纯函数解析色值和前景对比度。palette/usage/colorMode 为显式可选契约，历史输入缺字段不迁移。截图采集由 Agent 的可用浏览器执行，不成为 renderer 的网络依赖。

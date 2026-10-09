@@ -54,6 +54,139 @@
       ],
       "additionalProperties": false
     },
+    "palette": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "schemaVersion": {
+              "type": "string",
+              "const": "1.0"
+            },
+            "colors": {
+              "type": "object",
+              "properties": {
+                "accent": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$"
+                },
+                "accentAlt": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$"
+                },
+                "lightBackground": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Runtime enforces relative luminance >= 0.8 and RGB channel spread <= 32."
+                },
+                "darkBackground": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Runtime enforces relative luminance <= 0.08 and RGB channel spread <= 32."
+                },
+                "surface": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Runtime enforces relative luminance >= 0.8 and RGB channel spread <= 32."
+                }
+              },
+              "required": [
+                "accent",
+                "accentAlt",
+                "lightBackground",
+                "darkBackground",
+                "surface"
+              ],
+              "additionalProperties": false
+            },
+            "source": {
+              "type": "string",
+              "const": "assets"
+            },
+            "referenceAssets": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "schemaVersion",
+            "colors",
+            "source",
+            "referenceAssets"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "schemaVersion": {
+              "type": "string",
+              "const": "1.0"
+            },
+            "colors": {
+              "type": "object",
+              "properties": {
+                "accent": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$"
+                },
+                "accentAlt": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$"
+                },
+                "lightBackground": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Runtime enforces relative luminance >= 0.8 and RGB channel spread <= 32."
+                },
+                "darkBackground": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Runtime enforces relative luminance <= 0.08 and RGB channel spread <= 32."
+                },
+                "surface": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Runtime enforces relative luminance >= 0.8 and RGB channel spread <= 32."
+                }
+              },
+              "required": [
+                "accent",
+                "accentAlt",
+                "lightBackground",
+                "darkBackground",
+                "surface"
+              ],
+              "additionalProperties": false
+            },
+            "source": {
+              "type": "string",
+              "const": "custom"
+            },
+            "referenceAssets": {
+              "minItems": 0,
+              "maxItems": 0,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "schemaVersion",
+            "colors",
+            "source",
+            "referenceAssets"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
     "videoTemplate": {
       "type": "object",
       "properties": {
@@ -2860,6 +2993,11 @@
             {
               "required": [
                 "shotRecipes"
+              ]
+            },
+            {
+              "required": [
+                "palette"
               ]
             }
           ]

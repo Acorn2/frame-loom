@@ -135,7 +135,7 @@ const plans = styleIds.map((id) => {
       layer.assetDataUri = `data:image/svg+xml;base64,${fs.readFileSync(assetPath).toString('base64')}`;
     }
   }
-  const styleTokens = createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height);
+  const styleTokens = createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height, storyboard.font, storyboard.palette);
   return {id, storyboard, storyboardPath, inputProps: {storyboard: hydrated, styleTokens, renderProfile: {purpose: 'visual-preview'}}, description: styleDescriptions[id] ?? {name: id, subtitle: 'Style Pack', use: '', motion: ''}};
 });
 

@@ -142,7 +142,9 @@ function hydrateStoryboardAssets(value) {
 const styleDirectory = path.join(styleRoot, storyboard.style.id);
 const style = parseFile(StylePackSchema, path.join(styleDirectory, 'style.json'), 'style.json');
 const motion = parseFile(MotionPackSchema, path.join(styleDirectory, 'motion.json'), 'motion.json');
-const styleTokens = createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height, storyboard.font);
+const styleTokens = createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height, storyboard.font, storyboard.palette);
+const resolvedProduction = resolveProductionLock(storyboard, projectRoot, path.dirname(resolvedInput));
+const productionLock = resolvedProduction?.lock;
 const hydratedStoryboard = hydrateStoryboardAssets(storyboard);
 const audioRuntime = loadAudioRuntime(audioConfigPath, audioTiming);
 const hasAudio = Boolean(audioRuntime?.voiceoverDataUri || audioRuntime?.musicDataUri || audioRuntime?.sfx?.length);
@@ -151,8 +153,6 @@ if (outputPurpose === 'in-project-video' && !audioRuntime?.voiceoverDataUri) {
 }
 const handoff = outputPurpose === 'visual-master' ? loadHandoffConfig(path.dirname(resolvedInput)) : undefined;
 
-const resolvedProduction = resolveProductionLock(storyboard);
-const productionLock = resolvedProduction?.lock;
 const font = storyboard.font ? verifyFontAssets(storyboard.font) : undefined;
 const entryPoint = path.join(projectRoot, 'src/index.ts');
 console.log('Bundling Remotion composition...');
@@ -187,7 +187,7 @@ await renderToVerifiedOutput({
   }),
   verify: (stagedVideo) => {
     inspectOutput(stagedVideo, storyboard, {expectAudio: hasAudio});
-    if (productionLock && resolveProductionLock(storyboard).lock.hash !== productionLock.hash) throw new Error('输入或渲染实现已在渲染期间变化，未发布候选视频。');
+    if (productionLock && resolveProductionLock(storyboard, projectRoot, path.dirname(resolvedInput)).lock.hash !== productionLock.hash) throw new Error('输入或渲染实现已在渲染期间变化，未发布候选视频。');
   }
 });
 if (productionLock) writeProductionLock(storyboard, productionDirectory(resolvedOutput), resolvedProduction);

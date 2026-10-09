@@ -173,3 +173,5 @@ FrameLoom 自有代码采用 [MIT](LICENSE)。Remotion 使用独立的[官方许
 ## 作者
 
 由 **Hresh赫什** 维护，持续实践用 AI 把想法做成产品。项目进展与其他实践见[个人网站](https://hreshhao.com/)。欢迎通过 [Issue](https://github.com/Acorn2/frame-loom/issues)反馈使用问题，或按贡献说明提交改进。
+
+产品截图或准确网址还可作为全片配色参考；配色来源与视频风格、字体、镜头独立选择。支持自动判断、风格配色和跟随产品素材；首版限当前横屏配方，真实截图保持原貌。见[项目配色流程](references/project-palette.md)。

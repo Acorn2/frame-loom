@@ -5,6 +5,7 @@ import {pathToFileURL} from 'node:url';
 import {AssetManifestSchema} from '../src/schemas/asset-manifest.ts';
 import {ProjectInputSchema} from '../src/schemas/project-input.ts';
 import {StoryboardSchema} from '../src/schemas/storyboard.ts';
+import {resolvePaletteEvidence} from './lib/project-palette.mjs';
 
 function isInsideDirectory(directory, candidate) {
   const relative = path.relative(directory, candidate);
@@ -49,18 +50,24 @@ export function validateAssets(storyboardPath, manifestPath) {
     return scene.layers.filter((layer) => ['screenshot', 'object'].includes(layer.type));
   });
   if (projectInput?.inputMode === 'document') {
-    if (mediaLayers.length > 0 || manifest.assets.some((asset) => ['image', 'screenshot'].includes(asset.type))) {
+    if (mediaLayers.length > 0 || manifest.assets.some((asset) => ['image', 'screenshot'].includes(asset.type) && asset.usage !== 'palette-reference')) {
       issues.push('project-input.inputMode 为 document：不能使用图片或截图；如需使用，请由用户选择 document-images。');
     }
   } else if (projectInput?.inputMode === 'document-images' && visibleMediaLayers.length === 0) {
     issues.push('project-input.inputMode 为 document-images：分镜至少需要一个可见的图片或截图镜头；Storyboard 2.2 请使用 media purpose。');
   }
 
+  if (projectInput?.colorMode === 'style' && storyboard.palette) issues.push('colorMode 为 style：不能同时启用项目配色。');
+  if (projectInput?.colorMode === 'source' && storyboard.palette?.source !== 'assets') issues.push('colorMode 为 source：必须采用已登记的产品素材配色，不能静默回退。');
+  if (projectInput?.colorMode === 'auto' && !storyboard.palette && manifest.assets.some(asset => ['palette-reference', 'both'].includes(asset.usage)) && !projectInput.colorFallbackReason) issues.push('自动配色未采用已登记参考：请采用配色或在 colorFallbackReason 记录原因。');
+  try {resolvePaletteEvidence(storyboard.palette, path.dirname(resolvedStoryboard));} catch (error) {issues.push(`palette: ${error.message}`);}
+
   const ids = new Set();
   const assetsByPath = new Map();
   const manifestDirectory = path.dirname(resolvedManifest);
   const realManifestDirectory = fs.realpathSync(manifestDirectory);
   for (const asset of manifest.assets) {
+    if (['palette-reference', 'both'].includes(asset.usage) && !['image', 'screenshot'].includes(asset.type)) issues.push(`配色参考必须为 image/screenshot：${asset.id}`);
     if (ids.has(asset.id)) issues.push(`重复 asset id：${asset.id}`);
     ids.add(asset.id);
     const isRelative = !path.isAbsolute(asset.path);
@@ -92,6 +99,8 @@ export function validateAssets(storyboardPath, manifestPath) {
       const asset = assetsByPath.get(path.normalize(layerAssetPath));
       if (!asset) {
         issues.push(`scene ${scene.id}, layer ${layer.id}: ${layer.type} 未登记在 asset-manifest.json：${layer.asset}`);
+      } else if (asset.usage === 'palette-reference') {
+        issues.push(`scene ${scene.id}, layer ${layer.id}: 仅配色参考不能作为画面素材，请声明 both：${asset.id}`);
       } else if (layer.type === 'screenshot' && asset.type !== 'screenshot') {
         issues.push(`scene ${scene.id}, layer ${layer.id}: screenshot 在 asset-manifest.json 中登记为 ${asset.type}：${asset.path}`);
       } else if (layer.type === 'object' && asset.type !== 'image') {

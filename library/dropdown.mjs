@@ -5,7 +5,7 @@ const controls = new Map();
 function enhance(select) {
   const labels = [...select.labels];
   const wrapper = document.createElement('div');
-  wrapper.className = `select-control${select.id === 'tts-preset' ? ' select-control--wide' : ''}`;
+  wrapper.className = `select-control${['tts-preset', 'color-mode'].includes(select.id) ? ' select-control--wide' : ''}`;
   const trigger = document.createElement('button');
   trigger.type = 'button'; trigger.id = `${select.id}-trigger`; trigger.className = 'select-trigger';
   trigger.setAttribute('role', 'combobox'); trigger.setAttribute('aria-haspopup', 'listbox');
@@ -103,7 +103,7 @@ function enhance(select) {
 }
 
 export function enhanceDropdowns() {
-  for (const select of document.querySelectorAll('#canvas, #tts-preset')) if (!controls.has(select)) enhance(select);
+  for (const select of document.querySelectorAll('#canvas, #tts-preset, #color-mode')) if (!controls.has(select)) enhance(select);
 }
 export function syncDropdowns() {
   for (const control of controls.values()) control.sync();

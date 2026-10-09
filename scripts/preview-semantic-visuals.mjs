@@ -49,7 +49,7 @@ const plans = styleIds.map((id) => {
       layer.assetDataUri = `data:${mime};base64,${fs.readFileSync(file).toString('base64')}`;
     }
   }
-  return {id, storyboard, styleTokens: createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height)};
+  return {id, storyboard, styleTokens: createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height, storyboard.font, storyboard.palette)};
 });
 fs.mkdirSync(outputRoot, {recursive: true});
 console.log('Bundling Remotion composition...');

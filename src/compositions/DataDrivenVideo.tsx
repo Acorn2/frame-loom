@@ -5,6 +5,7 @@ import {captionTokensAtFrame} from '../shots/appearance';
 import type {Storyboard} from '../schemas/storyboard';
 import {RenderScene} from '../renderer/render-scene';
 import {applyProjectFont, getDefaultStyleTokens, type StyleTokens} from '../styles/style-loader';
+import {applyProjectPalette} from '../styles/project-palette';
 import {useProjectFont} from '../fonts/use-project-font';
 import {CaptionOverlay} from '../audio/CaptionOverlay';
 import type {CaptionCue} from '../audio/captions';
@@ -45,7 +46,7 @@ export function shouldRenderReviewMarker(profile?: DataDrivenVideoProps['renderP
 }
 
 export function DataDrivenVideo({storyboard, styleTokens, audioRuntime, renderProfile}: DataDrivenVideoProps) {
-  const tokens = applyProjectFont(styleTokens ?? getDefaultStyleTokens(storyboard.project.width, storyboard.project.height), storyboard.font);
+  const tokens = applyProjectPalette(applyProjectFont(styleTokens ?? getDefaultStyleTokens(storyboard.project.width, storyboard.project.height), storyboard.font), storyboard.palette);
   const fontReady = useProjectFont(storyboard.font);
   const captionTokens = captionTokensAtFrame(storyboard, useCurrentFrame(), tokens);
   const cleanMaster = renderProfile?.purpose === 'visual-master';

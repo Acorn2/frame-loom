@@ -31,7 +31,8 @@ export function normalizeProduction(catalog, value = {}) {
     goal: ['narrated', 'master'].includes(value?.goal) ? value.goal : 'narrated',
     audio: ['tts', 'external'].includes(value?.audio) ? value.audio : 'tts',
     ttsPreset: presets.some(p => p.id === value?.ttsPreset) ? value.ttsPreset : 'configured',
-    review: value?.review === true
+    review: value?.review === true,
+    colorMode: ['auto', 'style', 'source'].includes(value?.colorMode) ? value.colorMode : 'auto'
   };
 }
 export function createExports(catalog, selection) {
@@ -41,10 +42,11 @@ export function createExports(catalog, selection) {
   if (!catalog.recipes.some(recipe => compatible(recipe, state.style, state.canvas))) throw new Error('当前风格与画幅没有兼容镜头，请更换组合。');
   if (selection.font !== undefined && selection.font !== state.font) throw new Error('字体选项已失效，请重新选择。');
   if (selection.fontMode !== undefined && !['manual', 'recommended'].includes(selection.fontMode)) throw new Error('字体选择方式已失效，请重新选择。');
-  const {goal, audio, ttsPreset, review} = state.production;
-  for (const key of ['goal', 'audio', 'ttsPreset', 'review']) {
+  const {goal, audio, ttsPreset, review, colorMode} = state.production;
+  for (const key of ['goal', 'audio', 'ttsPreset', 'review', 'colorMode']) {
     if (selection.production?.[key] !== undefined && selection.production[key] !== state.production[key]) throw new Error('制作选项已失效，请重新选择。');
   }
+  if (colorMode === 'source' && state.canvas !== 'landscape') throw new Error('跟随产品素材配色目前支持横屏，请切换画幅或选择风格配色。');
   const purpose = goal === 'master' ? 'visual-master' : 'in-project-video';
   const audioMode = goal === 'master' ? 'silent' : audio;
   const mode = review ? 'review' : 'fast';
@@ -60,6 +62,11 @@ export function createExports(catalog, selection) {
       '仅在指定集合内按文档编排，可重复或只使用其中一部分；不足时说明具体缺口，不擅自添加配方。',
       ...(shotSelectionWarning(catalog, state) ? [shotSelectionWarning(catalog, state)] : [])
     ]),
+    `画面配色：${{auto: '自动判断', style: '使用风格配色', source: '跟随产品素材'}[colorMode]}；初始化时使用 --color-mode ${colorMode}。`,
+    colorMode === 'style' ? '保留风格默认配色，不启用项目配色；真实截图保持原貌。'
+      : colorMode === 'source' ? '使用我提供的主体产品截图或准确网址确定全片配色；网址先用 ego-browser 或可用浏览器截图到本地并登记来源。缺少有效参考时说明缺口，不静默回退。'
+        : '自动判断配色来源：横屏产品介绍优先采用主体产品素材配色；纯文档、引用图、竞品证据或尚未支持的组合使用风格配色并说明判断。用户明确给出的品牌色优先。',
+    '区分画面素材与配色参考；仅取色的截图不必出镜。项目配色写入最终分镜，保持字体与镜头选择，真实素材不染色；展示实际代表镜头检查深浅背景与字幕。',
     '根据原文自动生成简短项目主题，按项目规则创建带日期的生产目录，不要求我填写目录名。',
     `制作参数：--output-purpose ${purpose} --audio-mode ${audioMode} --mode ${mode}。`,
     `完整保留原文和来源；只在${state.shotSelection === 'auto' ? '根据文档选定并记录的' : '上述'}配方集合内编排，可重复、调整顺序或只用其中一部分，不补造事实。`,

@@ -11,7 +11,7 @@ import {FONT_CATALOG, recommendedFont} from '../src/fonts/catalog.ts';
 import {verifyFontAssets} from '../src/fonts/assets.ts';
 
 const VIDEO_ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const PROJECT_OPTIONS = new Set(['--slug', '--style', '--font', '--shots', '--canvas', '--input-mode', '--projects-dir', '--video-template']);
+const PROJECT_OPTIONS = new Set(['--slug', '--style', '--font', '--shots', '--canvas', '--input-mode', '--color-mode', '--projects-dir', '--video-template']);
 
 function positionalArgs(args) {
   const positional = [];
@@ -47,7 +47,7 @@ export function initProject(args = process.argv.slice(2), {now = new Date()} = {
   const slug = getOption(args, '--slug');
   const positional = positionalArgs(args);
   if ((slug && positional.length > 0) || (!slug && positional.length !== 1)) {
-    throw new Error('Usage: npm run init:project -- --slug <topic-slug> [--style <id>] [--font <id>] [--shots <id,id,...>] [--video-template <preset-id>] [--canvas landscape|portrait] [--input-mode document|document-images] [--projects-dir <path>]\n也可传入一个显式 video-id 以兼容已有流程。');
+    throw new Error('Usage: npm run init:project -- --slug <topic-slug> [--style <id>] [--font <id>] [--shots <id,id,...>] [--video-template <preset-id>] [--canvas landscape|portrait] [--input-mode document|document-images] [--color-mode auto|style|source] [--projects-dir <path>]\n也可传入一个显式 video-id 以兼容已有流程。');
   }
   const suppliedId = slug ?? positional[0];
   if (!suppliedId || !VIDEO_ID_PATTERN.test(suppliedId) || (slug && /^\d{8}-/.test(slug))) {
@@ -67,6 +67,9 @@ export function initProject(args = process.argv.slice(2), {now = new Date()} = {
   if (videoTemplate && styleId !== videoTemplate.defaultStyle.id) throw new Error('视频模板只允许默认风格。');
   const canvas = getOption(args, '--canvas') ?? 'landscape';
   const inputMode = getOption(args, '--input-mode') ?? 'document';
+  const colorMode = getOption(args, '--color-mode') ?? 'auto';
+  if (!['auto', 'style', 'source'].includes(colorMode)) throw new Error('--color-mode 只能是 auto、style 或 source。');
+  if (colorMode === 'source' && (canvas !== 'landscape' || !(shotRecipes || videoTemplate))) throw new Error('素材配色需要横屏及 --shots 或 --video-template，以启用 2.4。');
   if (!['landscape', 'portrait'].includes(canvas)) {
     throw new Error('--canvas 只能是 landscape 或 portrait。');
   }
@@ -101,10 +104,11 @@ export function initProject(args = process.argv.slice(2), {now = new Date()} = {
   fs.mkdirSync(path.join(target, 'audio'), {recursive: true});
   fs.mkdirSync(path.join(target, 'output'), {recursive: true});
   write(path.join(target, 'source/source.md'), `# ${videoId}\n\n在这里放入原始 Markdown、事实和来源。不要把未经核实的推断写成事实。\n`);
-  write(path.join(target, 'project-input.json'), `${JSON.stringify({schemaVersion: '1.0', inputMode}, null, 2)}\n`);
+  write(path.join(target, 'project-input.json'), `${JSON.stringify({schemaVersion: '1.0', inputMode, colorMode}, null, 2)}\n`);
+  write(path.join(target, 'visual-sources.md'), '# Visual Sources\n\nRecord local image paths or exact creator-provided URLs, original/final URL, capture time, viewport and visible state.\n\n## Project colors\n\n- Color mode: ' + colorMode + '\n- Subject product and source role: [palette-reference / scene-media / both]\n- Representative regions and sampled colors: [use sample:palette; preserve screenshot pixels]\n- Adopted palette or fallback reason: [write final colors to storyboard.palette; do not infer a brand from a citation or competitor]\n');
   write(path.join(target, 'production-brief.md'), `# Production Brief\n\n- Video ID: ${videoId} (internal; do not ask the creator to provide it)\n- Audience: [infer from source, or mark unspecified]\n- Platform / use: [record only when supplied or supported by source; do not block a first preview]\n- Viewer takeaway: [derive one sentence from supported source claims]\n- Canvas: ${canvas}\n- Style candidate: ${styleId}\n- Font: ${font.id} (one family for all generated text)\n- Duration constraint: [optional user limit; otherwise derive from script, reading time and scene holds]\n- Output purpose: [visual-preview / visual-master / in-project-video / script handoff]\n- Audio route: [silent / selected TTS profile / external voiceover]\n- Input mode: ${inputMode}\n\n## Source boundary\n\nRecord the original document path and which claims need verification. Keep an unchanged copy under source/. ${inputMode === 'document' ? 'This mode uses document-derived text and graphics; no images are required.' : 'This mode uses the document plus local images or screenshots captured from user-provided URLs. Record every visual source before rendering.'}\n\n## Review gates\n\n- [ ] Source and key claims checked against the document\n- [ ] Document route and content gaps checked\n${inputMode === 'document-images' ? '- [ ] Image sources, capture details and intended shots checked\n' : ''}- [ ] Style Pack selected after route\n- [ ] Storyboard approved by creator (review mode only)\n- [ ] Selected output watched in full after automated QA\n`);
   if (inputMode === 'document-images') {
-    write(path.join(target, 'visual-sources.md'), '# Visual Sources\n\nList images supplied by the user or webpage URLs the user asked Codex to capture. For each URL, use a browser to save a real screenshot into assets/ before rendering; record the final URL, capture time, viewport and visible state. A URL is not itself a renderable asset. Do not invent a screenshot or claim unverified publication rights.\n\n| Visual ID | Kind: local image / URL screenshot | Original path or URL | Final URL | Local assets/ path | Capture time / viewport / state | Claim and shot | Rights / review state |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n');
+    fs.appendFileSync(path.join(target, 'visual-sources.md'), '\n## Display media\n\nList images supplied by the user or webpage URLs the user asked Codex to capture. For each URL, use a browser to save a real screenshot into assets/ before rendering; record the final URL, capture time, viewport and visible state. A URL is not itself a renderable asset. Do not invent a screenshot or claim unverified publication rights.\n\n| Visual ID | Kind: local image / URL screenshot | Original path or URL | Final URL | Local assets/ path | Capture time / viewport / state | Claim and shot | Rights / review state |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n');
   }
   write(path.join(target, 'route-card.md'), '# Route Card\n\nCompare routes supported by the document and selected visual inputs before choosing a visual theme. A style preview is not a project-specific route preview.\n\n| Route ID | What the viewer sees | Document / image support | Trade-off / limit | Decision |\n| --- | --- | --- | --- | --- |\n| R1 | [step diagram, comparison, or evidence-led sequence] | [source sections and optional visual IDs] | [what this route cannot explain] | proposed |\n\n## Selected route\n\n- Route ID: [select after review]\n- Reason: [why the source supports this narrative and these visuals]\n- Representative frame: [path after actual renderer preview; say if only a generic style sample]\n');
   write(path.join(target, 'content-gaps.md'), '# Content Gaps\n\nList unsupported claims or ideas that cannot yet be expressed clearly from the document. If none, state “No unresolved content gaps for the selected route.” Do not request image or audio inputs for the document-only workflow.\n\n| Gap ID | Route / claim / shot | Missing source support or visual explanation | Safe revision | Status |\n| --- | --- | --- | --- | --- |\n| G1 | R1 / C1 / [shot-id] | [specific unsupported fact or unclear relationship] | [narrow the claim or reframe the visual] | open |\n');

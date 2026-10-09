@@ -1,7 +1,9 @@
 import {SHOT_IDS} from '../schemas/shot-recipe';
+import {PROJECT_PALETTE_STYLES} from '../schemas/project-palette';
 import type {ActionId, LayerType, TemplateId, TransitionId, SceneVisual} from '../schemas/storyboard';
 
 export const CAPABILITY_MANIFEST = {
+  projectPalette: {schemaVersion: '1.0', orientations: ['landscape'], styles: PROJECT_PALETTE_STYLES, sources: ['assets', 'custom']},
   shots: SHOT_IDS,
   auxiliaryRecipes: ['marker-underline', 'outline-trace', 'paper-tape', 'card-flip', 'scanline-annotate-focus', 'scan-bracket-sweep', 'line-boil', 'speed-ramp-freeze', 'mosaic-reframe'],
   chapterTransitions: ['blinds-wipe', 'bottom-push', 'line-carry-transition', 'print-texture-transitions', 'page-turn-transitions'],

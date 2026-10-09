@@ -86,7 +86,7 @@ export function runQa(options) {
 
   if (storyboard) {
     if (storyboard.schemaVersion === '2.4') {
-      try {checks.productionLock = {passed: true, hash: assertProductionLock(storyboard, resolvedVideo).hash};}
+      try {checks.productionLock = {passed: true, hash: assertProductionLock(storyboard, resolvedVideo, undefined, path.dirname(resolvedStoryboard)).hash};}
       catch (error) {checks.productionLock = {passed: false, error: error.message}; errors.push(`production lock: ${error.message}`);}
     }
     let expectAudio = options.expectAudio || outputPurpose === 'in-project-video';

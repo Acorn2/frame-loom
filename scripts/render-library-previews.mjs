@@ -54,7 +54,7 @@ await Promise.all(Array.from({length: 3}, async () => {
     if (errors.length) throw new Error(`${fixture.id}: ${errors.join('；')}`);
     const style = StylePackSchema.parse(JSON.parse(fs.readFileSync(path.join(styleRoot, storyboard.style.id, 'style.json'), 'utf8')));
     const motion = MotionPackSchema.parse(JSON.parse(fs.readFileSync(path.join(styleRoot, storyboard.style.id, 'motion.json'), 'utf8')));
-    const inputProps = {storyboard: hydrateLibraryAssets(storyboard, storyboardPath), styleTokens: createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height), renderProfile: {purpose: 'visual-preview', showReviewMarker: false}};
+    const inputProps = {storyboard: hydrateLibraryAssets(storyboard, storyboardPath), styleTokens: createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height, storyboard.font, storyboard.palette), renderProfile: {purpose: 'visual-preview', showReviewMarker: false}};
     const composition = (await getCompositions(serveUrl, {inputProps, puppeteerInstance: browser})).find(item => item.id === 'StoryboardV2');
     if (!composition) throw new Error('缺少 StoryboardV2 composition。');
     console.log(`[${index + 1}/${pending.length}] ${fixture.id}`);

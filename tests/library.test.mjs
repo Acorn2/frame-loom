@@ -16,7 +16,7 @@ import {projectRoot} from '../scripts/lib/style-catalog.mjs';
 import {publicTtsPresets} from '../scripts/lib/library-tts-catalog.mjs';
 
 const catalog = {...buildLibraryCatalog(), ttsPresets: publicTtsPresets()};
-const defaultProduction = {goal: 'narrated', audio: 'tts', ttsPreset: 'configured', review: false};
+const defaultProduction = {goal: 'narrated', audio: 'tts', ttsPreset: 'configured', review: false, colorMode: 'auto'};
 fs.mkdirSync(path.join(projectRoot, '.tmp'), {recursive: true});
 const directory = fs.mkdtempSync(path.join(projectRoot, '.tmp/library-test-'));
 const output = await buildLibrary(path.join(directory, 'site'));
@@ -142,7 +142,7 @@ describe('local library capabilities and selection', () => {
     expect(value.prompt).toContain('无旁白字幕和审片标记');expect(value.prompt).toContain('逐镜时间表');expect(value.prompt).not.toContain('provider=aliyun');
   });
   it('restores public workflow preferences and safely resets stale options from local storage', () => {
-    const selection={style:'retro-zine',canvas:'landscape',selected:['paper-title'],production:{goal:'master',audio:'external',ttsPreset:'elevenlabs',review:true}};
+    const selection={style:'retro-zine',canvas:'landscape',selected:['paper-title'],production:{goal:'master',audio:'external',ttsPreset:'elevenlabs',review:true,colorMode:'source'}};
     expect(normalizeSelection(catalog,selection).production).toEqual(selection.production);
     expect(normalizeSelection(catalog,{...selection,production:{goal:'unknown',audio:'invalid',ttsPreset:'stale',review:'true'}}).production).toEqual(defaultProduction);
   });

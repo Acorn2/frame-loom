@@ -77,7 +77,7 @@ npm run qa:storyboard -- <storyboard.json> <preview.mp4> [output-dir]
 - [ ] The final claim remains stable for the declared `outro.holdFrames` before fade.
 - [ ] Titles, captions and content stay readable on the target canvas.
 - [ ] Captions use transparent backgrounds in every Style Pack; no colored or translucent subtitle panel covers the picture.
-- [ ] Caption text uses the Style Pack's distinct `captionInk` color and remains readable against the canvas.
+- [ ] Caption text uses the effective palette's distinct `captionInk` color and remains readable against the canvas.
 - [ ] Bottom narration captions appear as short, single-line phrases; they change during speech, and the shot changes promptly when narration ends.
 - [ ] Every bottom narration cue omits pause punctuation at its start and end; punctuation inside one cue remains only where it helps separate clauses, and final question or exclamation marks carry tone.
 - [ ] No text, card or screenshot crosses the visual safe area.
@@ -102,3 +102,11 @@ output a **silent visual preview**. A clean silent picture master can become
 picture handoff to an external editor. For an in-project narrated video,
 record the creator's full playback review and run `approve:delivery`; check
 `deliveryStatus=release-ready` and `qa-report.json` `releaseReady=true`.
+
+## Project palette, when enabled
+
+- [ ] The subject product and reference roles are supported by supplied sources; citation/competitor colors did not silently replace the video palette.
+- [ ] Reference pixels and URLs are recorded; source images are unchanged and local.
+- [ ] Adopted palette uses current supported shots; light/dark stages, cards, accent foreground and both subtitle routes are readable.
+- [ ] Actual project preview uses adopted colors; default library samples are not presented as this project preview.
+- [ ] Palette/source changes invalidate prior production and approval.

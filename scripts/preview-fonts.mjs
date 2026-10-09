@@ -34,7 +34,7 @@ try {
     const visual = checkVisualInput(storyboard);
     const errors = [...issues, ...visual.textLayout, ...visual.safeArea.issues].filter(issue => issue.severity === 'error');
     if (errors.length) throw new Error(`${item.id}: ${errors.map(issue => issue.message).join('；')}`);
-    const inputProps = {storyboard, styleTokens: createStyleTokens(style, motion, 1920, 1080, storyboard.font), renderProfile: {purpose: 'visual-preview', showReviewMarker: false}};
+    const inputProps = {storyboard, styleTokens: createStyleTokens(style, motion, 1920, 1080, storyboard.font, storyboard.palette), renderProfile: {purpose: 'visual-preview', showReviewMarker: false}};
     const composition = (await getCompositions(serveUrl, {inputProps, puppeteerInstance: browser})).find(item => item.id === 'StoryboardV2');
     console.log(`FONT PREVIEW [${index + 1}/${pending.length}] ${item.id}`);
     const video = path.join(fontPreviewRoot, `${item.id}.pending.mp4`);

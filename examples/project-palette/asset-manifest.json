@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "id": "product-home",
+      "path": "assets/frameloom-library.png",
+      "type": "screenshot",
+      "usage": "both",
+      "source": "FrameLoom local library selection.html; captured with ego-browser at http://127.0.0.1:4326/selection.html",
+      "license": "FrameLoom MIT; bundled fonts retain their original licenses",
+      "intendedUse": "Reference the primary action color and show the actual local selection page"
+    }
+  ]
+}

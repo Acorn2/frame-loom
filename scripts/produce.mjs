@@ -480,7 +480,7 @@ export function runProduction(options) {
       if (!previousRun.outputFingerprint || previousRun.outputFingerprint !== fingerprintFiles([outputPath], projectPath)) {
         throw new Error('无法从 qa 恢复：输出视频与上次渲染结果不同，请从 render 阶段重跑。');
       }
-      const lock = assertProductionLock(storyboard, outputPath);
+      const lock = assertProductionLock(storyboard, outputPath, undefined, options.projectPath);
       if (lock && previousRun.productionLockHash !== lock.hash) throw new Error('无法恢复：run 与生产锁不匹配。');
       if (lock) run.productionLockHash = lock.hash;
       setStage(run, 'render', 'reused');
@@ -501,7 +501,7 @@ export function runProduction(options) {
       runCommand(renderArgs);
       setStage(run, 'render', 'completed');
       run.outputFingerprint = fingerprintFiles([outputPath], projectPath);
-      const lock = assertProductionLock(storyboard, outputPath);
+      const lock = assertProductionLock(storyboard, outputPath, undefined, options.projectPath);
       if (lock) {
         run.productionLockHash = lock.hash;
         run.artifacts.productionLock = path.relative(projectPath, path.join(productionDirectory(outputPath), 'production-lock.json'));

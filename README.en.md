@@ -173,3 +173,5 @@ FrameLoom's own code is [MIT licensed](LICENSE). Remotion has a separate [offici
 ## Maintainer
 
 Maintained by **Hresh赫什**, an independent developer building products with AI. Follow the project and other work on the [personal website](https://hreshhao.com/). Report problems in [Issues](https://github.com/Acorn2/frame-loom/issues) or contribute using the [contributing guide](CONTRIBUTING.md).
+
+Product screenshots or exact URLs can provide project colors independently of visual style, font and shots. Choose automatic, style or source colors; current landscape recipes are supported and original images remain unchanged. See [project colors](references/project-palette.md).

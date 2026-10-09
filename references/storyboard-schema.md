@@ -2,7 +2,7 @@
 
 The machine-readable contract is `schemas/storyboard.schema.json`; runtime checks live in `src/validation/storyboard-validator.ts`. This reference explains the production rules and does not replace either file.
 
-New project input selection is stored separately in `project-input.json` (schema: `schemas/project-input.schema.json`). `document` allows document-derived text/graphics only; `document-images` requires at least one actual image or screenshot scene. Projects created before this setting existed retain their previous asset behavior. Web URLs must be captured by the Agent to local files before rendering; neither `asset` nor the manifest path accepts a live webpage as a usable image.
+New project input selection is stored separately in `project-input.json` (schema: `schemas/project-input.schema.json`). `document` allows document-derived text/graphics and reference-only palette assets; `document-images` requires at least one actual image or screenshot scene. Projects created before this setting existed retain their previous asset behavior. Web URLs must be captured by the Agent to local files before rendering; neither `asset` nor the manifest path accepts a live webpage as a usable image.
 
 ## 2.3 内容驱动的画面契约
 
@@ -192,3 +192,7 @@ C02 `trace` 只在 structure-then-text 上描实际轮廓；C03需 row-embed/car
 五个新增宿主效果采用 `effects: [{id, target}]`，每场最多一种，绑定实际目标及唯一 highlight beat。冻结位于 focus 内部且保留运动连续性；扫描只在文档正文落定后开始；轮廓微颤不影响正文；重排不新增或丢失成员。
 
 三个新增换章是 overlap-line-carry / overlap-ink / overlap-barn-door，0.6–2.4秒、chapterBoundary=true，只有2.4与已验证横屏风格可用。线条承接额外需要 carryKey，并校验前后 code 图层相同 semanticRole 和 label，每片最多一次。所有新转场进入共享时间线、字幕边界校验、生产锁和必选QA帧。
+
+## Optional project palette (2.4)
+
+`palette` is an explicit optional project input; absence preserves default colors. See [project colors](project-palette.md) and [palette schema](../schemas/project-palette.schema.json). Asset `usage` distinguishes palette references from visible media; input `colorMode` records intent and `colorFallbackReason` records an automatic fallback. Current landscape shots only; historical versions reject this extension. Adopted/derived colors and source bytes enter the production lock and review fingerprints.

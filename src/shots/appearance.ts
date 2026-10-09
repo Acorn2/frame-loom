@@ -2,9 +2,10 @@ import type {Shot} from '../schemas/shot-recipe';
 import type {StyleTokens} from '../styles/style-loader';
 import type {Storyboard} from '../schemas/storyboard';
 import {getSceneTimeline} from '../timeline/scene-timeline';
+import {resolveProjectPalette} from '../styles/project-palette';
 
 // Neutral stages replace warm paper across all current recipe samples.
-// Styles retain accent families; production and public previews share these treatments.
+// Default styles retain accent families; explicit project palettes take precedence.
 export const RECIPE_VISUALS = {
   'semantic-default': 'diagram', 'compare-reveal': 'comparison', 'network-expand': 'network',
   'paper-title': 'editorial', 'document-conclusions': 'document', 'title-to-label': 'studio',
@@ -75,7 +76,7 @@ export function recipeAppearance(shot: Shot, base: StyleTokens): RecipeAppearanc
     workbench: '#eef2f6'
   };
   const serif = ['editorial', 'document', 'archive'].includes(visual);
-  const tokens: StyleTokens = {...base, background: native ? base.background : dark ? deep : neutral,
+  let tokens: StyleTokens = {...base, background: native ? base.background : dark ? deep : neutral,
     paper: '#ffffff', accentAlt: native || luminance(base.accentAlt) <= .15 ? base.accentAlt : mixColor(base.accentAlt, '#192330', .6), ink: '#192330', muted: '#5c6878', grid: '#cbd3dd',
     captionInk: native ? base.captionInk : dark ? '#ffffff' : '#334155',
     displayFont: base.font || native || serif ? base.displayFont : visual === 'terminal' ? 'monospace' : base.bodyFont,
@@ -83,6 +84,15 @@ export function recipeAppearance(shot: Shot, base: StyleTokens): RecipeAppearanc
     surfaceBorder: '1px solid #dfe5ec',
     surfaceShadow: dark ? '0 20px 52px #00000038, 0 1px 2px #00000020' : '0 12px 32px #1923300b, 0 1px 3px #19233008'
   };
+  if (base.palette) {
+    const colors = resolveProjectPalette(base.palette, dark);
+    tokens = {...tokens, ...colors, ink: colors.paperInk, muted: colors.paperMuted, accentAlt: colors.paperAccent};
+    return {visual, dark, background: colors.background, stageInk: colors.ink,
+      stageMuted: colors.muted, lineInk: colors.accentAlt,
+      decoration: ['editorial', 'document', 'archive'].includes(visual) ? 'paper'
+        : ['terminal', 'blueprint'].includes(visual) ? 'grid'
+          : ['gallery', 'platform'].includes(visual) ? 'floor' : visual === 'contrast' ? 'split' : 'none', tokens};
+  }
   return {visual, dark, background: backgrounds[visual], stageInk: dark ? '#f5f7fb' : tokens.ink,
     stageMuted: dark ? '#aeb9c8' : tokens.muted,
     lineInk: dark ? glow : luminance(base.accentAlt) > .35 ? mixColor(base.accentAlt, '#192330', .6) : base.accentAlt,

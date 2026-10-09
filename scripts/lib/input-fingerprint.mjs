@@ -110,7 +110,7 @@ export function fingerprintProjectInputs(projectPath, styleRoot, audioConfigPath
   let fingerprint = fingerprintFiles(files, projectPath);
   if (fs.existsSync(selectedPath)) {
     const selected = JSON.parse(fs.readFileSync(selectedPath, 'utf8'));
-    if (selected.schemaVersion === '2.4') fingerprint = createHash('sha256').update(fingerprint).update(resolveProductionLock(selected)?.lock.hash ?? '').digest('hex');
+    if (selected.schemaVersion === '2.4') fingerprint = createHash('sha256').update(fingerprint).update(resolveProductionLock(selected, path.dirname(styleRoot), projectPath)?.lock.hash ?? '').digest('hex');
   }
   return includeAudio && ttsConfigPath && fs.existsSync(configuredTts)
     ? includeEnvironmentVoice(fingerprint, configuredTts)

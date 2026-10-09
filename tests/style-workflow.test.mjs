@@ -123,7 +123,7 @@ describe('Style Pack workflow', () => {
     expect(fs.readFileSync(path.join(project, 'content-gaps.md'), 'utf8')).toContain('Gap ID');
     expect(fs.readFileSync(path.join(project, 'shot-map.md'), 'utf8')).toContain('Scene ID');
     expect(JSON.parse(fs.readFileSync(path.join(project, 'project-input.json'), 'utf8')).inputMode).toBe('document');
-    expect(fs.existsSync(path.join(project, 'visual-sources.md'))).toBe(false);
+    expect(fs.readFileSync(path.join(project, 'visual-sources.md'), 'utf8')).toContain('Color mode: auto');
     const audioExample = JSON.parse(fs.readFileSync(path.join(project, 'audio/audio-config.example.json'), 'utf8'));
     expect(AudioConfigSchema.safeParse(audioExample).success).toBe(true);
     for (const name of ['', '.openai', '.elevenlabs', '.aliyun']) {

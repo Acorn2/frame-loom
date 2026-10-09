@@ -137,7 +137,7 @@ function renderCards() {
 }
 function renderExports() {
   if (!$('prompt')) return;
-  const {goal, audio, ttsPreset, review} = state.production;
+  const {goal, audio, ttsPreset, review, colorMode} = state.production;
   for (const input of document.querySelectorAll('input[name="shot-selection"]')) input.checked = input.value === state.shotSelection;
   $('manual-shots').hidden = state.shotSelection !== 'manual';
   $('auto-shots-note').hidden = state.shotSelection !== 'auto';
@@ -150,6 +150,7 @@ function renderExports() {
   $('copy-prompt-label').textContent = state.shotSelection === 'auto' ? '复制自动编排指令' : '复制指定镜头指令';
   for (const input of document.querySelectorAll('input[name="goal"]')) input.checked = input.value === goal;
   for (const input of document.querySelectorAll('input[name="audio"]')) input.checked = input.value === audio;
+  $('color-mode').value = colorMode;
   $('tts-preset').value = ttsPreset; $('review-first').checked = review;
   $('voice-section').hidden = goal === 'master'; $('master-note').hidden = goal !== 'master';
   $('tts-section').hidden = audio !== 'tts'; $('external-note').hidden = audio !== 'external';
@@ -164,7 +165,7 @@ function renderExports() {
   } else {
     const note = document.createElement('p'); note.textContent = 'Agent 读取本地已启用配置：只有一个时直接使用；多个时列出服务、模型与音色供你选择。'; $('tts-summary').append(note);
   }
-  $('production-summary').textContent = `${state.shotSelection === 'auto' ? '根据文档选镜头' : '使用手动镜头集合'} · ${goal === 'master' ? '仅画面 · 后期剪辑' : `带旁白的视频 · ${audio === 'external' ? '已有旁白' : preset?.name ?? '本地 TTS 配置'}`} · ${review ? '先确认讲稿与分镜' : '直接制作，出片后复核'}`;
+  $('production-summary').textContent = `${state.shotSelection === 'auto' ? '根据文档选镜头' : '使用手动镜头集合'} · ${goal === 'master' ? '仅画面 · 后期剪辑' : `带旁白的视频 · ${audio === 'external' ? '已有旁白' : preset?.name ?? '本地 TTS 配置'}`} · ${{auto: '自动配色', style: '风格配色', source: '产品素材配色'}[colorMode]} · ${review ? '先确认讲稿与分镜' : '直接制作，出片后复核'}`;
   try {
     const value = createExports(catalog, state);
     $('prompt').value = value.prompt; $('export-error').textContent = ''; $('copy-prompt').disabled = false;
@@ -266,7 +267,7 @@ async function start() {
   state = normalizeSelection(catalog, saved ?? {});
   const query = new URLSearchParams(window.location.search);
   if (query.has('style')) state = normalizeSelection(catalog, {style: query.get('style'), font: query.get('font'), fontMode: query.get('fontMode'), canvas: query.get('canvas'), selected: (query.get('shots') ?? '').split(',').filter(Boolean), shotSelection: query.get('shotSelection'),
-    production: query.has('goal') ? {goal: query.get('goal'), audio: query.get('audio'), ttsPreset: query.get('ttsPreset'), review: query.get('review') === 'true'} : state.production});
+    production: query.has('goal') ? {goal: query.get('goal'), audio: query.get('audio'), ttsPreset: query.get('ttsPreset'), review: query.get('review') === 'true', colorMode: query.get('colorMode') ?? state.production.colorMode} : {...state.production, ...(query.has('colorMode') ? {colorMode: query.get('colorMode')} : {})}});
   if ($('tts-preset')) {
     for (const preset of catalog.ttsPresets) {const option = document.createElement('option'); option.value = preset.id; option.textContent = `${preset.name} · 项目内置预设`; $('tts-preset').append(option);}
   }
@@ -340,6 +341,7 @@ async function start() {
     if (input.name === 'goal') state.production.goal = input.value;
     else if (input.name === 'audio') state.production.audio = input.value;
     else if (input.id === 'tts-preset') state.production.ttsPreset = input.value;
+    else if (input.id === 'color-mode') state.production.colorMode = input.value;
     else if (input.id === 'review-first') state.production.review = input.checked;
     else return;
     renderExports(); persist();

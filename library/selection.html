@@ -52,6 +52,7 @@
           </div>
           <p id="external-note" class="inline-note" hidden>粘贴指令时附上旁白文件。Agent 会检查音频、字幕与画面的时间对应关系。</p>
         </div>
+        <details class="form-card advanced-settings"><summary>画面配色</summary><div class="tts-section"><label class="tts-select-label" for="color-mode">配色来源</label><select id="color-mode" aria-describedby="color-note"><option value="auto">自动判断（推荐）</option><option value="style">使用风格配色</option><option value="source">跟随产品素材</option></select><p id="color-note" class="section-note">产品介绍可跟随你提供的截图或网址配色；文档与普通引用图片沿用风格配色。真实截图保持原貌，实际配色预览在本地制作时生成。素材配色目前支持横屏。</p></div></details>
         <details class="form-card advanced-settings"><summary>制作前的确认</summary><label class="review-choice"><input id="review-first" type="checkbox"><span><strong>先确认讲稿和分镜，再制作</strong><small>勾选后，Agent 会先展示内容与镜头安排，等待你确认。默认直接制作，出片后复核。</small></span></label><p class="section-note">静音审片用于检查制作过程中的画面；“仅画面”则是交给后期剪辑的产物。</p></details>
         <div class="export-card handoff-card">
           <div class="wizard-heading"><span id="handoff-step" class="step-number" aria-hidden="true">4</span><div><h2>交给 Agent 开始制作</h2><p id="production-summary" class="section-note" aria-live="polite"></p></div></div>

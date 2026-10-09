@@ -42,6 +42,14 @@
           "intendedUse": {
             "type": "string",
             "minLength": 1
+          },
+          "usage": {
+            "type": "string",
+            "enum": [
+              "scene-media",
+              "palette-reference",
+              "both"
+            ]
           }
         },
         "required": [

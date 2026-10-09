@@ -13,6 +13,18 @@
         "document",
         "document-images"
       ]
+    },
+    "colorMode": {
+      "type": "string",
+      "enum": [
+        "auto",
+        "style",
+        "source"
+      ]
+    },
+    "colorFallbackReason": {
+      "type": "string",
+      "minLength": 1
     }
   },
   "required": [

@@ -60,7 +60,7 @@ for (const scene of hydrated.scenes) {
 const audioTiming = audioConfigPath ? checkAudioInput(storyboardPath, audioConfigPath) : undefined;
 const audioRuntime = loadAudioRuntime(audioConfigPath, audioTiming);
 const hasAudio = Boolean(audioRuntime?.voiceoverDataUri || audioRuntime?.musicDataUri || audioRuntime?.sfx?.length);
-const inputProps = {storyboard: hydrated, audioRuntime, styleTokens: createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height, storyboard.font), renderProfile: {purpose: 'visual-preview'}};
+const inputProps = {storyboard: hydrated, audioRuntime, styleTokens: createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height, storyboard.font, storyboard.palette), renderProfile: {purpose: 'visual-preview'}};
 console.log('Bundling Remotion composition...');
 const serveUrl = await bundle({entryPoint: path.join(root, 'src/index.ts')});
 const composition = (await getCompositions(serveUrl, {inputProps})).find((item) => item.id === 'StoryboardV2');

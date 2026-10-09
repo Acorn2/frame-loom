@@ -53,7 +53,7 @@ export function approveVisualHandoff(projectDirectory, reviewFilePath) {
     throw new Error('讲稿、分镜、素材或预留区域在 QA 后变化，请重新运行 produce。');
   }
   const storyboard = read(path.join(projectPath, 'storyboard.json'));
-  const lock = assertProductionLock(storyboard, videoPath);
+  const lock = assertProductionLock(storyboard, videoPath, undefined, projectPath);
   if (lock && (run.productionLockHash !== lock.hash || qa.checks?.productionLock?.hash !== lock.hash)) throw new Error('run、QA 与生产锁不一致。');
   inspectOutput(videoPath, storyboard, {expectAudio: false});
   const reviewedAt = new Date().toISOString();

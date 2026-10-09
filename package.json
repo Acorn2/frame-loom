@@ -22,6 +22,7 @@
     "preview:fonts": "node --import tsx/esm scripts/preview-fonts.mjs",
     "test:fonts": "vitest run --dir tests font-selection.test.mjs",
     "validate:styles": "node --import tsx/esm scripts/validate-styles.mjs",
+    "sample:palette": "node --import tsx/esm scripts/sample-palette.mjs",
     "validate:assets": "node --import tsx/esm scripts/validate-assets.mjs",
     "list:styles": "node scripts/list-styles.mjs",
     "preview:styles": "node scripts/preview-styles.mjs",

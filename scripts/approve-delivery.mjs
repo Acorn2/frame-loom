@@ -69,7 +69,7 @@ export function approveDelivery(projectDirectory, reviewFilePath) {
     if (readJson(ttsConfigPath).provider === 'mock') throw new Error('mock TTS 仅用于测试，不能确认交付。');
   }
   const storyboard = readJson(path.join(projectPath, 'storyboard.json'));
-  const lock = assertProductionLock(storyboard, videoPath);
+  const lock = assertProductionLock(storyboard, videoPath, undefined, projectPath);
   if (lock && (run.productionLockHash !== lock.hash || qa.checks?.productionLock?.hash !== lock.hash)) throw new Error('run、QA 与生产锁不一致。');
   inspectOutput(videoPath, storyboard, {expectAudio: true});
   const reviewedAt = new Date().toISOString();
