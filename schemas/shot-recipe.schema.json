@@ -42,7 +42,10 @@
         "media-before-after",
         "document-write",
         "code-reveal",
-        "letterspace-materialize"
+        "letterspace-materialize",
+        "type-and-filter",
+        "ai-stream-response",
+        "unit-dot-regroup"
       ]
     },
     "version": {

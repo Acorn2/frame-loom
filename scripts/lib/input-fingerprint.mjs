@@ -3,8 +3,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {resolveProductionLock} from './production-lock.mjs';
 import {fontAssetFiles} from '../../src/fonts/assets.ts';
-import {TtsConfigSchema} from '../../src/schemas/tts-config.ts';
-import {resolveTtsVoiceType} from './tts-profiles.mjs';
+import {TtsConfigSchema, TTS_SYNTHESIS_REVISION} from '../../src/schemas/tts-config.ts';
+import {ttsEnvironmentSettings} from './tts-profiles.mjs';
 
 function collectFiles(directory) {
   if (!fs.existsSync(directory)) return [];
@@ -45,7 +45,7 @@ export function fingerprintFiles(files, basePath) {
   return hash.digest('hex');
 }
 
-function includeEnvironmentVoice(fingerprint, ttsConfigPath, strict = false) {
+function includeTtsRuntime(fingerprint, ttsConfigPath, strict = false) {
   let config;
   try {
     config = TtsConfigSchema.parse(JSON.parse(fs.readFileSync(ttsConfigPath, 'utf8')));
@@ -53,12 +53,12 @@ function includeEnvironmentVoice(fingerprint, ttsConfigPath, strict = false) {
     if (strict) throw error;
     return fingerprint;
   }
-  if (!config.enabled || !config.voiceTypeEnv) return fingerprint;
-  return createHash('sha256').update(fingerprint).update('\0').update(resolveTtsVoiceType(config)).digest('hex');
+  if (!config.enabled) return fingerprint;
+  return createHash('sha256').update(fingerprint).update('\0').update(JSON.stringify({revision: TTS_SYNTHESIS_REVISION, ...ttsEnvironmentSettings(config)})).digest('hex');
 }
 
 export function fingerprintTtsConfig(ttsConfigPath, basePath) {
-  return includeEnvironmentVoice(fingerprintFiles([ttsConfigPath], basePath), ttsConfigPath, true);
+  return includeTtsRuntime(fingerprintFiles([ttsConfigPath], basePath), ttsConfigPath, true);
 }
 
 export function fingerprintProjectInputs(projectPath, styleRoot, audioConfigPath, ttsConfigPath, options = {}) {
@@ -113,6 +113,6 @@ export function fingerprintProjectInputs(projectPath, styleRoot, audioConfigPath
     if (selected.schemaVersion === '2.4') fingerprint = createHash('sha256').update(fingerprint).update(resolveProductionLock(selected, path.dirname(styleRoot), projectPath)?.lock.hash ?? '').digest('hex');
   }
   return includeAudio && ttsConfigPath && fs.existsSync(configuredTts)
-    ? includeEnvironmentVoice(fingerprint, configuredTts)
+    ? includeTtsRuntime(fingerprint, configuredTts)
     : fingerprint;
 }

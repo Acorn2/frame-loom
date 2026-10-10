@@ -1,3 +1,6 @@
+import expansion0 from '../../shots/type-and-filter/manifest.json';
+import expansion1 from '../../shots/ai-stream-response/manifest.json';
+import expansion2 from '../../shots/unit-dot-regroup/manifest.json';
 import p20 from '../../shots/research-stack/manifest.json';
 import p21 from '../../shots/list-stack-press/manifest.json';
 import p22 from '../../shots/integration-hub/manifest.json';
@@ -78,7 +81,7 @@ import manifest4 from '../../shots/list-reveal/manifest.json';
 import manifest5 from '../../shots/compare-reveal/manifest.json';
 import manifest6 from '../../shots/network-expand/manifest.json';
 import {ShotManifestSchema, type ShotId, type ShotManifest} from '../schemas/shot-recipe';
-export const SHOT_CATALOG: readonly ShotManifest[] = [p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p210, p211, p212, manifest0, manifest1, manifest2, manifest3, manifest4, manifest5, manifest6, manifest7, manifest8, manifest9, manifest10, manifest11, manifest12, manifest13, manifest14, manifest15, manifest16, manifest17, manifest18, manifest19, manifest20, manifest21, manifest22, manifest23].map((value) => ShotManifestSchema.parse(value));
+export const SHOT_CATALOG: readonly ShotManifest[] = [expansion0, expansion1, expansion2, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p210, p211, p212, manifest0, manifest1, manifest2, manifest3, manifest4, manifest5, manifest6, manifest7, manifest8, manifest9, manifest10, manifest11, manifest12, manifest13, manifest14, manifest15, manifest16, manifest17, manifest18, manifest19, manifest20, manifest21, manifest22, manifest23].map((value) => ShotManifestSchema.parse(value));
 export const LEGACY_SHOT_CATALOG = [history0, history1, history2, history3, history4, history5, history6, history7, history8, history9, history10, history11, history12, history13, history14, history15, history16, history17, history18, history19, history20].map((value) => ShotManifestSchema.parse(value));
 export const PREVIOUS_SHOT_CATALOG = [previous0, previous1, previous2, previous3, previous4, previous5, previous6, previous7, previous8, previous9, previous10, previous11, previous12, previous13, previous14, previous15, previous16, previous17, previous18, previous19, previous20].map(value => ShotManifestSchema.parse(value));
 export function resolveShot(id: ShotId, version: string): ShotManifest {

@@ -45,9 +45,14 @@ export const additionalPreviewFixtures = [
 ];
 export const libraryStyleIds = loadStyleIndex().styles.filter(item => item.status !== 'deprecated').map(item => item.id);
 export function libraryPreviewFixtures() {
-  return [...libraryFixtures(), ...additionalPreviewFixtures].flatMap(item => libraryStyleIds.map(styleId => ({
-    ...item, recipeId: item.id, styleId, id: styleId === 'retro-zine' ? item.id : `${item.id}--${styleId}`
-  })));
+  return [...libraryFixtures(), ...additionalPreviewFixtures].flatMap(item => {
+    const canvases = SHOT_CATALOG.find(recipe => recipe.id === item.id)?.orientations ?? ['landscape'];
+    return canvases.flatMap(canvas => libraryStyleIds.map(styleId => ({
+      ...item, source: canvas === 'portrait' ? item.source.replace(/storyboard\.json$/u, 'portrait.json') : item.source,
+      recipeId: item.id, styleId, canvas,
+      id: `${styleId === 'retro-zine' ? item.id : `${item.id}--${styleId}`}${canvas === 'portrait' ? '--portrait' : ''}`
+    })));
+  });
 }
 function sourceFiles(directory) {
   return fs.readdirSync(directory, {withFileTypes: true}).flatMap((entry) => {
@@ -58,7 +63,7 @@ function sourceFiles(directory) {
 export function previewFingerprint() {
   const hash = createHash('sha256');
   const inputs = [...sourceFiles(path.join(projectRoot, 'src')), ...sourceFiles(path.join(projectRoot, 'shots')), ...sourceFiles(path.join(projectRoot, 'styles')),
-    ...[...libraryFixtures(), ...additionalPreviewFixtures].map((item) => path.join(projectRoot, item.source)),
+    ...[...new Set(libraryPreviewFixtures().map(item => item.source))].map((source) => path.join(projectRoot, source)),
     ...[...libraryFixtures(), ...additionalPreviewFixtures].flatMap(item => fixtureAssets(path.join(projectRoot, item.source))),
     path.join(projectRoot, 'scripts/lib/library-assets.mjs'), path.join(projectRoot, 'scripts/render-library-previews.mjs'), path.join(projectRoot, 'scripts/lib/library-catalog.mjs'), path.join(projectRoot, 'package-lock.json')];
   for (const input of inputs) {hash.update(path.relative(projectRoot, input)); hash.update(fs.readFileSync(input));}
@@ -82,11 +87,11 @@ export function buildLibraryCatalog({previewManifest = readPreviewManifest(), pr
     return complete ? {posterSource, videoSource, previewStatus: 'ready'}
       : {posterSource: null, videoSource: null, previewStatus: previewManifest && !fresh ? 'stale' : 'missing'};
   }
-  function stylePreviews(id) {
-    return libraryStyleIds.map(styleId => {
-      const sampleId = styleId === 'retro-zine' ? id : `${id}--${styleId}`;
-      return {id: sampleId, style: styleId, ...preview(sampleId)};
-    });
+  function stylePreviews(id, canvases = ['landscape']) {
+    return canvases.flatMap(canvas => libraryStyleIds.map(styleId => {
+      const sampleId = `${styleId === 'retro-zine' ? id : `${id}--${styleId}`}${canvas === 'portrait' ? '--portrait' : ''}`;
+      return {id: sampleId, style: styleId, canvas, ...preview(sampleId)};
+    }));
   }
   const styles = loadStyleIndex().styles.filter((item) => item.status !== 'deprecated').map((item) => {
     const description = styleDescriptions[item.id];
@@ -104,7 +109,7 @@ export function buildLibraryCatalog({previewManifest = readPreviewManifest(), pr
       recipe: readLibraryText(`shots/${item.id}/recipe.md`),
       provenance: JSON.parse(readLibraryText(`shots/${item.id}/provenance.json`)), fixture: fixture.source,
       ...preview(item.id),
-      sampleStyle: 'retro-zine', sampleCanvas: 'landscape', stylePreviews: stylePreviews(item.id),
+      sampleStyle: 'retro-zine', sampleCanvas: 'landscape', stylePreviews: stylePreviews(item.id, item.orientations),
       previewVariants: additionalPreviewFixtures.filter(variant => variant.host === item.id).map(variant => ({id: variant.id, name: variant.name,
         ...preview(variant.id), stylePreviews: stylePreviews(variant.id)}))};
   });

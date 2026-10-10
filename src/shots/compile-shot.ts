@@ -1,5 +1,7 @@
 import {p2SlotType, p2Allowed, validateP2} from './p2/validate';
 import {isP2Shot} from './p2/schema';
+import {isExpansionShot} from './expansion/schema';
+import {expansionAllowed, expansionSlotType, validateExpansion} from './expansion/validate';
 import {validateChapterTransitions} from './shortlist/chapter-transitions';
 import {p1SlotType, p1Allowed, validateP1} from './shortlist/validate-p1';
 import type {Storyboard, StoryboardScene, StoryboardBeat, StoryboardLayer} from '../schemas/storyboard';
@@ -35,7 +37,7 @@ export function compileShot(scene: StoryboardScene, context: ShotContext): ShotP
   const layout = width < height ? 'portrait' : 'landscape';
   if (!recipe.styles.includes(style.id) || (shot.id !== 'semantic-default' && style.version !== '1.0.0')) fail('未支持的风格或精确版本。');
   if (!recipe.orientations.includes(layout)) fail(`尚未支持 ${layout}。`);
-  if (shot.id !== 'semantic-default' && Math.abs(width / height - 16 / 9) > 0.001) fail('首版只适配 16:9，其他画幅尚未验证。');
+  if (shot.id !== 'semantic-default' && Math.abs(width / height - (layout === 'portrait' ? 9 / 16 : 16 / 9)) > 0.001) fail('只适配声明过的16:9或9:16画幅。');
   if (!scene.visual || !recipe.visualKinds.includes(scene.visual.kind)) fail('visual.kind 与配方冲突。');
   const visual = scene.visual ?? fail('缺少 visual。');
   if (visual.networkDirection && visual.kind !== 'network') fail('networkDirection 仅适用于 network。');
@@ -53,7 +55,7 @@ export function compileShot(scene: StoryboardScene, context: ShotContext): ShotP
       const layer = get(id);
       if (name !== 'emphasis') allIds.push(id);
       const titleSlot = name === 'phrases' || name === 'title' || name === 'emphasis' || name === 'subtitle';
-      const explicitType = p2SlotType(shot) ?? p1SlotType(shot, name);
+      const explicitType = expansionSlotType(shot, name) ?? p2SlotType(shot) ?? p1SlotType(shot, name);
       if (explicitType ? layer.type !== explicitType : titleSlot ? layer.type !== 'label' : !['node', 'card'].includes(layer.type)) fail(`${id} 的图层类型不符合 ${name} 槽位。`);
       if (!layer.label?.trim()) fail(`${id} 需要明确的 label。`);
       if (budget.textMax && !layer.text?.trim()) fail(`${id} 需要可见正文 text。`);
@@ -81,7 +83,7 @@ export function compileShot(scene: StoryboardScene, context: ShotContext): ShotP
     if (!budget || beat.duration < Math.ceil(budget.minSec * fps) || beat.duration > Math.ceil(budget.maxSec * fps)) fail(`${beat.id} 动作窗口不符合配方范围。`);
     if (beat.start < 0 || endOf(beat) > stableEndFrame) fail(`${beat.id} 超出有效镜头时间。`);
     if (shot.id === 'semantic-default' || shot.id === 'compare-reveal' || shot.id === 'network-expand') continue;
-    const allowed = isP2Shot(shot) ? p2Allowed(shot, beat, scene) : p1Allowed(shot, beat);
+    const allowed = isExpansionShot(shot) ? expansionAllowed(shot, beat) : isP2Shot(shot) ? p2Allowed(shot, beat, scene) : p1Allowed(shot, beat);
     if (shot.id === 'paper-title' && beat.target === shot.slots.emphasis) allowed.push('highlight');
     if ((shot.id === 'blur-slide' || shot.id === 'split-text-stagger') && beat.target === shot.slots.emphasis) allowed.push('highlight');
     if (shot.id === 'card-stack' && beat.target === shot.slots.items[0]) allowed.push('focus');
@@ -178,7 +180,8 @@ export function compileShot(scene: StoryboardScene, context: ShotContext): ShotP
   }
   validateP1(scene, shot, fps, get, entry, fail);
   validateP2(scene, shot, fps, get, entry, fail);
-  if ('items' in shot.slots && !isP2Shot(shot)) {
+  validateExpansion(scene, shot, fps, get, entry, fail);
+  if ('items' in shot.slots && !isP2Shot(shot) && !isExpansionShot(shot)) {
     const entries = shot.slots.items.map(entry);
     entries.forEach((beat, index) => {
       if (index && beat.start - entries[index - 1]!.start < Math.ceil(recipe.timing.itemHoldSec * fps)) fail('逐项提示间隔过短，请缩短内容或拆镜头。');
@@ -210,6 +213,12 @@ export function compileShot(scene: StoryboardScene, context: ShotContext): ShotP
     for (let i = 0; i < digits; i++) checkpoints.push({id: `digit-${i}-locked`, frame: Math.ceil(beat.start + beat.duration * (.6 + .4 * i / Math.max(1, digits - 1)))});
   }
   if (visual.mediaFocus) checkpoints.push({id: 'media-focus-complete', frame: visual.mediaFocus.start + visual.mediaFocus.duration});
+  if (shot.id === 'unit-dot-regroup') {
+    const regroup = actions.find(beat => beat.target === shot.slots.total && beat.action === 'focus')!;
+    for (const [index, name] of ['grouped', 'bars', 'total'].entries()) {
+      checkpoints.push({id: `dots-${name}`, frame: Math.ceil(regroup.start + regroup.duration * (index + .68) / 3)});
+    }
+  }
   checkpoints.push({id: 'complete', frame: completeFrame + 1}, {id: 'before-handoff', frame: stableEndFrame - 2});
   return {sceneId: scene.id, shot: {id: shot.id, version: shot.version}, layout, durationFrames: scene.durationFrames, actions, checkpoints, completeFrame, stableEndFrame};
 }

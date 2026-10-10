@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "unit-dot-regroup",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "单位点阵重组",
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "durationSec": 9.6,
+    "durationFrames": 288,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "unit-dot-regroup",
+      "template": "metric-grid",
+      "purpose": "process",
+      "title": "单位点阵重组",
+      "primaryClaim": "同一批单位从散点变为分组、柱形与汇总，数量保持一致。",
+      "visual": {
+        "kind": "metric",
+        "explanation": "FrameLoom 自写示意，不代表真实产品或用户数据",
+        "representation": "diagram",
+        "source": "source.md",
+        "unit": "项"
+      },
+      "shot": {
+        "id": "unit-dot-regroup",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "a",
+            "b",
+            "c"
+          ],
+          "total": "total"
+        }
+      },
+      "narration": "同一批单位从散点变为分组、柱形与汇总，数量保持一致。",
+      "durationFrames": 288,
+      "layers": [
+        {
+          "id": "a",
+          "type": "metric",
+          "label": "资料",
+          "value": 16
+        },
+        {
+          "id": "b",
+          "type": "metric",
+          "label": "图解",
+          "value": 12
+        },
+        {
+          "id": "c",
+          "type": "metric",
+          "label": "注释",
+          "value": 8
+        },
+        {
+          "id": "total",
+          "type": "metric",
+          "label": "公开示意",
+          "value": 36
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "a-enter",
+          "target": "a",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "b-enter",
+          "target": "b",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "c-enter",
+          "target": "c",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "total-enter",
+          "target": "total",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "total-focus",
+          "target": "total",
+          "action": "focus",
+          "start": 54,
+          "duration": 180
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

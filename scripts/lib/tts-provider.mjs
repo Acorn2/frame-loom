@@ -4,6 +4,7 @@ import {spawnSync} from 'node:child_process';
 import crypto from 'node:crypto';
 import {URL} from 'node:url';
 import {resolveTtsVoiceType} from './tts-profiles.mjs';
+import {TtsConfigSchema} from '../../src/schemas/tts-config.ts';
 
 const PROVIDER_HOSTS = {
   openai: new Set(['api.openai.com']),
@@ -113,7 +114,8 @@ async function requestOpenAi(text, config) {
       input: text,
       voice: config.voiceType,
       response_format: config.format,
-      speed: config.speedRatio
+      speed: config.speedRatio,
+      ...(config.instructions ? {instructions: config.instructions} : {})
     }),
     signal: globalThis.AbortSignal.timeout(config.timeoutMs)
   });
@@ -130,7 +132,11 @@ async function requestElevenLabs(text, config) {
     method: 'POST',
     redirect: 'error',
     headers: {'xi-api-key': apiKey, 'content-type': 'application/json'},
-    body: JSON.stringify({...config.requestBody, text, model_id: config.model ?? 'eleven_multilingual_v2'}),
+    body: JSON.stringify({...config.requestBody, text, model_id: config.model ?? 'eleven_multilingual_v2',
+      voice_settings: {...config.requestBody?.voice_settings, ...config.voiceSettings, speed: config.speedRatio},
+      ...(config.language ? {language_code: config.language} : {}),
+      ...(config.pronunciationDictionaries ? {pronunciation_dictionary_locators: config.pronunciationDictionaries} : {}),
+      ...(config.textNormalization ? {apply_text_normalization: config.textNormalization} : {})}),
     signal: globalThis.AbortSignal.timeout(config.timeoutMs)
   });
   return readBinaryAudio(response, 'ElevenLabs');
@@ -147,7 +153,9 @@ async function requestAliyun(text, config) {
     body: JSON.stringify({
       ...config.requestBody,
       model: config.model ?? 'qwen3-tts-flash',
-      input: {...config.requestBody?.input, text, voice: config.voiceType}
+      input: {...config.requestBody?.input, text, voice: config.voiceType,
+        ...(config.language ? {language_type: config.language} : {}),
+        ...(config.instructions ? {instructions: config.instructions} : {})}
     }),
     signal: globalThis.AbortSignal.timeout(config.timeoutMs)
   });
@@ -224,11 +232,11 @@ async function requestDoubao(text, config) {
     body: JSON.stringify(body),
     signal: globalThis.AbortSignal.timeout(config.timeoutMs)
   });
+  if (!response.ok) {
+    throw new Error(`豆包 TTS 请求失败（HTTP ${response.status}）。请检查鉴权、资源 ID 和服务权限。`);
+  }
   const contentType = response.headers.get('content-type') ?? '';
   const responseBuffer = Buffer.from(await response.arrayBuffer());
-  if (!response.ok) {
-    throw new Error(`豆包 TTS 请求失败（HTTP ${response.status}）：${responseBuffer.toString('utf8').slice(0, 500)}`);
-  }
   if (contentType.includes('audio/')) return {audio: responseBuffer};
   if (config.apiVersion === 'v3') {
     const chunks = [];
@@ -238,7 +246,8 @@ async function requestDoubao(text, config) {
       let event;
       try { event = JSON.parse(value); } catch { throw new Error('豆包 TTS 流式响应包含不可解析的 JSON。'); }
       if (event.code !== undefined && event.code !== 0 && event.code !== 20000000 && !(event.code === 3000 && event.data)) {
-        throw new Error(`豆包 TTS 合成失败（code: ${event.code}）：${event.message ?? '未知错误'}`);
+        const code = Number.isSafeInteger(event.code) ? event.code : 'invalid';
+        throw new Error(`豆包 TTS 合成失败（code: ${code}）。请检查音色、资源 ID 和服务权限。`);
       }
       if (event.data) chunks.push(readAudioPayload(event.data));
     }
@@ -256,11 +265,15 @@ async function requestDoubao(text, config) {
 }
 
 export async function synthesizeSpeech({text, config, outputPath}) {
+  if (!text?.trim()) throw new Error('TTS 文本不能为空。');
   if (config.provider === 'mock') {
     if (config.format !== 'wav') throw new Error('mock provider 目前只支持 wav。');
     fs.writeFileSync(outputPath, createWav(estimateMockDuration(text, config.speedRatio), config.sampleRate));
     return {durationHintSec: estimateMockDuration(text, config.speedRatio)};
   }
+  config = TtsConfigSchema.parse(config);
+  if (!config.enabled) throw new Error('TTS 配置未启用。');
+  if (config.provider === 'openai' && text.length > 4096) throw new Error('OpenAI 单场旁白不能超过 4096 字符，请拆分镜头。');
   const providers = {doubao: requestDoubao, openai: requestOpenAi, elevenlabs: requestElevenLabs, aliyun: requestAliyun};
   const request = providers[config.provider];
   if (!request) throw new Error(`不支持的 TTS provider：${config.provider}`);
@@ -278,7 +291,7 @@ export function probeAudioDuration(filePath) {
   return durationSec;
 }
 
-export function combineAudioSegments(segments, outputPath, durationSec) {
+export function combineAudioSegments(segments, outputPath, durationSec, sampleRate = 24000) {
   if (segments.length === 0) throw new Error('没有可合并的旁白片段。');
   const args = ['-hide_banner', '-loglevel', 'error', '-y'];
   const filters = [];
@@ -287,7 +300,7 @@ export function combineAudioSegments(segments, outputPath, durationSec) {
     const delayMs = Math.max(0, Math.round(segment.startSec * 1000));
     filters.push(`[${index}:a]adelay=${delayMs}|${delayMs},apad,atrim=duration=${durationSec.toFixed(3)}[a${index}]`);
   }
-  args.push('-filter_complex', `${filters.join(';')};${segments.map((_, index) => `[a${index}]`).join('')}amix=inputs=${segments.length}:duration=longest:dropout_transition=0:normalize=0,atrim=duration=${durationSec.toFixed(3)}`, '-ac', '1', '-ar', '24000', outputPath);
+  args.push('-filter_complex', `${filters.join(';')};${segments.map((_, index) => `[a${index}]`).join('')}amix=inputs=${segments.length}:duration=longest:dropout_transition=0:normalize=0,atrim=duration=${durationSec.toFixed(3)}`, '-ac', '1', '-ar', String(sampleRate), outputPath);
   const result = spawnSync('ffmpeg', args, {encoding: 'utf8'});
   if (result.error?.code === 'ENOENT') throw new Error('找不到 ffmpeg。请安装 FFmpeg，并确保 ffmpeg 在 PATH 中。');
   if (result.status !== 0) throw new Error(`ffmpeg 合并旁白失败：${result.stderr.trim()}`);

@@ -38,7 +38,7 @@ function validateSemanticScene(scene: StoryboardScene): MappingIssue[] {
     issues.push(mappingIssue(scene, 'media 需要 source-media；其余语义图解需要 diagram，避免把示意图伪装成真实素材。', 'error'));
   }
   for (const layer of scene.layers) {
-    if (UNUSED_LAYOUT_FIELDS.some((field) => field in layer && !(scene.shot?.id === 'media-before-after' && ['width','height','fit'].includes(field)))) issues.push(mappingIssue(scene, `layer ${layer.id} 含语义版式不会读取的坐标或状态字段。`, 'error'));
+    if (UNUSED_LAYOUT_FIELDS.some((field) => field in layer && !(scene.shot?.id === 'media-before-after' && ['width','height','fit'].includes(field)) && !(scene.shot?.id === 'ai-stream-response' && field === 'state'))) issues.push(mappingIssue(scene, `layer ${layer.id} 含语义版式不会读取的坐标或状态字段。`, 'error'));
     const allowed = visual.kind === 'statement' ? ['label']
       : visual.kind === 'media' ? ['screenshot', 'object']
         : visual.kind === 'metric' ? ['metric'] : ['node', 'card'];
@@ -111,7 +111,7 @@ export function validateContentMapping(storyboard: Storyboard): MappingIssue[] {
     if (!['2.3', '2.4'].includes(storyboard.schemaVersion) && scene.visual && (scene.visual.networkDirection || scene.visual.changeMode || scene.visual.mediaFocus || scene.visual.shotPattern)) issues.push(mappingIssue(scene, '语义扩展只支持 Storyboard 2.3。', 'error'));
     if (storyboard.schemaVersion === '2.4' && !['semantic-default', 'compare-reveal', 'network-expand'].includes(scene.shot?.id ?? '')) {
       if (!scene.primaryClaim?.trim() || !scene.title.trim() || scene.visual?.representation !== (scene.shot?.id === 'media-before-after' ? 'source-media' : 'diagram') || scene.template !== (['network', 'sequence'].includes(scene.visual?.kind ?? '') ? 'graph-explainer' : scene.visual?.kind === 'metric' ? 'metric-grid' : 'statement')) issues.push(mappingIssue(scene, '配方需要主张、标题、diagram 与匹配的基础 template。', 'error'));
-      if (scene.layers.some((layer) => UNUSED_LAYOUT_FIELDS.some((field) => field in layer && !(scene.shot?.id === 'media-before-after' && ['width','height','fit'].includes(field))))) issues.push(mappingIssue(scene, '配方不接受不会执行的坐标/状态字段。', 'error'));
+      if (scene.layers.some((layer) => UNUSED_LAYOUT_FIELDS.some((field) => field in layer && !(scene.shot?.id === 'media-before-after' && ['width','height','fit'].includes(field)) && !(scene.shot?.id === 'ai-stream-response' && field === 'state')))) issues.push(mappingIssue(scene, '配方不接受不会执行的坐标/状态字段。', 'error'));
       continue;
     }
     if (['2.3', '2.4'].includes(storyboard.schemaVersion)) {

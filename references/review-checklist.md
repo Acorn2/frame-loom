@@ -106,7 +106,13 @@ record the creator's full playback review and run `approve:delivery`; check
 ## Project palette, when enabled
 
 - [ ] The subject product and reference roles are supported by supplied sources; citation/competitor colors did not silently replace the video palette.
-- [ ] Reference pixels and URLs are recorded; source images are unchanged and local.
+- [ ] Reference pixels and URLs are recorded; source images are unchanged and local. New asset palettes use 1.1 with direct background, ink and accent samples plus evidence for all remaining roles.
+- [ ] Source background temperature/hue, title/body ink and surfaces appear in generated visuals; a button accent alone is insufficient. Any departure has a recorded reason.
+- [ ] QA palette adjustments have been checked against actual representative frames, not just accepted for contrast. Automated role verification does not prove visual similarity.
 - [ ] Adopted palette uses current supported shots; light/dark stages, cards, accent foreground and both subtitle routes are readable.
 - [ ] Actual project preview uses adopted colors; default library samples are not presented as this project preview.
 - [ ] Palette/source changes invalidate prior production and approval.
+
+## 内容布局复核
+
+遵循[内容优先布局检查](content-layout.md)。检查 QA 的 `renderedLayout` 和必选帧覆盖，复核主体过小、裁切素材、连续重复与动作中段警告。截图内部文字、关键对象是否清楚须查看实际画面；完成态无生成文字碰撞不等于宣传效果合格。检查每种布局和实际相邻交接后，再完整播放。

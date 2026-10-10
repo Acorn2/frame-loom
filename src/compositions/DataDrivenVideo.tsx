@@ -11,6 +11,7 @@ import {CaptionOverlay} from '../audio/CaptionOverlay';
 import type {CaptionCue} from '../audio/captions';
 import {getMusicVolumeAtFrame, type MusicDucking} from '../audio/ducking';
 import {getSceneTimeline} from '../timeline/scene-timeline';
+import {LayoutDiagnostics} from '../layout/LayoutDiagnostics';
 
 export interface AudioRuntime {
   voiceoverDataUri?: string;
@@ -34,6 +35,7 @@ export interface DataDrivenVideoProps extends Record<string, unknown> {
     showReviewMarker?: boolean;
     facecamRightFraction?: number;
     subtitleBottomFraction?: number;
+    layoutCheckFrames?: number[];
   };
 }
 
@@ -46,7 +48,7 @@ export function shouldRenderReviewMarker(profile?: DataDrivenVideoProps['renderP
 }
 
 export function DataDrivenVideo({storyboard, styleTokens, audioRuntime, renderProfile}: DataDrivenVideoProps) {
-  const tokens = applyProjectPalette(applyProjectFont(styleTokens ?? getDefaultStyleTokens(storyboard.project.width, storyboard.project.height), storyboard.font), storyboard.palette);
+  const tokens = {...applyProjectPalette(applyProjectFont(styleTokens ?? getDefaultStyleTokens(storyboard.project.width, storyboard.project.height), storyboard.font), storyboard.palette), layoutPolicy: storyboard.layoutPolicy};
   const fontReady = useProjectFont(storyboard.font);
   const captionTokens = captionTokensAtFrame(storyboard, useCurrentFrame(), tokens);
   const cleanMaster = renderProfile?.purpose === 'visual-master';
@@ -88,7 +90,7 @@ export function DataDrivenVideo({storyboard, styleTokens, audioRuntime, renderPr
         const outgoing = timeline[index + 1]?.scene.transitionIn?.type;
         return (
           <Sequence key={scene.id} from={startFrame} durationInFrames={scene.durationFrames}>
-            <ChapterPage scene={scene} outgoing={outgoing} outgoingFrames={overlapOutFrames} seamInk={tokens.accentAlt}><div style={{position: 'absolute', width: '100%', height: '100%', transform: scale < 1 ? `scale(${scale})` : undefined, transformOrigin: 'top left'}}>
+            <ChapterPage scene={scene} outgoing={outgoing} outgoingFrames={overlapOutFrames} seamInk={tokens.accentAlt}><div data-layout-scene={scene.id} style={{position: 'absolute', width: '100%', height: '100%', transform: scale < 1 ? `scale(${scale})` : undefined, transformOrigin: 'top left'}}>
               <RenderScene scene={scene} styleVersion={storyboard.style.version} tokens={tokens} showSceneCaptions={showSceneCaptions} externalCaptions={!cleanMaster && Boolean(audioRuntime?.captions?.length)} overlapOutFrames={overlapOutFrames} chapterTransitionOut={isChapterTransition(outgoing)} />
             </div></ChapterPage>
           </Sequence>
@@ -106,6 +108,7 @@ export function DataDrivenVideo({storyboard, styleTokens, audioRuntime, renderPr
         {audioRuntime?.voiceoverDataUri || audioRuntime?.musicDataUri || audioRuntime?.sfx?.length ? 'AUDIO PILOT' : 'SILENT PREVIEW'}
       </div> : null}
       {!cleanMaster && audioRuntime?.captions ? <CaptionOverlay captions={audioRuntime.captions} tokens={captionTokens} /> : null}
+      {storyboard.layoutPolicy && renderProfile?.layoutCheckFrames ? <LayoutDiagnostics board={storyboard} tokens={tokens} frames={renderProfile.layoutCheckFrames} captions={!cleanMaster && Boolean(audioRuntime?.captions?.length)} /> : null}
     </AbsoluteFill>
   );
 }

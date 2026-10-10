@@ -24,7 +24,21 @@ source document + video style + selected shot recipes → claims and shot planni
 
 用户只需给出材料和想得到的结果，**不需要知道项目 ID、填写 JSON 或运行 CLI**。先决定交付什么，再决定是否要在渲染前审核分镜；输入是纯文档还是文档＋图片，不影响下面的选择。
 
-**先选视频风格与全片字体，再选多个兼容的镜头配方。**风格决定配色、形状与基础入场方式，并为基础图解提供各自的标题构图和流程布局。全片字体独立单选，统一应用于标题、正文、图解和旁白字幕；专用配方负责证据驻留、标题降格、要点展开等具体镜头动作。你可以指定集合，也可以让 Agent 根据原文推荐并说明逐场选择。可用组合见[镜头配方库](../shots/README.md)，`retro-zine-explainer` 仅是预设组合的快捷入口。风格／配方选择与 `fast`／`review`、音频来源、交付目标互不绑定。
+**先选视频风格与全片字体，再选多个兼容的镜头配方。**风格决定默认配色、形状与基础入场方式，并为基础图解提供各自的标题构图和流程布局。提供主体截图时，背景、文字、卡片和强调色优先参考截图，风格保留构图、装饰与动效。全片字体独立单选，统一应用于标题、正文、图解和旁白字幕；专用配方负责证据驻留、标题降格、要点展开等具体镜头动作。你可以指定集合，也可以让 Agent 根据原文推荐并说明逐场选择。可用组合见[镜头配方库](../shots/README.md)，`retro-zine-explainer` 仅是预设组合的快捷入口。风格／配方选择与 `fast`／`review`、音频来源、交付目标互不绑定。
+
+### 截图配色与风格配色
+
+**有主体截图时，优先参考截图配色，不完全依赖视频风格默认色。** 你可以提供本地截图，或提供准确网址让 Agent 截图。背景、标题／正文、卡片表面和强调色分别参考来源，不仅取按钮颜色；来源中的暖色或有色背景可保留，真实截图不重新染色。选择 `retro-zine` 等风格只确定画面语言，不强制使用其默认色。
+
+| 配色选择 | 实际行为 |
+| --- | --- |
+| 自动判断（默认，`--color-mode auto`） | 主体产品截图用于全片配色；引用、竞品截图不自动决定主体颜色。没有配色参考时沿用风格与配方默认色 |
+| 跟随产品素材（`--color-mode source`） | 必须使用有效截图来源及完整取色记录，缺少来源时说明缺口，不静默回退 |
+| 使用风格配色（`--color-mode style`） | 明确保留风格与配方默认色；画面中的真实截图仍保持原貌 |
+
+素材配色目前支持六套当前风格与40个当前横屏场景。Agent 会记录取色与推导理由，并在实际镜头中检查颜色及文字可读性；公开样片仍展示默认色。操作与校验细节见[项目配色](project-palette.md)。
+
+### 初始化与审核模式
 
 **默认值要分清：**直接运行 `init:project` 且省略 `--style`，代码默认使用 `retro-zine`；通过 Skill 未指定组合时，Agent 应查可用能力后推荐风格和配方集合。CLI 用 `--style <id> --font <font-id> --shots <id,id,...>` 初始化独立组合；只传 `--style` 的旧 2.3 入口仍保留。`review` 审核组合与逐场编排，`fast` 按已说明的选择继续。
 
@@ -172,7 +186,7 @@ npm run init:project -- --slug my-explainer --style retro-zine --shots paper-tit
 
 `--slug` 换成简短的英文主题，不带日期。命令打印 `PROJECT INITIALIZED` 和实际项目绝对路径，目录格式为 `projects/YYYYMMDD-my-explainer`，同日同名会加序号。后续命令使用这个实际路径；继续同一条视频时无需重新初始化。
 
-草稿中的 `shotRecipes` 固定可用集合，逐场 `shot` 填实际选用项；允许重复、调整顺序和只用其中一部分，不能悄悄添加集合外镜头。初始化只创建待编排文件，不读取文档、不渲染视频。具体说明及适配上游的方法见[配方库](../shots/README.md)。当前全部 37 个场景配方支持六套风格的 16:9 横屏；竖屏目前可选基础语义配方；不支持的组合会明确报错。`--shots` 只接收场景配方 ID，辅助动作和跨场转场不能填入这个参数。
+草稿中的 `shotRecipes` 固定可用集合，逐场 `shot` 填实际选用项；允许重复、调整顺序和只用其中一部分，不能悄悄添加集合外镜头。初始化只创建待编排文件，不读取文档、不渲染视频。具体说明及适配上游的方法见[配方库](../shots/README.md)。当前全部 40 个场景配方支持六套风格的 16:9 横屏；竖屏可选基础语义配方及操作筛选、结果生成和单位点阵重组；不支持的组合会明确报错。`--shots` 只接收场景配方 ID，辅助动作和跨场转场不能填入这个参数。
 
 ### 让 Agent 完成原文到分镜的编排
 
@@ -237,9 +251,9 @@ Agent 按原文选择镜头，逐场显式填写精确 `shot` 与 layer 槽位�
 
 公开示例：[资料笔记](../examples/video-templates/knowledge-notes/README.md)、[演示产品更新](../examples/video-templates/product-update/README.md)，以及 [单镜 fixture](../examples/shot-recipes)。两份原始文档均为自有演示材料，不代表第三方产品事实。阶段完成情况、实际验证与剩余缺口见[实施记录](video-template-refactor-status.md)。
 
-当前运行时：37 个场景配方、9 个宿主动作、5 个换章配方；筛选清单接入 48/48。
+当前运行时：40 个场景配方、9 个宿主动作、5 个换章配方；筛选清单接入 48/48。
 
-场景配方包括34个上游方法适配和3个原生配方。P2 新增了资料卡堆、列表压弹、中枢翻面、滚动刹停、真实曲线、粒子柱图、成员网格、环形注释、循环节点、前后对照、文档书写、代码揭示和字形描画。具体适配变体见[台账](../shots/shortlist-coverage.json)。`npm run list:shots -- --auxiliary` 查询辅助动作，`--transitions` 查询换章配方，均不计成独立正文镜头。
+场景配方包括原筛选清单34个上游方法适配、3个新增上游方法适配和3个原生配方。P2 新增了资料卡堆、列表压弹、中枢翻面、滚动刹停、真实曲线、粒子柱图、成员网格、环形注释、循环节点、前后对照、文档书写、代码揭示和字形描画。具体适配变体见[台账](../shots/shortlist-coverage.json)。`npm run list:shots -- --auxiliary` 查询辅助动作，`--transitions` 查询换章配方，均不计成独立正文镜头。
 
 P2 支持六套当前风格的 16:9 横屏，保持 experimental。数据类需要真实记录和单位；前后对照需要两份有来源、同尺寸同视角素材；代码需要原文；字形描画需要输入 SVG 几何。辅助效果在场景 `shot.effects` 中绑定指定宿主与目标，使用显式 `highlight` 阶段；换章在 `transitionIn` 中声明并避开字幕。不能仅凭一句需求让 renderer 编造这些输入。网页仍在三个独立页面选风格、勾选场景、导出制作指令。
 
@@ -265,7 +279,7 @@ npm run init:project -- --slug font-demo --style scatterbrain --font source-han-
 
 六套风格通过标题构图、中文字体、节点形状、流程布局和入场方式形成不同的画面语言。Style Pack 提供配色、默认字体与基础动效，显式选择的全片字体覆盖默认字体，基础语义 renderer 根据风格组织画面；文字、数字、连接和素材仍由分镜提供。
 
-六套风格均支持横屏 `landscape`（1920×1080）和竖屏 `portrait`（1080×1920）。六套风格的 16:9 横屏均有 37 个可用场景配方；竖屏组合支持 `semantic-default`，这一基础配方覆盖观点、对照、顺序、关联、变化、数据和素材七种语义画面，可在同一视频中重复使用。风格支持某种画幅不代表所有专用配方都已适配，实际选择以页面和 catalog 的兼容清单为准。
+六套风格均支持横屏 `landscape`（1920×1080）和竖屏 `portrait`（1080×1920）。六套风格的 16:9 横屏均有 40 个可用场景配方；竖屏组合支持 `type-and-filter`、`ai-stream-response`、`unit-dot-regroup` 和 `semantic-default`，这一基础配方覆盖观点、对照、顺序、关联、变化、数据和素材七种语义画面，可在同一视频中重复使用。风格支持某种画幅不代表所有专用配方都已适配，实际选择以页面和 catalog 的兼容清单为准。
 
 展示名称已更新，命令行 ID 保持不变：墨白杂志仍使用 `retro-zine`，瑞士蓝使用 `archive-grid`，手绘便签使用 `scatterbrain`。已有分镜更换风格或采用更新后的实现时，需要重新校验布局并渲染。
 
@@ -431,7 +445,15 @@ export DASHSCOPE_API_KEY='<北京地域的百炼 API Key>'
 
 Windows PowerShell 对应写法如 `$env:OPENAI_API_KEY = '<OpenAI Secret key>'`，其他服务替换变量名即可。这些变量只对当前终端会话有效；如果从 IDE、Agent 或另一个终端启动命令，也要确保那个进程能读到相同的环境变量。FrameLoom **不会自动读取 `.env` 文件**；不要把真实 Key 写入 `tts-config.json`、样例文件或提交到 Git。豆包 API Key 方式不需要另外填写 App ID 和 Access Token。旧项目如已使用 `DOUBAO_TTS_*` 环境变量，可继续按其现有 `apiKeyEnv`、`resourceIdEnv` 配置使用。阿里样例使用北京接入域名，北京 Key 不能与其他地域域名混用；改用新加坡时还需把配置文件里的 `endpoint` 主机改为 `dashscope-intl.aliyuncs.com`，并使用新加坡地域的 Key。
 
-运行 `npm run list:tts-profiles -- projects/my-video` 可查看已启用且通过格式校验的配置摘要，不显示密钥；该命令不会验证 Key 是否有效。一个有效配置可以默认选用；多个有效配置必须通过 `--tts-config` 指定其中一个，并在运行记录中保留所选音色。内置 TTS 只向对应服务商的官方 HTTPS 域名发送凭据，不接受自定义代理地址或跳转；需要代理时先在外部生成音频，再走外部配音路线。自动测试使用模拟服务响应，不能证明真实账号、音色和权限已可用；首次使用所选服务时，应在自己的项目中实际合成一小段并检查输出。实际合成会向服务商发起请求，可能产生费用；更多服务限制见[音频接入说明](audio-integration.md)。
+运行 `npm run list:tts-profiles -- projects/my-video` 可查看各配置的状态和不含密钥的诊断：`ready` 表示本地参数有效且所需环境变量已设置，`needs-environment` 表示缺少变量，`disabled` 为关闭，`invalid` 为无效配置，`test-only` 仅供测试。该命令不验证在线 Key、余额或音色权限；一个坏配置不会中断其他配置的展示。仅一个 `ready` 配置时可默认选用，多个时通过 `--tts-config` 指定；真实配置缺失时不自动退回 mock。内置 TTS 只向对应服务商的官方 HTTPS 域名发送凭据，不接受自定义代理地址或跳转；需要代理时先在外部生成音频，再走外部配音路线。
+
+首次使用或调整音色时，可显式合成一小段试听，默认输出到项目 `audio/previews/`，不覆盖整片音频包：
+
+```bash
+npm run preview:tts -- projects/my-video --tts-config projects/my-video/audio/tts-config.json --text "你好，请确认这段配音的音色与语速。"
+```
+
+试听会请求服务商并可能产生费用；本地检查和自动测试不会证明真实账号与音色可用。试听应在审核前进行，音频目录仍参与生产指纹。常用参数包括 `speedRatio`、支持模型的 `instructions`、ElevenLabs 的 `voiceSettings`／发音词典／可选前后场上下文，以及最终旁白的 `outputSampleRate`。字段按服务校验，不支持的非默认设置会报错；完整支持范围及示例见[音频接入说明](audio-integration.md#validated-voice-controls)。
 
 ```bash
 npm run produce -- projects/my-video --mode fast --audio-mode tts --output-purpose in-project-video --tts-config projects/my-video/audio/tts-config.json

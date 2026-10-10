@@ -59,8 +59,8 @@ describe('2.4 shot production contracts', () => {
   });
   it('lists actual recipe capabilities for style and canvas selection', () => {
     const log = () => {};
-    expect(listShots(['--style', 'retro-zine', '--canvas', 'landscape'], {log})).toHaveLength(37);
-    expect(listShots(['--style', 'signal', '--canvas', 'portrait'], {log}).map((shot) => shot.id)).toEqual(['semantic-default']);
+    expect(listShots(['--style', 'retro-zine', '--canvas', 'landscape'], {log})).toHaveLength(40);
+    expect(listShots(['--style', 'signal', '--canvas', 'portrait'], {log}).map((shot) => shot.id)).toEqual(['type-and-filter', 'ai-stream-response', 'unit-dot-regroup', 'semantic-default']);
     expect(() => listShots(['--style', 'invented'], {log})).toThrow(/未知风格/);
     expect(() => listShots(['--canvas', 'square'], {log})).toThrow(/canvas/);
     expect(() => listShots(['--invented'], {log})).toThrow(/Usage/);

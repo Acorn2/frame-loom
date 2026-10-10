@@ -149,7 +149,9 @@ describe('video production purposes', () => {
   it('tracks a TTS speaker supplied by an environment variable in reuse fingerprints', () => {
     const {project} = projectFixture();
     const configPath = path.join(project, 'audio', 'tts-config.json');
-    fs.writeFileSync(configPath, JSON.stringify({schemaVersion: '1.0', enabled: true, provider: 'doubao', voiceTypeEnv: 'VOLC_TTS_SPEAKER'}));
+    fs.writeFileSync(configPath, JSON.stringify({schemaVersion: '1.0', enabled: true, provider: 'doubao', voiceTypeEnv: 'VOLC_TTS_SPEAKER', endpoint: 'https://openspeech.bytedance.com/api/v3/tts/unidirectional/sse', apiVersion: 'v3'}));
+    vi.stubEnv('VOLC_TTS_API_KEY', 'test-key');
+    vi.stubEnv('VOLC_TTS_RESOURCE_ID', 'test-resource');
     vi.stubEnv('VOLC_TTS_SPEAKER', 'voice-a');
     expect(selectTtsProfile(project).voiceType).toBe('voice-a');
     const configFingerprint = fingerprintTtsConfig(configPath, project);

@@ -58,6 +58,7 @@ export function validateAssets(storyboardPath, manifestPath) {
   }
 
   if (projectInput?.colorMode === 'style' && storyboard.palette) issues.push('colorMode 为 style：不能同时启用项目配色。');
+  if (projectInput?.palettePolicy === 'source-roles-v1' && storyboard.palette && storyboard.palette.schemaVersion !== '1.1') issues.push('source-roles-v1：新项目必须使用 palette 1.1，完整记录背景、文字、表面及强调色；不能只替换强调色。');
   if (projectInput?.colorMode === 'source' && storyboard.palette?.source !== 'assets') issues.push('colorMode 为 source：必须采用已登记的产品素材配色，不能静默回退。');
   if (projectInput?.colorMode === 'auto' && !storyboard.palette && manifest.assets.some(asset => ['palette-reference', 'both'].includes(asset.usage)) && !projectInput.colorFallbackReason) issues.push('自动配色未采用已登记参考：请采用配色或在 colorFallbackReason 记录原因。');
   try {resolvePaletteEvidence(storyboard.palette, path.dirname(resolvedStoryboard));} catch (error) {issues.push(`palette: ${error.message}`);}

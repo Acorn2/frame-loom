@@ -1,0 +1,148 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "ai-stream-response",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "结果生成与确认",
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "durationSec": 10.0,
+    "durationFrames": 300,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "ai-stream-response",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "结果生成与确认",
+      "primaryClaim": "摘要先出现，任务逐项确认，最后显示完成状态。",
+      "visual": {
+        "kind": "sequence",
+        "explanation": "FrameLoom 自写示意，不代表真实产品或用户数据",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "ai-stream-response",
+        "version": "1.2.0",
+        "slots": {
+          "summary": "summary",
+          "items": [
+            "a",
+            "b",
+            "c"
+          ],
+          "completion": "done"
+        }
+      },
+      "narration": "摘要先出现，任务逐项确认，最后显示完成状态。",
+      "durationFrames": 300,
+      "layers": [
+        {
+          "id": "summary",
+          "type": "label",
+          "label": "先给结论，再补齐依据"
+        },
+        {
+          "id": "a",
+          "type": "node",
+          "label": "读取资料",
+          "text": "保留原文出处",
+          "state": "upcoming"
+        },
+        {
+          "id": "b",
+          "type": "node",
+          "label": "核对输入",
+          "text": "确认内容与边界",
+          "state": "upcoming"
+        },
+        {
+          "id": "c",
+          "type": "node",
+          "label": "整理结果",
+          "text": "输出可复查的结论",
+          "state": "upcoming"
+        },
+        {
+          "id": "done",
+          "type": "label",
+          "label": "本轮整理完成"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "summary-enter",
+          "target": "summary",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "a-enter",
+          "target": "a",
+          "action": "enter",
+          "start": 54,
+          "duration": 18
+        },
+        {
+          "id": "a-set-state",
+          "target": "a",
+          "action": "set-state",
+          "start": 81,
+          "duration": 12,
+          "state": "completed"
+        },
+        {
+          "id": "b-enter",
+          "target": "b",
+          "action": "enter",
+          "start": 108,
+          "duration": 18
+        },
+        {
+          "id": "b-set-state",
+          "target": "b",
+          "action": "set-state",
+          "start": 135,
+          "duration": 12,
+          "state": "completed"
+        },
+        {
+          "id": "c-enter",
+          "target": "c",
+          "action": "enter",
+          "start": 162,
+          "duration": 18
+        },
+        {
+          "id": "c-set-state",
+          "target": "c",
+          "action": "set-state",
+          "start": 189,
+          "duration": 12,
+          "state": "completed"
+        },
+        {
+          "id": "done-enter",
+          "target": "done",
+          "action": "enter",
+          "start": 234,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

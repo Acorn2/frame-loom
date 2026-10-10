@@ -16,10 +16,10 @@ export function previewStatusText(item) {
 }
 
 // Never substitute another style's media when the chosen sample is missing.
-export function recipePreview(item, style) {
+export function recipePreview(item, style, canvas = 'landscape') {
   if (!item.stylePreviews) return item;
-  const preview = item.stylePreviews.find(sample => sample.style === style);
+  const preview = item.stylePreviews.find(sample => sample.style === style && (sample.canvas ?? 'landscape') === canvas);
   return {...item, poster: preview?.poster ?? null, video: preview?.video ?? null,
-    previewStatus: preview?.previewStatus ?? 'missing', sampleStyle: style,
-    previewVariants: item.previewVariants?.map(variant => recipePreview(variant, style))};
+    previewStatus: preview?.previewStatus ?? 'missing', sampleStyle: style, sampleCanvas: canvas,
+    previewVariants: item.previewVariants?.map(variant => recipePreview(variant, style, canvas))};
 }

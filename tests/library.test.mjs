@@ -28,7 +28,7 @@ afterAll(async () => {await new Promise(resolve => server.close(resolve));});
 describe('local library capabilities and selection', () => {
   it('joins actual catalog entries and public fixtures without counting hosted actions as scenes', () => {
     expect(catalog.styles).toHaveLength(6);
-    expect(catalog.recipes.filter(item => item.kind === 'scene')).toHaveLength(37);
+    expect(catalog.recipes.filter(item => item.kind === 'scene')).toHaveLength(40);
     expect(catalog.recipes.filter(item => item.kind === 'hosted-action')).toHaveLength(9);
     expect(catalog.recipes.filter(item => item.kind === 'cross-scene-transition')).toHaveLength(5);
     for (const fixture of libraryFixtures()) expect(fs.existsSync(path.join(projectRoot, fixture.source))).toBe(true);
@@ -41,7 +41,7 @@ describe('local library capabilities and selection', () => {
   it('filters all style and orientation combinations using manifest compatibility', () => {
     for (const style of catalog.styles) for (const canvas of ['landscape', 'portrait']) {
       const recipes = catalog.recipes.filter(item => compatible(item, style.id, canvas));
-      expect(recipes).toHaveLength(canvas === 'landscape' ? 37 : 1);
+      expect(recipes).toHaveLength(canvas === 'landscape' ? 40 : 4);
       expect(recipes.some(item => item.id === 'semantic-default')).toBe(true);
     }
   });
@@ -330,10 +330,10 @@ describe('portable recipe copying', () => {
 describe('style card capability and preview evidence', () => {
   it('counts compatible scenes for the current canvas, excluding auxiliary actions and chapter transitions', () => {
     const retro = catalog.styles.find(style => style.id === 'retro-zine');
-    expect(styleCardInfo(retro, catalog.recipes, 'landscape').count).toBe(37);
-    expect(styleCardInfo(retro, catalog.recipes, 'portrait').count).toBe(1);
-    expect(styleCardInfo(retro, catalog.recipes, 'portrait').basicOnly).toBe(true);
-    for (const style of catalog.styles.filter(style => style.id !== 'retro-zine')) expect(styleCardInfo(style, catalog.recipes, 'landscape').capability).toBe('37 个可用镜头');
+    expect(styleCardInfo(retro, catalog.recipes, 'landscape').count).toBe(40);
+    expect(styleCardInfo(retro, catalog.recipes, 'portrait').count).toBe(4);
+    expect(styleCardInfo(retro, catalog.recipes, 'portrait').basicOnly).toBe(false);
+    for (const style of catalog.styles.filter(style => style.id !== 'retro-zine')) expect(styleCardInfo(style, catalog.recipes, 'landscape').capability).toBe('40 个可用镜头');
   });
   it('publishes readable covers from the same video and color roles from the actual style tokens', async () => {
     const published = await (await fetch(`${base}/catalog.json`)).json();

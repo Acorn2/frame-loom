@@ -1,8 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {createHash, randomUUID} from 'node:crypto';
-import {resolveTtsVoiceType} from './tts-profiles.mjs';
+import {ttsEnvironmentSettings} from './tts-profiles.mjs';
 import {probeAudioDuration, synthesizeSpeech} from './tts-provider.mjs';
+import {TTS_SYNTHESIS_REVISION} from '../../src/schemas/tts-config.ts';
 
 function canonical(value) {
   if (Array.isArray(value)) return value.map(canonical);
@@ -11,10 +12,9 @@ function canonical(value) {
 }
 
 export function voiceCacheKey(text, config) {
-  const settings = {...config, voiceType: resolveTtsVoiceType(config)};
-  for (const key of ['enabled', 'outputDirectory', 'timeoutMs', 'apiKeyEnv', 'accessTokenEnv', 'appIdEnv', 'voiceTypeEnv', 'resourceIdEnv']) delete settings[key];
-  settings.resourceId = config.resourceIdEnv ? process.env[config.resourceIdEnv] : undefined;
-  return createHash('sha256').update(JSON.stringify(canonical({version: 1, text, settings}))).digest('hex');
+  const settings = {...config, ...ttsEnvironmentSettings(config)};
+  for (const key of ['enabled', 'outputDirectory', 'outputSampleRate', 'timeoutMs', 'apiKeyEnv', 'accessTokenEnv', 'appIdEnv', 'voiceTypeEnv', 'resourceIdEnv']) delete settings[key];
+  return createHash('sha256').update(JSON.stringify(canonical({version: TTS_SYNTHESIS_REVISION, text, settings}))).digest('hex');
 }
 
 const bytesHash = (file) => createHash('sha256').update(fs.readFileSync(file)).digest('hex');

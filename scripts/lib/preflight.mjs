@@ -7,10 +7,11 @@ import {inspectAudio} from '../inspect-audio.mjs';
 import {validateAssets} from '../validate-assets.mjs';
 import {checkExternalCaptionLayout, checkTextLayout} from './text-layout.mjs';
 import {checkContentQuality} from './content-quality.mjs';
+import {checkContentLayout} from './content-layout.mjs';
 
 export function checkStoryboardInput(storyboard, {storyboardPath, styleRoot, executionMode}) {
   const issues = validateStoryboard(storyboard, {storyboardPath, styleRoot, executionMode});
-  return issues.some(item => item.severity === 'error') ? issues : [...issues, ...checkContentQuality(storyboard)];
+  return issues.some(item => item.severity === 'error') ? issues : [...issues, ...checkContentQuality(storyboard), ...checkContentLayout(storyboard).map(item => ({path: `layout.${item.sceneId}.${item.layerId}`, severity: item.severity, message: item.message}))];
 }
 
 export function checkAssetInput(storyboardPath) {
@@ -19,6 +20,7 @@ export function checkAssetInput(storyboardPath) {
 
 export function checkVisualInput(storyboard) {
   const safeArea = checkSafeArea(storyboard);
+  safeArea.issues.push(...checkContentLayout(storyboard));
   const textLayout = checkTextLayout(storyboard);
   return {safeArea, textLayout};
 }

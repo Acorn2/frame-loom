@@ -11,6 +11,8 @@ import {checkAssetInput, checkAudioInput, checkStoryboardInput, checkVisualInput
 
 import {loadAudioRuntime} from './lib/audio-runtime.mjs';
 import {assertStoryboardApproval} from './lib/storyboard-approval.mjs';
+import {layoutCollector} from './lib/layout-qa.mjs';
+import {layoutCheckpoints} from '../src/layout/checkpoints.ts';
 
 const args = process.argv.slice(2);
 let executionMode = 'fast';
@@ -60,16 +62,17 @@ for (const scene of hydrated.scenes) {
 const audioTiming = audioConfigPath ? checkAudioInput(storyboardPath, audioConfigPath) : undefined;
 const audioRuntime = loadAudioRuntime(audioConfigPath, audioTiming);
 const hasAudio = Boolean(audioRuntime?.voiceoverDataUri || audioRuntime?.musicDataUri || audioRuntime?.sfx?.length);
-const inputProps = {storyboard: hydrated, audioRuntime, styleTokens: createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height, storyboard.font, storyboard.palette), renderProfile: {purpose: 'visual-preview'}};
+const context = hasAudio ? Math.round(storyboard.project.fps * 0.5) : 0;
+const start = Math.max(0, timing.startFrame - context);
+const end = Math.min(storyboard.project.durationFrames - 1, timing.endFrame + context - 1);
+const layout = layoutCollector(storyboard, {frames: layoutCheckpoints(storyboard).filter(frame => frame >= start && frame <= end)});
+const inputProps = {storyboard: hydrated, audioRuntime, styleTokens: createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height, storyboard.font, storyboard.palette), renderProfile: {purpose: 'visual-preview', ...(storyboard.layoutPolicy ? {layoutCheckFrames: layout.frames} : {})}};
 console.log('Bundling Remotion composition...');
 const serveUrl = await bundle({entryPoint: path.join(root, 'src/index.ts')});
 const composition = (await getCompositions(serveUrl, {inputProps})).find((item) => item.id === 'StoryboardV2');
 if (!composition) throw new Error('找不到 StoryboardV2 composition。');
 fs.mkdirSync(path.dirname(outputPath), {recursive: true});
-const context = hasAudio ? Math.round(storyboard.project.fps * 0.5) : 0;
-const start = Math.max(0, timing.startFrame - context);
-const end = Math.min(storyboard.project.durationFrames - 1, timing.endFrame + context - 1);
-await renderMedia({composition, serveUrl, inputProps, codec: 'h264', outputLocation: outputPath, audioCodec: hasAudio ? 'aac' : null, muted: !hasAudio, enforceAudioTrack: hasAudio, frameRange: [start, end]});
+await renderMedia({composition, serveUrl, inputProps, codec: 'h264', outputLocation: outputPath, audioCodec: hasAudio ? 'aac' : null, muted: !hasAudio, enforceAudioTrack: hasAudio, frameRange: [start, end], onBrowserLog: layout.onBrowserLog, logLevel: 'error'});
 fs.mkdirSync(reviewDir, {recursive: true});
 const firstAction = timing.scene.beats.find((beat) => beat.action !== 'set-state');
 const lastActionEnd = Math.max(0, ...timing.scene.beats.map((beat) => beat.start + beat.duration));
@@ -84,6 +87,7 @@ for (const item of frames) {
   const frame = timing.startFrame + Math.max(0, Math.min(timing.scene.durationFrames - 1, item.local));
   await renderStill({composition, serveUrl, inputProps, frame, output: path.join(reviewDir, `${item.name}.png`), imageFormat: 'png'});
 }
-fs.writeFileSync(path.join(reviewDir, 'clip-timing.json'), JSON.stringify({sceneId, sourceStartFrame: start, sourceEndFrameInclusive: end, fps: storyboard.project.fps, hasAudio, reviewOnly: true, frames}, null, 2));
+const layoutQa = layout.finish();
+fs.writeFileSync(path.join(reviewDir, 'clip-timing.json'), JSON.stringify({sceneId, sourceStartFrame: start, sourceEndFrameInclusive: end, fps: storyboard.project.fps, hasAudio, reviewOnly: true, frames, ...(layoutQa ? {layoutQa} : {})}, null, 2));
 console.log(`SHOT PREVIEW ${outputPath} (${timing.scene.durationFrames / storyboard.project.fps}s)`);
 console.log(`REVIEW FRAMES ${reviewDir}`);

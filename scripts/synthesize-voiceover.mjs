@@ -23,6 +23,13 @@ function writeJson(filePath, value) {
   fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`);
 }
 
+export function withSceneContext(config, texts, index) {
+  if (config.provider !== 'elevenlabs' || !config.useSceneContext) return config;
+  return {...config, useSceneContext: false, requestBody: {...config.requestBody,
+    ...(index > 0 ? {previous_text: texts[index - 1]} : {}),
+    ...(index + 1 < texts.length ? {next_text: texts[index + 1]} : {})}};
+}
+
 function parseArgs(args) {
   const positional = [];
   const options = {force: false, reuse: false};
@@ -73,7 +80,7 @@ function isInside(directory, candidate) {
   return relative !== '' && relative !== '..' && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative);
 }
 
-function resolveOutputDirectory(projectPath, configuredPath) {
+export function resolveOutputDirectory(projectPath, configuredPath) {
   const audioDirectory = path.join(projectPath, 'audio');
   const outputDirectory = path.resolve(projectPath, configuredPath);
   if (!isInside(audioDirectory, outputDirectory)) {
@@ -155,6 +162,7 @@ async function main(options) {
   const timeline = getSceneTimeline(storyboardResult.data);
   const configFingerprint = fingerprintTtsConfig(ttsConfigPath, projectPath);
   const narratedScenes = timeline.filter(({scene}) => scene.narration.trim());
+  const narratedTexts = narratedScenes.map(({scene}) => scene.narration.trim());
   const segmentNames = narratedScenes.map(({scene}) => scene.id.toLowerCase());
   if (segmentNames.includes('voiceover')) throw new Error('scene id 不能是 voiceover：它与合成后的旁白文件名冲突。');
   if (new Set(segmentNames).size !== segmentNames.length) throw new Error('有旁白的 scene id 不能仅以大小写区分：它们会在部分文件系统中生成同名音频文件。');
@@ -193,7 +201,8 @@ async function main(options) {
       const segmentPath = path.join(stagingDirectory, `${scene.id}.${extension}`);
       const finalSegmentPath = path.join(outputDirectory, `${scene.id}.${extension}`);
       console.log(`SYNTHESIZE ${scene.id} provider=${config.provider}`);
-      const {durationSec, reused} = await cachedSpeech({projectPath, text, config, outputPath: segmentPath, refresh: options.refreshVoice});
+      const speechConfig = withSceneContext(config, narratedTexts, segments.length);
+      const {durationSec, reused} = await cachedSpeech({projectPath, text, config: speechConfig, outputPath: segmentPath, refresh: options.refreshVoice});
       console.log(`${reused ? 'VOICE CACHE HIT' : 'VOICE GENERATED'} ${scene.id}`);
       const endSec = startSec + durationSec;
       segments.push({
@@ -227,7 +236,7 @@ async function main(options) {
     const overlapErrors = overlap.issues.filter((issue) => issue.includes('重叠') || issue.includes('无效') || issue.includes('重复'));
     if (overlapErrors.length) throw new Error(overlapErrors.join('\n'));
     const stagedFullAudioPath = path.join(stagingDirectory, `voiceover.${extension}`);
-    combineAudioSegments(segments, stagedFullAudioPath, projectDurationSec);
+    combineAudioSegments(segments, stagedFullAudioPath, projectDurationSec, config.outputSampleRate);
     const manualCues = fs.existsSync(manualCuesPath);
     const cues = manualCues ? resolveManualCues(readJson(manualCuesPath), segments) : segments.flatMap((segment) => splitCaptionWindow(segment.text, segment.startSec, segment.endSec));
     const captions = cues.map((cue, index) => [

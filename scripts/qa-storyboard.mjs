@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import {inspectLayoutReceipt} from './lib/layout-qa.mjs';
 import {assertProductionLock} from './lib/production-lock.mjs';
 import {compileStoryboardShots} from '../src/shots/compile-shot.ts';
 import path from 'node:path';
@@ -16,6 +17,7 @@ import {loadHandoffConfig, OUTPUT_PURPOSES} from './lib/output-purpose.mjs';
 import {fingerprintFiles} from './lib/input-fingerprint.mjs';
 import {inspectCleanNarratedRender} from './lib/render-receipt.mjs';
 import {inspectTrailingSilence} from './lib/audio-tail.mjs';
+import {resolvePaletteEvidence} from './lib/project-palette.mjs';
 
 function parseArgs(args) {
   const options = {expectAudio: false, executionMode: 'review'};
@@ -85,6 +87,8 @@ export function runQa(options) {
   }
 
   if (storyboard) {
+    try {checks.renderedLayout = inspectLayoutReceipt(storyboard, resolvedVideo);}
+    catch (error) {checks.renderedLayout = {passed: false, error: error.message}; errors.push(`rendered layout: ${error.message}`);}
     if (storyboard.schemaVersion === '2.4') {
       try {checks.productionLock = {passed: true, hash: assertProductionLock(storyboard, resolvedVideo, undefined, path.dirname(resolvedStoryboard)).hash};}
       catch (error) {checks.productionLock = {passed: false, error: error.message}; errors.push(`production lock: ${error.message}`);}
@@ -133,6 +137,21 @@ export function runQa(options) {
     const assetIssues = checkAssetInput(resolvedStoryboard);
     checks.assets = {passed: assetIssues.length === 0, issues: assetIssues};
     if (!checks.assets.passed) errors.push('asset validation failed');
+    if (storyboard.palette) {
+      try {
+        const palette = resolvePaletteEvidence(storyboard.palette, path.dirname(resolvedStoryboard));
+        checks.palette = {passed: true, schemaVersion: palette.input.schemaVersion, source: palette.input.source,
+          roles: palette.evidence?.roles ?? Object.keys(palette.input.colors), resolved: palette.resolved,
+          adjustments: Object.fromEntries(['light', 'dark'].map(mode => [mode, Object.fromEntries(
+            ['ink', 'muted', 'captionInk'].filter(role => palette.input.colors[role] && palette.input.colors[role].toLowerCase() !== palette.resolved[mode][role].toLowerCase())
+              .map(role => [role, {adopted: palette.input.colors[role], rendered: palette.resolved[mode][role]}])
+          )])),
+          sourceRolesVerified: Boolean(palette.evidence),
+          visualMatchRequiresManualReview: true};
+      } catch (error) {
+        checks.palette = {passed: false, error: error.message}; errors.push(`palette: ${error.message}`);
+      }
+    }
 
     try {
       const {safeArea, textLayout} = checkVisualInput(storyboard);

@@ -3,6 +3,7 @@ import {PROJECT_PALETTE_STYLES} from '../schemas/project-palette';
 import type {ActionId, LayerType, TemplateId, TransitionId, SceneVisual} from '../schemas/storyboard';
 
 export const CAPABILITY_MANIFEST = {
+  layoutPolicies: ['content-first-v1'],
   projectPalette: {schemaVersion: '1.0', orientations: ['landscape'], styles: PROJECT_PALETTE_STYLES, sources: ['assets', 'custom']},
   shots: SHOT_IDS,
   auxiliaryRecipes: ['marker-underline', 'outline-trace', 'paper-tape', 'card-flip', 'scanline-annotate-focus', 'scan-bracket-sweep', 'line-boil', 'speed-ramp-freeze', 'mosaic-reframe'],

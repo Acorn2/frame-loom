@@ -1,0 +1,96 @@
+{
+  "id": "type-and-filter",
+  "version": "1.2.0",
+  "status": "experimental",
+  "registered": true,
+  "visualKinds": [
+    "sequence"
+  ],
+  "purpose": "操作筛选与详情",
+  "inputModes": [
+    "document-only",
+    "document-with-assets"
+  ],
+  "requiredAssets": [],
+  "styles": [
+    "retro-zine",
+    "signal",
+    "scatterbrain",
+    "archive-grid",
+    "signal-noir",
+    "studio-frame"
+  ],
+  "orientations": [
+    "landscape",
+    "portrait"
+  ],
+  "slots": {
+    "query": {
+      "min": 1,
+      "max": 1,
+      "labelMax": 16
+    },
+    "items": {
+      "min": 2,
+      "max": 4,
+      "labelMax": 14,
+      "textMax": 32
+    },
+    "detail": {
+      "min": 1,
+      "max": 1,
+      "labelMax": 20,
+      "textMax": 80
+    }
+  },
+  "timing": {
+    "actions": {
+      "enter": {
+        "minSec": 0.2,
+        "maxSec": 3
+      },
+      "reveal": {
+        "minSec": 0.2,
+        "maxSec": 3
+      },
+      "focus": {
+        "minSec": 0.6,
+        "maxSec": 2
+      },
+      "highlight": {
+        "minSec": 0.2,
+        "maxSec": 0.8
+      }
+    },
+    "readingSec": 1.2,
+    "titleHoldSec": 0.6,
+    "sourceHoldSec": 0.6,
+    "itemHoldSec": 0.6
+  },
+  "motion": {
+    "recipeOwned": [
+      "type-and-filter",
+      "source-driven-phases",
+      "orientation-specific-layout"
+    ],
+    "styleOwned": [
+      "accent",
+      "font-family",
+      "caption-color",
+      "safe-area"
+    ],
+    "continuousDrift": false
+  },
+  "qa": [
+    "action-mid",
+    "action-complete",
+    "complete",
+    "before-handoff"
+  ],
+  "sound": {
+    "enabled": false,
+    "events": [
+      "phase-complete"
+    ]
+  }
+}

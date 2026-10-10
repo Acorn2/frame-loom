@@ -22,6 +22,10 @@
         "source"
       ]
     },
+    "palettePolicy": {
+      "type": "string",
+      "const": "source-roles-v1"
+    },
     "colorFallbackReason": {
       "type": "string",
       "minLength": 1

@@ -24,7 +24,7 @@ describe('selected upstream shortlist slice', () => {
     for (const [group, count] of [['A', 17], ['B', 17], ['C', 14]]) expect(entries.filter((item) => item.number.startsWith(group))).toHaveLength(count);
     expect(entries.filter((item) => item.status === 'registered-experimental').map((item) => item.number)).toEqual(['A', 'B', 'C'].flatMap(group => Array.from({length: group === 'C' ? 14 : 17}, (_, i) => `${group}${String(i + 1).padStart(2, '0')}`)));
     expect(entries.filter((item) => item.status === 'pending').every((item) => item.runtimeId === null)).toBe(true);
-    expect(SHOT_CATALOG).toHaveLength(37);
+    expect(SHOT_CATALOG).toHaveLength(40);
     expect(AUXILIARY_CATALOG).toHaveLength(9);
   });
   it.each(ids)('accepts %s in an independent style and shot selection', (id) => {

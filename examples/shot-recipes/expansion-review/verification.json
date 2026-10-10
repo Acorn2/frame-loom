@@ -1,0 +1,487 @@
+{
+  "generatedAt": "2026-10-09T07:16:53.810Z",
+  "scope": "Three new scene recipes; six styles; landscape and portrait",
+  "tests": {
+    "fullSuite": {
+      "command": "npm run test -- --maxWorkers=2 --testTimeout=15000",
+      "files": 29,
+      "passed": 475
+    },
+    "libraryAfterResponsiveFix": {
+      "command": "npm run test:library",
+      "passed": 54
+    }
+  },
+  "publicPreviews": {
+    "command": "npm run preview:library",
+    "samples": 360,
+    "fingerprint": "78434ed17dbd97ffe4b68ed923bb83d35338e10d8db3685f0124181a8376cedc"
+  },
+  "newSampleDecode": [
+    {
+      "id": "type-and-filter",
+      "decodePassed": true,
+      "width": 960,
+      "height": 540,
+      "fps": "30/1",
+      "durationSec": 8.8
+    },
+    {
+      "id": "type-and-filter--portrait",
+      "decodePassed": true,
+      "width": 540,
+      "height": 960,
+      "fps": "30/1",
+      "durationSec": 8.8
+    },
+    {
+      "id": "type-and-filter--signal",
+      "decodePassed": true,
+      "width": 960,
+      "height": 540,
+      "fps": "30/1",
+      "durationSec": 8.8
+    },
+    {
+      "id": "type-and-filter--signal--portrait",
+      "decodePassed": true,
+      "width": 540,
+      "height": 960,
+      "fps": "30/1",
+      "durationSec": 8.8
+    },
+    {
+      "id": "type-and-filter--scatterbrain",
+      "decodePassed": true,
+      "width": 960,
+      "height": 540,
+      "fps": "30/1",
+      "durationSec": 8.8
+    },
+    {
+      "id": "type-and-filter--scatterbrain--portrait",
+      "decodePassed": true,
+      "width": 540,
+      "height": 960,
+      "fps": "30/1",
+      "durationSec": 8.8
+    },
+    {
+      "id": "type-and-filter--archive-grid",
+      "decodePassed": true,
+      "width": 960,
+      "height": 540,
+      "fps": "30/1",
+      "durationSec": 8.8
+    },
+    {
+      "id": "type-and-filter--archive-grid--portrait",
+      "decodePassed": true,
+      "width": 540,
+      "height": 960,
+      "fps": "30/1",
+      "durationSec": 8.8
+    },
+    {
+      "id": "type-and-filter--signal-noir",
+      "decodePassed": true,
+      "width": 960,
+      "height": 540,
+      "fps": "30/1",
+      "durationSec": 8.8
+    },
+    {
+      "id": "type-and-filter--signal-noir--portrait",
+      "decodePassed": true,
+      "width": 540,
+      "height": 960,
+      "fps": "30/1",
+      "durationSec": 8.8
+    },
+    {
+      "id": "type-and-filter--studio-frame",
+      "decodePassed": true,
+      "width": 960,
+      "height": 540,
+      "fps": "30/1",
+      "durationSec": 8.8
+    },
+    {
+      "id": "type-and-filter--studio-frame--portrait",
+      "decodePassed": true,
+      "width": 540,
+      "height": 960,
+      "fps": "30/1",
+      "durationSec": 8.8
+    },
+    {
+      "id": "ai-stream-response",
+      "decodePassed": true,
+      "width": 960,
+      "height": 540,
+      "fps": "30/1",
+      "durationSec": 10
+    },
+    {
+      "id": "ai-stream-response--portrait",
+      "decodePassed": true,
+      "width": 540,
+      "height": 960,
+      "fps": "30/1",
+      "durationSec": 10
+    },
+    {
+      "id": "ai-stream-response--signal",
+      "decodePassed": true,
+      "width": 960,
+      "height": 540,
+      "fps": "30/1",
+      "durationSec": 10
+    },
+    {
+      "id": "ai-stream-response--signal--portrait",
+      "decodePassed": true,
+      "width": 540,
+      "height": 960,
+      "fps": "30/1",
+      "durationSec": 10
+    },
+    {
+      "id": "ai-stream-response--scatterbrain",
+      "decodePassed": true,
+      "width": 960,
+      "height": 540,
+      "fps": "30/1",
+      "durationSec": 10
+    },
+    {
+      "id": "ai-stream-response--scatterbrain--portrait",
+      "decodePassed": true,
+      "width": 540,
+      "height": 960,
+      "fps": "30/1",
+      "durationSec": 10
+    },
+    {
+      "id": "ai-stream-response--archive-grid",
+      "decodePassed": true,
+      "width": 960,
+      "height": 540,
+      "fps": "30/1",
+      "durationSec": 10
+    },
+    {
+      "id": "ai-stream-response--archive-grid--portrait",
+      "decodePassed": true,
+      "width": 540,
+      "height": 960,
+      "fps": "30/1",
+      "durationSec": 10
+    },
+    {
+      "id": "ai-stream-response--signal-noir",
+      "decodePassed": true,
+      "width": 960,
+      "height": 540,
+      "fps": "30/1",
+      "durationSec": 10
+    },
+    {
+      "id": "ai-stream-response--signal-noir--portrait",
+      "decodePassed": true,
+      "width": 540,
+      "height": 960,
+      "fps": "30/1",
+      "durationSec": 10
+    },
+    {
+      "id": "ai-stream-response--studio-frame",
+      "decodePassed": true,
+      "width": 960,
+      "height": 540,
+      "fps": "30/1",
+      "durationSec": 10
+    },
+    {
+      "id": "ai-stream-response--studio-frame--portrait",
+      "decodePassed": true,
+      "width": 540,
+      "height": 960,
+      "fps": "30/1",
+      "durationSec": 10
+    },
+    {
+      "id": "unit-dot-regroup",
+      "decodePassed": true,
+      "width": 960,
+      "height": 540,
+      "fps": "30/1",
+      "durationSec": 9.6
+    },
+    {
+      "id": "unit-dot-regroup--portrait",
+      "decodePassed": true,
+      "width": 540,
+      "height": 960,
+      "fps": "30/1",
+      "durationSec": 9.6
+    },
+    {
+      "id": "unit-dot-regroup--signal",
+      "decodePassed": true,
+      "width": 960,
+      "height": 540,
+      "fps": "30/1",
+      "durationSec": 9.6
+    },
+    {
+      "id": "unit-dot-regroup--signal--portrait",
+      "decodePassed": true,
+      "width": 540,
+      "height": 960,
+      "fps": "30/1",
+      "durationSec": 9.6
+    },
+    {
+      "id": "unit-dot-regroup--scatterbrain",
+      "decodePassed": true,
+      "width": 960,
+      "height": 540,
+      "fps": "30/1",
+      "durationSec": 9.6
+    },
+    {
+      "id": "unit-dot-regroup--scatterbrain--portrait",
+      "decodePassed": true,
+      "width": 540,
+      "height": 960,
+      "fps": "30/1",
+      "durationSec": 9.6
+    },
+    {
+      "id": "unit-dot-regroup--archive-grid",
+      "decodePassed": true,
+      "width": 960,
+      "height": 540,
+      "fps": "30/1",
+      "durationSec": 9.6
+    },
+    {
+      "id": "unit-dot-regroup--archive-grid--portrait",
+      "decodePassed": true,
+      "width": 540,
+      "height": 960,
+      "fps": "30/1",
+      "durationSec": 9.6
+    },
+    {
+      "id": "unit-dot-regroup--signal-noir",
+      "decodePassed": true,
+      "width": 960,
+      "height": 540,
+      "fps": "30/1",
+      "durationSec": 9.6
+    },
+    {
+      "id": "unit-dot-regroup--signal-noir--portrait",
+      "decodePassed": true,
+      "width": 540,
+      "height": 960,
+      "fps": "30/1",
+      "durationSec": 9.6
+    },
+    {
+      "id": "unit-dot-regroup--studio-frame",
+      "decodePassed": true,
+      "width": 960,
+      "height": 540,
+      "fps": "30/1",
+      "durationSec": 9.6
+    },
+    {
+      "id": "unit-dot-regroup--studio-frame--portrait",
+      "decodePassed": true,
+      "width": 540,
+      "height": 960,
+      "fps": "30/1",
+      "durationSec": 9.6
+    }
+  ],
+  "fullResolution": [
+    {
+      "id": "type-and-filter",
+      "canvas": "landscape",
+      "storyboard": "examples/shot-recipes/type-and-filter/storyboard.json",
+      "storyboardSha256": "4b4cfd72b0e7a60f0458b2ee2c1757e1d954f79e967d199dcaf70202d9b17b16",
+      "videoSha256": "fc23d4f04c7aa491cee40a9cab43605fddf984ad42d8bbd2c2a715462a26038c",
+      "width": 1920,
+      "height": 1080,
+      "automatedPassed": true,
+      "releaseReady": false,
+      "reviewFrames": 23,
+      "productionLockHash": "6a37133466af5375053c9df56f23a0b43070d3d466455625207508b46c2a12a8",
+      "checks": {
+        "schema": true,
+        "productionLock": true,
+        "storyboard": true,
+        "timeline": true,
+        "assets": true,
+        "safeArea": true,
+        "textLayout": true,
+        "output": true,
+        "audio": true,
+        "reviewFrames": true
+      }
+    },
+    {
+      "id": "type-and-filter",
+      "canvas": "portrait",
+      "storyboard": "examples/shot-recipes/type-and-filter/portrait.json",
+      "storyboardSha256": "89e66e639d6a58a9e232b8b3d8fe64341e4879cef7a8ad2ae511e04989cb7289",
+      "videoSha256": "eb992f8d5ca880b35fe3d2118e4fb57978b32bd2a7b815e5ddf2fa09d38dfde2",
+      "width": 1080,
+      "height": 1920,
+      "automatedPassed": true,
+      "releaseReady": false,
+      "reviewFrames": 23,
+      "productionLockHash": "1e3f4a0a13b6ca9a4a8d99a0df8bafcf82f1d6bac27f69b0953a352858d53acb",
+      "checks": {
+        "schema": true,
+        "productionLock": true,
+        "storyboard": true,
+        "timeline": true,
+        "assets": true,
+        "safeArea": true,
+        "textLayout": true,
+        "output": true,
+        "audio": true,
+        "reviewFrames": true
+      }
+    },
+    {
+      "id": "ai-stream-response",
+      "canvas": "landscape",
+      "storyboard": "examples/shot-recipes/ai-stream-response/storyboard.json",
+      "storyboardSha256": "ad5af4acd46c73945ae5176553541ce0a57814b724fe97595378ca77ecae1211",
+      "videoSha256": "8710e7080330ff0e08660a5b23f11ce15cbb795786a23e37ada3c3a199d65b9d",
+      "width": 1920,
+      "height": 1080,
+      "automatedPassed": true,
+      "releaseReady": false,
+      "reviewFrames": 25,
+      "productionLockHash": "2e2ad9eaa807f8215385e18835240f1071e1abb46849369449f9cc98e38e28ab",
+      "checks": {
+        "schema": true,
+        "productionLock": true,
+        "storyboard": true,
+        "timeline": true,
+        "assets": true,
+        "safeArea": true,
+        "textLayout": true,
+        "output": true,
+        "audio": true,
+        "reviewFrames": true
+      }
+    },
+    {
+      "id": "ai-stream-response",
+      "canvas": "portrait",
+      "storyboard": "examples/shot-recipes/ai-stream-response/portrait.json",
+      "storyboardSha256": "cf5a8706939237faeda65f48e5e78646fb8b5705e941a090dcaa180be9295b29",
+      "videoSha256": "478cee967ced0ddfd41ad98250a59255afa4e840518aa5d77f1bb3af5904c33c",
+      "width": 1080,
+      "height": 1920,
+      "automatedPassed": true,
+      "releaseReady": false,
+      "reviewFrames": 25,
+      "productionLockHash": "467ff8ce1ab351cf691284cbd334ac0c68a0bdaa4951e621662122e514f687ea",
+      "checks": {
+        "schema": true,
+        "productionLock": true,
+        "storyboard": true,
+        "timeline": true,
+        "assets": true,
+        "safeArea": true,
+        "textLayout": true,
+        "output": true,
+        "audio": true,
+        "reviewFrames": true
+      }
+    },
+    {
+      "id": "unit-dot-regroup",
+      "canvas": "landscape",
+      "storyboard": "examples/shot-recipes/unit-dot-regroup/storyboard.json",
+      "storyboardSha256": "b24083a570bc33d7b4b7bbc8107bc6de3fd8ed1a52bad6e9570dfab7c63a809a",
+      "videoSha256": "de1625748457f25de23df9656609dfc492aaf7f82a06499004b465134555c549",
+      "width": 1920,
+      "height": 1080,
+      "automatedPassed": true,
+      "releaseReady": false,
+      "reviewFrames": 22,
+      "productionLockHash": "34bbaf8bc0ab63759615c82bf383cd5197f99af1346ec5758187898c6d7b768e",
+      "checks": {
+        "schema": true,
+        "productionLock": true,
+        "storyboard": true,
+        "timeline": true,
+        "assets": true,
+        "safeArea": true,
+        "textLayout": true,
+        "output": true,
+        "audio": true,
+        "reviewFrames": true
+      }
+    },
+    {
+      "id": "unit-dot-regroup",
+      "canvas": "portrait",
+      "storyboard": "examples/shot-recipes/unit-dot-regroup/portrait.json",
+      "storyboardSha256": "85aab17efb78b90923857a5113a2c3984e670da00b6e6377b0cf253aae7a4671",
+      "videoSha256": "d1708094cc5c9cc2f9cb34a9b37fd40398601ae9158e88e5c8401246b6601836",
+      "width": 1080,
+      "height": 1920,
+      "automatedPassed": true,
+      "releaseReady": false,
+      "reviewFrames": 22,
+      "productionLockHash": "c1d14dd5308fe9d8b827d91689d1ddf5ed413e1147a4af85d86de2385fe39818",
+      "checks": {
+        "schema": true,
+        "productionLock": true,
+        "storyboard": true,
+        "timeline": true,
+        "assets": true,
+        "safeArea": true,
+        "textLayout": true,
+        "output": true,
+        "audio": true,
+        "reviewFrames": true
+      }
+    }
+  ],
+  "browser": {
+    "desktopAndMobile": true,
+    "mobileViewport": [
+      390,
+      844
+    ],
+    "portraitPreviewSource": "media/style-ai-stream-response--portrait.mp4",
+    "portraitControlsWithinViewport": true
+  },
+  "manualReview": {
+    "requiredFramesViewed": 140,
+    "fullPlaybackApproval": false
+  },
+  "reproduce": {
+    "render": "npm run render:storyboard -- <storyboard> <output.mp4> --mode fast --output-purpose visual-preview",
+    "qa": "npm run qa:storyboard -- <storyboard> <output.mp4> <review-dir> --mode fast --output-purpose visual-preview"
+  },
+  "fontPreviews": {
+    "command": "npm run preview:fonts",
+    "samples": 30
+  },
+  "libraryBuild": {
+    "command": "npm run build:library -- --require-previews",
+    "passed": true
+  }
+}

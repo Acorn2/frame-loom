@@ -42,6 +42,8 @@ GitHub Pages 使用独立 Library Pages 工作流生成和缓存公开样片，�
 
 原稿仍以 scene.narration 为准。服务合成的逐段语音与哈希存于用户项目 `.cache/tts/`，与镜头起点分离；采用的片段、混音与字幕继续存入 `audio/` 并参与生产指纹。失败时保留成功缓存，但不发布不完整音频包。时间提案只写新分镜文件，采用后必须重新校验；review 重新批准。手工字幕按讲稿哈希、文字顺序及实测语音范围核对。
 
+TTS 配置按 provider 区分格式、范围与声音控制；旧中性占位值兼容，非默认的不支持项报错。配置发现逐项输出安全状态，选择只考虑可用配置，真实配置不可用不退回测试音调。ElevenLabs 可选邻场文本进入实际请求和缓存键；环境音色、豆包 Resource ID 与环境 endpoint 绑定复用指纹。`outputSampleRate` 只影响最终单声道混音，独立于源语音缓存。`preview:tts` 显式请求短句、输出独立试听文件，不发布生产音频清单。
+
 Renderer 为最终有声候选文件生成 profile 与视频指纹记录；QA 和批准检查同一文件，批准后不重渲。代表片段复用正式音频加载器和原时间轴，只做带标记的审片输出。
 
 语义扩展通过 2.3 的可选字段显式启用，能力清单、schema、validator 和 renderer 同步；不重解释旧字段。图像聚焦根据实际图像尺寸计算原图归一化区域，并等待尺寸就绪后渲染。
@@ -68,7 +70,7 @@ P1扩展采用独立槽位与阶段约束：字体加载后实测标题基线与
 
 镜头版本隔离：当前视觉组件位于`src/shots/`，历史1.0.0与1.1.0视觉组件分别封存在`src/shots/legacy-v1/`、`src/shots/legacy-v11/`，历史清单位于各配方的`history/`。renderer按shot精确版本选择，production-lock按同一版本读取清单；旧分镜不自动改版。新ShotShell只负责安全区、标题区、字幕与交接，构图和运动由配方组件负责。公开样片包含51个库入口及2个已注册变体；可见卡片按需加载、离屏暂停，选择状态仍在三个独立页面共享。
 
-当前镜头视觉职责：`appearance.ts` 从现有StyleTokens推导每个配方的深浅背景、场景文字、卡片文字、阴影和静态装饰；不增加风格ID或用户输入参数。画布以白色、冷灰、石墨色为主体，Style Pack提供强调色与原始字体，显式全片字体覆盖原始字体；卡片前景与场景前景分开，暗场中的白卡仍使用深色正文。`RenderShot` 按精确版本派发并注入外观，34个当前上游场景配方及3个原生场景应用中性底色；历史上游版本不应用新外观。`DataDrivenVideo` 按共享时间线的当前场景选取外部字幕captionInk，seek或换镜后立即跟随深浅背景；字幕无底板。网页通过实际renderer生成的公开样片展示同一行为。
+当前镜头视觉职责：`appearance.ts` 从现有StyleTokens推导每个配方的深浅背景、场景文字、卡片文字、阴影和静态装饰；不增加风格ID或用户输入参数。无项目配色时画布以白色、冷灰、石墨色为主体，Style Pack提供强调色与原始字体；显式素材配色覆盖背景、文字、表面和强调色，保留来源暖色或有色背景。显式全片字体覆盖原始字体；卡片前景与场景前景分开，暗场中的白卡仍使用深色正文。`RenderShot` 按精确版本派发并注入外观，34个当前上游场景配方及3个原生场景应用中性底色；历史上游版本不应用新外观。`DataDrivenVideo` 按共享时间线的当前场景选取外部字幕captionInk，seek或换镜后立即跟随深浅背景；字幕无底板。网页通过实际renderer生成的公开样片展示同一行为。
 
 制作向导数据流：构建从examples/tts-profiles读取四份公开样例，只选择id/name/provider/model/voice/voiceFromLocalConfig字段进入catalog.ttsPresets；不读取用户音频配置或环境值。选择页使用normalizeProduction约束公开选项，目标映射为visual-master或in-project-video，旁白映射silent/tts/external，确认开关映射review/fast。生产选项与镜头在同一浏览器记录跨页恢复，存储禁用时以公开URL参数携带。指令由Agent结合随后提供的文档与音频执行；配置不匹配时说明缺口，不隐式更换服务。预览指纹依旧只绑定视频渲染源，向导和公开TTS目录不改变样片画面。
 
@@ -84,8 +86,16 @@ P2 对开换章使用互补中央裁切与旧页左右半页位移，防止新�
 
 ## 项目配色流
 
-选择页将 colorMode（auto/style/source）随公开制作选项保存和导出；init:project 写入 project-input.json。Agent 判断素材代表主体品牌还是引用证据，网址先采集为本地图片。asset-manifest 的可选 usage 将 scene-media、palette-reference、both 区分；document 允许仅取色参考，不允许媒体层，document-images 仍要求可见媒体。
+选择页将 colorMode（auto/style/source）随公开制作选项保存和导出；init:project 写入 project-input.json 和 source-roles-v1 配色策略。Agent 判断素材代表主体品牌还是引用证据，网址先采集为本地图片。asset-manifest 的可选 usage 将 scene-media、palette-reference、both 区分；document 允许仅取色参考，不允许媒体层，document-images 仍要求可见媒体。
 
-Agent 选择语义区域，sample:palette 用本地 FFmpeg 采样，不采用颜色。最终 storyboard.palette 是唯一生产输入：assets 引用 manifest ID，custom 记录用户指定色值。共享 project-palette 解析器生成浅深配色；style-loader、composition、镜头外观及字幕使用同一解析结果，字体、动作和真实图像不改变。仅显式启用的当前横屏配方应用新颜色，缺字段保留原路径。
+Agent 选择语义区域，sample:palette 用本地 FFmpeg 采样，不采用颜色。最终 storyboard.palette 是唯一生产输入：assets 引用 manifest ID，custom 记录用户指定色值。新项目 palette 1.1 明确八个角色，素材配色 evidence 记录直接区域采样或有理由的角色推导；背景、正文、强调色必须直接采样，校验拒绝缺项、采样不符和循环推导。共享 project-palette 解析器使用来源文字、背景和表面，只为对比度调整派生值；旧 palette 1.0 不迁移。style-loader、composition、镜头外观及字幕使用同一解析结果，字体、动作和真实图像不改变。仅显式启用的当前横屏配方应用新颜色，缺字段保留原路径。
 
-production lock 存采用色、派生色及参考素材 SHA-256；渲染开始与结束重新核对，QA 与批准传入相同项目路径校验实际字节。生产指纹与分镜批准也覆盖原素材。参考图不进入公开站点，公开样片继续展示默认风格。详见 [契约与执行流程](references/project-palette.md)。
+production lock 存采用色、角色证据、固定区域采样、派生色及参考素材 SHA-256；QA 输出各角色和可读性调整，截图视觉匹配仍需人工复核；渲染开始与结束重新核对，QA 与批准传入相同项目路径校验实际字节。生产指纹与分镜批准也覆盖原素材。参考图不进入公开站点，公开样片继续展示默认风格。详见 [契约与执行流程](references/project-palette.md)。
+
+## 横竖屏镜头扩充（2026-10-09）
+
+新增 type-and-filter、ai-stream-response、unit-dot-regroup；六套风格、16:9和9:16共用严格内容契约与独立画幅布局。当前40个横屏场景、4个竖屏场景；原专用配方不自动扩展画幅。搜索结果、任务状态与点阵总数均由输入给定，预检拒绝不一致数据和错误时序。公开库按风格×画幅读取实际样片，旧画幅/版本不迁移，不新增依赖；竖屏素材配色仍保持原限制。范围、验收与验证见[接入记录](references/shot-expansion-20261009.md)。
+
+## 内容优先布局与实测
+
+`storyboard.layoutPolicy` 是显式版本契约；新2.4初始化采用content-first-v1，缺省保留历史路径。`src/layout/scene-layout.ts` 在renderer和预检之间共享区域与节点几何。`LayoutDiagnostics` 在正式渲染的已加载字体/图片下采集文字可见范围、遮罩和contain后的源图尺寸；`scripts/lib/layout-qa.mjs` 汇集场景事件及相邻交接证据，在候选原子发布前拦截硬错误。实测写入receipt并由QA核对分镜哈希、必选帧和视频字节；整体输入与实现继续进入原生产锁。主观吸引力、源图内部文字和音画全片复核仍由人工判断。

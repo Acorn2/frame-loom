@@ -18,7 +18,7 @@
     <span class="header-note">看效果 · 选组合 · 本地制作</span>
   </header>
   <main id="main" data-screen-label="制作组合">
-    <section class="page-heading"><div><p class="eyebrow">03 / MAKE YOUR VIDEO</p><h1>把选择变成视频</h1><p class="page-description">选成品、选配音，再把制作指令和文档交给 Agent。</p></div><div class="canvas-label"><label for="canvas">制作画幅</label><select id="canvas"><option value="landscape">16:9 横屏</option><option value="portrait">9:16 竖屏</option></select></div></section>
+    <section class="page-heading"><div><p class="eyebrow">03 / MAKE YOUR VIDEO</p><h1>把选择变成视频</h1><p class="page-description">选成品、选配音，再把文档与素材交给 Agent。有主体截图时，默认优先参考截图配色，保留所选风格的构图与动效。</p></div><div class="canvas-label"><label for="canvas">制作画幅</label><select id="canvas"><option value="landscape">16:9 横屏</option><option value="portrait">9:16 竖屏</option></select></div></section>
     <div class="selection-layout">
       <aside class="combination-card"><p class="meta-label">我的制作组合</p><div class="combination-style"><img id="selected-style-poster" alt="当前风格原始字体样片" width="960" height="540"><div><strong id="current-style"></strong><p id="current-font" class="section-note"></p><a href="index.html" class="text-button">更换风格 ↗</a></div></div><p id="auto-shots-note" class="inline-note">镜头由 Agent 读取文档后推荐。无需预先挑选，复制指令并附上文档即可。</p><div id="manual-shots" hidden><div class="selected-heading"><h2>手动镜头集合 <span id="selected-count">0 个</span></h2><button id="clear" class="text-button">清空</button></div><div id="selected-list" class="selected-list"></div><a href="shots.html" class="button secondary wide">继续挑选镜头 <span aria-hidden="true">→</span></a><p class="section-note">Agent 只在此集合内编排，可重复使用，也无需全部出场。</p></div></aside>
       <section class="export-main" aria-label="视频制作向导">
@@ -52,7 +52,7 @@
           </div>
           <p id="external-note" class="inline-note" hidden>粘贴指令时附上旁白文件。Agent 会检查音频、字幕与画面的时间对应关系。</p>
         </div>
-        <details class="form-card advanced-settings"><summary>画面配色</summary><div class="tts-section"><label class="tts-select-label" for="color-mode">配色来源</label><select id="color-mode" aria-describedby="color-note"><option value="auto">自动判断（推荐）</option><option value="style">使用风格配色</option><option value="source">跟随产品素材</option></select><p id="color-note" class="section-note">产品介绍可跟随你提供的截图或网址配色；文档与普通引用图片沿用风格配色。真实截图保持原貌，实际配色预览在本地制作时生成。素材配色目前支持横屏。</p></div></details>
+        <details class="form-card advanced-settings"><summary>画面配色</summary><div class="tts-section"><label class="tts-select-label" for="color-mode">配色来源</label><select id="color-mode" aria-describedby="color-note"><option value="auto">自动判断（推荐）</option><option value="style">使用风格配色</option><option value="source">跟随产品素材</option></select><p id="color-note" class="section-note">有主体产品截图或准确网址时，默认优先参考截图的背景、文字、卡片与强调色，不仅替换按钮颜色。风格保留构图与动效；选择“使用风格配色”才明确保留默认色。无参考或只有引用、竞品截图时沿用默认色。真实截图保持原貌，实际预览在本地制作时生成；素材配色目前支持横屏。</p></div></details>
         <details class="form-card advanced-settings"><summary>制作前的确认</summary><label class="review-choice"><input id="review-first" type="checkbox"><span><strong>先确认讲稿和分镜，再制作</strong><small>勾选后，Agent 会先展示内容与镜头安排，等待你确认。默认直接制作，出片后复核。</small></span></label><p class="section-note">静音审片用于检查制作过程中的画面；“仅画面”则是交给后期剪辑的产物。</p></details>
         <div class="export-card handoff-card">
           <div class="wizard-heading"><span id="handoff-step" class="step-number" aria-hidden="true">4</span><div><h2>交给 Agent 开始制作</h2><p id="production-summary" class="section-note" aria-live="polite"></p></div></div>

@@ -26,6 +26,20 @@ const clock = seconds => `${Math.floor((seconds || 0) / 60)}:${String(Math.floor
 export function createDetailView({selected, available, styleName, onSelect, onVariant, onToast, onClose}) {
   const dialog = byId('detail'); let current; let isStyle = false;
   const media = () => byId('detail-media').querySelector('video');
+  function fitPortraitMedia() {
+    const box = byId('detail-media');
+    if (!dialog.open || box.dataset.canvas !== 'portrait') return;
+    const stage = box.closest('.detail-stage'), css = window.getComputedStyle(stage);
+    const innerWidth = stage.clientWidth - parseFloat(css.paddingLeft) - parseFloat(css.paddingRight);
+    const controls = byId('detail-controls');
+    const available = window.innerWidth >= 900
+      ? stage.clientHeight - parseFloat(css.paddingTop) - parseFloat(css.paddingBottom) - (controls.hidden ? 0 : controls.offsetHeight) - 8
+      : window.innerHeight * .6;
+    const height = Math.min(Math.max(120, available), innerWidth * 16 / 9);
+    box.style.setProperty('--portrait-preview-height', `${height}px`);
+    box.style.setProperty('--portrait-preview-width', `${height * 9 / 16}px`);
+  }
+  window.addEventListener('resize', fitPortraitMedia);
   let saveProgress = () => {}; let disposeProgress = () => {};
   function clearMedia() {
     disposeProgress(); disposeProgress = () => {}; saveProgress = () => {};
@@ -61,6 +75,7 @@ export function createDetailView({selected, available, styleName, onSelect, onVa
   }
   function show(item, style = false) {
     clearMedia(); current = item; isStyle = style;
+    byId('detail-media').dataset.canvas = item.sampleCanvas ?? 'landscape';
     byId('detail-copy-status').textContent = '';
     dialog.querySelector('.detail-copy-fallback')?.remove();
     byId('detail-copy-id').textContent = style ? '复制风格 ID' : '复制镜头 ID';
@@ -71,7 +86,7 @@ export function createDetailView({selected, available, styleName, onSelect, onVa
     byId('detail-category').textContent = style ? '视频风格' : `${item.category} / ${item.kind === 'scene' ? '场景镜头' : item.kind === 'hosted-action' ? '辅助动作' : '换章转场'}`;
     byId('detail-description').textContent = item.description;
     byId('detail-facts').replaceChildren();
-    for (const fact of [style ? item.name : styleName(item.sampleStyle), '16:9 横屏', item.video ? '静音样片' : item.poster ? '静态参考' : previewStatusText(item)]) {
+    for (const fact of [style ? item.name : styleName(item.sampleStyle), item.sampleCanvas === 'portrait' ? '9:16 竖屏' : '16:9 横屏', item.video ? '静音样片' : item.poster ? '静态参考' : previewStatusText(item)]) {
       const span = document.createElement('span'); span.textContent = fact; byId('detail-facts').append(span);
     }
     byId('detail-preview-note').textContent = !item.video && !item.poster ? `${previewStatusText(item)}，维护者需重新生成公开样片。配方说明与选择仍可使用。` : item.previewNote ?? (style ? '相同公开分镜，用于比较风格。' : item.video ? '实际渲染效果；公开示例仅供选型参考。' : '当前仅有静态参考，尚未生成动画样片。');
@@ -134,6 +149,7 @@ export function createDetailView({selected, available, styleName, onSelect, onVa
     byId('detail-panel-source').querySelector('details').open = false;
     tab('overview'); for (const panel of dialog.querySelectorAll('[role="tabpanel"]')) panel.scrollTop = 0;
     refreshSelection(); if (!dialog.open) dialog.showModal();
+    window.requestAnimationFrame(fitPortraitMedia);
     if (item.video && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) element.play().catch(() => syncPlayer());
   }
   async function copyText(text, label) {

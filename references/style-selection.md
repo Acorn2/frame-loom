@@ -2,6 +2,8 @@
 
 Style selection happens before the final storyboard. The goal is to narrow the visual system without loading every Style Pack's full design specification.
 
+When subject screenshots are provided, their colors take priority over the selected style's default palette. Background, title/body text, card surfaces and accents follow the screenshots; the style keeps composition, decoration and motion. Selecting a style alone does not request its default colors. An explicit **Use style colors** choice does. See [project colors](project-palette.md) for source roles and current landscape support.
+
 ## 1. Classify the content
 
 Choose one primary content tag from the compact index vocabulary:

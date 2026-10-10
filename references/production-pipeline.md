@@ -66,6 +66,7 @@ Output: `production-brief.md`, `route-card.md`, `content-gaps.md`, and an initia
 - Preserve source facts and mark uncertain claims.
 - Define the one-sentence outcome and visible targets.
 - Choose a route before following `style-selection.md`; record whether the route was creator-reviewed or selected only for an automated preview.
+- Explain that subject screenshots guide background, text, card and accent colors before style defaults. Capture exact URLs locally, distinguish subject references from citations/competitors, and follow [project colors](project-palette.md). Keep the selected style's composition and motion; only an explicit style-color choice retains default colors when subject references are available. Published style samples show default palettes, not this project's source palette.
 - Default to [document-driven shot planning](shot-planning.md): after reading the source, map claims to visible jobs and recommend compatible recipes. Initialize with the adopted pool through `--shots`. Do not fill every library category. Manual pools remain strict; explain title-only or other expression gaps before committing to a long explainer. In fast mode, present the choice briefly and continue; review mode includes it in the existing storyboard gate.
 
 Output: `content-brief.md` and a selected Style Pack.

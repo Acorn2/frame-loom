@@ -13,10 +13,11 @@ const contrast=(a,b)=>{const x=luminance(a),y=luminance(b);return(Math.max(x,y)+
 describe('independent landscape style and shot combinations',()=>{
  const catalog=buildLibraryCatalog();
  it.each(libraryStyleIds)('%s accepts every scene, hosted action, transition and variant fixture',style=>{
-  const fixtures=libraryPreviewFixtures().filter(f=>f.styleId===style);expect(fixtures).toHaveLength(53);
-  const tokens=createStyleTokens(JSON.parse(fs.readFileSync(`styles/${style}/style.json`)),JSON.parse(fs.readFileSync(`styles/${style}/motion.json`)),1920,1080);
+  const fixtures=libraryPreviewFixtures().filter(f=>f.styleId===style);expect(fixtures).toHaveLength(60);
+
   for(const fixture of fixtures){
    const storyboardPath=path.resolve(fixture.source),board=JSON.parse(fs.readFileSync(storyboardPath));board.style.id=style;delete board.videoTemplate;
+   const tokens=createStyleTokens(JSON.parse(fs.readFileSync(`styles/${style}/style.json`)),JSON.parse(fs.readFileSync(`styles/${style}/motion.json`)),board.project.width,board.project.height);
    expect(checkStoryboardInput(board,{storyboardPath,styleRoot:path.resolve('styles'),executionMode:'fast'}).filter(i=>i.severity==='error'),fixture.id).toEqual([]);
    expect(checkAssetInput(storyboardPath)).toEqual([]);
    const visual=checkVisualInput(board);expect([...visual.safeArea.issues,...visual.textLayout].filter(i=>i.severity==='error'),fixture.id).toEqual([]);

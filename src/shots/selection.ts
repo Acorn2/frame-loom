@@ -10,7 +10,7 @@ export function assertShotSelectionCompatibility(selection: readonly ShotRef[], 
   for (const ref of shots) {
     const recipe = resolveShot(ref.id, ref.version);
     if (!recipe.styles.includes(context.style.id) || (ref.id !== 'semantic-default' && context.style.version !== '1.0.0')) throw new Error(`${ref.id}@${ref.version} 尚未适配风格 ${context.style.id}@${context.style.version}。`);
-    if (!recipe.orientations.includes(orientation) || (ref.id !== 'semantic-default' && Math.abs(context.width / context.height - 16 / 9) > 0.001)) throw new Error(`${ref.id}@${ref.version} 尚未适配该画幅。`);
+    if (!recipe.orientations.includes(orientation) || (ref.id !== 'semantic-default' && Math.abs(context.width / context.height - (orientation === 'portrait' ? 9 / 16 : 16 / 9)) > 0.001)) throw new Error(`${ref.id}@${ref.version} 尚未适配该画幅。`);
   }
 }
 

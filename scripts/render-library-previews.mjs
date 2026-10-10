@@ -9,6 +9,7 @@ import {StylePackSchema, MotionPackSchema} from '../src/schemas/style-pack.ts';
 import {createStyleTokens} from '../src/styles/style-loader.ts';
 import {getSceneTimeline} from '../src/timeline/scene-timeline.ts';
 import {checkStoryboardInput, checkAssetInput, checkVisualInput} from './lib/preflight.mjs';
+import {layoutCollector} from './lib/layout-qa.mjs';
 
 if (process.argv.slice(2).length) throw new Error('Usage: npm run preview:library');
 const lockRoot = path.join(projectRoot, '.tmp/library-render');
@@ -46,6 +47,7 @@ await Promise.all(Array.from({length: 3}, async () => {
     storyboard.style.id = fixture.styleId;
     // Preview the independent style + shot combination, not the optional preset.
     delete storyboard.videoTemplate;
+    storyboard.layoutPolicy = 'content-first-v1';
     const styleRoot = path.join(projectRoot, 'styles');
     const issues = checkStoryboardInput(storyboard, {storyboardPath, styleRoot, executionMode: 'fast'});
     const visual = checkVisualInput(storyboard);
@@ -54,14 +56,16 @@ await Promise.all(Array.from({length: 3}, async () => {
     if (errors.length) throw new Error(`${fixture.id}: ${errors.join('；')}`);
     const style = StylePackSchema.parse(JSON.parse(fs.readFileSync(path.join(styleRoot, storyboard.style.id, 'style.json'), 'utf8')));
     const motion = MotionPackSchema.parse(JSON.parse(fs.readFileSync(path.join(styleRoot, storyboard.style.id, 'motion.json'), 'utf8')));
-    const inputProps = {storyboard: hydrateLibraryAssets(storyboard, storyboardPath), styleTokens: createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height, storyboard.font, storyboard.palette), renderProfile: {purpose: 'visual-preview', showReviewMarker: false}};
+    const layout = layoutCollector(storyboard);
+    const inputProps = {storyboard: hydrateLibraryAssets(storyboard, storyboardPath), styleTokens: createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height, storyboard.font, storyboard.palette), renderProfile: {purpose: 'visual-preview', showReviewMarker: false, layoutCheckFrames: layout.frames}};
     const composition = (await getCompositions(serveUrl, {inputProps, puppeteerInstance: browser})).find(item => item.id === 'StoryboardV2');
     if (!composition) throw new Error('缺少 StoryboardV2 composition。');
     console.log(`[${index + 1}/${pending.length}] ${fixture.id}`);
     const pendingVideo = path.join(previewRoot, `${fixture.id}.pending.mp4`);
     const pendingPoster = path.join(previewRoot, `${fixture.id}.pending.png`);
     await renderMedia({serveUrl, composition, inputProps, puppeteerInstance: browser, codec: 'h264', muted: true, audioCodec: null,
-      outputLocation: pendingVideo, scale: .5, concurrency: 1, crf: 24, x264Preset: 'veryfast'});
+      outputLocation: pendingVideo, scale: .5, concurrency: 1, crf: 24, x264Preset: 'veryfast', onBrowserLog: layout.onBrowserLog, logLevel: 'error'});
+    const layoutQa = layout.finish();
     const timeline = getSceneTimeline(storyboard);
     // The basic recipe demonstrates a diagram and a closing; show the diagram on its card.
     const timing = fixture.recipeId === 'semantic-default' ? timeline[0] : timeline.at(-1);
@@ -71,7 +75,7 @@ await Promise.all(Array.from({length: 3}, async () => {
     await renderStill({serveUrl, composition, inputProps, puppeteerInstance: browser, frame, output: pendingPoster, imageFormat: 'png', scale: .5});
     fs.renameSync(pendingVideo, path.join(previewRoot, `${fixture.id}.mp4`));
     fs.renameSync(pendingPoster, path.join(previewRoot, `${fixture.id}.png`));
-    manifest.samples = [...manifest.samples.filter(item => item.id !== fixture.id), {id: fixture.id, fixture: fixture.source, style: fixture.styleId, durationSec: composition.durationInFrames / composition.fps, posterFrame: frame}];
+    manifest.samples = [...manifest.samples.filter(item => item.id !== fixture.id), {id: fixture.id, fixture: fixture.source, style: fixture.styleId, durationSec: composition.durationInFrames / composition.fps, posterFrame: frame, layoutPolicy: storyboard.layoutPolicy, layoutWarnings: layoutQa.issues.length}];
     fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
   }
   } finally {await browser.close({silent: true});}

@@ -27,6 +27,8 @@ P1扩展仍不添加依赖：浏览器 `document.fonts.ready` 与DOM测量标题
 
 制作向导仍使用原生radio/select/details和既有ES module，无新增依赖或生产API。公开TTS元数据在build-library阶段从已校验样例提取，浏览器仅保存公开选项；测试覆盖四预设、外部旁白、静音底片、先审分镜、过期选项与元数据字段白名单。
 
+TTS 配置使用既有 Zod 与导出的 JSON Schema，不新增服务商 SDK；Node.js fetch 继续只访问官方 HTTPS 主机。试听复用适配器与 ffprobe，最终采样率由既有 FFmpeg 混音设置处理。回归测试使用模拟 HTTP 响应和本地音频，真实账号、音色权限与听感需要显式在线试听。
+
 P2 继续使用现有 React / Remotion / Zod；SVG 滤镜与确定性闭式粒子不引入新运行时依赖。
 
 六套风格差异化仍使用现有React/Remotion、CSS与SVG，不增加依赖或远程字体。中文标题分别显式选择宋体、楷体及无衬线字体栈，使用已安装的系统字体和Noto回退；未打包字体，不保证不同系统的字形完全一致。标题采用平衡换行，渲染与预检共享字体适配及槽位尺寸。
@@ -41,4 +43,12 @@ P2 继续使用现有 React / Remotion / Zod；SVG 滤镜与确定性闭式粒�
 
 ## 项目配色
 
-继续使用 TypeScript/Zod、Node.js 原生文件与 SHA-256、既有 FFmpeg/ffprobe、原生页面控件，无新增依赖、服务或环境配置。Agent 处理素材语义，sample:palette 对显式区域输出像素候选；纯函数解析色值和前景对比度。palette/usage/colorMode 为显式可选契约，历史输入缺字段不迁移。截图采集由 Agent 的可用浏览器执行，不成为 renderer 的网络依赖。
+继续使用 TypeScript/Zod、Node.js 原生文件与 SHA-256、既有 FFmpeg/ffprobe、原生页面控件，无新增依赖、服务或环境配置。Agent 处理素材语义，sample:palette 对显式区域输出像素候选；palette 1.1 保存完整颜色角色与采样／推导证据，固定区域候选由本地 FFmpeg 重采样核对；纯函数采用来源色并调整前景对比度。新初始化启用 source-roles-v1，旧 1.0 保持原行为。palette/usage/colorMode 为显式可选契约，历史输入缺字段不迁移。截图采集由 Agent 的可用浏览器执行，不成为 renderer 的网络依赖。
+
+## 横竖屏镜头扩充（2026-10-09）
+
+新增 type-and-filter、ai-stream-response、unit-dot-regroup；六套风格、16:9和9:16共用严格内容契约与独立画幅布局。当前40个横屏场景、4个竖屏场景；原专用配方不自动扩展画幅。搜索结果、任务状态与点阵总数均由输入给定，预检拒绝不一致数据和错误时序。公开库按风格×画幅读取实际样片，旧画幅/版本不迁移，不新增依赖；竖屏素材配色仍保持原限制。范围、验收与验证见[接入记录](references/shot-expansion-20261009.md)。
+
+## 内容布局验证
+
+复用React/Remotion、Chromium的DOM Range、Canvas字体墨迹测量及现有Vitest；不新增依赖。共享TypeScript布局函数提供确定性区域和节点边界，渲染器在同帧加载字体和图片后记录布局证据，Node端在候选发布和QA时校验。回归入口 `npm run test:content-layout`，完整矩阵使用 `--all`；见[布局契约](references/content-layout.md)。

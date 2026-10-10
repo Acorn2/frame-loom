@@ -82,7 +82,8 @@ signed OSS URL, FrameLoom upgrades that same Alibaba Cloud host and signature
 to HTTPS before downloading; it never downloads over HTTP. `voiceType` is the provider's voice
 name or ID, and `model` selects the model. OpenAI maps `speedRatio` to its
 speech speed; its sample-rate, pitch and volume fields are unused. ElevenLabs
-and Alibaba do not map the generic speed/pitch/volume/sample-rate fields.
+maps `speedRatio` to `voice_settings.speed` (supported range 0.7–1.2).
+Alibaba does not map the generic speed/pitch/volume/sample-rate fields.
 Doubao v3 maps `speedRatio` and `volumeRatio` to its speech and loudness rates;
 `pitchRatio` is not mapped by the SSE preset.
 `voiceTypeEnv` selects the environment variable holding the voice ID; a static
@@ -101,11 +102,90 @@ See the [OpenAI speech API](https://platform.openai.com/docs/api-reference/audio
 and [Alibaba Cloud non-real-time TTS guide](https://help.aliyun.com/zh/model-studio/non-realtime-tts-user-guide)
 when changing models or voices.
 
+### Validated voice controls
+
+Configuration remains at schema version 1.0. Neutral legacy placeholders
+(`volumeRatio: 1`, `pitchRatio: 1`, `sampleRate: 24000`) remain compatible where
+they were unused. Changing an unsupported setting now fails validation instead
+of being ignored. ElevenLabs defaults to MP3; Alibaba and mock require WAV.
+OpenAI speed is 0.25–4.0; Doubao speed and loudness ratios are 0.5–2.0,
+and v3 rejects non-neutral pitch. Format and basic parameter constraints are
+also exported in the JSON Schema; model compatibility, endpoint security and
+advanced `requestBody` checks run in the local validator.
+Synthesis revision 2 invalidates older voice-cache entries and audio-package
+reuse fingerprints, including profiles whose JSON is unchanged. Review an old
+project's settings, then explicitly use `--force` to regenerate its audio package;
+review mode requires current approval again. No existing project is migrated or
+regenerated automatically.
+
+| Setting | Provider / behavior |
+| --- | --- |
+| `instructions` | OpenAI speech instructions, excluding `tts-1` / `tts-1-hd`; Alibaba requires the `qwen3-tts-instruct-flash` model family and writes to `input.instructions` |
+| `language` | Alibaba: `Auto`, `Chinese`, `English`, `German`, `Italian`, `Portuguese`, `Spanish`, `Japanese`, `Korean`, `French`, `Russian`; ElevenLabs: ISO 639-1 code, excluding `eleven_multilingual_v2` |
+| `voiceSettings` | ElevenLabs `stability`, `similarity_boost`, `style` (0–1), and `use_speaker_boost` (boolean); speed uses top-level `speedRatio` |
+| `pronunciationDictionaries` | ElevenLabs: at most three `{pronunciation_dictionary_id, version_id?}` entries referencing existing provider dictionaries |
+| `textNormalization` | ElevenLabs: `auto`, `on`, `off`, for provider text normalization such as number reading |
+| `useSceneContext` | ElevenLabs only, opt-in; supplies adjacent narrated scene text as `previous_text` / `next_text`; changed neighbors invalidate affected voice-cache entries |
+| `outputSampleRate` | Final combined mono voiceover: 24000 (default), 44100, or 48000 Hz; separate from provider `sampleRate`, without regenerating otherwise unchanged source takes |
+
+OpenAI example additions:
+
+```json
+{"speedRatio": 1.1, "instructions": "语气沉稳、自然，吐字清楚。", "outputSampleRate": 48000}
+```
+
+ElevenLabs example additions:
+
+```json
+{"speedRatio": 1.1, "voiceSettings": {"stability": 0.6, "similarity_boost": 0.75}, "textNormalization": "auto", "useSceneContext": true}
+```
+
+Alibaba example additions (explicitly selects the instruction-capable model):
+
+```json
+{"model": "qwen3-tts-instruct-flash", "language": "Chinese", "instructions": "语气沉稳、自然，吐字清楚。"}
+```
+
+Merge these fields into a chosen enabled profile; they are not standalone
+configuration files. Do not silently change a user's model to enable a control.
+Provider model, voice, region, subscription and language limitations still apply.
+See the [Qwen-TTS API](https://help.aliyun.com/zh/model-studio/qwen-tts-api)
+and [ElevenLabs speed guide](https://elevenlabs.io/docs/help-center/product/core-capabilities/text-to-speech/can-i-change-the-pace-of-the-voice).
+
+`requestBody` remains an advanced escape hatch, but cannot override managed
+text, model, voice, format or basic audio fields. Known instruction, language
+and ElevenLabs voice controls are checked for invalid values and conflicts
+with top-level fields. Other vendor-specific options must be checked against
+the selected model's official documentation. Automatic scene context cannot
+be combined with manual context text or request IDs.
+
 Profiles may also live in `audio/tts-config.<name>.json` or
 `audio/tts-profiles/<name>.json`. Run `npm run list:tts-profiles --
 projects/<video-id>` to see safe summaries. With more than one enabled valid
 profile, pass `--tts-config <selected-file>` to `produce`; it will not choose a
 voice silently. The selected provider and voice are recorded in `run.json`.
+The listing reports each discovered profile as `ready`, `needs-environment`,
+`disabled`, `invalid` or `test-only`, including safe reasons. A bad profile
+does not hide the others. `ready` means local configuration and named environment
+variables are present; it does not verify online credentials, balance or voice
+permissions. Automatic selection considers ready real providers first and does
+not fall back to mock when a real enabled profile is unavailable.
+
+### Explicit voice preview
+
+```bash
+npm run preview:tts -- projects/<video-id> --tts-config projects/<video-id>/audio/tts-config.json --text "你好，请确认这段配音的音色与语速。"
+```
+
+This is an explicit online synthesis request and may incur provider charges.
+It accepts `--text` or `--text-file` (1–500 characters); omitting both uses a
+short built-in audition sentence. It writes a unique original provider audio
+file under `audio/previews/` and prints the measured duration and safe profile
+summary. It never creates or replaces the production audio manifest, captions
+or storyboard, and rejects mock audition. No automatic playback or vendor voice
+catalog fetching is performed. `outputSampleRate` applies to production mixing,
+not this original preview file. Audition before approving the storyboard;
+files under `audio/` participate in project input fingerprints.
 
 ```bash
 cp examples/tts-profiles/openai.json projects/<video-id>/audio/tts-config.json

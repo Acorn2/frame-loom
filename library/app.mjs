@@ -13,7 +13,7 @@ const $ = (id) => document.getElementById(id);
 const escape = (value) => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
 const storageKey = 'frame-loom-library-selection-v1';
 let catalog; let state; let category = '全部镜头'; let toastTimer; let fontPicker; let searchTimer; let cardsKey;
-const categoryOrder = ['全部镜头', '标题', '文字', '证据', '结构', '关系', '时间与数据', '基础', '辅助动作', '换章转场'];
+const categoryOrder = ['全部镜头', '标题', '文字', '证据', '结构', '关系', '交互', '时间与数据', '基础', '辅助动作', '换章转场'];
 const featuredRecipes = ['blur-slide', 'paper-title', 'title-to-label', 'card-stack', 'source-converge', 'concept-matrix'];
 
 function toast(message) {
@@ -123,12 +123,12 @@ function renderCards() {
   for (const video of $('cards').querySelectorAll('video')) releaseVideo(video);
   activePreview = undefined;
   $('cards').innerHTML = items.map((recipe, index) => {
-    const item = recipePreview(recipe, state.style);
+    const item = recipePreview(recipe, state.style, state.canvas);
     const available = compatible(item, state.style, state.canvas);
     const selected = state.selected.includes(item.id);
     const status = item.kind !== 'scene' ? `${item.kind === 'hosted-action' ? `宿主：${item.hosts.join(' / ')}` : `独立换章窗口 · ${item.minSec}–${item.maxSec} 秒`}` : available ? '支持当前组合' : '当前风格或画幅不兼容';
     return `<article class="shot-card ${selected ? 'selected' : ''} ${available ? '' : 'incompatible'}" data-recipe="${escape(item.id)}">
-      <div class="shot-preview"><button class="shot-poster" data-detail="${escape(item.id)}" aria-label="预览 ${escape(item.name)}">
+      <div class="shot-preview"><button class="shot-poster" data-canvas="${escape(item.sampleCanvas)}" data-detail="${escape(item.id)}" aria-label="预览 ${escape(item.name)}">
         ${item.video ? `<video data-src="${escape(item.video)}" data-poster="${escape(item.poster)}" muted loop playsinline preload="none" width="960" height="540" aria-label="${escape(item.name)} 动态参考"></video>` : item.poster ? `<img src="${escape(item.poster)}" alt="${escape(item.name)} 配方示例画面" loading="lazy" width="960" height="540">` : `<span class="preview-unavailable"><strong>${previewStatusText(item)}</strong><span>可查看配方说明</span></span>`}<span class="shot-number">${String(index + 1).padStart(2, '0')}</span><span class="play-label">${item.video ? '查看动效与配方 ↗' : item.poster ? '查看画面与用法 ↗' : '查看配方说明 ↗'}</span></button>${item.video ? `<button class="preview-expand" data-fullscreen="${escape(item.id)}" aria-label="全屏播放 ${escape(item.name)}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5"/></svg></button>` : ''}</div>
       <div class="shot-body"><p class="shot-category">${escape(item.category)}</p><h3>${escape(item.name)}</h3><p class="shot-id">${escape(item.id)}</p><p class="shot-desc">${escape(item.description)}</p><p class="shot-compat">${escape(status)}</p><div class="shot-actions">${item.kind === 'scene' ? `<label class="pick-label"><input type="checkbox" data-pick="${escape(item.id)}" aria-label="选择镜头 ${escape(item.name)}" ${selected ? 'checked' : ''} ${available ? '' : 'disabled'}>选择镜头</label>` : '<span class="section-note">附属能力 · 不计入镜头集合</span>'}<button class="text-button" data-detail="${escape(item.id)}">配方说明</button></div></div></article>`;
   }).join('');
@@ -237,7 +237,7 @@ const detailView = createDetailView({
   },
   onVariant: (id, variantId) => {
     const item = catalog.recipes.find(item => item.id === id);
-    const variant = recipePreview(item, state.style).previewVariants.find(variant => variant.id === variantId);
+    const variant = recipePreview(item, state.style, state.canvas).previewVariants.find(variant => variant.id === variantId);
     showDetail({...item, variantId: variant?.id});
   },
   onToast: toast,
@@ -248,7 +248,7 @@ const detailView = createDetailView({
 });
 function showDetail(item, isStyle = false) {
   stylePlayback?.stop();
-  let sample = {...(isStyle ? item : recipePreview(item, state.style)), previewNote: '此样片使用风格原始字体，展示构图与动效。所选全片字体用于实际制作，可在风格页查看字体组合样片。'};
+  let sample = {...(isStyle ? item : recipePreview(item, state.style, state.canvas)), previewNote: '此样片使用风格原始字体，展示构图与动效。所选全片字体用于实际制作，可在风格页查看字体组合样片。'};
   const variant = sample.previewVariants?.find(v => v.id === item.variantId);
   if (variant) sample = {...sample, poster: variant.poster, video: variant.video, previewStatus: variant.previewStatus};
   detailView.show(sample, isStyle); updatePreviewPlayback();

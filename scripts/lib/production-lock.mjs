@@ -49,7 +49,7 @@ export function resolveProductionLock(input, root = defaultRoot, projectPath) {
     if (manifest.id !== storyboard.videoTemplate.id || manifest.version !== storyboard.videoTemplate.version) throw new Error('视频模板精确版本不一致。');
     template = {...storyboard.videoTemplate, manifestHash: fileHash(file)};
   }
-  const rendererScripts = ['scripts/render-storyboard.mjs', 'scripts/lib/audio-runtime.mjs', 'scripts/lib/output-purpose.mjs', 'scripts/lib/verified-render-output.mjs', 'scripts/lib/render-receipt.mjs'];
+  const rendererScripts = ['scripts/render-storyboard.mjs', 'scripts/lib/audio-runtime.mjs', 'scripts/lib/output-purpose.mjs', 'scripts/lib/verified-render-output.mjs', 'scripts/lib/render-receipt.mjs', 'scripts/lib/layout-qa.mjs'];
   const runtime = [...files(path.join(root, 'src')), ...rendererScripts.map((name) => path.join(root, name)), path.join(root, 'package-lock.json'), path.join(root, 'tsconfig.json')].sort().map((file) => [path.relative(root, file), fileHash(file)]);
   const style = {...storyboard.style, contentHash: hashValue(['style.json', 'motion.json'].map((name) => fileHash(path.join(root, 'styles', storyboard.style.id, name))))};
   const font = storyboard.font ? verifyFontAssets(storyboard.font, root) : undefined;

@@ -16,6 +16,9 @@ import {StyleStatement} from './StyleStatement';
 import {StyleSequence} from './StyleSequence';
 import {fittedSemanticFont, languageBackground, languageEntrance, semanticHeadingLayout, styleLanguage} from './style-language';
 
+import {sceneRegions, networkRects} from '../../layout/scene-layout';
+import {ReadableText} from '../../layout/ReadableText';
+
 interface Props {
   scene: StoryboardScene;
   tokens: StyleTokens;
@@ -125,15 +128,16 @@ function DiagramNode({layer, scene, tokens, frame, scale, active, compact = fals
   const neutral = scene.shot && ['semantic-default', 'compare-reveal', 'network-expand'].includes(scene.shot.id);
   const framed = neutral && ['compare', 'network'].includes(scene.visual?.kind ?? '');
   const family = styleLanguage(tokens.id);
-  const cardInk = contrastInk(tokens.paper);
-  const diameter = (neutral ? horizontal ? 64 : compact ? 84 : 104 : horizontal ? 70 : compact ? 122 : 158) * scale;
-  const heading = <strong style={{fontFamily: tokens.displayFont, fontSize: (neutral ? horizontal ? 48 : compact ? 52 : 64 : horizontal ? 30 : compact ? 38 : 48) * scale, lineHeight: 1.1, overflowWrap: 'anywhere'}}>{layerHeading(layer)}</strong>;
-  const detail = layer.label && layer.text ? <span style={{fontSize: (neutral ? compact ? 30 : 38 : compact ? 23 : 27) * scale, lineHeight: 1.2, color: framed && tokens.palette ? tokens.paperMuted : tokens.muted, overflowWrap: 'anywhere'}}>{layer.text}</span> : null;
-  return <div style={{...entranceStyle(progress, tokens, scale), width: '100%', height: '100%', display: 'flex', flexDirection: horizontal ? 'row' : 'column', justifyContent: 'center', alignItems: 'center', textAlign: horizontal ? 'left' : 'center', gap: 14 * scale, color: framed ? cardInk : tokens.ink, boxSizing: 'border-box', padding: framed ? 18 * scale : undefined, background: framed ? tokens.paper : undefined, border: framed ? tokens.surfaceBorder : undefined, borderRadius: framed ? tokens.surfaceRadius * scale : undefined, boxShadow: framed ? tokens.surfaceShadow : undefined, rotate: family === 'notes' ? `${layer.id.length % 2 ? 1.2 : -1.2}deg` : undefined, opacity: clamp(progress) * (framed ? 1 : getAttentionOpacity(scene, layer.id, frame))}}>
+  const cardInk = tokens.palette?.schemaVersion === '1.1' ? tokens.paperInk ?? tokens.ink : contrastInk(tokens.paper);
+  const modern = Boolean(tokens.layoutPolicy);
+  const diameter = (modern && horizontal ? 48 : neutral ? horizontal ? 64 : compact ? 84 : 104 : horizontal ? 70 : compact ? 122 : 158) * scale;
+  const heading = <strong style={{fontFamily: tokens.displayFont, fontSize: (modern && horizontal ? 36 : neutral ? horizontal ? 48 : compact ? 52 : 64 : horizontal ? 30 : compact ? 38 : 48) * scale, lineHeight: 1.1, overflowWrap: 'anywhere'}}>{layerHeading(layer)}</strong>;
+  const detail = layer.label && layer.text ? <span style={{fontSize: (modern && horizontal ? 24 : neutral ? compact ? 30 : 38 : compact ? 23 : 27) * scale, lineHeight: 1.2, color: framed && tokens.palette ? tokens.paperMuted : tokens.muted, overflowWrap: 'anywhere'}}>{layer.text}</span> : null;
+  return <div style={{...entranceStyle(progress, tokens, scale), width: '100%', height: '100%', display: 'flex', flexDirection: horizontal ? 'row' : 'column', justifyContent: 'center', alignItems: 'center', textAlign: horizontal ? 'left' : 'center', gap: 14 * scale, color: framed ? cardInk : tokens.ink, boxSizing: 'border-box', padding: framed ? (modern && horizontal ? 12 : 18) * scale : undefined, background: framed ? tokens.paper : undefined, border: framed ? tokens.surfaceBorder : undefined, borderRadius: framed ? tokens.surfaceRadius * scale : undefined, boxShadow: framed ? tokens.surfaceShadow : undefined, rotate: family === 'notes' ? `${layer.id.length % 2 ? 1.2 : -1.2}deg` : undefined, opacity: clamp(progress) * (framed ? 1 : getAttentionOpacity(scene, layer.id, frame))}}>
     <div style={{width: diameter, height: diameter, flexShrink: 0, borderRadius: family === 'swiss' || family === 'blueprint' ? 0 : family === 'signal' ? '50%' : neutral ? tokens.surfaceRadius * scale : '50%', border: `${(neutral ? 1.5 : 4) * scale}px solid ${active ? tokens.accent : tokens.grid}`, background: active ? tokens.accent : tokens.paper, boxShadow: active && family === 'signal' ? `0 0 0 ${12 * scale}px ${tokens.accent}18` : undefined, display: 'grid', placeItems: 'center', boxSizing: 'border-box'}}>
       {layer.glyph ? <ConceptGlyph glyph={layer.glyph} color={active ? (tokens.onAccent ?? contrastInk(tokens.accent)) : tokens.paperAccent ?? tokens.accentAlt} size={diameter * 0.54} /> : <span style={{fontFamily: tokens.displayFont, fontSize: 57 * scale, color: tokens.palette ? active ? tokens.onAccent : tokens.paperInk : undefined}}>{[...layerHeading(layer)][0]}</span>}
     </div>
-    {horizontal ? <div style={{minWidth: 0, flex: 1, display: 'flex', flexDirection: 'column', gap: 10 * scale}}>{heading}{detail}</div> : <>{heading}{detail}</>}
+    {horizontal ? <div style={{minWidth: 0, flex: 1, display: 'flex', flexDirection: 'column', gap: (modern ? 8 : 10) * scale}}>{heading}{detail}</div> : <>{heading}{detail}</>}
   </div>;
 }
 
@@ -212,7 +216,30 @@ function ConvergenceVisual({scene, tokens, frame, scale}: {scene: StoryboardScen
   </div>;
 }
 
-function NetworkVisual({scene, tokens, frame, scale}: {scene: StoryboardScene; tokens: StyleTokens; frame: number; scale: number}) {
+function NetworkVisual({scene, tokens, frame, scale, width = 0, height = 0}: {scene: StoryboardScene; tokens: StyleTokens; frame: number; scale: number; width?: number; height?: number}) {
+  if (tokens.layoutPolicy) {
+    const items = scene.layers.filter(layer => layer.type === 'node' || layer.type === 'card');
+    const anchor = items.find(layer => layer.id === scene.visual?.anchorId);
+    const branches = items.filter(layer => layer.id !== anchor?.id);
+    const inward = scene.visual?.networkDirection === 'inward';
+    const rects = networkRects(branches.length, width, height, scale, inward);
+    const focused = getAttentionTarget(scene, frame) ?? anchor?.id;
+    return <div style={{position: 'relative', width, height}}>
+      <svg width={width} height={height} style={{position: 'absolute', inset: 0}} aria-hidden>
+        {branches.map((branch, index) => {
+          const link = scene.connections.find(item => inward ? item.from === branch.id && item.to === anchor?.id : item.from === anchor?.id && item.to === branch.id);
+          if (!link) return null;
+          const a = rects.anchor, b = rects.branches[index]!;
+          const x1 = inward ? b.x + b.width : a.x + a.width, y1 = inward ? b.y + b.height / 2 : a.y + a.height / 2;
+          const x2 = inward ? a.x : b.x, y2 = inward ? a.y + a.height / 2 : b.y + b.height / 2;
+          const progress = beatProgress(scene, link.id, frame, ['draw']);
+          return <path key={link.id} d={`M${x1} ${y1} H${(x1 + x2) / 2} V${y2} H${x2}`} stroke={tokens.accentAlt} strokeWidth={3 * scale} fill="none" pathLength="1" strokeDasharray="1" strokeDashoffset={1 - progress} />;
+        })}
+      </svg>
+      {[...(anchor ? [{layer: anchor, rect: rects.anchor}] : []), ...branches.map((layer, index) => ({layer, rect: rects.branches[index]!}))].map(({layer, rect}) => <div key={layer.id} data-layout-node={layer.id} style={{position: 'absolute', left: rect.x, top: rect.y, width: rect.width, height: rect.height}}><DiagramNode layer={layer} scene={scene} tokens={tokens} frame={frame} scale={scale} active={focused === layer.id} compact horizontal /></div>)}
+    </div>;
+  }
+
   if (scene.visual?.networkDirection === 'inward') return <ConvergenceVisual scene={scene} tokens={tokens} frame={frame} scale={scale} />;
   const items = scene.layers.filter((layer) => layer.type === 'node' || layer.type === 'card');
   const anchor = items.find((layer) => layer.id === scene.visual?.anchorId);
@@ -309,8 +336,9 @@ function MediaVisual({scene, tokens, frame, scale, width, height}: {scene: Story
   const focus = scene.visual?.mediaFocus;
   const focusProgress = focus ? 1 - (1 - clamp((frame - focus.start) / focus.duration)) ** 3 : 0;
   const family = styleLanguage(tokens.id);
-  return <div style={{...surface(tokens, false, 0), ...entranceStyle(progress, tokens, scale), height: '100%', padding: (family === 'notes' ? 38 : 25) * scale, boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative', rotate: family === 'notes' ? '-1.5deg' : undefined, border: family === 'swiss' ? `3px solid ${tokens.accent}` : family === 'blueprint' ? `2px solid ${tokens.accentAlt}` : tokens.surfaceBorder}}>
-    {layer.assetDataUri ? focus ? <FocusedMedia src={layer.assetDataUri} focus={focus} frame={frame} width={width - 50 * scale} height={height - 50 * scale} /> : <Img src={layer.assetDataUri} style={{maxWidth: '100%', maxHeight: '100%', width: '100%', height: '100%', objectFit: layer.fit ?? 'contain'}} /> : null}
+  const padding = tokens.layoutPolicy ? 0 : (family === 'notes' ? 38 : 25) * scale;
+  return <div data-layout-media style={{...surface(tokens, false, 0), ...entranceStyle(progress, tokens, scale), height: '100%', padding, boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative', rotate: !tokens.layoutPolicy && family === 'notes' ? '-1.5deg' : undefined, border: tokens.layoutPolicy ? 'none' : family === 'swiss' ? `3px solid ${tokens.accent}` : family === 'blueprint' ? `2px solid ${tokens.accentAlt}` : tokens.surfaceBorder, ...(tokens.layoutPolicy ? {background: 'transparent', boxShadow: 'none'} : {})}}>
+    {layer.assetDataUri ? focus ? <FocusedMedia src={layer.assetDataUri} focus={focus} frame={frame} width={width - (tokens.layoutPolicy ? 0 : 50 * scale)} height={height - (tokens.layoutPolicy ? 0 : 50 * scale)} /> : <Img src={layer.assetDataUri} style={{maxWidth: '100%', maxHeight: '100%', width: '100%', height: '100%', objectFit: layer.fit ?? 'contain'}} /> : null}
     {focus ? <span style={{position: 'absolute', left: 24 * scale, bottom: 16 * scale, fontSize: 21 * scale, fontWeight: 700, color: tokens.ink, opacity: focusProgress}}>{focus.label}</span> : null}
   </div>;
 }
@@ -329,12 +357,13 @@ export function SemanticScene({scene, tokens, appearance, showSceneCaptions, ext
   const extended = visual.networkDirection || visual.changeMode || visual.mediaFocus;
   const family = styleLanguage(tokens.id);
   const productMedia = family === 'product' && visual.kind === 'media' && !portrait;
-  const bodyLeft = productMedia ? contentWidth * .37 : family === 'signal' && visual.kind === 'media' ? contentWidth * .10 : 0;
-  const bodyWidth = productMedia ? contentWidth * .63 : family === 'signal' && visual.kind === 'media' ? contentWidth * .80 : contentWidth;
-  const bodyTop = productMedia ? contentHeight * .14 : contentHeight * (portrait ? .26 : .29);
-  const bodyHeight = contentHeight * (productMedia ? .66 : portrait ? .56 : .55);
-  const titleWidth = contentWidth * (productMedia ? .30 : .96);
-  const headingSlot = semanticHeadingLayout(tokens.id, contentWidth, contentHeight, portrait, scale, visual.kind === 'media');
+  const regions = tokens.layoutPolicy ? sceneRegions({width, height, safeArea: tokens.safeArea, captions: captionReserve > 0, media: visual.kind === 'media'}) : undefined;
+  const bodyLeft = regions?.body.x ?? (productMedia ? contentWidth * .37 : family === 'signal' && visual.kind === 'media' ? contentWidth * .10 : 0);
+  const bodyWidth = regions?.body.width ?? (productMedia ? contentWidth * .63 : family === 'signal' && visual.kind === 'media' ? contentWidth * .80 : contentWidth);
+  const bodyTop = regions?.body.y ?? (productMedia ? contentHeight * .14 : contentHeight * (portrait ? .26 : .29));
+  const bodyHeight = regions?.body.height ?? contentHeight * (productMedia ? .66 : portrait ? .56 : .55);
+  const titleWidth = regions?.title.width ?? contentWidth * (productMedia ? .30 : .96);
+  const headingSlot = regions ? {...regions.title, max: regions.titleMax, min: 38 * scale} : semanticHeadingLayout(tokens.id, contentWidth, contentHeight, portrait, scale, visual.kind === 'media');
   const titleSize = family ? fittedSemanticFont(scene.title, headingSlot.width, headingSlot.height, headingSlot.max, headingSlot.min)
     : Math.max(38, Math.min(portrait ? 82 : 78, (portrait ? 75 : 76) * 14 / Math.max(8, [...scene.title].length), extended ? contentWidth * .94 / scale / Math.max(1, [...scene.title].length) : Infinity)) * scale;
   const {heading: headingProgress, claim: claimProgress} = semanticTextProgress(scene, frame, fps, tokens, overlapOutFrames);
@@ -344,7 +373,7 @@ export function SemanticScene({scene, tokens, appearance, showSceneCaptions, ext
       : visual.kind === 'sequence' ? family ? <StyleSequence scene={scene} tokens={stageTokens} frame={frame} scale={scale} width={bodyWidth} height={bodyHeight} portrait={portrait} /> : <SequenceVisual scene={scene} tokens={stageTokens} frame={frame} scale={scale} />
         : visual.kind === 'network' ? visual.shotPattern === 'document-conclusion-deal'
           ? <DocumentConclusionDeal scene={scene} tokens={tokens} frame={frame} scale={scale} />
-          : <NetworkVisual scene={scene} tokens={stageTokens} frame={frame} scale={scale} />
+          : <NetworkVisual scene={scene} tokens={stageTokens} frame={frame} scale={scale} width={bodyWidth} height={bodyHeight} />
           : visual.kind === 'change' ? <ChangeVisual scene={scene} tokens={stageTokens} frame={frame} scale={scale} />
             : visual.kind === 'metric' ? <MetricVisual scene={scene} tokens={stageTokens} frame={frame} scale={scale} />
               : <MediaVisual scene={scene} tokens={tokens} frame={frame} scale={scale} width={bodyWidth} height={bodyHeight} />;
@@ -352,15 +381,15 @@ export function SemanticScene({scene, tokens, appearance, showSceneCaptions, ext
   return <AbsoluteFill style={{background: appearance?.background ?? tokens.background, color: appearance?.stageInk ?? tokens.ink, fontFamily: tokens.bodyFont, overflow: 'hidden', ...background(tokens, scale), ...transitionStyle(scene, frame, overlapOutFrames, chapterTransitionOut)}}>
     <div style={{position: 'absolute', left: tokens.safeArea.left, top: tokens.safeArea.top, width: contentWidth, height: contentHeight}}>
       {visual.kind !== 'statement' ? <>
-        <div style={{position: 'absolute', left: 0, top: 0, right: 0, display: 'flex', justifyContent: 'space-between', borderBottom: family === 'signal' ? undefined : `${2 * scale}px solid ${family === 'swiss' ? tokens.accent : tokens.grid}`, paddingBottom: 14 * scale, color: appearance?.stageMuted ?? tokens.muted, fontSize: 23 * scale, fontFamily: tokens.font ? tokens.bodyFont : family === 'blueprint' ? 'monospace' : tokens.bodyFont, letterSpacing: 2 * scale}}><span>{kindLabel}</span><span>{visual.representation === 'diagram' ? '示意图' : '来源素材'}</span></div>
-        <h1 style={{...entranceStyle(headingProgress, tokens, scale), position: 'absolute', left: 0, top: contentHeight * (productMedia ? .13 : .085), margin: 0, width: titleWidth, fontFamily: tokens.displayFont, fontSize: titleSize, fontWeight: family === 'editorial' || family === 'notes' ? 700 : 800, lineHeight: 1.12, overflowWrap: 'anywhere', textWrap: 'balance', textAlign: family === 'signal' ? 'center' : 'left', rotate: family === 'notes' ? '-.7deg' : undefined}}>{scene.title}</h1>
-        <div style={{position: 'absolute', left: bodyLeft, width: bodyWidth, top: bodyTop, height: bodyHeight}}>{body}</div>
-        <div style={{...entranceStyle(claimProgress, tokens, scale), position: 'absolute', left: 0, right: 0, bottom: 0, borderTop: family === 'signal' ? undefined : `1px solid ${tokens.grid}`, paddingTop: 14 * scale, fontSize: 27 * scale, lineHeight: 1.25, textAlign: family === 'signal' ? 'center' : 'left', color: appearance?.stageMuted ?? tokens.muted}}>{scene.primaryClaim}</div>
+        {!regions ? <div style={{position: 'absolute', left: 0, top: 0, right: 0, display: 'flex', justifyContent: 'space-between', borderBottom: family === 'signal' ? undefined : `${2 * scale}px solid ${family === 'swiss' ? tokens.accent : tokens.grid}`, paddingBottom: 14 * scale, color: appearance?.stageMuted ?? tokens.muted, fontSize: 23 * scale, fontFamily: tokens.font ? tokens.bodyFont : family === 'blueprint' ? 'monospace' : tokens.bodyFont, letterSpacing: 2 * scale}}><span>{kindLabel}</span><span>{visual.representation === 'diagram' ? '示意图' : '来源素材'}</span></div> : null}
+        <h1 data-layout-title style={{...entranceStyle(headingProgress, tokens, scale), position: 'absolute', left: regions?.title.x ?? 0, top: regions?.title.y ?? contentHeight * (productMedia ? .13 : .085), margin: 0, width: titleWidth, height: regions?.title.height, fontFamily: tokens.displayFont, fontSize: titleSize, fontWeight: family === 'editorial' || family === 'notes' ? 700 : 800, lineHeight: 1.12, overflowWrap: 'anywhere', textWrap: 'balance', textAlign: family === 'signal' && !regions ? 'center' : 'left', rotate: !regions && family === 'notes' ? '-.7deg' : undefined}}>{tokens.layoutPolicy ? <ReadableText text={scene.title} /> : scene.title}</h1>
+        <div data-layout-body style={{position: 'absolute', left: bodyLeft, width: bodyWidth, top: bodyTop, height: bodyHeight}}>{body}</div>
+        <div data-layout-claim style={{...entranceStyle(claimProgress, tokens, scale), position: 'absolute', left: regions?.claim.x ?? 0, ...(regions ? {top: regions.claim.y, width: regions.claim.width, height: regions.claim.height, boxSizing: 'border-box' as const} : {right: 0, bottom: 0}), borderTop: family === 'signal' ? undefined : `1px solid ${tokens.grid}`, paddingTop: 14 * scale, fontSize: 27 * scale, lineHeight: 1.25, textAlign: family === 'signal' ? 'center' : 'left', color: appearance?.stageMuted ?? tokens.muted}}>{scene.primaryClaim}</div>
       </> : <>
         <div style={{position: 'absolute', inset: 0}}>{body}</div>
         <div style={{...entranceStyle(claimProgress, tokens, scale), position: 'absolute', left: 0, bottom: 0, borderTop: appearance ? `1px solid ${tokens.grid}60` : `${2 * scale}px solid ${tokens.grid}`, paddingTop: 17 * scale, fontSize: 26 * scale, color: appearance?.stageMuted ?? tokens.muted}}>{scene.primaryClaim}</div>
       </>}
     </div>
-    {caption ? <div style={{...captionTextStyle(tokens), position: 'absolute', left: tokens.safeArea.left, right: tokens.safeArea.right, bottom: tokens.safeArea.bottom + 10 * scale, padding: `${12 * scale}px ${18 * scale}px`, fontSize: (portrait ? 32 : 28) * scale, lineHeight: 1.3}}>{caption.text}</div> : null}
+    {caption ? <div data-layout-caption style={{...captionTextStyle(tokens), position: 'absolute', left: tokens.safeArea.left, right: tokens.safeArea.right, bottom: tokens.safeArea.bottom + 10 * scale, padding: `${12 * scale}px ${18 * scale}px`, fontSize: (portrait ? 32 : 28) * scale, lineHeight: 1.3}}>{caption.text}</div> : null}
   </AbsoluteFill>;
 }

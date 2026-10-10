@@ -7,6 +7,7 @@ import {resolveProjectPalette} from '../styles/project-palette';
 // Neutral stages replace warm paper across all current recipe samples.
 // Default styles retain accent families; explicit project palettes take precedence.
 export const RECIPE_VISUALS = {
+  'type-and-filter': 'studio', 'ai-stream-response': 'slate', 'unit-dot-regroup': 'instrument',
   'semantic-default': 'diagram', 'compare-reveal': 'comparison', 'network-expand': 'network',
   'paper-title': 'editorial', 'document-conclusions': 'document', 'title-to-label': 'studio',
   'list-reveal': 'slate', 'blur-slide': 'spotlight', 'split-text-stagger': 'ink',

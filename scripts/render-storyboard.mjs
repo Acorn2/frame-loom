@@ -13,6 +13,7 @@ import {loadHandoffConfig, OUTPUT_PURPOSES} from './lib/output-purpose.mjs';
 import {assertStoryboardApproval} from './lib/storyboard-approval.mjs';
 import {renderToVerifiedOutput} from './lib/verified-render-output.mjs';
 import {verifyFontAssets} from '../src/fonts/assets.ts';
+import {layoutCollector} from './lib/layout-qa.mjs';
 
 const args = process.argv.slice(2);
 let force = false;
@@ -157,7 +158,9 @@ const font = storyboard.font ? verifyFontAssets(storyboard.font) : undefined;
 const entryPoint = path.join(projectRoot, 'src/index.ts');
 console.log('Bundling Remotion composition...');
 const bundleLocation = await bundle({entryPoint});
+const layout = layoutCollector(storyboard);
 const inputProps = {storyboard: hydratedStoryboard, styleTokens, audioRuntime, renderProfile: {
+  ...(storyboard.layoutPolicy ? {layoutCheckFrames: layout.frames} : {}),
   ...(font ? {font: {id: font.id, version: font.version, faces: font.faces.map(({file, sha256}) => ({file, sha256})), licenseSha256: font.licenseSha256}} : {}),
   ...(productionLock ? {productionLockHash: productionLock.hash, productionLock, resolvedShotPlan: resolvedProduction.plans} : {}),
   purpose: outputPurpose ?? (hasAudio ? 'in-project-video' : 'visual-preview'),
@@ -178,6 +181,8 @@ await renderToVerifiedOutput({
   render: (stagedVideo) => renderMedia({
     composition, serveUrl: bundleLocation, codec: 'h264', outputLocation: stagedVideo,
     inputProps, audioCodec: hasAudio ? 'aac' : null, muted: !hasAudio, enforceAudioTrack: hasAudio,
+    onBrowserLog: layout.onBrowserLog,
+    logLevel: 'error',
     onProgress: ({progress, renderedFrames, encodedFrames}) => {
       const bucket = Math.floor(progress * 10);
       if (bucket <= lastProgressBucket) return;
@@ -186,6 +191,8 @@ await renderToVerifiedOutput({
     }
   }),
   verify: (stagedVideo) => {
+    const layoutQa = layout.finish();
+    if (layoutQa) inputProps.renderProfile.layoutQa = layoutQa;
     inspectOutput(stagedVideo, storyboard, {expectAudio: hasAudio});
     if (productionLock && resolveProductionLock(storyboard, projectRoot, path.dirname(resolvedInput)).lock.hash !== productionLock.hash) throw new Error('输入或渲染实现已在渲染期间变化，未发布候选视频。');
   }

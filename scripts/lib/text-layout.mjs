@@ -1,4 +1,6 @@
+import {sceneRegions} from '../../src/layout/scene-layout.ts';
 import {checkP2Text} from './p2-text-layout.mjs';
+import {checkExpansionText} from './expansion-text-layout.mjs';
 import {documentConclusionType, listType} from '../../src/shots/type-scale.ts';
 import {shotContentLayout} from '../../src/shots/layout.ts';
 import {compileStoryboardShots} from '../../src/shots/compile-shot.ts';
@@ -72,6 +74,7 @@ export function checkTextLayout(storyboard, style = loadStylePack(storyboard.sty
     const captionReserve = scene.shot ? (portrait ? 170 : 125) * scale : scene.captions.length > 0 ? (portrait ? 170 : 125) : 0;
     const contentHeight = height - safeArea.top - safeArea.bottom - captionReserve;
     issues.push(...checkP2Text(scene, estimateTextLines));
+    issues.push(...checkExpansionText(scene, contentWidth / scale, contentHeight / scale, estimateTextLines));
     issues.push(...checkShortlistText(scene, contentWidth, contentHeight, scale, estimateTextLines));
     if (scene.visual) {
       const modern = scene.shot && scene.shot.version !== '1.0.0';
@@ -80,7 +83,8 @@ export function checkTextLayout(storyboard, style = loadStylePack(storyboard.sty
       const documentShot = scene.shot?.id === 'document-conclusions' || scene.visual.shotPattern === 'document-conclusion-deal';
       const customShot = recipePlans.has(scene.id) && !['semantic-default', 'compare-reveal', 'network-expand'].includes(scene.shot.id);
       const family = !customShot && styleLanguage(style.id);
-      const titleSlot = family ? scene.visual.kind === 'statement' ? statementTitleLayout(style.id, contentWidth, contentHeight, portrait, scale) : semanticHeadingLayout(style.id, contentWidth, contentHeight, portrait, scale, scene.visual.kind === 'media') : undefined;
+      const regions = storyboard.layoutPolicy ? sceneRegions({width, height, safeArea, captions: true, media: scene.visual.kind === 'media'}) : undefined;
+      const titleSlot = family ? scene.visual.kind === 'statement' ? statementTitleLayout(style.id, contentWidth, contentHeight, portrait, scale) : regions ? {...regions.title, max: regions.titleMax, min: 38 * scale} : semanticHeadingLayout(style.id, contentWidth, contentHeight, portrait, scale, scene.visual.kind === 'media') : undefined;
       const titleWidth = titleSlot?.width ?? contentWidth * (scene.visual.kind === 'statement' ? .83 : .96);
       const titleFont = titleSlot ? fittedSemanticFont(scene.title, titleSlot.width, titleSlot.height, titleSlot.max, titleSlot.min) : (customShot ? scene.shot.id === 'paper-title' ? current ? 144 : 108 : scene.shot.id === 'title-to-label' ? current ? 152 : 112 : layout.titleFont : scene.visual.kind === 'statement' ? 120 : 78) * scale;
       const titleHeight = titleSlot?.height ?? contentHeight * (customShot && ['paper-title', 'title-to-label'].includes(scene.shot.id) ? .5 : scene.visual.kind === 'statement' ? .5 : .2);
@@ -98,7 +102,7 @@ export function checkTextLayout(storyboard, style = loadStylePack(storyboard.sty
         if (customShot || documentShot) continue;
         if (family && scene.visual.kind === 'sequence') {
           const gap = (portrait ? 28 : 40) * scale;
-          const bodyHeight = contentHeight * (portrait ? .56 : .55);
+          const bodyHeight = regions?.body.height ?? contentHeight * (portrait ? .56 : .55);
           const cellWidth = portrait ? contentWidth * .86 : (contentWidth - gap * (items.length - 1)) / Math.max(1, items.length);
           const cellHeight = portrait ? (bodyHeight - gap * (items.length - 1)) / Math.max(1, items.length) : bodyHeight * (family === 'blueprint' ? .48 : .76);
           const textWidth = cellWidth - (portrait ? family === 'swiss' ? 180 : 100 : 48) * scale;

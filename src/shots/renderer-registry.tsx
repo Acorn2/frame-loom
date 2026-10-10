@@ -1,4 +1,5 @@
 import {P2Scene} from './p2/P2Scene';
+import {ExpansionScene} from './expansion/ExpansionScene';
 import {SHOT_RENDERERS as LEGACY_RENDERERS} from './legacy-v1/renderer-registry';
 import {SHOT_RENDERERS as PREVIOUS_RENDERERS} from './legacy-v11/renderer-registry';
 import {recipeAppearance} from './appearance';
@@ -23,6 +24,9 @@ import {RelationShots} from './shortlist/RelationShots';
 
 const NativeShot = ({plan: _plan, ...props}: ShotRenderProps & {plan: ShotPlan}) => <SemanticScene {...props} />;
 export const SHOT_RENDERERS = {
+  'type-and-filter': ExpansionScene,
+  'ai-stream-response': ExpansionScene,
+  'unit-dot-regroup': ExpansionScene,
     'research-stack': P2Scene,
   'list-stack-press': P2Scene,
   'integration-hub': P2Scene,

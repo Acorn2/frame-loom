@@ -8,6 +8,7 @@ import {applyProjectPalette} from './project-palette';
 export type StylePattern = 'grid' | 'desktop' | 'dots' | 'solid';
 
 export interface StyleTokens {
+  layoutPolicy?: 'content-first-v1';
   id: string;
   background: string;
   ink: string;

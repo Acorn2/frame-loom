@@ -285,6 +285,30 @@
       "purpose": "有来源字标连续描画",
       "manifest": "letterspace-materialize/manifest.json",
       "recipe": "letterspace-materialize/recipe.md"
+    },
+    {
+      "id": "type-and-filter",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "操作筛选与详情",
+      "manifest": "type-and-filter/manifest.json",
+      "recipe": "type-and-filter/recipe.md"
+    },
+    {
+      "id": "ai-stream-response",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "结果生成与确认",
+      "manifest": "ai-stream-response/manifest.json",
+      "recipe": "ai-stream-response/recipe.md"
+    },
+    {
+      "id": "unit-dot-regroup",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "单位点阵重组",
+      "manifest": "unit-dot-regroup/manifest.json",
+      "recipe": "unit-dot-regroup/recipe.md"
     }
   ]
 }

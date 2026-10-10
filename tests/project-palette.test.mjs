@@ -19,6 +19,10 @@ import {buildLibraryCatalog} from '../scripts/lib/library-catalog.mjs';
 
 const read = id => JSON.parse(fs.readFileSync(`examples/shot-recipes/${id}/storyboard.json`, 'utf8'));
 const palette = (accent = '#2563eb') => ({schemaVersion: '1.0', source: 'custom', referenceAssets: [], colors: {accent, accentAlt: accent, lightBackground: '#f4f6f8', darkBackground: '#151a22', surface: '#ffffff'}});
+const fullPalette = () => ({schemaVersion: '1.1', source: 'custom', referenceAssets: [], colors: {
+  accent: '#2563eb', accentAlt: '#1a311e', lightBackground: '#f6f3e4', darkBackground: '#102218', surface: '#fffdf5',
+  ink: '#1a311e', muted: '#466647', captionInk: '#305535'
+}});
 fs.mkdirSync('.tmp/project-palette-tests', {recursive: true});
 function project() {
   const dir = fs.mkdtempSync(path.resolve('.tmp/project-palette-tests/case-'));
@@ -35,6 +39,27 @@ function project() {
 }
 
 describe('project palette contract and rendering', () => {
+  it('uses source background, body, surface and subtitle roles across every current style and shot', () => {
+    for (const id of ['retro-zine', 'archive-grid', 'scatterbrain', 'signal', 'signal-noir', 'studio-frame']) {
+      const base = createStyleTokens(JSON.parse(fs.readFileSync(`styles/${id}/style.json`)), JSON.parse(fs.readFileSync(`styles/${id}/motion.json`)), 1920, 1080, {id: 'lxgw-wenkai', version: '1.522'});
+      const selected = fullPalette();
+      const chosen = applyProjectPalette(base, selected);
+      for (const shot of SHOT_CATALOG) {
+        const appearance = recipeAppearance(read(shot.id).scenes[0].shot, chosen);
+        expect(appearance.background).toBe(appearance.dark ? selected.colors.darkBackground : selected.colors.lightBackground);
+        expect(appearance.tokens.paper).toBe(selected.colors.surface);
+        expect(appearance.tokens.ink).toBe(selected.colors.ink);
+        expect(appearance.tokens.captionInk).toBe(appearance.dark ? '#ffffff' : selected.colors.captionInk);
+        expect(contrastRatio(appearance.stageInk, appearance.background)).toBeGreaterThanOrEqual(7);
+        expect(contrastRatio(appearance.tokens.captionInk, appearance.background)).toBeGreaterThanOrEqual(4.5);
+        expect(appearance.tokens.displayFont).toBe(chosen.displayFont);
+        expect(appearance.tokens.motion).toEqual(base.motion);
+      }
+    }
+    const selected = fullPalette(); selected.colors.lightBackground = '#cdeccd';
+    expect(ProjectPaletteSchema.safeParse(selected).success).toBe(true);
+    delete selected.colors.ink; expect(ProjectPaletteSchema.safeParse(selected).success).toBe(false);
+  });
   it('keeps accent foreground readable even on middle-gray brand colors', () => {
     for (let value = 0; value <= 255; value++) {
       const color = `#${value.toString(16).padStart(2, '0').repeat(3)}`;
@@ -95,6 +120,44 @@ describe('project palette contract and rendering', () => {
 });
 
 describe('palette source lifecycle', () => {
+  it('requires complete, verifiable role evidence for new projects and preserves legacy palettes', () => {
+    const p = project(); const file = path.join(p.dir, 'storyboard.json');
+    expect(validateAssets(file)).toEqual([]);
+    p.input.palettePolicy = 'source-roles-v1'; p.save();
+    expect(validateAssets(file).join(' ')).toMatch(/不能只替换强调色/);
+    const pixels = Array.from({length: 16}, () => [...Array.from({length: 16}, () => [37,99,235]), ...Array.from({length: 16}, () => [246,243,228]), ...Array.from({length: 16}, () => [26,49,30])].flat()).flat();
+    fs.writeFileSync(path.join(p.dir, 'assets/product.ppm'), Buffer.concat([Buffer.from('P6\n48 16\n255\n'), Buffer.from(pixels)]));
+    p.board.palette = {...fullPalette(), source: 'assets', referenceAssets: ['product'], evidence: {
+      accent: {assetId: 'product', region: [0,0,16,16], sampledColor: '#2563eb'},
+      lightBackground: {assetId: 'product', region: [16,0,16,16], sampledColor: '#f6f3e4'},
+      ink: {assetId: 'product', region: [32,0,16,16], sampledColor: '#1a311e'},
+      surface: {derivedFrom: 'lightBackground', reason: 'Lighten the source background for cards.'},
+      darkBackground: {derivedFrom: 'ink', reason: 'Dark green stage derived from source ink.'},
+      accentAlt: {derivedFrom: 'ink', reason: 'Use source title green as secondary accent.'},
+      muted: {derivedFrom: 'ink', reason: 'Lower-emphasis green from source ink.'},
+      captionInk: {derivedFrom: 'ink', reason: 'Distinct readable green for captions.'}
+    }};
+    p.save(); expect(validateAssets(file)).toEqual([]);
+    const first = resolveProductionLock(p.board, undefined, p.dir).lock;
+    expect(first.palette.evidence.roles).toHaveLength(8);
+    expect(first.palette.evidence.samples).toHaveLength(3);
+    const original = structuredClone(p.board.palette);
+    delete p.board.palette.evidence.surface; p.save(); expect(validateAssets(file).length).toBeGreaterThan(0);
+    p.board.palette = structuredClone(original); p.board.palette.evidence.ink.sampledColor = '#000000'; p.save();
+    expect(validateAssets(file).join(' ')).toMatch(/采样候选不匹配/);
+    p.board.palette = structuredClone(original); p.board.palette.evidence.ink.region = [47,0,16,16]; p.save();
+    expect(validateAssets(file).join(' ')).toMatch(/边界/);
+    p.board.palette = structuredClone(original); p.board.palette.evidence.lightBackground = {derivedFrom: 'accent', reason: 'Only sample a button.'}; p.save();
+    expect(validateAssets(file).join(' ')).toMatch(/必须直接采样/);
+    p.board.palette = structuredClone(original); p.board.palette.evidence.surface.derivedFrom = 'surface'; p.save();
+    expect(validateAssets(file).join(' ')).toMatch(/循环/);
+    p.board.palette = structuredClone(original); p.board.palette.evidence.ink.region = [0,0,16,16]; p.save();
+    expect(validateAssets(file).join(' ')).toMatch(/不能复用/);
+    p.board.palette = structuredClone(original); p.board.palette.colors.ink = '#203820'; p.save();
+    expect(validateAssets(file).join(' ')).toMatch(/调整原因/);
+    p.board.palette.evidence.ink.reason = 'Readable green adjustment.'; p.save(); expect(validateAssets(file)).toEqual([]);
+    expect(resolveProductionLock(p.board, undefined, p.dir).lock.hash).not.toBe(first.hash);
+  });
   it('permits reference-only images in a document without inventing a media scene and enforces source policy', () => {
     const p = project(); const file = path.join(p.dir, 'storyboard.json');
     expect(validateAssets(file)).toEqual([]);
@@ -139,6 +202,7 @@ describe('palette source lifecycle', () => {
   it('persists CLI intent and exports independent library choices without source paths', () => {
     const dir = initProject(['--slug', 'palette-cli', '--shots', 'paper-title', '--color-mode', 'source', '--projects-dir', path.resolve('.tmp/project-palette-tests')]);
     expect(JSON.parse(fs.readFileSync(path.join(dir, 'project-input.json'), 'utf8')).colorMode).toBe('source');
+    expect(JSON.parse(fs.readFileSync(path.join(dir, 'project-input.json'), 'utf8')).palettePolicy).toBe('source-roles-v1');
     const catalog = buildLibraryCatalog();
     for (const colorMode of ['auto', 'style', 'source']) {
       const state = normalizeSelection(catalog, {style: 'scatterbrain', canvas: 'landscape', selected: ['paper-title'], font: 'source-han-serif-sc', fontMode: 'manual', production: {colorMode}});

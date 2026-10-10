@@ -140,9 +140,15 @@ export const StoryboardSchema = z.object({
   palette: ProjectPaletteSchema.optional(),
   videoTemplate: VideoTemplateRefSchema.optional(),
   shotRecipes: ShotSelectionSchema.optional(),
+  layoutPolicy: z.literal('content-first-v1').optional(),
   project: StoryboardProjectSchema,
   scenes: z.array(StoryboardSceneSchema).min(1)
 }).strict().superRefine((board, ctx) => {
+  if (board.layoutPolicy && board.schemaVersion !== '2.4') ctx.addIssue({code: 'custom', path: ['layoutPolicy'], message: '内容优先布局仅支持 2.4。'});
+  if (board.layoutPolicy) for (const scene of board.scenes) {
+    const native = scene.shot && ['semantic-default', 'compare-reveal', 'network-expand'].includes(scene.shot.id);
+    if (!scene.shot || scene.shot.version !== (native ? '1.0.0' : '1.2.0')) ctx.addIssue({code: 'custom', path: ['layoutPolicy'], message: '内容优先布局仅支持当前镜头版本；历史分镜保持原布局。'});
+  }
   if (board.palette) {
     if (board.schemaVersion !== '2.4') ctx.addIssue({code: 'custom', path: ['palette'], message: '项目配色仅支持 2.4。'});
     if (board.project.width <= board.project.height) ctx.addIssue({code: 'custom', path: ['palette'], message: '项目配色首版仅支持横屏。'});

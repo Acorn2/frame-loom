@@ -16,13 +16,15 @@ A local document-to-video Skill for Codex, Claude Code, and other coding agents
 [![Node.js](https://img.shields.io/badge/Node.js-24%2B-339933)](package.json)
 [![GitHub stars](https://img.shields.io/github/stars/Acorn2/frame-loom)](https://github.com/Acorn2/frame-loom/stargazers)
 
-**6 video styles · 37 scene recipes · 5 Chinese font families · silent previews / clean visual masters / narrated videos**
+**6 video styles · 40 scene recipes · 5 Chinese font families · silent previews / clean visual masters / narrated videos**
 
 [Browse the library](https://acorn2.github.io/frame-loom/) · [Quick start](#quick-start) · [Usage guide](references/usage-guide.md) · [Contribute](CONTRIBUTING.md)
 
 </div>
 
 **FrameLoom** is a local video production Skill built primarily for Codex and compatible with Claude Code and other coding agents. Give the agent an article, script, or product document. It interprets the content and writes the script and storyboard; Remotion validates and renders the visuals. Start with a silent preview, then export a clean visual master for an external editor or make a narrated video in the project with TTS or existing voiceover.
+
+**When you provide screenshots, the video prioritizes their colors over the selected style's default palette.** Backgrounds, text, cards, and accents follow the subject screenshots; the style still controls composition, decoration, and motion. See [screenshot colors](#how-screenshots-affect-video-colors).
 
 It is suited to knowledge explainers, product walkthroughs, report summaries, and data explanations. **v0.5 is a public beta.** The creator must review generated claims and facts. A clean visual handoff or narrated delivery also requires a full human playback review after automated QA.
 
@@ -91,10 +93,21 @@ In the [online recipe library](https://acorn2.github.io/frame-loom/), choose **v
 
 ## What is included
 
+### How screenshots affect video colors
+
+Provide subject-product screenshots or an exact URL for the agent to capture. The video uses their background, title/body text, card surfaces, and accent colors, including warm or colored backgrounds. It does more than replace a button color. Original screenshots and their embedded fonts remain unchanged; the chosen style keeps its composition, decoration, and motion, and the project font remains independent.
+
+The default **Auto** mode uses subject screenshots as color references. Citation or competitor screenshots do not automatically determine the subject's palette. Without a color reference, the style and recipe defaults apply. You can explicitly choose **Follow product assets** or **Use style colors**; choosing a video style alone does not disable screenshot color references. Source palettes currently support the six active styles and 40 current landscape scenes; unsupported combinations are reported.
+
+Ask the agent to “use the screenshots' background, text, card, and accent colors while keeping my chosen style's composition and motion.” It records the color sources and compares representative rendered shots with the screenshots. Public library samples show default colors, not the final palette after your screenshots are added. See the [project color workflow](references/project-palette.md).
+
+### Capabilities
+
 | Area | Current capability |
 | --- | --- |
-| Video styles | 6 Style Packs for color, composition, and base motion; [browse styles](#six-video-styles) |
-| Scene recipes | 37 independent scenes for titles, key points, comparisons, relationships, processes, and data; [recipe catalog](shots/README.md) |
+| Video styles | 6 Style Packs for default colors, composition, and base motion; [browse styles](#six-video-styles) |
+| Screenshot colors | Subject screenshots guide backgrounds, text, cards, and accents independently of style, font, and shots; [how it works](#how-screenshots-affect-video-colors) |
+| Scene recipes | 40 independent scenes for titles, key points, comparisons, relationships, processes, and data; [recipe catalog](shots/README.md) |
 | Supporting effects | 9 hosted actions and 5 chapter transitions; hosted actions require compatible scenes |
 | Project-wide fonts | Source Han Sans, Source Han Serif, LXGW WenKai, Smiley Sans, and Xiaolai; one family per video, with 30 landscape style × font references |
 | Optional preset | `retro-zine-explainer`, a landscape knowledge explainer combination; [guide](video-templates/retro-zine-explainer/guide.md) |
@@ -102,7 +115,7 @@ In the [online recipe library](https://acorn2.github.io/frame-loom/), choose **v
 | Local production | Storyboard contract, asset provenance checks, render receipts, QA reports, and approval fingerprints; [shared workflow](SKILL.md) |
 | Recipe library | Real samples, combination selection, and a copyable production prompt; runs locally or on GitHub Pages |
 
-The runtime currently registers **37 scene recipes, 9 hosted actions, and 5 chapter transitions**, with **48/48 shortlist candidates** adapted. All 37 current scenes support all six active styles in 16:9 landscape. In 9:16 portrait, only the base `semantic-default` recipe is currently available. Scene recipes and presets remain experimental; the [capability manifest](src/renderer/capability-manifest.ts) is the authority for supported combinations.
+The runtime currently registers **40 scene recipes, 9 hosted actions, and 5 chapter transitions**, with **48/48 shortlist candidates** adapted. All 40 current scenes support all six active styles in 16:9 landscape. In 9:16 portrait, `semantic-default`, `type-and-filter`, `ai-stream-response`, and `unit-dot-regroup` are available. Scene recipes and presets remain experimental; the [capability manifest](src/renderer/capability-manifest.ts) is the authority for supported combinations.
 
 ## Six video styles
 
@@ -129,6 +142,8 @@ Style and font are independent choices. The selected shot pool limits what the a
 `fast` proceeds through the selected stage without a storyboard approval stop. `review` requires script and storyboard approval before production. Both modes support the outputs above. Passing automated QA does not mean the video has passed human review. Videos finished later in an external editor are reviewed there.
 
 TTS integrations cover Doubao, OpenAI, ElevenLabs, and Alibaba Cloud Model Studio. Configure only the provider you use, or supply existing voiceover with optional SRT/VTT subtitles. The example profiles are disabled by default and credentials are read from environment variables. Missing or mismatched audio is reported rather than treated as a narrated delivery. See the [usage guide](references/usage-guide.md) and [audio integration guide](references/audio-integration.md).
+
+TTS settings are validated per provider; `list:tts-profiles` reports readiness and missing configuration. Use `preview:tts` for an explicit short audition before full synthesis. Supported reading instructions, pronunciation dictionaries, scene context and final sample rates are described in the [voice controls guide](references/audio-integration.md#validated-voice-controls).
 
 ## Repository layout
 
@@ -174,4 +189,6 @@ FrameLoom's own code is [MIT licensed](LICENSE). Remotion has a separate [offici
 
 Maintained by **Hresh赫什**, an independent developer building products with AI. Follow the project and other work on the [personal website](https://hreshhao.com/). Report problems in [Issues](https://github.com/Acorn2/frame-loom/issues) or contribute using the [contributing guide](CONTRIBUTING.md).
 
-Product screenshots or exact URLs can provide project colors independently of visual style, font and shots. Choose automatic, style or source colors; current landscape recipes are supported and original images remain unchanged. See [project colors](references/project-palette.md).
+## Layout reliability
+
+New 2.4 projects explicitly enable content-first layout; older storyboards retain their original pictures. Production measures rendered text, nodes and fitted image bounds before publishing a candidate. Completed-state clipping and collisions fail the render; small media and repeated compositions require review. See the [layout contract](references/content-layout.md). Automated QA does not replace full playback or checking text embedded in source images.

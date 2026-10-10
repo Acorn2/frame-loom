@@ -1,0 +1,137 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "type-and-filter",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "操作筛选与详情",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 8.8,
+    "durationFrames": 264,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "type-and-filter",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "操作筛选与详情",
+      "primaryClaim": "输入、筛选、点击和详情按真实内容依次发生。",
+      "visual": {
+        "kind": "sequence",
+        "explanation": "FrameLoom 自写示意，不代表真实产品或用户数据",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "type-and-filter",
+        "version": "1.2.0",
+        "selectedId": "a",
+        "slots": {
+          "query": "query",
+          "items": [
+            "a",
+            "b",
+            "c"
+          ],
+          "detail": "detail"
+        }
+      },
+      "narration": "输入、筛选、点击和详情按真实内容依次发生。",
+      "durationFrames": 264,
+      "layers": [
+        {
+          "id": "query",
+          "type": "label",
+          "label": "镜头"
+        },
+        {
+          "id": "a",
+          "type": "card",
+          "label": "镜头笔记",
+          "text": "记录镜头用途与输入"
+        },
+        {
+          "id": "b",
+          "type": "card",
+          "label": "字体笔记",
+          "text": "记录字体来源与许可"
+        },
+        {
+          "id": "c",
+          "type": "card",
+          "label": "配色笔记",
+          "text": "记录背景与强调色"
+        },
+        {
+          "id": "detail",
+          "type": "card",
+          "label": "镜头笔记详情",
+          "text": "保留用途、输入和来源，便于下一次复用"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "a-enter",
+          "target": "a",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "b-enter",
+          "target": "b",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "c-enter",
+          "target": "c",
+          "action": "enter",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "query-enter",
+          "target": "query",
+          "action": "enter",
+          "start": 54,
+          "duration": 24
+        },
+        {
+          "id": "a-focus",
+          "target": "a",
+          "action": "focus",
+          "start": 108,
+          "duration": 30
+        },
+        {
+          "id": "a-highlight",
+          "target": "a",
+          "action": "highlight",
+          "start": 168,
+          "duration": 12
+        },
+        {
+          "id": "detail-enter",
+          "target": "detail",
+          "action": "enter",
+          "start": 180,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

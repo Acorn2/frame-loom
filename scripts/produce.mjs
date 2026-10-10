@@ -527,6 +527,7 @@ export function runProduction(options) {
       });
       run.artifacts.qaReport = path.relative(projectPath, qa.reportPath);
       addWarnings(run, qa.report.checks.audioTail?.issues ?? []);
+      addWarnings(run, (qa.report.checks.renderedLayout?.issues ?? []).map(issue => ({path: `layout.${issue.sceneId}@${issue.frame}`, message: issue.message})));
       if (!qa.report.automatedPassed) {
         run.errors.push(...qa.report.errors);
         setStage(run, 'qa', 'blocked');

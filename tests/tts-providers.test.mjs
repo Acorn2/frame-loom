@@ -130,6 +130,42 @@ describe('built-in TTS provider requests', () => {
     expect(fs.existsSync(outputPath)).toBe(false);
   });
 
+  it.each(['generic', 'v3'].flatMap(apiVersion => [401, 403, 500].map(status => [apiVersion, status])))('keeps a Doubao %s HTTP %s error body out of diagnostics', async (apiVersion, status) => {
+    vi.stubEnv('DOUBAO_TTS_API_KEY', 'audit-dummy-key');
+    vi.stubEnv('DOUBAO_TTS_RESOURCE_ID', 'audit-dummy-resource');
+    const response = globalThis.Response.json({message: 'AUDIT_PRIVATE_TEXT audit-dummy-key audit@example.invalid'}, {status});
+    const readBody = vi.spyOn(response, 'arrayBuffer');
+    vi.stubGlobal('fetch', vi.fn(async () => response));
+    const config = TtsConfigSchema.parse({schemaVersion: '1.0', enabled: true, provider: 'doubao', apiVersion, voiceType: 'test', format: 'mp3', endpoint: 'https://openspeech.bytedance.com/api/v3/tts/unidirectional/sse'});
+    const outputPath = path.join(outputDir, 'private-http-error.mp3');
+    const error = await synthesizeSpeech({text: 'AUDIT_PRIVATE_TEXT', config, outputPath}).catch(error => error);
+    expect(error).toBeInstanceOf(Error);
+    expect(error.message).toBe(`豆包 TTS 请求失败（HTTP ${status}）。请检查鉴权、资源 ID 和服务权限。`);
+    expect(readBody).not.toHaveBeenCalled();
+    expect(fs.existsSync(outputPath)).toBe(false);
+  });
+
+  it.each([
+    [3000, '3000'],
+    ['AUDIT_PRIVATE_CODE', 'invalid'],
+    [['AUDIT_PRIVATE_CODE'], 'invalid'],
+    [{private: 'AUDIT_PRIVATE_CODE'}, 'invalid'],
+    [null, 'invalid'],
+    [1.5, 'invalid'],
+    [Number.MAX_SAFE_INTEGER + 1, 'invalid']
+  ])('keeps untrusted Doubao stream fields out of diagnostics (%j)', async (code, expectedCode) => {
+    vi.stubEnv('DOUBAO_TTS_API_KEY', 'audit-dummy-key');
+    vi.stubEnv('DOUBAO_TTS_RESOURCE_ID', 'audit-dummy-resource');
+    const event = {code, message: 'AUDIT_PRIVATE_TEXT audit-dummy-key audit@example.invalid'};
+    vi.stubGlobal('fetch', vi.fn(async () => new globalThis.Response(`data: ${JSON.stringify(event)}\n`, {headers: {'content-type': 'text/event-stream'}})));
+    const config = TtsConfigSchema.parse({schemaVersion: '1.0', enabled: true, provider: 'doubao', apiVersion: 'v3', voiceType: 'test', format: 'mp3', endpoint: 'https://openspeech.bytedance.com/api/v3/tts/unidirectional/sse'});
+    const outputPath = path.join(outputDir, 'private-stream-error.mp3');
+    const error = await synthesizeSpeech({text: 'AUDIT_PRIVATE_TEXT', config, outputPath}).catch(error => error);
+    expect(error).toBeInstanceOf(Error);
+    expect(error.message).toBe(`豆包 TTS 合成失败（code: ${expectedCode}）。请检查音色、资源 ID 和服务权限。`);
+    expect(fs.existsSync(outputPath)).toBe(false);
+  });
+
   it('rejects a missing key before sending a request', async () => {
     vi.stubEnv('OPENAI_API_KEY', '');
     const fetch = vi.fn();
@@ -156,7 +192,7 @@ describe('built-in TTS provider requests', () => {
   ])('rejects a %s endpoint outside the official HTTPS host before any request', async (provider, format) => {
     const fetch = vi.fn();
     vi.stubGlobal('fetch', fetch);
-    const config = TtsConfigSchema.parse({schemaVersion: '1.0', enabled: true, provider, voiceType: 'test', format, endpoint: 'https://example.org/collect'});
+    const config = {schemaVersion: '1.0', enabled: true, provider, voiceType: 'test', format, endpoint: 'https://example.org/collect'};
     await expect(synthesizeSpeech({text: '测试', config, outputPath: path.join(outputDir, 'blocked.mp3')})).rejects.toThrow(/官方 HTTPS 域名/);
     expect(fetch).not.toHaveBeenCalled();
   });

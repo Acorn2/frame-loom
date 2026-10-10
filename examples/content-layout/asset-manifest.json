@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "id": "review-demo",
+      "path": "assets/review.svg",
+      "type": "image",
+      "source": "FrameLoom repository authored SVG demonstration",
+      "license": "MIT",
+      "intendedUse": "Illustrated review workspace; not a real product screenshot"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "ai-stream-response",
+  "mode": "method-reference",
+  "repository": "https://github.com/Acorn2/video-shotcraft",
+  "commit": "5ddbf521038b0a7accfb6dc1e0a9eb29c67277ab",
+  "recipe": "references/shots/interaction/ai-stream-response.md",
+  "implementation": "demos/interaction/ai-stream-response/StreamResponse.tsx",
+  "upstreamLicense": "Apache-2.0",
+  "implementationLicense": "MIT",
+  "notice": "Independent implementation. No upstream fixtures, copy, media or runtime dependencies copied.",
+  "retained": [
+    "结果生成与确认",
+    "摘要先出现，任务逐项确认，最后显示完成状态。"
+  ],
+  "omitted": [
+    "fixed copy and coordinates",
+    "invented facts",
+    "automatic sound",
+    "continuous drift"
+  ],
+  "externalAttribution": "Method references do not authorize external media."
+}

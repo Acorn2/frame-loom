@@ -1,6 +1,8 @@
 # 镜头配方库
 
-FrameLoom 的制作选择分为两层：**视频风格决定外观，镜头配方决定信息怎样出现、变化与停留**。用户可以选一套风格和多个配方，Agent 按原文决定每场使用哪个、是否重复及顺序。`video-templates/` 是预设组合的快捷入口，不是使用配方库的前提。
+FrameLoom 的制作选择分为两层：**视频风格决定画面语言，镜头配方决定信息怎样出现、变化与停留**。用户可以选一套风格和多个配方，Agent 按原文决定每场使用哪个、是否重复及顺序。`video-templates/` 是预设组合的快捷入口，不是使用配方库的前提。
+
+**有主体截图时，全片配色优先参考截图的背景、文字、卡片和强调色，风格保留构图与动效。** 本目录配方说明中的白色、冷灰、石墨等外观，以及公开样片的颜色，描述的是默认参考，不强制覆盖素材配色。仅指定风格或镜头不会取消截图配色参考；明确选择“使用风格配色”时才保留默认色。当前素材配色支持六套风格与40个当前横屏场景，真实截图不染色。详见[项目配色](../references/project-palette.md)。
 
 ```text
 请读取 <文档路径>，先编排讲稿和分镜。
@@ -45,7 +47,7 @@ npm run init:project -- --slug my-topic --style retro-zine --shots paper-title,d
 | [network-expand](network-expand/recipe.md) | 一个主体向外展开真实关系 | 1 个主体、2–5 个对象及向外连接 | FrameLoom 原生语义组件 |
 | [semantic-default](semantic-default/recipe.md) | 顺序、变化、数据、来源图片或基础收尾 | 遵守既有语义契约 | FrameLoom 原生语义组件 |
 
-36 个专用场景镜头支持六套当前风格与 16:9；`semantic-default` 保留全部已安装风格及横竖屏。`list:shots` 根据实际 manifest 筛选能力，不把参数读自 Style Pack 当作已经完成所有风格适配。所有配方目前为 experimental。
+39 个专用场景镜头支持六套当前风格与 16:9；`semantic-default` 保留全部已安装风格及横竖屏。`list:shots` 根据实际 manifest 筛选能力，不把参数读自 Style Pack 当作已经完成所有风格适配。所有配方目前为 experimental。
 
 ## 编排契约
 
@@ -53,13 +55,13 @@ npm run init:project -- --slug my-topic --style retro-zine --shots paper-title,d
 
 每个配方都有 manifest、选用说明和 provenance；程序只执行静态注册的组件。新增配方先核对上游说明、TSX、依赖与许可证，再定义输入、阶段、文本和时间边界，并同步 schema／catalog／renderer／能力清单和校验。不能只增加 Markdown 就宣称已具备运行能力。
 
-来源记录固定上游 commit 与原文件路径，34 个上游场景配方、9 个宿主动作与5个跨场转场是方法参考与独立实现；不依赖安装另一仓库，不导入上游占位事实、字幕系统或外部媒体。详细契约见[Storyboard 2.4](../references/storyboard-schema.md#storyboard-24-controlled-shots)。
+来源记录固定上游 commit 与原文件路径，原筛选清单34个上游场景配方、9个宿主动作与5个跨场转场，以及3个新增横竖屏场景均为方法参考与独立实现；不依赖安装另一仓库，不导入上游占位事实、字幕系统或外部媒体。详细契约见[Storyboard 2.4](../references/storyboard-schema.md#storyboard-24-controlled-shots)。
 
 不含预设模板的完整字段例子见[独立组合示例](../examples/shot-selection/README.md)。
 
 ## 清单实施数量与宿主动作
 
-按 2026-09-30 筛选清单计数，当前接入 **48/48**，加3个原生场景共37个场景入口。9个宿主动作和5个换章配方分别查询，不计入正文镜头。家族只适配台账声明的变体，例如 chart-live 使用 OscilloscopeStreamV2、scroll-brake 使用 ChangelogScrollBrake、page-turn 使用 BarnDoorSplit，不宣称全部变体可用。
+按 2026-09-30 筛选清单计数，当前接入 **48/48**，加3个原生场景共37个原清单场景入口；另有3个新增横竖屏场景，共40个场景入口。9个宿主动作和5个换章配方分别查询，不计入正文镜头。家族只适配台账声明的变体，例如 chart-live 使用 OscilloscopeStreamV2、scroll-brake 使用 ChangelogScrollBrake、page-turn 使用 BarnDoorSplit，不宣称全部变体可用。
 
 ```bash
 npm run list:shots -- --style retro-zine --canvas landscape
@@ -86,3 +88,7 @@ C09/C11/C12 分别对应 `overlap-line-carry` / `overlap-ink` / `overlap-barn-do
 | [document-write](document-write/recipe.md) | 文档段落逐步书写显现 | 有完整且需要展示版式的原文摘录 |
 | [code-reveal](code-reveal/recipe.md) | 代码/配置逐行或逐字符揭示 | 原文包含实际代码或配置示例 |
 | [letterspace-materialize](letterspace-materialize/recipe.md) | 有来源字标连续描画 | 文档需要真实品牌/组织字标或短章名 |
+
+## 横竖屏扩充
+
+新增[操作筛选与详情](type-and-filter/recipe.md)、[结果生成与确认](ai-stream-response/recipe.md)、[单位点阵重组](unit-dot-regroup/recipe.md)，均支持六套当前风格、16:9和9:16。竖屏共4个可选场景（含基础语义配方）；其余原专用镜头保留横屏边界。新三项不计入既有48项筛选清单。详情见[接入记录](../references/shot-expansion-20261009.md)。
