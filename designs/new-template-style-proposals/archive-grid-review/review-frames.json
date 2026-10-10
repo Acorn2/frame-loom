@@ -1,6 +1,6 @@
 {
-  "video": "/Users/ankanghao/ai_code/frame-loom/designs/new-template-style-proposals/archive-grid.mp4",
-  "storyboard": "/Users/ankanghao/ai_code/frame-loom/designs/new-template-style-proposals/storyboard.archive-grid.json",
+  "video": "<repository-root>/designs/new-template-style-proposals/archive-grid.mp4",
+  "storyboard": "<repository-root>/designs/new-template-style-proposals/storyboard.archive-grid.json",
   "frames": [
     {
       "label": "opening",

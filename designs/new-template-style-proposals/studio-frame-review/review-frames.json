@@ -1,6 +1,6 @@
 {
-  "video": "/Users/ankanghao/ai_code/frame-loom/designs/new-template-style-proposals/studio-frame.mp4",
-  "storyboard": "/Users/ankanghao/ai_code/frame-loom/designs/new-template-style-proposals/storyboard.studio-frame.json",
+  "video": "<repository-root>/designs/new-template-style-proposals/studio-frame.mp4",
+  "storyboard": "<repository-root>/designs/new-template-style-proposals/storyboard.studio-frame.json",
   "frames": [
     {
       "label": "opening",

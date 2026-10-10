@@ -2,6 +2,7 @@
   "name": "frame-loom",
   "description": "Turn structured documents into reviewable, style-driven Remotion videos.",
   "version": "0.5.0",
+  "skills": "./.agents/skills",
   "author": {
     "name": "Hresh赫什"
   }

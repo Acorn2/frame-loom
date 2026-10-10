@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-10-04T03:44:27.478Z",
-  "storyboard": "/Users/ankanghao/ai_code/frame-loom/examples/shot-recipes/chapter-transitions/line-carry-transition.json",
-  "video": "/Users/ankanghao/ai_code/frame-loom/.tmp/p2-recipes/carry-final.mp4",
+  "storyboard": "<repository-root>/examples/shot-recipes/chapter-transitions/line-carry-transition.json",
+  "video": "<repository-root>/.tmp/p2-recipes/carry-final.mp4",
   "executionMode": "fast",
   "outputPurpose": "visual-preview",
   "mode": "silent-preview",
@@ -81,7 +81,7 @@
     },
     "output": {
       "passed": true,
-      "path": "/Users/ankanghao/ai_code/frame-loom/.tmp/p2-recipes/carry-final.mp4",
+      "path": "<repository-root>/.tmp/p2-recipes/carry-final.mp4",
       "bytes": 693351,
       "codec": "h264",
       "width": 1920,
@@ -106,7 +106,7 @@
       "passed": true,
       "count": 25,
       "missingRequired": [],
-      "contactSheet": "/Users/ankanghao/ai_code/frame-loom/.tmp/p2-recipes/carry-qa/contact-sheet.png",
+      "contactSheet": "<repository-root>/.tmp/p2-recipes/carry-qa/contact-sheet.png",
       "contactSheets": [
         "contact-sheet.png"
       ],

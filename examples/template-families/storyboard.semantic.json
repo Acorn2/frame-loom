@@ -465,7 +465,7 @@
       "layers": [
         {
           "id": "demo-image",
-          "type": "object",
+          "type": "screenshot",
           "label": "仓库内演示插画",
           "asset": "assets/product-workflow.svg",
           "fit": "contain"

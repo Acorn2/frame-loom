@@ -6,8 +6,6 @@ import {libraryPreviewFixtures, libraryStyleIds} from './lib/library-catalog.mjs
 import {hydrateLibraryAssets} from './lib/library-assets.mjs';
 import {layoutCollector} from './lib/layout-qa.mjs';
 import {createStyleTokens} from '../src/styles/style-loader.ts';
-import {compileStoryboardShots} from '../src/shots/compile-shot.ts';
-import {getSceneTimeline} from '../src/timeline/scene-timeline.ts';
 import {FONT_CATALOG} from '../src/fonts/catalog.ts';
 
 const all = process.argv.includes('--all');
@@ -30,11 +28,11 @@ try {
     const storyboardPath = path.resolve(fixture.source), board = JSON.parse(fs.readFileSync(storyboardPath, 'utf8'));
     board.style.id = fixture.styleId; delete board.videoTemplate; board.layoutPolicy = 'content-first-v1';
     if (fixture.portrait) {board.project.width = 1080; board.project.height = 1920;}
-    const font = FONT_CATALOG.find(font => font.id === (fixture.fontId ?? 'lxgw-wenkai'));
-    board.font = {id: font.id, version: font.version};
-    const plans = compileStoryboardShots(board), timeline = getSceneTimeline(board);
-    const frames = [...new Set(plans.flatMap((plan, index) => [timeline[index].startFrame + plan.completeFrame, timeline[index].startFrame + Math.min(plan.stableEndFrame, plan.completeFrame + 6)]))];
-    const collector = layoutCollector(board, {frames});
+    if (fixture.fontId) {
+      const font = FONT_CATALOG.find(font => font.id === fixture.fontId);
+      board.font = {id: font.id, version: font.version};
+    }
+    const collector = layoutCollector(board), frames = collector.frames;
     const style = JSON.parse(fs.readFileSync(`styles/${board.style.id}/style.json`)), motion = JSON.parse(fs.readFileSync(`styles/${board.style.id}/motion.json`));
     const inputProps = {storyboard: hydrateLibraryAssets(board, storyboardPath), styleTokens: createStyleTokens(style, motion, board.project.width, board.project.height, board.font), renderProfile: {purpose: 'visual-preview', showReviewMarker: false, layoutCheckFrames: frames}};
     const composition = (await getCompositions(serveUrl, {inputProps, puppeteerInstance: browser})).find(item => item.id === 'StoryboardV2');

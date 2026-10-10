@@ -1,0 +1,35 @@
+name: 视频效果反馈 / Video feedback
+description: 图解、节奏、字幕或配音效果 / Diagrams, pacing, captions, or voiceover
+title: "[Video] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请提供可公开的最小片段，标出场景或时间点。无需上传完整私有文档、音频或凭据。
+        Share only a minimal public-safe excerpt and identify the scene or timestamp. Do not upload private documents, audio, or credentials.
+  - type: input
+    id: setup
+    attributes:
+      label: 风格、画幅与输出类型 / Style, orientation, and output
+      placeholder: "retro-zine; 16:9; silent preview / visual master / narrated video"
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际效果 / Actual result
+      description: Identify the scene or timestamp and describe the problem. Attach a public-safe frame or clip if helpful.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 希望观众理解什么 / What should the viewer understand?
+      description: Describe the intended explanation or desired behavior, such as the relationship, comparison, sequence, pronunciation, or pacing.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 可公开的输入与复现信息 / Public-safe source and reproduction details
+      description: Include a short source excerpt, selected recipe IDs, relevant storyboard fields, and QA messages when available. These are optional if your material is private.

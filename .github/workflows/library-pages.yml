@@ -78,7 +78,21 @@ jobs:
           path: library/previews
           key: library-previews-${{ runner.os }}-${{ runner.arch }}-${{ steps.previews.outputs.fingerprint }}
       - name: Render public recipe samples
-        run: npm run preview:library
+        id: recipe_previews
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p .tmp/library-render
+          npm run preview:library 2>&1 | tee .tmp/library-render/preview.log
+      - name: Save failed recipe rendering diagnostics
+        if: failure() && steps.recipe_previews.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: recipe-render-diagnostics-${{ github.run_attempt }}
+          path: |
+            .tmp/library-render/preview.log
+            library/previews/manifest.json
+          retention-days: 7
       - name: Calculate font preview fingerprint
         id: fonts
         run: |

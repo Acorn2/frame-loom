@@ -16,7 +16,7 @@ FrameLoom 是以 Codex 为主要入口、兼容其他 Coding Agent 的本地、�
 - `.github/workflows/library-pages.yml`：GitHub Pages 只发布完整的 `dist/library/` 静态产物；PR 不发布，用户生产目录和音频配置不得进入站点。
 - `examples/`：公开、可替换、无私有凭据的示例生产层。
 - `projects/`：用户视频生产目录，不提交输出视频。新生产项目使用 `YYYYMMDD-内容主题` 命名；同日同名用 `-02`、`-03`，旧目录不批量改名，`template-` 预设示例不适用。
-- `.agents/skills/frame-loom/`：Codex 自动发现入口；根目录 `SKILL.md` 是共享生产流程。
+- `.agents/skills/frame-loom/`：Codex 自动发现入口，Claude Code 插件通过 manifest 的 `skills` 路径复用；根目录 `SKILL.md` 是共享生产流程。
 - `.claude-plugin/`：Claude Code 插件元数据，复用根目录 `SKILL.md`。
 
 ## 验证入口

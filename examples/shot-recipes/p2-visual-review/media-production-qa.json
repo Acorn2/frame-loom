@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-10-04T03:44:26.316Z",
-  "storyboard": "/Users/ankanghao/ai_code/frame-loom/examples/shot-recipes/media-before-after/storyboard.json",
-  "video": "/Users/ankanghao/ai_code/frame-loom/.tmp/p2-recipes/media-final.mp4",
+  "storyboard": "<repository-root>/examples/shot-recipes/media-before-after/storyboard.json",
+  "video": "<repository-root>/.tmp/p2-recipes/media-final.mp4",
   "executionMode": "fast",
   "outputPurpose": "visual-preview",
   "mode": "silent-preview",
@@ -67,7 +67,7 @@
     },
     "output": {
       "passed": true,
-      "path": "/Users/ankanghao/ai_code/frame-loom/.tmp/p2-recipes/media-final.mp4",
+      "path": "<repository-root>/.tmp/p2-recipes/media-final.mp4",
       "bytes": 239628,
       "codec": "h264",
       "width": 1920,
@@ -92,7 +92,7 @@
       "passed": true,
       "count": 15,
       "missingRequired": [],
-      "contactSheet": "/Users/ankanghao/ai_code/frame-loom/.tmp/p2-recipes/media-qa/contact-sheet.png",
+      "contactSheet": "<repository-root>/.tmp/p2-recipes/media-qa/contact-sheet.png",
       "contactSheets": [
         "contact-sheet.png"
       ],

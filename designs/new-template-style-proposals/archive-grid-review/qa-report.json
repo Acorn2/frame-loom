@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-09-24T08:27:45.434Z",
-  "storyboard": "/Users/ankanghao/ai_code/frame-loom/designs/new-template-style-proposals/storyboard.archive-grid.json",
-  "video": "/Users/ankanghao/ai_code/frame-loom/designs/new-template-style-proposals/archive-grid.mp4",
+  "storyboard": "<repository-root>/designs/new-template-style-proposals/storyboard.archive-grid.json",
+  "video": "<repository-root>/designs/new-template-style-proposals/archive-grid.mp4",
   "executionMode": "review",
   "mode": "silent-preview",
   "automatedPassed": true,
@@ -108,7 +108,7 @@
     },
     "output": {
       "passed": true,
-      "path": "/Users/ankanghao/ai_code/frame-loom/designs/new-template-style-proposals/archive-grid.mp4",
+      "path": "<repository-root>/designs/new-template-style-proposals/archive-grid.mp4",
       "bytes": 1412464,
       "codec": "h264",
       "width": 1920,
@@ -132,7 +132,7 @@
     "reviewFrames": {
       "passed": true,
       "count": 15,
-      "contactSheet": "/Users/ankanghao/ai_code/frame-loom/designs/new-template-style-proposals/archive-grid-review/contact-sheet.png"
+      "contactSheet": "<repository-root>/designs/new-template-style-proposals/archive-grid-review/contact-sheet.png"
     }
   },
   "manualReview": {

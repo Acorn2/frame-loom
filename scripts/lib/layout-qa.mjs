@@ -22,7 +22,13 @@ export function layoutCollector(board, {frames = layoutCheckpoints(board)} = {})
       const checks = [...samples.values()].sort((a, b) => a.frame - b.frame);
       const timeline = getSceneTimeline(board);
       for (const sample of checks) {
-        const expected = timeline.filter(item => sample.frame >= item.startFrame && sample.frame < item.endFrame).map(item => item.scene.id).sort();
+        const expected = timeline.flatMap((item, index) => {
+          if (sample.frame < item.startFrame || sample.frame >= item.endFrame) return [];
+          // Barn-door handoffs render both clipped halves of the outgoing scene.
+          const split = timeline[index + 1]?.scene.transitionIn?.type === 'overlap-barn-door'
+            && sample.frame >= item.endFrame - item.overlapOutFrames;
+          return split ? [item.scene.id, item.scene.id] : [item.scene.id];
+        }).sort();
         const observed = sample.checks.map(check => check.sceneId).sort();
         if (JSON.stringify(expected) !== JSON.stringify(observed)) throw new Error(`布局实测帧 ${sample.frame} 缺少当前场景或相邻交接证据。`);
       }

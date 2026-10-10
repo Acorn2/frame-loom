@@ -1,6 +1,6 @@
 # FrameLoom 使用指南
 
-快速安装、效果展示和项目概览见 [项目首页](../README.md)。本文保留制作路线、手动 CLI、字体与音频配置，以及审核交付的详细步骤；所有命令从仓库根目录运行。
+首次安装与排错见[安装指南](installation.md)，自带样片和文档试跑见[项目首页](../README.md#快速开始)。本文保留制作路线、手动 CLI、字体与音频配置，以及审核交付的详细步骤；所有命令从仓库根目录运行。
 
 FrameLoom 是一个以 Codex 为主要入口、兼容 Claude Code、Kimi Code、OpenCode 等 Coding Agent 的结构化视频生产 Skill。Agent 负责从文档提炼内容并编写分镜，Remotion 负责校验、渲染和 QA。
 
@@ -319,7 +319,7 @@ npm run init:project -- --slug font-demo --style scatterbrain --font source-han-
 ### 1. 让 Agent 加载 Skill
 
 - **Codex**：在本仓库开启新会话，直接说明“使用 `frame-loom` Skill”；Codex 从 [Skill 入口](../.agents/skills/frame-loom/SKILL.md)读取根目录的[共享流程](../SKILL.md)。
-- **Claude Code**：通过 [插件清单](../.claude-plugin/plugin.json)加载，或从仓库根目录运行 `claude --plugin-dir .`；共享流程同样是根目录 `SKILL.md`。
+- **Claude Code**：从仓库根目录运行 `claude --plugin-dir .`，通过 `/frame-loom:frame-loom` 调用 Skill。[插件清单](../.claude-plugin/plugin.json)注册仓库内的 Skill 入口，再读取根目录的共享流程。
 - **其他 Coding Agent**：让 Agent 先读取根目录 [`SKILL.md`](../SKILL.md)，命令均从仓库根目录执行。
 
 ### 2. 按需选择输入方式并比较模板

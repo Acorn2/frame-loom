@@ -1,6 +1,6 @@
 {
-  "video": "/Users/ankanghao/ai_code/frame-loom/designs/new-template-style-proposals/signal-noir.mp4",
-  "storyboard": "/Users/ankanghao/ai_code/frame-loom/designs/new-template-style-proposals/storyboard.signal-noir.json",
+  "video": "<repository-root>/designs/new-template-style-proposals/signal-noir.mp4",
+  "storyboard": "<repository-root>/designs/new-template-style-proposals/storyboard.signal-noir.json",
   "frames": [
     {
       "label": "opening",

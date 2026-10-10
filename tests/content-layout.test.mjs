@@ -59,6 +59,14 @@ describe('content-first production layout', () => {
     value.images[0].fit = 'cover';
     expect(analyzeMeasurement(value).issues.some(i => i.code === 'media-crop')).toBe(true);
   });
+  it('still rejects the four-pixel title overflow reported by the Linux Pages render', () => {
+    const value = {...measurement(), sceneId: 'code-reveal', frame: 120, content: {x: 120, y: 100, width: 1680, height: 880}};
+    value.texts = ['看清', '制作'].map((text, group) => ({text, group,
+      rect: {x: 120 + group * 124, y: 96, width: 124, height: 61},
+      container: {x: 120, y: 100, width: 1612, height: 100}}));
+    const issues = analyzeMeasurement(value).issues;
+    expect(issues.filter(i => i.code === 'text-clipped' && i.severity === 'error')).toHaveLength(2);
+  });
   it('includes event states and both sides of an actual overlapping handoff', () => {
     const board = StoryboardSchema.parse({...structuredClone(fixture), layoutPolicy: 'content-first-v1'});
     const frames = layoutCheckpoints(board);
@@ -76,6 +84,24 @@ describe('content-first production layout', () => {
     const bad = layoutCollector(board, {frames: [0]});
     bad.onBrowserLog({text: `${LAYOUT_LOG_PREFIX}${JSON.stringify({frame: 0, checks: [{sceneId: timeline[0].scene.id, issues: [{severity: 'error', sceneId: timeline[0].scene.id, frame: 0, message: '关键内容遮挡'}]}]})}`});
     expect(() => bad.finish()).toThrow(/关键内容遮挡/);
+  });
+  it('accepts both outgoing page halves while checking each copy and the incoming scene', () => {
+    const board = {...JSON.parse(fs.readFileSync('examples/shot-recipes/chapter-transitions/page-turn-transitions.json', 'utf8')), layoutPolicy: 'content-first-v1'};
+    const frame = getSceneTimeline(board)[1].startFrame;
+    const checks = [{sceneId: board.scenes[0].id, issues: []}, {sceneId: board.scenes[0].id, issues: []}, {sceneId: board.scenes[1].id, issues: []}];
+    const inspect = (items, at = frame) => {
+      const collector = layoutCollector(board, {frames: [at]});
+      collector.onBrowserLog({text: `${LAYOUT_LOG_PREFIX}${JSON.stringify({frame: at, checks: items})}`});
+      return collector.finish();
+    };
+    expect(inspect(checks).checks[0].checks).toHaveLength(3);
+    expect(() => inspect(checks.slice(0, 2))).toThrow(/场景/);
+    expect(() => inspect([checks[0], checks[2]])).toThrow(/场景/);
+    expect(() => inspect([...checks, checks[0]])).toThrow(/场景/);
+    expect(() => inspect(checks.slice(0, 2), frame - 1)).toThrow(/场景/);
+    const clipped = structuredClone(checks);
+    clipped[1].issues.push({severity: 'error', sceneId: board.scenes[0].id, frame, message: '右页文字被裁切'});
+    expect(() => inspect(clipped)).toThrow(/右页文字被裁切/);
   });
   it.each(libraryStyleIds)('accepts all current %s recipes under the new policy', style => {
     for (const item of libraryPreviewFixtures().filter(item => item.styleId === style)) {

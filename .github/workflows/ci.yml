@@ -13,13 +13,14 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-noto-cjk fonts-liberation
       - run: npm ci
       - run: npm audit --audit-level=high
       - run: npm run check:docs
       - run: npm run generate:schemas
       - run: git diff --exit-code -- schemas
       - run: npm run validate:styles
+      - run: npm run validate:fonts
       - run: npm run validate:shots
       - run: npm run typecheck
       - run: npm run lint
@@ -32,6 +33,15 @@ jobs:
       - run: npm run validate:assets -- examples/semantic-visuals/storyboard.json
       - run: npm run check:safe-area -- examples/data-explainer/storyboard.json
       - run: npm run build
+      - name: Verify titles and overlapping chapter pages
+        run: npm run test:content-layout -- --all --only code-reveal,code-reveal--signal,code-reveal--scatterbrain,code-reveal--archive-grid,code-reveal--signal-noir,code-reveal--studio-frame,page-turn-transitions,page-turn-transitions--signal,page-turn-transitions--scatterbrain,page-turn-transitions--archive-grid,page-turn-transitions--signal-noir,page-turn-transitions--studio-frame
+      - name: Verify README quick start
+        run: |
+          npm run validate:storyboard -- examples/creator-production-pilot/storyboard.json --mode fast
+          npm run validate:assets -- examples/creator-production-pilot/storyboard.json
+          npm run render:storyboard -- examples/creator-production-pilot/storyboard.json .tmp/quick-start/preview-silent.mp4 --mode fast
+          npm run inspect:output -- .tmp/quick-start/preview-silent.mp4 examples/creator-production-pilot/storyboard.json
+          npm run qa:storyboard -- examples/creator-production-pilot/storyboard.json .tmp/quick-start/preview-silent.mp4 .tmp/quick-start/review --mode fast
       - run: npm run render:storyboard -- examples/article-video/storyboard.json /tmp/frame-loom-ci.mp4 --mode fast
       - run: npm run qa:storyboard -- examples/article-video/storyboard.json /tmp/frame-loom-ci.mp4 /tmp/frame-loom-ci-review --mode fast
       - run: npm run render:storyboard -- examples/semantic-visuals/storyboard.json /tmp/frame-loom-semantic-ci.mp4 --mode fast

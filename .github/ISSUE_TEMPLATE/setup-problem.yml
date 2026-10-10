@@ -1,0 +1,50 @@
+name: 安装或运行问题 / Setup problem
+description: 安装、Agent 加载或渲染失败 / Installation, Skill loading, or render failures
+title: "[Setup] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请先查看 README 中的安装与排错指南。分享日志前删除密钥、私人路径和私有材料。
+        Check the installation guide linked from the README first. Remove credentials, private paths, and private material from logs.
+  - type: dropdown
+    id: operating-system
+    attributes:
+      label: 操作系统 / Operating system
+      options:
+        - macOS
+        - Windows
+        - Ubuntu / Debian
+        - Other Linux
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: 系统与工具版本 / OS and tool versions
+      description: Include the OS version, Node.js, npm, FFmpeg, and agent version if relevant.
+      placeholder: "macOS …; Node.js …; npm …; FFmpeg …; Codex / Claude Code …"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤与实际命令 / Steps and exact command
+      description: State the working directory relative to the repository and the command or agent instruction you used.
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: 错误输出 / Error output
+      description: Paste the relevant error, including the first failure. Remove secrets and private information.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期结果 / Expected result
+      description: What did you expect, and which installation or usage guide did you follow?
+    validations:
+      required: true
