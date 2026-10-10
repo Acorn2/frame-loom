@@ -413,7 +413,9 @@ npm run prepare:script-handoff -- projects/my-video --mode review
 
 可以从文档直接开始，也可以在审片预览、底片或讲稿交接之后继续。`produce` 会在渲染有声 MP4 后运行 QA；音频就绪后须按实测时长调整分镜，重新校验并渲染。明确指定 `--output-purpose in-project-video` 时，没有有效旁白不会回退为静音文件；只有配乐或音效也不能通过讲解视频交付门禁。
 
-**内置 TTS**：根据 `scene.narration` 生成旁白和字幕。目前支持豆包、OpenAI、ElevenLabs 和阿里百炼 Qwen3-TTS-Flash。四份[配置样例](../examples/tts-profiles)默认关闭；新项目初始化时会复制到项目的 `audio/` 目录。
+**内置 TTS**：根据 `scene.narration` 生成旁白和字幕。目前支持豆包、OpenAI、ElevenLabs、阿里百炼 Qwen3-TTS-Flash 和 MiniMax。五份[配置样例](../examples/tts-profiles)默认关闭；新项目初始化时会复制到项目的 `audio/` 目录。
+
+第一次接入时，按 [TTS 配置指南](tts-setup.md)操作：每家都有凭据入口、完整启用 JSON、环境变量和参数示例。可直接跳到[豆包](tts-setup.md#豆包)、[OpenAI](tts-setup.md#openai)、[ElevenLabs](tts-setup.md#elevenlabs)、[阿里百炼](tts-setup.md#阿里百炼)或 [MiniMax](tts-setup.md#minimax)。以下步骤以已有项目 `projects/my-video` 为例，请替换成实际目录。
 
 先在所选服务的官方控制台取得凭据；**只需要配置实际使用的那一家**：
 
@@ -423,14 +425,15 @@ npm run prepare:script-handoff -- projects/my-video --mode review
 | OpenAI | 登录 [OpenAI API Keys 页面](https://platform.openai.com/api-keys)，创建并复制 Secret key。 | `OPENAI_API_KEY` | `audio/tts-config.openai.example.json` |
 | ElevenLabs | 登录 [ElevenLabs API Keys 页面](https://elevenlabs.io/app/developers/api-keys)，创建 Key；若使用受限 Key，开启 Text to Speech 权限。 | `ELEVENLABS_API_KEY` | `audio/tts-config.elevenlabs.example.json` |
 | 阿里百炼 | 按[阿里云百炼获取 API Key 指南](https://help.aliyun.com/zh/model-studio/get-api-key/)进入 [API Key 控制台](https://bailian.console.aliyun.com/cn-beijing/model/settings/api-key)，选择**华北 2（北京）**地域并创建 Key。 | `DASHSCOPE_API_KEY` | `audio/tts-config.aliyun.example.json` |
+| MiniMax | 按 [MiniMax 同步语音合成文档](https://platform.minimaxi.com/docs/api-reference/speech-t2a-http)的鉴权说明，从开放平台账号管理的 API Keys 获取 Key，并确认语音额度及音色权限。 | `MINIMAX_API_KEY` | `audio/tts-config.minimax.example.json` |
 
 在仓库根目录，复制所选样例为该视频项目的实际配置文件。例如选择 OpenAI：
 
 ```bash
-cp projects/my-video/audio/tts-config.openai.example.json projects/my-video/audio/tts-config.json
+cp -n projects/my-video/audio/tts-config.openai.example.json projects/my-video/audio/tts-config.json
 ```
 
-如果是初始化功能加入前创建的旧项目，可从仓库样例复制，例如 `cp examples/tts-profiles/openai.json projects/my-video/audio/tts-config.json`；换服务时将 `openai` 换成 `doubao`、`elevenlabs` 或 `aliyun`。编辑 `projects/my-video/audio/tts-config.json`，将 `"enabled": false` 改为 `"enabled": true`。`apiKeyEnv`、`resourceIdEnv` 和 `voiceTypeEnv` 填的是**环境变量名**，不要替换成真实密钥。豆包样例从 `VOLC_TTS_SPEAKER` 读取音色，并要求它与 `VOLC_TTS_RESOURCE_ID` 对应；其他三份样例已有初始模型和音色，需要时可在该文件中改 `model`、`voiceType`。旧项目中写死的 `voiceType` 仍可继续使用。
+如果是初始化功能加入前创建的旧项目，可从仓库样例复制，例如 `cp -n examples/tts-profiles/openai.json projects/my-video/audio/tts-config.json`；选择其他服务时将 `openai` 换成 `doubao`、`elevenlabs`、`aliyun` 或 `minimax`。`cp -n` 保留已有目标文件，已有配置请先核对再编辑，或按[多配置步骤](tts-setup.md#多个配置与切换服务)另存一份。编辑 `projects/my-video/audio/tts-config.json`，将 `"enabled": false` 改为 `"enabled": true`。`apiKeyEnv`、`resourceIdEnv` 和 `voiceTypeEnv` 填的是**环境变量名**，不要替换成真实密钥。豆包样例从 `VOLC_TTS_SPEAKER` 读取音色，并要求它与 `VOLC_TTS_RESOURCE_ID` 对应；其他四份样例已有初始模型和音色，需要时可在该文件中改 `model`、`voiceType`。旧项目中写死的 `voiceType` 仍可继续使用。
 
 在**运行 FrameLoom 命令的同一个终端**设置环境变量。macOS/Linux 用 `export`，下列命令只执行所选服务对应的行，将尖括号占位值换成自己的凭据：
 
@@ -441,11 +444,14 @@ export VOLC_TTS_SPEAKER='<已开通的豆包音色 ID>'
 export OPENAI_API_KEY='<OpenAI Secret key>'
 export ELEVENLABS_API_KEY='<ElevenLabs API Key>'
 export DASHSCOPE_API_KEY='<北京地域的百炼 API Key>'
+export MINIMAX_API_KEY='<MiniMax API Key>'
 ```
 
 Windows PowerShell 对应写法如 `$env:OPENAI_API_KEY = '<OpenAI Secret key>'`，其他服务替换变量名即可。这些变量只对当前终端会话有效；如果从 IDE、Agent 或另一个终端启动命令，也要确保那个进程能读到相同的环境变量。FrameLoom **不会自动读取 `.env` 文件**；不要把真实 Key 写入 `tts-config.json`、样例文件或提交到 Git。豆包 API Key 方式不需要另外填写 App ID 和 Access Token。旧项目如已使用 `DOUBAO_TTS_*` 环境变量，可继续按其现有 `apiKeyEnv`、`resourceIdEnv` 配置使用。阿里样例使用北京接入域名，北京 Key 不能与其他地域域名混用；改用新加坡时还需把配置文件里的 `endpoint` 主机改为 `dashscope-intl.aliyuncs.com`，并使用新加坡地域的 Key。
 
 运行 `npm run list:tts-profiles -- projects/my-video` 可查看各配置的状态和不含密钥的诊断：`ready` 表示本地参数有效且所需环境变量已设置，`needs-environment` 表示缺少变量，`disabled` 为关闭，`invalid` 为无效配置，`test-only` 仅供测试。该命令不验证在线 Key、余额或音色权限；一个坏配置不会中断其他配置的展示。仅一个 `ready` 配置时可默认选用，多个时通过 `--tts-config` 指定；真实配置缺失时不自动退回 mock。内置 TTS 只向对应服务商的官方 HTTPS 域名发送凭据，不接受自定义代理地址或跳转；需要代理时先在外部生成音频，再走外部配音路线。
+
+MiniMax 样例默认使用 `speech-2.8-hd`、中文系统音色 `male-qn-qingse` 和中国站接入地址 `https://api.minimax.cn/v1/t2a_v2`。国际站需显式改为 `https://api.minimax.io/v1/t2a_v2`，并使用对应平台的 Key。可配置语速、音量、半音值 `pitchSemitones`、情绪、语言和发音提示；参数范围与模型限制见[MiniMax 接入说明](audio-integration.md#minimax-setup)。每场少于 10000 字符，当前接入非流式 MP3/WAV。
 
 首次使用或调整音色时，可显式合成一小段试听，默认输出到项目 `audio/previews/`，不覆盖整片音频包：
 

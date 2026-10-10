@@ -4,7 +4,7 @@ FrameLoom supports three audio routes:
 
 1. `silent`: render either an inspection preview or a clean visual master for external editing, chosen with `--output-purpose`.
 2. `tts`: generate narration before rendering with Doubao, OpenAI,
-   ElevenLabs or Alibaba Cloud Model Studio. `mock` is for deterministic tests.
+   ElevenLabs, Alibaba Cloud Model Studio or MiniMax. `mock` is for deterministic tests.
 3. `external`: consume any locally produced voiceover, including recording,
    voice cloning, third-party TTS or manually edited audio.
 
@@ -58,9 +58,15 @@ Copy `audio/audio-config.example.json` to `audio/audio-config.json`, then enable
 
 ## Built-in TTS Contract
 
-The repository stores the four credential-free presets in
+For complete enabled JSON configurations, credential locations, environment setup
+and troubleshooting for all five providers, start with the
+[TTS setup guide (Chinese)](tts-setup.md). The sections below describe the runtime
+contract and the common CLI workflow. A public preset in the library selects
+model and voice metadata; it does not enable local credentials.
+
+The repository stores the five credential-free presets in
 [`examples/tts-profiles/`](../examples/tts-profiles/). Initialize a project,
-choose one of its four disabled examples, copy it to
+choose one of its five disabled examples, copy it to
 `audio/tts-config.json`, set `enabled` to `true`, and set the named environment
 variable. Existing projects can copy a preset from the repository. Do not put
 credential values in JSON. The Doubao example reads the voice, API key and
@@ -73,6 +79,7 @@ must be available for the selected resource ID.
 | `tts-config.openai.example.json` | OpenAI speech | `OPENAI_API_KEY` | `alloy` / MP3 |
 | `tts-config.elevenlabs.example.json` | ElevenLabs | `ELEVENLABS_API_KEY` | `JBFqnCBsd6RMkjVDRZzb` / MP3 |
 | `tts-config.aliyun.example.json` | Alibaba Cloud Qwen3-TTS-Flash | `DASHSCOPE_API_KEY` | `Cherry` / WAV |
+| `tts-config.minimax.example.json` | MiniMax synchronous speech | `MINIMAX_API_KEY` | `male-qn-qingse` / MP3 |
 
 The Alibaba example uses the Beijing Qwen non-streaming endpoint and requires
 a Beijing API key. For Singapore, change the host to
@@ -99,8 +106,45 @@ endpoint. `outputDirectory` must stay inside the project's `audio/` directory,
 and scene IDs may contain only safe filename characters.
 See the [OpenAI speech API](https://platform.openai.com/docs/api-reference/audio/createSpeech),
 [ElevenLabs conversion API](https://elevenlabs.io/docs/api-reference/text-to-speech/convert),
-and [Alibaba Cloud non-real-time TTS guide](https://help.aliyun.com/zh/model-studio/non-realtime-tts-user-guide)
+[Alibaba Cloud non-real-time TTS guide](https://help.aliyun.com/zh/model-studio/non-realtime-tts-user-guide),
+and [MiniMax synchronous speech API](https://platform.minimaxi.com/docs/api-reference/speech-t2a-http)
 when changing models or voices.
+
+### MiniMax setup
+
+Copy [`examples/tts-profiles/minimax.json`](../examples/tts-profiles/minimax.json)
+to the project's `audio/tts-config.json`, enable it, and supply `MINIMAX_API_KEY`
+in the process environment. The preset uses `speech-2.8-hd`, the Chinese system
+voice `male-qn-qingse`, MP3 at 32000 Hz, and a 120-second request timeout.
+It calls the current China endpoint `https://api.minimax.cn/v1/t2a_v2`.
+For the international platform, explicitly use
+`https://api.minimax.io/v1/t2a_v2` and that platform's API key; the adapter never
+switches endpoints or models automatically. `voiceType` accepts an existing
+system or user-owned voice ID; voice cloning and voice management are external.
+
+MiniMax uses one non-streaming request per scene, with `output_format: hex`.
+The adapter checks both HTTP and business status, requires a completed result,
+and strictly decodes nonempty, even-length hexadecimal audio. It never logs the
+server's raw error body or message. Keep each scene below 10000 Unicode
+characters. MP3 and WAV are supported; raw PCM, streaming, URL output, mixed
+voices and arbitrary `requestBody` fields are not supported by this adapter.
+
+| MiniMax configuration | Behavior |
+| --- | --- |
+| `model` | `speech-2.8-hd` (default), `speech-2.8-turbo`, `speech-2.6-hd`, `speech-2.6-turbo`, `speech-02-hd`, `speech-02-turbo`, `speech-01-hd`, `speech-01-turbo` |
+| `speedRatio`, `volumeRatio` | Map to `voice_setting.speed` (0.5–2) and `vol` (greater than 0, at most 10) |
+| `pitchSemitones` | Integer −12 to 12, default 0; `pitchRatio` must remain 1 |
+| `emotion` | Optional: `happy`, `sad`, `angry`, `fearful`, `disgusted`, `surprised`, `calm`; `fluent` and `whisper` require a `speech-2.6-*` model; omitted means automatic emotion |
+| `language` | Maps to `language_boost`, default `auto`; supports official language names such as `Chinese`, `Chinese,Yue`, `English`; the schema lists all choices; `speech-01` / `speech-02` reject `Persian`, `Filipino`, `Tamil` |
+| `pronunciationHints` | Nonempty list of `original/replacement` rules, for example `["处理/(chu3)(li3)", "FrameLoom/Frame Loom"]`, mapped to `pronunciation_dict.tone` |
+| `textNormalization` | `basic` or `quality`; `quality` requires `speech-2.6-*` or `speech-2.8-*` |
+| `sampleRate` | Provider source rate: 8000, 16000, 22050, 24000, 32000 (default), or 44100 Hz |
+| `bitrate` | MP3 only: 32000, 64000, 128000 (default), or 256000; explicit bitrate with WAV fails validation |
+
+These controls participate in source-take cache keys and audio-package
+fingerprints. `outputSampleRate` continues to control the final combined
+voiceover independently. Existing providers retain synthesis revision 2;
+adding MiniMax does not invalidate their existing takes.
 
 ### Validated voice controls
 
@@ -124,7 +168,7 @@ regenerated automatically.
 | `language` | Alibaba: `Auto`, `Chinese`, `English`, `German`, `Italian`, `Portuguese`, `Spanish`, `Japanese`, `Korean`, `French`, `Russian`; ElevenLabs: ISO 639-1 code, excluding `eleven_multilingual_v2` |
 | `voiceSettings` | ElevenLabs `stability`, `similarity_boost`, `style` (0–1), and `use_speaker_boost` (boolean); speed uses top-level `speedRatio` |
 | `pronunciationDictionaries` | ElevenLabs: at most three `{pronunciation_dictionary_id, version_id?}` entries referencing existing provider dictionaries |
-| `textNormalization` | ElevenLabs: `auto`, `on`, `off`, for provider text normalization such as number reading |
+| `textNormalization` | ElevenLabs: `auto`, `on`, `off`; MiniMax: `basic`, `quality`, with the model constraints above |
 | `useSceneContext` | ElevenLabs only, opt-in; supplies adjacent narrated scene text as `previous_text` / `next_text`; changed neighbors invalidate affected voice-cache entries |
 | `outputSampleRate` | Final combined mono voiceover: 24000 (default), 44100, or 48000 Hz; separate from provider `sampleRate`, without regenerating otherwise unchanged source takes |
 
@@ -152,7 +196,7 @@ Provider model, voice, region, subscription and language limitations still apply
 See the [Qwen-TTS API](https://help.aliyun.com/zh/model-studio/qwen-tts-api)
 and [ElevenLabs speed guide](https://elevenlabs.io/docs/help-center/product/core-capabilities/text-to-speech/can-i-change-the-pace-of-the-voice).
 
-`requestBody` remains an advanced escape hatch, but cannot override managed
+For providers other than MiniMax, `requestBody` remains an advanced escape hatch, but cannot override managed
 text, model, voice, format or basic audio fields. Known instruction, language
 and ElevenLabs voice controls are checked for invalid values and conflicts
 with top-level fields. Other vendor-specific options must be checked against
@@ -188,7 +232,7 @@ not this original preview file. Audition before approving the storyboard;
 files under `audio/` participate in project input fingerprints.
 
 ```bash
-cp examples/tts-profiles/openai.json projects/<video-id>/audio/tts-config.json
+cp -n examples/tts-profiles/openai.json projects/<video-id>/audio/tts-config.json
 # Edit audio/tts-config.json: set enabled=true, then export the named API key.
 npm run list:tts-profiles -- projects/<video-id>
 npm run synthesize:voiceover -- projects/<video-id>

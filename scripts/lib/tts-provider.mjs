@@ -7,6 +7,7 @@ import {resolveTtsVoiceType} from './tts-profiles.mjs';
 import {TtsConfigSchema} from '../../src/schemas/tts-config.ts';
 
 const PROVIDER_HOSTS = {
+  minimax: new Set(['api.minimax.cn', 'api.minimax.io']),
   openai: new Set(['api.openai.com']),
   elevenlabs: new Set(['api.elevenlabs.io']),
   aliyun: new Set(['dashscope.aliyuncs.com', 'dashscope-intl.aliyuncs.com']),
@@ -120,6 +121,38 @@ async function requestOpenAi(text, config) {
     signal: globalThis.AbortSignal.timeout(config.timeoutMs)
   });
   return readBinaryAudio(response, 'OpenAI');
+}
+
+async function requestMiniMax(text, config) {
+  if ([...text].length >= 10000) throw new Error('MiniMax 单场旁白必须少于 10000 字符，请拆分镜头。');
+  const endpoint = assertProviderEndpoint(config.endpoint ?? 'https://api.minimax.cn/v1/t2a_v2', 'minimax');
+  const apiKey = requireApiKey(config, 'MINIMAX_API_KEY', 'MiniMax');
+  const response = await globalThis.fetch(endpoint.href, {
+    method: 'POST', redirect: 'error',
+    headers: {authorization: `Bearer ${apiKey}`, 'content-type': 'application/json'},
+    body: JSON.stringify({model: config.model, text, stream: false, output_format: 'hex',
+      language_boost: config.language ?? 'auto',
+      voice_setting: {voice_id: config.voiceType, speed: config.speedRatio, vol: config.volumeRatio,
+        pitch: config.pitchSemitones, ...(config.emotion ? {emotion: config.emotion} : {})},
+      audio_setting: {sample_rate: config.sampleRate, format: config.format, channel: 1,
+        ...(config.format === 'mp3' ? {bitrate: config.bitrate ?? 128000} : {})},
+      ...(config.pronunciationHints ? {pronunciation_dict: {tone: config.pronunciationHints}} : {}),
+      ...(config.textNormalization ? {text_normalization_mode: config.textNormalization} : {})}),
+    signal: globalThis.AbortSignal.timeout(config.timeoutMs)
+  });
+  if (!response.ok) throw new Error(`MiniMax TTS 请求失败（HTTP ${response.status}）。`);
+  let result;
+  try { result = await response.json(); } catch { throw new Error('MiniMax TTS 返回不是可解析 JSON。'); }
+  const code = result?.base_resp?.status_code;
+  if (!Number.isInteger(code)) throw new Error('MiniMax TTS 返回缺少有效业务状态码。');
+  if (code !== 0) throw new Error(`MiniMax TTS 合成失败（code: ${code}）。请检查凭据、额度、音色和模型权限。`);
+  if (result?.data?.status !== 2) throw new Error('MiniMax TTS 未返回完整的合成结果。');
+  const hex = result.data.audio;
+  // Buffer.from(..., 'hex') silently truncates invalid or odd-length input.
+  if (typeof hex !== 'string' || hex.length % 2 !== 0 || !/^[a-f\d]+$/iu.test(hex)) {
+    throw new Error('MiniMax TTS 未返回有效的十六进制音频。');
+  }
+  return {audio: Buffer.from(hex, 'hex')};
 }
 
 async function requestElevenLabs(text, config) {
@@ -274,7 +307,7 @@ export async function synthesizeSpeech({text, config, outputPath}) {
   config = TtsConfigSchema.parse(config);
   if (!config.enabled) throw new Error('TTS 配置未启用。');
   if (config.provider === 'openai' && text.length > 4096) throw new Error('OpenAI 单场旁白不能超过 4096 字符，请拆分镜头。');
-  const providers = {doubao: requestDoubao, openai: requestOpenAi, elevenlabs: requestElevenLabs, aliyun: requestAliyun};
+  const providers = {doubao: requestDoubao, openai: requestOpenAi, elevenlabs: requestElevenLabs, aliyun: requestAliyun, minimax: requestMiniMax};
   const request = providers[config.provider];
   if (!request) throw new Error(`不支持的 TTS provider：${config.provider}`);
   const result = await request(text, {...config, voiceType: resolveTtsVoiceType(config)});

@@ -126,7 +126,7 @@ describe('Style Pack workflow', () => {
     expect(fs.readFileSync(path.join(project, 'visual-sources.md'), 'utf8')).toContain('Color mode: auto');
     const audioExample = JSON.parse(fs.readFileSync(path.join(project, 'audio/audio-config.example.json'), 'utf8'));
     expect(AudioConfigSchema.safeParse(audioExample).success).toBe(true);
-    for (const name of ['', '.openai', '.elevenlabs', '.aliyun']) {
+    for (const name of ['', '.openai', '.elevenlabs', '.aliyun', '.minimax']) {
       const example = JSON.parse(fs.readFileSync(path.join(project, `audio/tts-config${name}.example.json`), 'utf8'));
       expect(TtsConfigSchema.safeParse(example).success).toBe(true);
       expect(example.enabled).toBe(false);

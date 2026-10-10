@@ -25,9 +25,11 @@ P1扩展仍不添加依赖：浏览器 `document.fonts.ready` 与DOM测量标题
 
 当前镜头视觉继续使用现有DOM/CSS/SVG：白色/冷灰/石墨画布、细网格、柔和阴影、透视卡片与纯帧运动；强调色与字体由现有Style Pack提供，无新增依赖、远程字体或图片素材。独立的历史1.1渲染快照保持精确版本解析；Vitest覆盖深浅背景、正文与字幕对比度、字幕跨镜切换和历史兼容。
 
-制作向导仍使用原生radio/select/details和既有ES module，无新增依赖或生产API。公开TTS元数据在build-library阶段从已校验样例提取，浏览器仅保存公开选项；测试覆盖四预设、外部旁白、静音底片、先审分镜、过期选项与元数据字段白名单。
+制作向导仍使用原生radio/select/details和既有ES module，无新增依赖或生产API。公开TTS元数据在build-library阶段从已校验样例提取，浏览器仅保存公开选项；测试覆盖五预设、外部旁白、静音底片、先审分镜、过期选项与元数据字段白名单。
 
 TTS 配置使用既有 Zod 与导出的 JSON Schema，不新增服务商 SDK；Node.js fetch 继续只访问官方 HTTPS 主机。试听复用适配器与 ffprobe，最终采样率由既有 FFmpeg 混音设置处理。回归测试使用模拟 HTTP 响应和本地音频，真实账号、音色权限与听感需要显式在线试听。
+
+MiniMax 复用 Node.js fetch 和 Buffer hex 解码，接入同步 HTTP JSON 响应，不增加 SDK 或流式基础设施。参数范围与模型限制在 Zod／JSON Schema 中声明；模拟响应覆盖业务错误与损坏音频，MP3/WAV 经既有 FFmpeg／ffprobe 验证。
 
 P2 继续使用现有 React / Remotion / Zod；SVG 滤镜与确定性闭式粒子不引入新运行时依赖。
 

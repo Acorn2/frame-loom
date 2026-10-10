@@ -141,9 +141,42 @@ Style and font are independent choices. The selected shot pool limits what the a
 
 `fast` proceeds through the selected stage without a storyboard approval stop. `review` requires script and storyboard approval before production. Both modes support the outputs above. Passing automated QA does not mean the video has passed human review. Videos finished later in an external editor are reviewed there.
 
-TTS integrations cover Doubao, OpenAI, ElevenLabs, and Alibaba Cloud Model Studio. Configure only the provider you use, or supply existing voiceover with optional SRT/VTT subtitles. The example profiles are disabled by default and credentials are read from environment variables. Missing or mismatched audio is reported rather than treated as a narrated delivery. See the [usage guide](references/usage-guide.md) and [audio integration guide](references/audio-integration.md).
+TTS integrations cover Doubao, OpenAI, ElevenLabs, Alibaba Cloud Model Studio, and MiniMax. Configure only the provider you use, or supply existing voiceover with optional SRT/VTT subtitles. The example profiles are disabled by default and credentials are read from environment variables. Missing or mismatched audio is reported rather than treated as a narrated delivery. See the [usage guide](references/usage-guide.md) and [audio integration guide](references/audio-integration.md).
 
 TTS settings are validated per provider; `list:tts-profiles` reports readiness and missing configuration. Use `preview:tts` for an explicit short audition before full synthesis. Supported reading instructions, pronunciation dictionaries, scene context and final sample rates are described in the [voice controls guide](references/audio-integration.md#validated-voice-controls).
+
+### Configure TTS
+
+Choose one provider. Copy its preset to your existing project's `audio/tts-config.json`, set `enabled` to `true`, and supply the required process environment variables. Follow the [provider setup guide (Chinese)](references/tts-setup.md) for complete JSON examples and credential locations; the [audio integration guide](references/audio-integration.md#built-in-tts-contract) describes the contract in English.
+
+| Provider | Repository preset | Required environment variables | Preset model / voice |
+| --- | --- | --- | --- |
+| [Doubao](references/tts-setup.md#豆包) | [doubao.json](examples/tts-profiles/doubao.json) | `VOLC_TTS_API_KEY`, `VOLC_TTS_RESOURCE_ID`, `VOLC_TTS_SPEAKER` | v3 / environment voice |
+| [OpenAI](references/tts-setup.md#openai) | [openai.json](examples/tts-profiles/openai.json) | `OPENAI_API_KEY` | `gpt-4o-mini-tts` / `alloy` |
+| [ElevenLabs](references/tts-setup.md#elevenlabs) | [elevenlabs.json](examples/tts-profiles/elevenlabs.json) | `ELEVENLABS_API_KEY` | `eleven_multilingual_v2` / `JBFqnCBsd6RMkjVDRZzb` |
+| [Alibaba Cloud](references/tts-setup.md#阿里百炼) | [aliyun.json](examples/tts-profiles/aliyun.json) | `DASHSCOPE_API_KEY` (Beijing) | `qwen3-tts-flash` / `Cherry` |
+| [MiniMax](references/tts-setup.md#minimax) | [minimax.json](examples/tts-profiles/minimax.json) | `MINIMAX_API_KEY` | `speech-2.8-hd` / `male-qn-qingse` |
+
+For a first MiniMax setup, run from the repository root and replace `projects/my-video` with an existing project path:
+
+```bash
+cp -n examples/tts-profiles/minimax.json projects/my-video/audio/tts-config.json
+```
+
+Edit the target JSON to set `"enabled": true`. `cp -n` keeps an existing target, so inspect that file if you already configured another provider. Set the key in the same terminal that runs FrameLoom, then check locally:
+
+```bash
+export MINIMAX_API_KEY='<your MiniMax API key>'
+npm run list:tts-profiles -- projects/my-video
+```
+
+`ready` confirms local settings and environment presence only. To explicitly audition the voice, run the following command; it calls the provider and may incur charges:
+
+```bash
+npm run preview:tts -- projects/my-video --tts-config projects/my-video/audio/tts-config.json --text "Hello, please check this voice and speaking speed."
+```
+
+The original audio is saved under `audio/previews/`. For PowerShell, set keys with `$env:MINIMAX_API_KEY = '<your key>'` and copy with `Copy-Item` only when the target does not exist. FrameLoom does not automatically load `.env` files, and web presets do not configure credentials. Keep actual keys out of JSON and Git. The [setup guide](references/tts-setup.md#检查与制作) covers production commands, multiple profiles and troubleshooting.
 
 ## Repository layout
 
@@ -170,6 +203,7 @@ frame-loom/
 Some linked reference guides are in Chinese. The shared Skill, audio integration guide, and contributing guide are in English.
 
 - [Usage guide](references/usage-guide.md): production routes, fonts, CLI, audio, and delivery review.
+- [TTS setup guide (Chinese)](references/tts-setup.md): credentials, complete profiles, environment variables, checks, auditions, and troubleshooting for all five providers.
 - [Shared Skill](SKILL.md) and [Storyboard contract](references/storyboard-schema.md): agent workflow and rendering inputs.
 - [Quality production guide](references/quality-production.md): measured audio timing, captions, and shot quality.
 - [Local library and Pages guide](library/README.md): server setup, sample generation, and static deployment for local browsing or library maintenance.

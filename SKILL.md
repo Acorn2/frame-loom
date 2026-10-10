@@ -242,7 +242,10 @@ with an actionable explanation; do not silently deliver a preview instead.
    Listing includes disabled, invalid, missing-environment and test-only entries;
    only `ready` real profiles are candidates for narrated delivery. Local readiness
    does not prove online permissions. Preserve chosen models and unsupported-setting
-   errors; do not silently drop controls. Read the audio integration guide for
+   errors; do not silently drop controls. For first-time setup, follow the
+   [TTS setup guide](references/tts-setup.md) for provider-specific credential
+   locations, enabled JSON examples and environment variables; a library preset
+   does not enable the service. Read the audio integration guide for
    provider-specific instructions, pronunciation dictionaries and scene context.
    `preview:tts` is an explicit online audition; invoke it only when preview/provider
    use is authorized, before approval, and never treat it as a production audio package.
@@ -328,7 +331,7 @@ schema, capability manifest, validator fixtures and renderer together.
 
 - No online editor, cloud rendering, account system or automatic publishing.
 - No voice cloning, mastering or universal vendor SDK. Built-in HTTP TTS
-  adapters support Doubao, OpenAI, ElevenLabs and Alibaba Cloud Qwen3 TTS;
+  adapters support Doubao, OpenAI, ElevenLabs, Alibaba Cloud Qwen3 TTS and MiniMax;
   credentials remain in environment variables. Other providers use the
   external-audio route.
 - Webpage screenshots are captured by the Agent before rendering; the CLI and renderer do not fetch URLs or discover images automatically.

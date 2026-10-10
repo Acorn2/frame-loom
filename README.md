@@ -149,9 +149,42 @@ Agent 会记录取色来源，在渲染前后对照截图检查实际画面。�
 
 `fast` 直接推进当前阶段，`review` 在渲染前增加讲稿与分镜审核；两种模式都能选择上述输出。自动 QA 通过不等于成片已经人工验收。底片在外部剪辑完成的视频由外部流程验收。
 
-TTS 支持豆包、OpenAI、ElevenLabs 和阿里百炼；只配置实际使用的一家，也可提供已有旁白与 SRT/VTT。配置样例默认关闭，密钥通过环境变量读取。音频缺失或不匹配时会说明缺口，不把静音或 mock 语音作为有声交付。步骤见[使用指南](references/usage-guide.md#6-接入音频制作项目内有声视频)与[音频接入说明](references/audio-integration.md)。
+TTS 支持豆包、OpenAI、ElevenLabs、阿里百炼和 MiniMax；只配置实际使用的一家，也可提供已有旁白与 SRT/VTT。配置样例默认关闭，密钥通过环境变量读取。音频缺失或不匹配时会说明缺口，不把静音或 mock 语音作为有声交付。步骤见[使用指南](references/usage-guide.md#6-接入音频制作项目内有声视频)与[音频接入说明](references/audio-integration.md)。
 
 TTS 配置按服务校验语速、格式与声音控制；`list:tts-profiles` 展示配置状态及缺失项。可用 `preview:tts` 显式试听短句，再生成整片；支持的朗读指令、发音词典、前后场上下文与最终采样率见[配置说明](references/audio-integration.md#validated-voice-controls)。
+
+### 配置 TTS
+
+只选一家，按表中的[逐家配置步骤](references/tts-setup.md)取得凭据、复制样例并启用：
+
+| 服务 | 仓库配置样例 | 需要设置的环境变量 | 预设模型 / 音色 |
+| --- | --- | --- | --- |
+| [豆包](references/tts-setup.md#豆包) | [doubao.json](examples/tts-profiles/doubao.json) | `VOLC_TTS_API_KEY`、`VOLC_TTS_RESOURCE_ID`、`VOLC_TTS_SPEAKER` | v3 / 从音色环境变量读取 |
+| [OpenAI](references/tts-setup.md#openai) | [openai.json](examples/tts-profiles/openai.json) | `OPENAI_API_KEY` | `gpt-4o-mini-tts` / `alloy` |
+| [ElevenLabs](references/tts-setup.md#elevenlabs) | [elevenlabs.json](examples/tts-profiles/elevenlabs.json) | `ELEVENLABS_API_KEY` | `eleven_multilingual_v2` / `JBFqnCBsd6RMkjVDRZzb` |
+| [阿里百炼](references/tts-setup.md#阿里百炼) | [aliyun.json](examples/tts-profiles/aliyun.json) | `DASHSCOPE_API_KEY`（北京地域） | `qwen3-tts-flash` / `Cherry` |
+| [MiniMax](references/tts-setup.md#minimax) | [minimax.json](examples/tts-profiles/minimax.json) | `MINIMAX_API_KEY` | `speech-2.8-hd` / `male-qn-qingse` |
+
+以 MiniMax 首次配置为例，在仓库根目录执行，`projects/my-video` 替换成你的已有项目路径：
+
+```bash
+cp -n examples/tts-profiles/minimax.json projects/my-video/audio/tts-config.json
+```
+
+编辑目标 JSON，把 `"enabled": false` 改为 `"enabled": true`；若目标文件已存在，`cp -n` 会保留它，请先核对实际服务。然后在运行 FrameLoom 的同一终端设置凭据并检查：
+
+```bash
+export MINIMAX_API_KEY='<你的 MiniMax API Key>'
+npm run list:tts-profiles -- projects/my-video
+```
+
+`ready` 只表示本地参数和环境变量齐全。确认需要在线试听后再运行（会调用服务商，可能收费）：
+
+```bash
+npm run preview:tts -- projects/my-video --tts-config projects/my-video/audio/tts-config.json --text "你好，请确认音色与语速。"
+```
+
+试听输出到 `audio/previews/`。完整配置 JSON、Windows 写法、各家参数限制、多个配置切换和整片制作命令见 [TTS 配置指南](references/tts-setup.md)。网页预设不会配置密钥；FrameLoom 不自动读取 `.env`，也不把真实 Key 写入 JSON。
 
 ## 仓库结构
 
@@ -176,6 +209,7 @@ frame-loom/
 ## 文档与参与开发
 
 - [使用指南](references/usage-guide.md)：制作路线、字体选择、CLI、配音配置与交付审核。
+- [TTS 配置指南](references/tts-setup.md)：五家服务的凭据入口、可复制配置、环境变量、检查、试听与排错。
 - [Skill 流程](SKILL.md)与[Storyboard 契约](references/storyboard-schema.md)：Agent 编排与渲染输入约束。
 - [质量生产说明](references/quality-production.md)：实测音频时间、字幕调整与镜头质量。
 - [配方库本地运行与 Pages 发布](library/README.md)：需要本地浏览或维护配方库时，查看服务启动、预览生成及静态站点部署说明。

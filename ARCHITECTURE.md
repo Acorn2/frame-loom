@@ -44,6 +44,8 @@ GitHub Pages 使用独立 Library Pages 工作流生成和缓存公开样片，�
 
 TTS 配置按 provider 区分格式、范围与声音控制；旧中性占位值兼容，非默认的不支持项报错。配置发现逐项输出安全状态，选择只考虑可用配置，真实配置不可用不退回测试音调。ElevenLabs 可选邻场文本进入实际请求和缓存键；环境音色、豆包 Resource ID 与环境 endpoint 绑定复用指纹。`outputSampleRate` 只影响最终单声道混音，独立于源语音缓存。`preview:tts` 显式请求短句、输出独立试听文件，不发布生产音频清单。
 
+MiniMax 数据流：按服务契约校验配置与模型能力 → 解析本地音色和密钥环境变量 → 官方 HTTPS 非流式请求 → 检查业务码和完成状态 → 严格 hex 解码 → 既有语音缓存、ffprobe 实测、FFmpeg 合并与字幕／manifest。情绪、半音、发音提示及规范化参与既有缓存和审核指纹；中国站／国际站由配置显式选择，不隐式切换。
+
 Renderer 为最终有声候选文件生成 profile 与视频指纹记录；QA 和批准检查同一文件，批准后不重渲。代表片段复用正式音频加载器和原时间轴，只做带标记的审片输出。
 
 语义扩展通过 2.3 的可选字段显式启用，能力清单、schema、validator 和 renderer 同步；不重解释旧字段。图像聚焦根据实际图像尺寸计算原图归一化区域，并等待尺寸就绪后渲染。
@@ -72,7 +74,7 @@ P1扩展采用独立槽位与阶段约束：字体加载后实测标题基线与
 
 当前镜头视觉职责：`appearance.ts` 从现有StyleTokens推导每个配方的深浅背景、场景文字、卡片文字、阴影和静态装饰；不增加风格ID或用户输入参数。无项目配色时画布以白色、冷灰、石墨色为主体，Style Pack提供强调色与原始字体；显式素材配色覆盖背景、文字、表面和强调色，保留来源暖色或有色背景。显式全片字体覆盖原始字体；卡片前景与场景前景分开，暗场中的白卡仍使用深色正文。`RenderShot` 按精确版本派发并注入外观，34个当前上游场景配方及3个原生场景应用中性底色；历史上游版本不应用新外观。`DataDrivenVideo` 按共享时间线的当前场景选取外部字幕captionInk，seek或换镜后立即跟随深浅背景；字幕无底板。网页通过实际renderer生成的公开样片展示同一行为。
 
-制作向导数据流：构建从examples/tts-profiles读取四份公开样例，只选择id/name/provider/model/voice/voiceFromLocalConfig字段进入catalog.ttsPresets；不读取用户音频配置或环境值。选择页使用normalizeProduction约束公开选项，目标映射为visual-master或in-project-video，旁白映射silent/tts/external，确认开关映射review/fast。生产选项与镜头在同一浏览器记录跨页恢复，存储禁用时以公开URL参数携带。指令由Agent结合随后提供的文档与音频执行；配置不匹配时说明缺口，不隐式更换服务。预览指纹依旧只绑定视频渲染源，向导和公开TTS目录不改变样片画面。
+制作向导数据流：构建从examples/tts-profiles读取五份公开样例，只选择id/name/provider/model/voice/voiceFromLocalConfig字段进入catalog.ttsPresets；不读取用户音频配置或环境值。选择页使用normalizeProduction约束公开选项，目标映射为visual-master或in-project-video，旁白映射silent/tts/external，确认开关映射review/fast。生产选项与镜头在同一浏览器记录跨页恢复，存储禁用时以公开URL参数携带。指令由Agent结合随后提供的文档与音频执行；配置不匹配时说明缺口，不隐式更换服务。预览指纹依旧只绑定视频渲染源，向导和公开TTS目录不改变样片画面。
 
 P2 场景使用独立严格 schema 与纯帧组件；宿主效果显式绑定槽位与 highlight 阶段。数据、素材、代码、字形为必需输入，不由 renderer 发明。换章沿共享时间线处理，辅助动作与转场分别进入 production lock。
 

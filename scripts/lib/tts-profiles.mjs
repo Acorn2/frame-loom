@@ -32,7 +32,7 @@ export function inspectTtsProfile(filePath, id = path.basename(filePath, '.json'
   }
   const config = result.data;
   Object.assign(summary, {enabled: config.enabled, provider: config.provider,
-    model: config.model ?? {openai: 'gpt-4o-mini-tts', elevenlabs: 'eleven_multilingual_v2', aliyun: 'qwen3-tts-flash'}[config.provider] ?? null});
+    model: config.model ?? {openai: 'gpt-4o-mini-tts', elevenlabs: 'eleven_multilingual_v2', aliyun: 'qwen3-tts-flash', minimax: 'speech-2.8-hd'}[config.provider] ?? null});
   if (!config.enabled) return {...summary, voiceType: config.voiceType ?? null, status: 'disabled'};
   try { summary.voiceType = resolveTtsVoiceType(config); }
   catch { summary.issues.push(`缺少音色环境变量 ${config.voiceTypeEnv}。`); }
@@ -52,7 +52,7 @@ export function inspectTtsProfile(filePath, id = path.basename(filePath, '.json'
       if (!hasCredential?.trim() && !accessToken?.trim()) summary.issues.push('缺少豆包 API key 或 access token。');
     }
   } else if (config.provider !== 'mock') {
-    missing(config.apiKeyEnv ?? {openai: 'OPENAI_API_KEY', elevenlabs: 'ELEVENLABS_API_KEY', aliyun: 'DASHSCOPE_API_KEY'}[config.provider]);
+    missing(config.apiKeyEnv ?? {openai: 'OPENAI_API_KEY', elevenlabs: 'ELEVENLABS_API_KEY', aliyun: 'DASHSCOPE_API_KEY', minimax: 'MINIMAX_API_KEY'}[config.provider]);
   }
   summary.status = summary.issues.length ? 'needs-environment' : config.provider === 'mock' ? 'test-only' : 'ready';
   return summary;

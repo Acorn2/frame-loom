@@ -135,7 +135,7 @@ export function initProject(args = process.argv.slice(2), {now = new Date()} = {
     },
     sfx: []
   }, null, 2)}\n`);
-  for (const name of ['doubao', 'openai', 'elevenlabs', 'aliyun']) {
+  for (const name of ['doubao', 'openai', 'elevenlabs', 'aliyun', 'minimax']) {
     const sourcePath = path.join(projectRoot, 'examples', 'tts-profiles', `${name}.json`);
     const targetName = name === 'doubao' ? 'tts-config.example.json' : `tts-config.${name}.example.json`;
     write(path.join(target, 'audio', targetName), fs.readFileSync(sourcePath));

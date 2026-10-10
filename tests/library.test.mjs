@@ -121,7 +121,7 @@ describe('local library capabilities and selection', () => {
   it.each([{goal:'unknown'}, {audio:'auto'}, {ttsPreset:'missing'}, {review:'true'}, {ttsPreset:'$(touch foo)'}])('rejects invalid production choices: %j', production => {
     expect(() => createExports(catalog, {style: 'retro-zine', canvas: 'landscape', selected: ['paper-title'], production})).toThrow();
   });
-  it.each(['doubao', 'openai', 'elevenlabs', 'aliyun'])('exports the selected public TTS preset %s precisely without claiming it is enabled', id => {
+  it.each(['doubao', 'openai', 'elevenlabs', 'aliyun', 'minimax'])('exports the selected public TTS preset %s precisely without claiming it is enabled', id => {
     const preset = catalog.ttsPresets.find(item=>item.id === id);
     const value = createExports(catalog, {style:'retro-zine', canvas:'landscape', selected:['paper-title'], production:{...defaultProduction,ttsPreset:id}});
     expect(value.prompt).toContain(`provider=${preset.provider}`);
@@ -148,7 +148,7 @@ describe('local library capabilities and selection', () => {
   });
   it('publishes only allowlisted TTS example metadata, never credentials, local profiles or availability', async () => {
     const data=await (await fetch(`${base}/catalog.json`)).json();
-    expect(data.ttsPresets).toEqual(catalog.ttsPresets);expect(data.ttsPresets).toHaveLength(4);
+    expect(data.ttsPresets).toEqual(catalog.ttsPresets);expect(data.ttsPresets).toHaveLength(5);
     for(const preset of data.ttsPresets)expect(Object.keys(preset).sort()).toEqual(['id','model','name','provider','voice','voiceFromLocalConfig'].sort());
   });
 });

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0",
+  "enabled": false,
+  "provider": "minimax",
+  "endpoint": "https://api.minimax.cn/v1/t2a_v2",
+  "apiKeyEnv": "MINIMAX_API_KEY",
+  "model": "speech-2.8-hd",
+  "voiceType": "male-qn-qingse",
+  "format": "mp3",
+  "sampleRate": 32000,
+  "speedRatio": 1,
+  "volumeRatio": 1,
+  "pitchSemitones": 0,
+  "timeoutMs": 120000
+}
