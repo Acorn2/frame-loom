@@ -1,3 +1,7 @@
+import {checkTextLedText} from './text-led-text-layout.mjs';
+import {checkIllustratedText} from './illustrated-text-layout.mjs';
+import {checkBoardText} from './whiteboard-board-text-layout.mjs';
+import {checkWhiteboardText} from './whiteboard-text-layout.mjs';
 import {sceneRegions} from '../../src/layout/scene-layout.ts';
 import {checkP2Text} from './p2-text-layout.mjs';
 import {checkExpansionText} from './expansion-text-layout.mjs';
@@ -74,6 +78,10 @@ export function checkTextLayout(storyboard, style = loadStylePack(storyboard.sty
     const captionReserve = scene.shot ? (portrait ? 170 : 125) * scale : scene.captions.length > 0 ? (portrait ? 170 : 125) : 0;
     const contentHeight = height - safeArea.top - safeArea.bottom - captionReserve;
     issues.push(...checkP2Text(scene, estimateTextLines));
+    issues.push(...checkIllustratedText(scene, storyboard, style, estimateTextLines));
+    issues.push(...checkBoardText(scene, estimateTextLines));
+    issues.push(...checkTextLedText(scene, estimateTextLines));
+    issues.push(...checkWhiteboardText(scene, storyboard, style, estimateTextLines));
     issues.push(...checkExpansionText(scene, contentWidth / scale, contentHeight / scale, estimateTextLines));
     issues.push(...checkShortlistText(scene, contentWidth, contentHeight, scale, estimateTextLines));
     if (scene.visual) {

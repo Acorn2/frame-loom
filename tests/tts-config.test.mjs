@@ -90,6 +90,36 @@ describe('provider-aware TTS configuration', () => {
     expect(JSON.parse(fetch.mock.calls[0][1].body)).toMatchObject({previous_text: '之前', next_text: '之后'});
   });
 
+  it('maps Doubao 2.0 instructions to JSON-string additions while retaining other additions', async () => {
+    vi.stubEnv('FRAMELOOM_TEST_KEY', 'dummy'); vi.stubEnv('VOLC_TTS_RESOURCE_ID', 'seed-tts-2.0');
+    const fetch = vi.fn(async () => { throw new Error('capture'); }); vi.stubGlobal('fetch', fetch);
+    const config = TtsConfigSchema.parse({...base, provider: 'doubao', apiVersion: 'v3', endpoint: 'https://openspeech.bytedance.com/api/v3/tts/unidirectional', apiKeyEnv: 'FRAMELOOM_TEST_KEY', instructions: '语气沉稳，吐字清楚。', requestBody: {req_params: {additions: JSON.stringify({silence_duration: 100})}}});
+    await expect(synthesizeSpeech({text: '测试', config, outputPath: path.join(project, 'unused')})).rejects.toThrow('capture');
+    const params = JSON.parse(fetch.mock.calls[0][1].body).req_params;
+    expect(typeof params.additions).toBe('string');
+    expect(JSON.parse(params.additions)).toEqual({silence_duration: 100, context_texts: [config.instructions]});
+    expect(params).not.toHaveProperty('instructions');
+    expect(voiceCacheKey('测试', config)).not.toBe(voiceCacheKey('测试', {...config, instructions: '语气活泼。'}));
+    vi.stubEnv('VOLC_TTS_RESOURCE_ID', 'seed-tts-1.0'); fetch.mockClear();
+    await expect(synthesizeSpeech({text: '测试', config, outputPath: path.join(project, 'unused')})).rejects.toThrow(/只接入 seed-tts-2.0/);
+    expect(fetch).not.toHaveBeenCalled();
+    writeProfile('tts-config.json', config);
+    expect(inspectTtsProfiles(project)[0].status).toBe('needs-environment');
+  });
+
+  it.each([
+    {instructions: '沉稳'},
+    {apiVersion: 'v3', apiKeyEnv: 'KEY', appIdEnv: 'APP'},
+    {apiVersion: 'v3', requestBody: {req_params: {additions: {context_texts: ['沉稳']}}}},
+    {apiVersion: 'v3', requestBody: {req_params: {additions: 'private invalid JSON'}}},
+    {apiVersion: 'v3', requestBody: {req_params: {additions: '[]'}}},
+    {apiVersion: 'v3', requestBody: {req_params: {additions: '{"context_texts":["沉稳","活泼"]}'}}},
+    {apiVersion: 'v3', instructions: '沉稳', requestBody: {req_params: {additions: '{"context_texts":["活泼"]}'}}},
+    {apiVersion: 'v3', requestBody: {req_params: {audio_params: {enable_subtitle: 'true'}}}}
+  ])('rejects unsupported or conflicting Doubao instructions and credentials: %j', fields => {
+    expect(TtsConfigSchema.safeParse({...base, provider: 'doubao', ...fields}).success).toBe(false);
+  });
+
   it('reports every profile without exposing credentials or hiding a good profile behind a bad one', () => {
     writeProfile('tts-config.json', {...base, provider: 'openai', apiKeyEnv: 'FRAMELOOM_TEST_KEY'});
     writeProfile('tts-config.missing.json', {schemaVersion: '1.0', enabled: true, provider: 'openai', voiceTypeEnv: 'FRAMELOOM_TEST_VOICE', apiKeyEnv: 'FRAMELOOM_TEST_KEY'});

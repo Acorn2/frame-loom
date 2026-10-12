@@ -980,7 +980,9 @@
           "minLength": 1
         },
         "instructions": {
-          "not": {}
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
         },
         "language": {
           "not": {}
@@ -1239,6 +1241,28 @@
           "pitchRatio": {
             "const": 1
           }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "provider": {
+            "const": "doubao"
+          },
+          "apiVersion": {
+            "const": "generic"
+          }
+        },
+        "required": [
+          "provider"
+        ]
+      },
+      "then": {
+        "not": {
+          "required": [
+            "instructions"
+          ]
         }
       }
     },

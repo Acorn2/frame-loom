@@ -76,6 +76,41 @@
               "tts",
               "external"
             ]
+          },
+          "speechWords": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "startSec": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "endSec": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "text",
+                "startSec",
+                "endSec"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "captionTimingSource": {
+            "type": "string",
+            "enum": [
+              "provider",
+              "estimated",
+              "manual"
+            ]
           }
         },
         "required": [
@@ -115,7 +150,9 @@
       "type": "string",
       "enum": [
         "estimated",
-        "manual"
+        "manual",
+        "provider",
+        "mixed"
       ]
     },
     "notes": {

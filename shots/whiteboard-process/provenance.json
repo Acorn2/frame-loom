@@ -1,0 +1,23 @@
+{
+  "id": "whiteboard-process",
+  "mode": "method-reference",
+  "repository": "https://github.com/trustfuture/simon-skills",
+  "commit": "3ad0a25127c17da48a0e869c9efbf4136c40848b",
+  "recipe": "skills/whiteboard-video/SKILL.md",
+  "implementation": "FrameLoom independent React/SVG implementation",
+  "upstreamLicense": "MIT",
+  "implementationLicense": "MIT",
+  "notice": "方法参考；未复制上游代码、字体、图像或脚本运行时。",
+  "retained": [
+    "固定种子手绘路径",
+    "轮廓先于文字",
+    "单笔逐项讲解"
+  ],
+  "omitted": [
+    "上游 JavaScript DSL 与 Playwright 渲染链",
+    "自动压缩绘制时间",
+    "自动生成主体素材",
+    "发布与品牌 CTA"
+  ],
+  "externalAttribution": "主体素材仍需单独登记来源与许可。"
+}

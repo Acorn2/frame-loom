@@ -6,6 +6,7 @@ import {AssetManifestSchema} from '../src/schemas/asset-manifest.ts';
 import {ProjectInputSchema} from '../src/schemas/project-input.ts';
 import {StoryboardSchema} from '../src/schemas/storyboard.ts';
 import {resolvePaletteEvidence} from './lib/project-palette.mjs';
+import {generatedAssetIssues} from './lib/illustrations.mjs';
 
 function isInsideDirectory(directory, candidate) {
   const relative = path.relative(directory, candidate);
@@ -50,12 +51,16 @@ export function validateAssets(storyboardPath, manifestPath) {
     return scene.layers.filter((layer) => ['screenshot', 'object'].includes(layer.type));
   });
   if (projectInput?.inputMode === 'document') {
-    if (mediaLayers.length > 0 || manifest.assets.some((asset) => ['image', 'screenshot'].includes(asset.type) && asset.usage !== 'palette-reference')) {
-      issues.push('project-input.inputMode 为 document：不能使用图片或截图；如需使用，请由用户选择 document-images。');
+    const generated = new Set(manifest.assets.filter(asset => asset.generation).map(asset => path.resolve(path.dirname(resolvedManifest), asset.path)));
+    const canIllustrate = projectInput.illustrationPolicy === 'generated-subjects-v1';
+    if (mediaLayers.some(layer => !canIllustrate || layer.type !== 'object' || !layer.asset || !generated.has(path.resolve(path.dirname(resolvedStoryboard), layer.asset)))
+      || manifest.assets.some(asset => ['image', 'screenshot'].includes(asset.type) && asset.usage !== 'palette-reference' && (!canIllustrate || !asset.generation))) {
+      issues.push('project-input.inputMode 为 document：不能使用图片或截图，除显式生图策略下已登记的生成主体；真实素材需选择 document-images。');
     }
   } else if (projectInput?.inputMode === 'document-images' && visibleMediaLayers.length === 0) {
     issues.push('project-input.inputMode 为 document-images：分镜至少需要一个可见的图片或截图镜头；Storyboard 2.2 请使用 media purpose。');
   }
+  issues.push(...generatedAssetIssues(path.dirname(resolvedStoryboard), storyboard, manifest, projectInput));
 
   if (projectInput?.colorMode === 'style' && storyboard.palette) issues.push('colorMode 为 style：不能同时启用项目配色。');
   if (projectInput?.palettePolicy === 'source-roles-v1' && storyboard.palette && storyboard.palette.schemaVersion !== '1.1') issues.push('source-roles-v1：新项目必须使用 palette 1.1，完整记录背景、文字、表面及强调色；不能只替换强调色。');

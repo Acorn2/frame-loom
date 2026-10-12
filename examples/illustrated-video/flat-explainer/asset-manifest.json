@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "id": "organizer",
+      "path": "assets/organizer-v2.png",
+      "type": "image",
+      "source": "AI-generated illustration; imagegen; illustration-plan.json#organizer; source claim: source.md: 整理主张与关系，再编排可见解释",
+      "license": "AI-generated output; use subject to image provider terms; not a factual photograph or official interface",
+      "intendedUse": "主体介绍与资料编排示意；虚构讲解人物",
+      "usage": "scene-media",
+      "generation": {
+        "tool": "imagegen",
+        "style": {
+          "id": "flat-explainer",
+          "version": "1.0.0"
+        },
+        "planId": "organizer",
+        "planHash": "23d429dec4bbb0eb8bd82a8bffca261f8ab8e5afb77b617ee0ad5f9033125020",
+        "promptHash": "95e451e012087942d17d1141dd257645ea82bafc4c0dc8e54b9d9122693f60fe",
+        "fileHash": "dcb2dc53395d6adcb3367d6f7de59620a98adc8590142b1eb4338b4374a42c72",
+        "review": {
+          "reviewer": "Codex: inspected native output, subject medium and complete geometry",
+          "reviewedAt": "2026-10-11T11:08:18.653Z"
+        }
+      }
+    },
+    {
+      "id": "loose-papers",
+      "path": "assets/loose-papers-v2.png",
+      "type": "image",
+      "source": "AI-generated illustration; imagegen; illustration-plan.json#loose-papers; source claim: source.md: 三份示意资料的整理过程，不代表真实业务指标",
+      "license": "AI-generated output; use subject to image provider terms; not a factual photograph or official interface",
+      "intendedUse": "展示尚未整理的资料",
+      "usage": "scene-media",
+      "generation": {
+        "tool": "imagegen",
+        "style": {
+          "id": "flat-explainer",
+          "version": "1.0.0"
+        },
+        "planId": "loose-papers",
+        "planHash": "5a60a949c87e3cb64a844510ca3f05a3ed5c7c97c5277d1c07ee0460a48b65d2",
+        "promptHash": "8bc362dd5fad6adaeef9eb121580a4c4c9d70f9fca8a539a5fd48f8a9652a177",
+        "fileHash": "8deb0f810de0ef1b80d589195d1f97972da36b39b9623ec53d942acf2e81d6c8",
+        "review": {
+          "reviewer": "Codex: inspected native output, media matches the person and all papers intact",
+          "reviewedAt": "2026-10-11T11:08:38.532Z"
+        }
+      }
+    },
+    {
+      "id": "organized-folder",
+      "path": "assets/organized-folder-v2.png",
+      "type": "image",
+      "source": "AI-generated illustration; imagegen; illustration-plan.json#organized-folder; source claim: source.md: 三份示意资料的整理过程，不代表真实业务指标",
+      "license": "AI-generated output; use subject to image provider terms; not a factual photograph or official interface",
+      "intendedUse": "展示完成编排的资料",
+      "usage": "scene-media",
+      "generation": {
+        "tool": "imagegen",
+        "style": {
+          "id": "flat-explainer",
+          "version": "1.0.0"
+        },
+        "planId": "organized-folder",
+        "planHash": "5dd9960a7b63b805c7b87aab05149be63e65d3b1c79254568c10998afa433211",
+        "promptHash": "9253a9b079334f12c4e46b90c56d0da8998b7f30a3fe52354efdd518a8b42d94",
+        "fileHash": "047dcd7d1b7cbf258331611d4e4e91e996a5635c5e7ae5423ed347eb3b6c814d",
+        "review": {
+          "reviewer": "Codex: inspected native cartoon output and complete folder",
+          "reviewedAt": "2026-10-11T11:10:01.862Z"
+        }
+      }
+    },
+    {
+      "id": "curious-family",
+      "path": "assets/curious-family.png",
+      "type": "image",
+      "usage": "scene-media",
+      "source": "AI-generated illustration; imagegen; illustration-plan.json#curious-family; source claim: source.md: 好问题，从观察开始；一起观察，也一起提问",
+      "license": "AI-generated output; use subject to image provider terms; not a factual photograph or official interface",
+      "intendedUse": "三套主风格同内容对照：亲子共同观察、比较与提问；虚构角色",
+      "generation": {
+        "tool": "imagegen",
+        "style": {
+          "id": "flat-explainer",
+          "version": "1.0.0"
+        },
+        "planId": "curious-family",
+        "planHash": "5204c971d3aa32915256aa08cfec218c5114f1497849dbdda1a0a33b541e3c54",
+        "promptHash": "e9dddf94c6f7715136a97c169c006e6013c852bd54972a1b7ee8436f48bba944",
+        "fileHash": "97501f3b0326431bf88736eeb09dc18172154a4a6212c4e56b8c52586e5689c0",
+        "review": {
+          "reviewer": "Codex",
+          "reviewedAt": "2026-10-12T06:59:04.060Z"
+        }
+      }
+    }
+  ]
+}

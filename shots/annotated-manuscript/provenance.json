@@ -1,0 +1,18 @@
+{
+  "id": "annotated-manuscript",
+  "mode": "native",
+  "source": "FrameLoom original design; user-approved text-first studies",
+  "implementation": "src/shots/text-led/TextLedScene.tsx",
+  "implementationLicense": "MIT",
+  "notice": "Original implementation. No upstream scene code copied.",
+  "retained": [
+    "文案优先",
+    "有限阶段",
+    "明确来源"
+  ],
+  "omitted": [
+    "样例文案依赖",
+    "外部脚本执行"
+  ],
+  "externalAttribution": "Illustration and font sources recorded separately."
+}

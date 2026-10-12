@@ -1,0 +1,75 @@
+{
+  "id": "whiteboard-board",
+  "version": "1.2.0",
+  "status": "experimental",
+  "registered": true,
+  "visualKinds": [
+    "statement",
+    "compare",
+    "sequence",
+    "network",
+    "change",
+    "metric"
+  ],
+  "purpose": "开放白板逐笔讲解",
+  "inputModes": [
+    "document-only",
+    "document-with-assets"
+  ],
+  "requiredAssets": [],
+  "styles": [
+    "whiteboard"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "slots": {
+    "items": {
+      "min": 2,
+      "max": 24,
+      "labelMax": 42
+    }
+  },
+  "timing": {
+    "actions": {
+      "reveal": {
+        "minSec": 0.35,
+        "maxSec": 8
+      },
+      "draw": {
+        "minSec": 0.35,
+        "maxSec": 4
+      }
+    },
+    "readingSec": 1.2,
+    "titleHoldSec": 0.6,
+    "sourceHoldSec": 0.6,
+    "itemHoldSec": 0.12
+  },
+  "motion": {
+    "recipeOwned": [
+      "natural-writing",
+      "single-pen",
+      "explicit-board-geometry",
+      "sticker-wipe",
+      "rough-stroke-pairs"
+    ],
+    "styleOwned": [
+      "palette",
+      "font-family",
+      "pencil",
+      "dot-paper"
+    ],
+    "continuousDrift": false
+  },
+  "qa": [
+    "action-mid",
+    "action-complete",
+    "complete",
+    "before-handoff"
+  ],
+  "sound": {
+    "enabled": false,
+    "events": []
+  }
+}

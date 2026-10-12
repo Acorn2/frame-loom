@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0",
+  "style": {
+    "id": "whiteboard",
+    "version": "1.0.0"
+  },
+  "assets": [
+    {
+      "id": "organizer",
+      "path": "assets/organizer.png",
+      "subject": "A friendly young adult with short dark hair and a blue shirt actively organizing three large document sheets and a yellow sticky note on a small desk. Waist-up three-quarter view, expressive attentive face, both hands clearly visible. Papers have simple abstract shapes only. One coherent isolated person-and-desk subject, no surroundings.",
+      "purpose": "主体介绍与资料编排示意；虚构讲解人物",
+      "sourceClaim": "source.md: 整理主张与关系，再编排可见解释"
+    },
+    {
+      "id": "loose-papers",
+      "path": "assets/loose-papers.png",
+      "subject": "Three overlapping loose document sheets in a disorganized pile, simple abstract bars on pages, one small yellow sticky note. Isolated coherent object.",
+      "purpose": "展示尚未整理的资料",
+      "sourceClaim": "source.md: 三份示意资料的整理过程，不代表真实业务指标"
+    },
+    {
+      "id": "organized-folder",
+      "path": "assets/organized-folder.png",
+      "subject": "A single blue open folder containing three neatly arranged document sheets and one small yellow tab. Simple abstract marks only. Isolated coherent object.",
+      "purpose": "展示完成编排的资料",
+      "sourceClaim": "source.md: 三份示意资料的整理过程，不代表真实业务指标"
+    }
+  ]
+}

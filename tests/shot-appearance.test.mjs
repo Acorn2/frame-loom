@@ -6,7 +6,7 @@ import {captionTextStyle} from '../src/audio/caption-style.ts';
 import {SHOT_CATALOG, PREVIOUS_SHOT_CATALOG} from '../src/shots/catalog.ts';
 import {sceneAuxiliaries} from '../src/shots/auxiliary-catalog.ts';
 import {resolveProductionLock} from '../scripts/lib/production-lock.mjs';
-const fixture=id=>JSON.parse(fs.readFileSync(`examples/shot-recipes/${id}/storyboard.json`,'utf8'));
+const fixture=id=>JSON.parse(fs.readFileSync(['annotated-manuscript', 'editorial-flow'].includes(id) ? `examples/text-led-video/${id === 'annotated-manuscript' ? 'annotated-reasoning' : 'editorial-typography'}/study-storyboard.json` : id === 'whiteboard-board' ? 'examples/whiteboard-reference/storyboard.json' : id.startsWith('illustrated-') ? `examples/illustrated-video/whiteboard/${id}.json` : `examples/shot-recipes/${id}/storyboard.json`,'utf8'));
 const luminance=hex=>{const rgb=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);return rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722;};
 const contrast=(a,b)=>{const x=luminance(a),y=luminance(b);return(Math.max(x,y)+.05)/(Math.min(x,y)+.05);};
 describe('recipe visual treatments',()=>{
@@ -21,6 +21,7 @@ describe('recipe visual treatments',()=>{
   const base=getDefaultStyleTokens();const before=JSON.stringify(base);const backgrounds=new Set();let dark=0,light=0;
   for(const entry of SHOT_CATALOG){
    const board=fixture(entry.id);const source=JSON.stringify(board);const appearance=recipeAppearance(board.scenes[0].shot,base);
+   if (entry.id.startsWith('whiteboard-') || entry.id.startsWith('illustrated-') || ['annotated-manuscript', 'editorial-flow'].includes(entry.id)) {expect(appearance.tokens).toBe(base);expect(appearance.background).toBe(base.background);expect(JSON.stringify(board)).toBe(source);continue;}
    expect(contrast(appearance.tokens.ink,appearance.tokens.paper)).toBeGreaterThanOrEqual(7);
    expect(contrast(appearance.tokens.muted,appearance.tokens.paper)).toBeGreaterThanOrEqual(4.5);
    expect(contrast(captionTextStyle(appearance.tokens).color,appearance.tokens.background)).toBeGreaterThanOrEqual(4.5);

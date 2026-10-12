@@ -1,0 +1,89 @@
+{
+  "id": "annotated-reasoning",
+  "version": "1.0.0",
+  "tokens": {
+    "background": "#ffffff",
+    "ink": "#262c35",
+    "captionInk": "#43516a",
+    "muted": "#5d6877",
+    "accent": "#386bb0",
+    "accentAlt": "#de7969",
+    "paper": "#ffffff",
+    "grid": "#dde2e7",
+    "displayFont": "\"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+    "bodyFont": "\"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+    "pattern": "solid",
+    "surfaceRadius": 0,
+    "surfaceBorder": "none",
+    "surfaceShadow": "none",
+    "labelRadius": 8,
+    "titleFontSize": 76
+  },
+  "safeArea": {
+    "landscape": {
+      "top": 96,
+      "right": 110,
+      "bottom": 48,
+      "left": 110
+    },
+    "portrait": {
+      "top": 128,
+      "right": 72,
+      "bottom": 144,
+      "left": 72
+    }
+  },
+  "supports": {
+    "purposes": [
+      "opening",
+      "claim",
+      "process",
+      "evidence",
+      "media",
+      "closing"
+    ],
+    "templates": [
+      "statement",
+      "graph-explainer",
+      "metric-grid",
+      "interaction-flow"
+    ],
+    "layers": [
+      "label",
+      "card",
+      "annotation",
+      "metric",
+      "node",
+      "screenshot",
+      "object",
+      "callout"
+    ],
+    "actions": [
+      "enter",
+      "reveal",
+      "draw",
+      "focus",
+      "highlight",
+      "count",
+      "camera-push",
+      "rotate",
+      "set-state",
+      "trace"
+    ],
+    "transitions": [
+      "fade",
+      "slide",
+      "paper-wipe",
+      "carry"
+    ],
+    "overlapTransitions": [
+      "overlap-fade",
+      "overlap-slide",
+      "overlap-carry"
+    ]
+  },
+  "provenance": {
+    "fonts": "System stack for raw samples; explicit fingerprinted storyboard.font overrides all generated text.",
+    "assets": "Independent generated subjects registered with prompt, image fingerprints and review; source screenshots are never generated."
+  }
+}

@@ -3,6 +3,7 @@ import {recipeDisplayText, previewStatusText} from './presentation.mjs';
 import {releaseVideo} from './playback.mjs';
 
 import {recipeSections, recipeOverview, portableRecipe} from './recipe-copy.mjs';
+import {isFixedStyle} from './style-policy.mjs';
 export {recipeSections, recipeOverview} from './recipe-copy.mjs';
 
 const byId = id => document.getElementById(id);
@@ -23,7 +24,7 @@ function sectionBlock(parent, title, lines) {
 }
 const clock = seconds => `${Math.floor((seconds || 0) / 60)}:${String(Math.floor((seconds || 0) % 60)).padStart(2, '0')}`;
 
-export function createDetailView({selected, available, styleName, onSelect, onVariant, onToast, onClose}) {
+export function createDetailView({selected, available, styleName, onSelect, onVariant, onToast, onClose, canPickRecipe = () => true}) {
   const dialog = byId('detail'); let current; let isStyle = false;
   const media = () => byId('detail-media').querySelector('video');
   function fitPortraitMedia() {
@@ -66,12 +67,13 @@ export function createDetailView({selected, available, styleName, onSelect, onVa
   }
   function refreshSelection() {
     if (!current) return;
-    const selectable = isStyle || current.kind === 'scene';
+    const locked = !isStyle && !canPickRecipe();
+    const selectable = isStyle || current.kind === 'scene' && !locked;
     const canSelect = available(current, isStyle); const isSelected = selected(current, isStyle);
     byId('detail-select').hidden = !selectable; byId('detail-select').disabled = !canSelect;
     byId('detail-select').setAttribute('aria-pressed', String(isSelected));
     byId('detail-select').textContent = !canSelect ? '当前组合不兼容' : isSelected ? (isStyle ? '✓ 已选风格' : '✓ 已选镜头') : isStyle ? '使用此风格' : '选择镜头';
-    byId('detail-selection-note').textContent = isStyle ? '选择风格后，再挑选适合内容的镜头。' : !selectable ? (current.kind === 'hosted-action' ? '辅助动作依附于宿主镜头，由 Agent 按条件编排。' : '转场用于章节交接，不单独计入镜头集合。') : !canSelect ? '此镜头不支持当前风格或画幅，可调整组合后选择。' : isSelected ? '已加入制作组合，可重复使用。' : '按内容选择，Agent 会安排镜头顺序与时长。';
+    byId('detail-selection-note').textContent = isStyle ? isFixedStyle(current.id) ? '镜头随风格固定，选择后可直接前往制作组合。' : '选择风格后，再挑选适合内容的镜头。' : locked ? '当前风格使用内置镜头流程，此处仅供查看，不加入手动集合。' : !selectable ? (current.kind === 'hosted-action' ? '辅助动作依附于宿主镜头，由 Agent 按条件编排。' : '转场用于章节交接，不单独计入镜头集合。') : !canSelect ? '此镜头不支持当前风格或画幅，可调整组合后选择。' : isSelected ? '已加入制作组合，可重复使用。' : '按内容选择，Agent 会安排镜头顺序与时长。';
   }
   function show(item, style = false) {
     clearMedia(); current = item; isStyle = style;

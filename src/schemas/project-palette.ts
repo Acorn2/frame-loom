@@ -2,7 +2,7 @@ import {z} from 'zod';
 import {luminance, rgb} from '../styles/colors';
 
 const HexColorSchema = z.string().regex(/^#[0-9a-fA-F]{6}$/, '颜色必须为六位十六进制色值。');
-export const PROJECT_PALETTE_STYLES = ['retro-zine', 'archive-grid', 'scatterbrain', 'signal', 'signal-noir', 'studio-frame'] as const;
+export const PROJECT_PALETTE_STYLES = ['retro-zine', 'archive-grid', 'scatterbrain', 'signal', 'signal-noir', 'studio-frame', 'whiteboard', 'flat-explainer', 'paper-collage', 'annotated-reasoning', 'editorial-typography'] as const;
 function neutral(hex: string): boolean {
   const channels = rgb(hex);
   return Math.max(...channels) - Math.min(...channels) <= 32;

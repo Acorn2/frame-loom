@@ -3,6 +3,9 @@ import type {StyleTokens} from '../styles/style-loader';
 import type {Storyboard} from '../schemas/storyboard';
 import {getSceneTimeline} from '../timeline/scene-timeline';
 import {resolveProjectPalette} from '../styles/project-palette';
+import {isTextLedShot} from './text-led/schema';
+import {isIllustratedShot} from './illustrated/schema';
+import {isWhiteboardShot} from './whiteboard/schema';
 
 // Neutral stages replace warm paper across all current recipe samples.
 // Default styles retain accent families; explicit project palettes take precedence.
@@ -52,6 +55,8 @@ function luminance(hex: string) {
   return r! * .2126 + g! * .7152 + b! * .0722;
 }
 export function recipeAppearance(shot: Shot, base: StyleTokens): RecipeAppearance | undefined {
+  if (isTextLedShot(shot) || shot.id === 'whiteboard-board' || isWhiteboardShot(shot) || isIllustratedShot(shot)) return {visual: 'diagram', dark: luminance(base.background) < .15,
+    background: base.background, stageInk: base.ink, stageMuted: base.muted, lineInk: base.accentAlt, decoration: 'none', tokens: base};
   const native = ['semantic-default', 'compare-reveal', 'network-expand'].includes(shot.id);
   if ((native ? shot.version !== '1.0.0' : shot.version !== '1.2.0') || !(shot.id in RECIPE_VISUALS)) return undefined;
   const visual = RECIPE_VISUALS[shot.id as keyof typeof RECIPE_VISUALS];

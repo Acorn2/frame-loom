@@ -12,6 +12,14 @@
   "sampleRate": 24000,
   "speedRatio": 1,
   "volumeRatio": 1,
+  "requestBody": {
+    "req_params": {
+      "audio_params": {
+        "enable_timestamp": true,
+        "enable_subtitle": true
+      }
+    }
+  },
   "outputDirectory": "audio/generated",
   "timeoutMs": 30000
 }

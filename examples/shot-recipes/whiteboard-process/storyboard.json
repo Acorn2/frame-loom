@@ -1,0 +1,149 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "whiteboard-process",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "逐笔流程",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 14.4,
+    "durationFrames": 432,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "whiteboard-process",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "逐笔流程",
+      "primaryClaim": "按来源顺序画出节点、文字与连接，解释两到四步流程。",
+      "visual": {
+        "kind": "sequence",
+        "explanation": "FrameLoom 自写流程示意，不代表实际用户数据",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "whiteboard-process",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "a",
+            "b",
+            "c"
+          ]
+        }
+      },
+      "narration": "按来源顺序画出节点、文字与连接，解释两到四步流程。",
+      "durationFrames": 432,
+      "layers": [
+        {
+          "id": "a",
+          "type": "node",
+          "label": "原文",
+          "text": "保留来源与主张"
+        },
+        {
+          "id": "b",
+          "type": "node",
+          "label": "编排",
+          "text": "解释步骤和关系"
+        },
+        {
+          "id": "c",
+          "type": "node",
+          "label": "成片",
+          "text": "检查画面与阅读时间"
+        }
+      ],
+      "connections": [
+        {
+          "id": "ab",
+          "from": "a",
+          "to": "b"
+        },
+        {
+          "id": "bc",
+          "from": "b",
+          "to": "c"
+        }
+      ],
+      "beats": [
+        {
+          "id": "a-trace",
+          "target": "a",
+          "action": "trace",
+          "start": 0,
+          "duration": 30
+        },
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 30,
+          "duration": 45
+        },
+        {
+          "id": "b-trace",
+          "target": "b",
+          "action": "trace",
+          "start": 90,
+          "duration": 30
+        },
+        {
+          "id": "b-reveal",
+          "target": "b",
+          "action": "reveal",
+          "start": 120,
+          "duration": 45
+        },
+        {
+          "id": "ab-draw",
+          "target": "ab",
+          "action": "draw",
+          "start": 175,
+          "duration": 30
+        },
+        {
+          "id": "c-trace",
+          "target": "c",
+          "action": "trace",
+          "start": 220,
+          "duration": 30
+        },
+        {
+          "id": "c-reveal",
+          "target": "c",
+          "action": "reveal",
+          "start": 250,
+          "duration": 45
+        },
+        {
+          "id": "bc-draw",
+          "target": "bc",
+          "action": "draw",
+          "start": 305,
+          "duration": 30
+        },
+        {
+          "id": "c-highlight",
+          "target": "c",
+          "action": "highlight",
+          "start": 348,
+          "duration": 30
+        }
+      ],
+      "captions": []
+    }
+  ],
+  "layoutPolicy": "content-first-v1"
+}

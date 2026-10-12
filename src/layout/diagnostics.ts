@@ -4,7 +4,7 @@ export const LAYOUT_LOG_PREFIX = 'FRAME_LOOM_LAYOUT ';
 export interface LayoutIssue {severity: 'warning' | 'error'; sceneId: string; frame: number; code: string; message: string}
 export interface TextBox {rect: Rect; text: string; group: number; container?: Rect; clipped?: boolean}
 export interface ImageBox {rect: Rect; source: {width: number; height: number}; fit: string; focused: boolean}
-export interface SceneMeasurement {sceneId: string; frame: number; stable: boolean; content: Rect; texts: TextBox[]; images: ImageBox[]; nodes: Rect[]}
+export interface SceneMeasurement {sceneId: string; frame: number; stable: boolean; content: Rect; texts: TextBox[]; images: ImageBox[]; nodes: Rect[]; brand?: Rect}
 
 function outside(rect: Rect, area: Rect, tolerance = 3) {
   return rect.x < area.x - tolerance || rect.y < area.y - tolerance
@@ -15,6 +15,7 @@ export function analyzeMeasurement(value: SceneMeasurement) {
   const issues: LayoutIssue[] = [];
   const add = (code: string, message: string, hard = false) => issues.push({sceneId: value.sceneId, frame: value.frame, code, message, severity: hard && value.stable ? 'error' : 'warning'});
   for (const text of value.texts) {
+    if (value.brand && overlaps(text.rect, value.brand)) add('brand-overlap', `正文与右上角品牌标识相互遮挡：${text.text}`, true);
     if (text.clipped || outside(text.rect, value.content) || (text.container && outside(text.rect, text.container))) add('text-clipped', `文字超出可读区域：${text.text} (${text.clipped ? '来源遮罩裁切' : '槽位边界'}, x=${Math.round(text.rect.x)}, y=${Math.round(text.rect.y)}, w=${Math.round(text.rect.width)}, h=${Math.round(text.rect.height)})`, true);
   }
   for (let i = 0; i < value.texts.length; i++) for (let j = i + 1; j < value.texts.length; j++) {
@@ -26,6 +27,7 @@ export function analyzeMeasurement(value: SceneMeasurement) {
   }
   const images = value.images.map(image => {
     const visible = image.fit === 'contain' ? containedImage(image.source, image.rect) : image.rect;
+    if (value.brand && overlaps(visible, value.brand)) add('brand-overlap', '来源图片与右上角品牌标识相互遮挡', true);
     const areaFraction = visible.width * visible.height / (value.content.width * value.content.height);
     const maximum = containedImage(image.source, value.content);
     const fitUtilization = visible.width * visible.height / (maximum.width * maximum.height);

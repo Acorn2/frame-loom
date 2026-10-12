@@ -1,0 +1,684 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "annotated-reasoning",
+    "version": "1.0.0"
+  },
+  "font": {
+    "id": "source-han-serif-sc",
+    "version": "2.003"
+  },
+  "shotRecipes": [
+    {
+      "id": "annotated-manuscript",
+      "version": "1.2.0"
+    },
+    {
+      "id": "semantic-default",
+      "version": "1.0.0"
+    }
+  ],
+  "layoutPolicy": "content-first-v1",
+  "project": {
+    "title": "资料多，不等于讲得清楚",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 26,
+    "durationFrames": 780,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "text-led-study",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "资料多，不等于讲得清楚",
+      "narration": "资料多，不等于讲得清楚。先明确问题，围绕什么来讲？再核对来源，这句话从哪里来？最后连接证据与结论，解释要有依据。",
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "资料多，不等于讲得清楚"
+        },
+        {
+          "id": "illustration",
+          "type": "object",
+          "label": "资料编排者",
+          "asset": "assets/researcher.png",
+          "fit": "contain"
+        },
+        {
+          "id": "question",
+          "type": "node",
+          "label": "先明确问题"
+        },
+        {
+          "id": "source",
+          "type": "node",
+          "label": "再核对来源"
+        },
+        {
+          "id": "last-prefix",
+          "type": "node",
+          "label": "最后连接"
+        },
+        {
+          "id": "evidence",
+          "type": "node",
+          "label": "证据"
+        },
+        {
+          "id": "and",
+          "type": "node",
+          "label": "与"
+        },
+        {
+          "id": "conclusion",
+          "type": "node",
+          "label": "结论"
+        },
+        {
+          "id": "question-note",
+          "type": "node",
+          "label": "围绕什么来讲？"
+        },
+        {
+          "id": "source-note",
+          "type": "node",
+          "label": "这句话从哪里来？"
+        },
+        {
+          "id": "evidence-note",
+          "type": "node",
+          "label": "解释要有依据"
+        },
+        {
+          "id": "data",
+          "type": "node",
+          "label": "资料"
+        },
+        {
+          "id": "foot-evidence",
+          "type": "node",
+          "label": "证据"
+        },
+        {
+          "id": "foot-conclusion",
+          "type": "node",
+          "label": "结论"
+        }
+      ],
+      "connections": [
+        {
+          "id": "q-note",
+          "from": "question",
+          "to": "question-note"
+        },
+        {
+          "id": "s-note",
+          "from": "source",
+          "to": "source-note"
+        },
+        {
+          "id": "e-note",
+          "from": "conclusion",
+          "to": "evidence-note"
+        },
+        {
+          "id": "support",
+          "from": "evidence",
+          "to": "conclusion"
+        },
+        {
+          "id": "data-evidence",
+          "from": "data",
+          "to": "foot-evidence"
+        },
+        {
+          "id": "evidence-conclusion",
+          "from": "foot-evidence",
+          "to": "foot-conclusion"
+        }
+      ],
+      "beats": [
+        {
+          "id": "title-reveal",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "illustration-reveal",
+          "target": "illustration",
+          "action": "reveal",
+          "start": 24,
+          "duration": 18
+        },
+        {
+          "id": "question-reveal",
+          "target": "question",
+          "action": "reveal",
+          "start": 24,
+          "duration": 18
+        },
+        {
+          "id": "source-reveal",
+          "target": "source",
+          "action": "reveal",
+          "start": 24,
+          "duration": 18
+        },
+        {
+          "id": "last-prefix-reveal",
+          "target": "last-prefix",
+          "action": "reveal",
+          "start": 24,
+          "duration": 18
+        },
+        {
+          "id": "evidence-reveal",
+          "target": "evidence",
+          "action": "reveal",
+          "start": 24,
+          "duration": 18
+        },
+        {
+          "id": "and-reveal",
+          "target": "and",
+          "action": "reveal",
+          "start": 24,
+          "duration": 18
+        },
+        {
+          "id": "conclusion-reveal",
+          "target": "conclusion",
+          "action": "reveal",
+          "start": 24,
+          "duration": 18
+        },
+        {
+          "id": "question-note-reveal",
+          "target": "question-note",
+          "action": "reveal",
+          "start": 160,
+          "duration": 18
+        },
+        {
+          "id": "source-note-reveal",
+          "target": "source-note",
+          "action": "reveal",
+          "start": 350,
+          "duration": 18
+        },
+        {
+          "id": "evidence-note-reveal",
+          "target": "evidence-note",
+          "action": "reveal",
+          "start": 568,
+          "duration": 18
+        },
+        {
+          "id": "question-highlight",
+          "target": "question",
+          "action": "highlight",
+          "start": 126,
+          "duration": 32
+        },
+        {
+          "id": "source-highlight",
+          "target": "source",
+          "action": "highlight",
+          "start": 310,
+          "duration": 36
+        },
+        {
+          "id": "evidence-highlight",
+          "target": "evidence",
+          "action": "highlight",
+          "start": 492,
+          "duration": 26
+        },
+        {
+          "id": "conclusion-highlight",
+          "target": "conclusion",
+          "action": "highlight",
+          "start": 510,
+          "duration": 26
+        },
+        {
+          "id": "q-note-draw",
+          "target": "q-note",
+          "action": "draw",
+          "start": 184,
+          "duration": 30
+        },
+        {
+          "id": "s-note-draw",
+          "target": "s-note",
+          "action": "draw",
+          "start": 380,
+          "duration": 30
+        },
+        {
+          "id": "e-note-draw",
+          "target": "e-note",
+          "action": "draw",
+          "start": 595,
+          "duration": 30
+        },
+        {
+          "id": "support-draw",
+          "target": "support",
+          "action": "draw",
+          "start": 540,
+          "duration": 36
+        },
+        {
+          "id": "data-reveal",
+          "target": "data",
+          "action": "reveal",
+          "start": 24,
+          "duration": 18
+        },
+        {
+          "id": "foot-evidence-reveal",
+          "target": "foot-evidence",
+          "action": "reveal",
+          "start": 606,
+          "duration": 18
+        },
+        {
+          "id": "foot-conclusion-reveal",
+          "target": "foot-conclusion",
+          "action": "reveal",
+          "start": 632,
+          "duration": 18
+        },
+        {
+          "id": "data-evidence-draw",
+          "target": "data-evidence",
+          "action": "draw",
+          "start": 624,
+          "duration": 18
+        },
+        {
+          "id": "evidence-conclusion-draw",
+          "target": "evidence-conclusion",
+          "action": "draw",
+          "start": 654,
+          "duration": 18
+        }
+      ],
+      "captions": [
+        {
+          "id": "caption-0",
+          "start": 0,
+          "end": 120,
+          "text": "资料多，不等于讲得清楚"
+        },
+        {
+          "id": "caption-1",
+          "start": 120,
+          "end": 200,
+          "text": "先明确问题"
+        },
+        {
+          "id": "caption-2",
+          "start": 200,
+          "end": 300,
+          "text": "围绕什么来讲？"
+        },
+        {
+          "id": "caption-3",
+          "start": 300,
+          "end": 380,
+          "text": "再核对来源"
+        },
+        {
+          "id": "caption-4",
+          "start": 380,
+          "end": 480,
+          "text": "这句话从哪里来？"
+        },
+        {
+          "id": "caption-5",
+          "start": 480,
+          "end": 575,
+          "text": "最后连接证据与结论"
+        },
+        {
+          "id": "caption-6",
+          "start": 575,
+          "end": 700,
+          "text": "解释要有依据"
+        },
+        {
+          "id": "caption-7",
+          "start": 700,
+          "end": 780,
+          "text": "从资料到清晰解释"
+        }
+      ],
+      "shot": {
+        "id": "annotated-manuscript",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "title",
+            "illustration",
+            "question",
+            "source",
+            "last-prefix",
+            "evidence",
+            "and",
+            "conclusion",
+            "question-note",
+            "source-note",
+            "evidence-note",
+            "data",
+            "foot-evidence",
+            "foot-conclusion"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 110,
+            "y": 120,
+            "width": 1450,
+            "height": 110,
+            "fontSize": 76,
+            "weight": "semibold",
+            "align": "left",
+            "color": "ink",
+            "opacity": 1
+          },
+          "illustration": {
+            "kind": "sticker",
+            "x": 110,
+            "y": 580,
+            "width": 315,
+            "height": 300,
+            "fontSize": 28,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 1
+          },
+          "question": {
+            "kind": "text",
+            "x": 530,
+            "y": 335,
+            "width": 680,
+            "height": 100,
+            "fontSize": 70,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 1
+          },
+          "source": {
+            "kind": "text",
+            "x": 530,
+            "y": 505,
+            "width": 680,
+            "height": 100,
+            "fontSize": 70,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 1
+          },
+          "last-prefix": {
+            "kind": "text",
+            "x": 530,
+            "y": 675,
+            "width": 280,
+            "height": 100,
+            "fontSize": 70,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 1
+          },
+          "evidence": {
+            "kind": "text",
+            "x": 810,
+            "y": 675,
+            "width": 140,
+            "height": 100,
+            "fontSize": 70,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 1
+          },
+          "and": {
+            "kind": "text",
+            "x": 950,
+            "y": 675,
+            "width": 70,
+            "height": 100,
+            "fontSize": 70,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 1
+          },
+          "conclusion": {
+            "kind": "text",
+            "x": 1020,
+            "y": 675,
+            "width": 140,
+            "height": 100,
+            "fontSize": 70,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 1
+          },
+          "question-note": {
+            "kind": "text",
+            "x": 1450,
+            "y": 298,
+            "width": 350,
+            "height": 70,
+            "fontSize": 39,
+            "weight": "regular",
+            "align": "left",
+            "color": "accent",
+            "opacity": 1
+          },
+          "source-note": {
+            "kind": "text",
+            "x": 1450,
+            "y": 510,
+            "width": 350,
+            "height": 70,
+            "fontSize": 39,
+            "weight": "regular",
+            "align": "left",
+            "color": "accent",
+            "opacity": 1
+          },
+          "evidence-note": {
+            "kind": "text",
+            "x": 1450,
+            "y": 710,
+            "width": 350,
+            "height": 70,
+            "fontSize": 39,
+            "weight": "regular",
+            "align": "left",
+            "color": "accent",
+            "opacity": 1
+          },
+          "data": {
+            "kind": "text",
+            "x": 600,
+            "y": 832,
+            "width": 150,
+            "height": 60,
+            "fontSize": 44,
+            "weight": "regular",
+            "align": "left",
+            "color": "muted",
+            "opacity": 1
+          },
+          "foot-evidence": {
+            "kind": "text",
+            "x": 850,
+            "y": 832,
+            "width": 150,
+            "height": 60,
+            "fontSize": 44,
+            "weight": "regular",
+            "align": "left",
+            "color": "accent",
+            "opacity": 1
+          },
+          "foot-conclusion": {
+            "kind": "text",
+            "x": 1118,
+            "y": 832,
+            "width": 150,
+            "height": 60,
+            "fontSize": 44,
+            "weight": "regular",
+            "align": "left",
+            "color": "accent",
+            "opacity": 1
+          }
+        },
+        "annotations": {
+          "question": {
+            "phrase": "问题",
+            "kind": "underline",
+            "color": "accentAlt"
+          },
+          "source": {
+            "phrase": "来源",
+            "kind": "circle",
+            "color": "accentAlt"
+          },
+          "evidence": {
+            "phrase": "证据",
+            "kind": "underline",
+            "color": "accentAlt"
+          },
+          "conclusion": {
+            "phrase": "结论",
+            "kind": "underline",
+            "color": "accentAlt"
+          }
+        },
+        "routes": {
+          "q-note": {
+            "points": [
+              [
+                920,
+                377
+              ],
+              [
+                1180,
+                268
+              ],
+              [
+                1425,
+                325
+              ]
+            ],
+            "arrow": false
+          },
+          "s-note": {
+            "points": [
+              [
+                920,
+                555
+              ],
+              [
+                1200,
+                490
+              ],
+              [
+                1425,
+                533
+              ]
+            ],
+            "arrow": false
+          },
+          "e-note": {
+            "points": [
+              [
+                1190,
+                716
+              ],
+              [
+                1310,
+                682
+              ],
+              [
+                1425,
+                735
+              ]
+            ],
+            "arrow": false
+          },
+          "support": {
+            "points": [
+              [
+                870,
+                791
+              ],
+              [
+                975,
+                850
+              ],
+              [
+                1101,
+                792
+              ]
+            ],
+            "arrow": true
+          },
+          "data-evidence": {
+            "points": [
+              [
+                740,
+                870
+              ],
+              [
+                820,
+                870
+              ]
+            ],
+            "arrow": true
+          },
+          "evidence-conclusion": {
+            "points": [
+              [
+                990,
+                870
+              ],
+              [
+                1080,
+                870
+              ]
+            ],
+            "arrow": true
+          }
+        }
+      },
+      "durationFrames": 780,
+      "primaryClaim": "资料多，不等于讲得清楚",
+      "visual": {
+        "kind": "network",
+        "representation": "diagram",
+        "source": "source.md",
+        "explanation": "文案驱动的原创图解，辅助人物为虚构AI插画；连线表达文本中明确的解释关系"
+      }
+    }
+  ]
+}

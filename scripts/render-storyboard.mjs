@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {resolveProductionLock, writeProductionLock, productionDirectory} from './lib/production-lock.mjs';
+import {resolveProductionLock, writeProductionLock, productionDirectory, hashValue} from './lib/production-lock.mjs';
 import {bundle} from '@remotion/bundler';
 import {getCompositions, renderMedia} from '@remotion/renderer';
 import {loadAudioRuntime} from './lib/audio-runtime.mjs';
@@ -14,17 +14,23 @@ import {assertStoryboardApproval} from './lib/storyboard-approval.mjs';
 import {renderToVerifiedOutput} from './lib/verified-render-output.mjs';
 import {verifyFontAssets} from '../src/fonts/assets.ts';
 import {layoutCollector} from './lib/layout-qa.mjs';
+import {resolveBrand} from './lib/branding.mjs';
+import {renderCover} from './render-cover.mjs';
+import {renderWithSceneCache} from './lib/scene-cache.mjs';
 
 const args = process.argv.slice(2);
 let force = false;
 let audioConfigPath;
 let executionMode = 'review';
 let outputPurpose;
+let sceneCache = true;
 const positional = [];
 for (let index = 0; index < args.length; index += 1) {
   const arg = args[index];
   if (arg === '--force') {
     force = true;
+  } else if (arg === '--no-scene-cache') {
+    sceneCache = false;
   } else if (arg === '--audio-config') {
     audioConfigPath = args[index + 1];
     if (!audioConfigPath) {
@@ -55,7 +61,7 @@ if (!['review', 'fast'].includes(executionMode)) {
 }
 const [inputPath, outputPath, ...unknown] = positional;
 if (!inputPath || !outputPath || unknown.length > 0) {
-  console.error('Usage: npm run render:storyboard -- <storyboard.json> <output.mp4> [--mode review|fast] [--output-purpose visual-preview|visual-master|in-project-video] [--audio-config <audio-config.json>] [--force]');
+  console.error('Usage: npm run render:storyboard -- <storyboard.json> <output.mp4> [--mode review|fast] [--output-purpose visual-preview|visual-master|in-project-video] [--audio-config <audio-config.json>] [--force] [--no-scene-cache]');
   process.exit(1);
 }
 
@@ -146,6 +152,13 @@ const motion = parseFile(MotionPackSchema, path.join(styleDirectory, 'motion.jso
 const styleTokens = createStyleTokens(style, motion, storyboard.project.width, storyboard.project.height, storyboard.font, storyboard.palette);
 const resolvedProduction = resolveProductionLock(storyboard, projectRoot, path.dirname(resolvedInput));
 const productionLock = resolvedProduction?.lock;
+const branding = resolveBrand(storyboard.style.id, {root: projectRoot, projectPath: path.dirname(resolvedInput)});
+if (branding && productionLock && hashValue(branding.evidence) !== hashValue(productionLock.brand)) {
+  throw new Error('品牌在解析生产锁期间变化，请重新渲染。');
+}
+if (branding && productionLock && !force && (fs.existsSync(`${resolvedOutput}.cover.png`) || fs.existsSync(`${resolvedOutput}.cover.png.render.json`))) {
+  throw new Error('同源封面或记录已存在，未覆盖；确认目标后使用 --force。');
+}
 const hydratedStoryboard = hydrateStoryboardAssets(storyboard);
 const audioRuntime = loadAudioRuntime(audioConfigPath, audioTiming);
 const hasAudio = Boolean(audioRuntime?.voiceoverDataUri || audioRuntime?.musicDataUri || audioRuntime?.sfx?.length);
@@ -161,6 +174,7 @@ const bundleLocation = await bundle({entryPoint});
 const layout = layoutCollector(storyboard);
 const inputProps = {storyboard: hydratedStoryboard, styleTokens, audioRuntime, renderProfile: {
   ...(storyboard.layoutPolicy ? {layoutCheckFrames: layout.frames} : {}),
+  ...(branding ? {brand: branding.runtime} : {}),
   ...(font ? {font: {id: font.id, version: font.version, faces: font.faces.map(({file, sha256}) => ({file, sha256})), licenseSha256: font.licenseSha256}} : {}),
   ...(productionLock ? {productionLockHash: productionLock.hash, productionLock, resolvedShotPlan: resolvedProduction.plans} : {}),
   purpose: outputPurpose ?? (hasAudio ? 'in-project-video' : 'visual-preview'),
@@ -178,7 +192,14 @@ await renderToVerifiedOutput({
   outputPath: resolvedOutput,
   force,
   profile: inputProps.renderProfile,
-  render: (stagedVideo) => renderMedia({
+  render: async (stagedVideo) => {
+    if (sceneCache) {
+      const cache = await renderWithSceneCache({projectPath: path.dirname(resolvedInput), inputProps, composition, serveUrl: bundleLocation, outputPath: stagedVideo, renderMedia, layout, hasAudio});
+      inputProps.renderProfile.sceneCache = cache;
+      if (cache.used) return;
+      console.log(`SCENE CACHE SKIPPED ${cache.reason}`);
+    }
+    return renderMedia({
     composition, serveUrl: bundleLocation, codec: 'h264', outputLocation: stagedVideo,
     inputProps, audioCodec: hasAudio ? 'aac' : null, muted: !hasAudio, enforceAudioTrack: hasAudio,
     onBrowserLog: layout.onBrowserLog,
@@ -189,13 +210,18 @@ await renderToVerifiedOutput({
       lastProgressBucket = bucket;
       console.log(`RENDER PROGRESS ${Math.min(bucket * 10, 100)}% rendered=${renderedFrames}/${composition.durationInFrames} encoded=${encodedFrames}`);
     }
-  }),
+    });
+  },
   verify: (stagedVideo) => {
     const layoutQa = layout.finish();
     if (layoutQa) inputProps.renderProfile.layoutQa = layoutQa;
     inspectOutput(stagedVideo, storyboard, {expectAudio: hasAudio});
+    if (hashValue(JSON.parse(fs.readFileSync(resolvedInput, 'utf8'))) !== hashValue(storyboard)) throw new Error('分镜在渲染期间变化，未发布候选视频。');
+    if (hashValue(hydrateStoryboardAssets(storyboard)) !== hashValue(hydratedStoryboard)) throw new Error('素材在渲染期间变化，未发布候选视频。');
+    if (hashValue(loadAudioRuntime(audioConfigPath, audioTiming) ?? null) !== hashValue(audioRuntime ?? null)) throw new Error('音频或字幕在渲染期间变化，未发布候选视频。');
     if (productionLock && resolveProductionLock(storyboard, projectRoot, path.dirname(resolvedInput)).lock.hash !== productionLock.hash) throw new Error('输入或渲染实现已在渲染期间变化，未发布候选视频。');
   }
 });
 if (productionLock) writeProductionLock(storyboard, productionDirectory(resolvedOutput), resolvedProduction);
+if (branding && productionLock) renderCover(resolvedInput, resolvedOutput, undefined, {force});
 console.log(`Rendered: ${resolvedOutput}`);

@@ -1,0 +1,1207 @@
+{
+  "policy": "content-first-v1",
+  "storyboardHash": "023d521b286cf2a0315b6c4e5318d36864487c9ff4b526b5085414b21ce33266",
+  "frames": [
+    0,
+    9,
+    18,
+    33,
+    42,
+    132,
+    144,
+    154,
+    163,
+    181,
+    193,
+    252,
+    264,
+    274,
+    283,
+    301,
+    313,
+    372,
+    384,
+    394,
+    403,
+    421,
+    433,
+    449,
+    458,
+    459,
+    538,
+    539
+  ],
+  "checks": [
+    {
+      "frame": 0,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 0,
+          "stable": false,
+          "textCount": 0,
+          "nodeCount": 0,
+          "images": [],
+          "issues": []
+        }
+      ]
+    },
+    {
+      "frame": 9,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 9,
+          "stable": false,
+          "textCount": 1,
+          "nodeCount": 1,
+          "images": [],
+          "issues": []
+        }
+      ]
+    },
+    {
+      "frame": 18,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 18,
+          "stable": false,
+          "textCount": 1,
+          "nodeCount": 1,
+          "images": [],
+          "issues": []
+        }
+      ]
+    },
+    {
+      "frame": 33,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 33,
+          "stable": false,
+          "textCount": 5,
+          "nodeCount": 5,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 33,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 42,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 42,
+          "stable": false,
+          "textCount": 5,
+          "nodeCount": 5,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 42,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 132,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 132,
+          "stable": false,
+          "textCount": 5,
+          "nodeCount": 5,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 132,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 144,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 144,
+          "stable": false,
+          "textCount": 5,
+          "nodeCount": 5,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 144,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 154,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 154,
+          "stable": false,
+          "textCount": 6,
+          "nodeCount": 6,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 154,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 163,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 163,
+          "stable": false,
+          "textCount": 6,
+          "nodeCount": 6,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 163,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 181,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 181,
+          "stable": false,
+          "textCount": 6,
+          "nodeCount": 6,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 181,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 193,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 193,
+          "stable": false,
+          "textCount": 6,
+          "nodeCount": 6,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 193,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 252,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 252,
+          "stable": false,
+          "textCount": 6,
+          "nodeCount": 6,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 252,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 264,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 264,
+          "stable": false,
+          "textCount": 6,
+          "nodeCount": 6,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 264,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 274,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 274,
+          "stable": false,
+          "textCount": 7,
+          "nodeCount": 7,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 274,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 283,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 283,
+          "stable": false,
+          "textCount": 7,
+          "nodeCount": 7,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 283,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 301,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 301,
+          "stable": false,
+          "textCount": 7,
+          "nodeCount": 7,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 301,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 313,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 313,
+          "stable": false,
+          "textCount": 7,
+          "nodeCount": 7,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 313,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 372,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 372,
+          "stable": false,
+          "textCount": 7,
+          "nodeCount": 7,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 372,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 384,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 384,
+          "stable": false,
+          "textCount": 7,
+          "nodeCount": 7,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 384,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 394,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 394,
+          "stable": false,
+          "textCount": 8,
+          "nodeCount": 8,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 394,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 403,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 403,
+          "stable": false,
+          "textCount": 8,
+          "nodeCount": 8,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 403,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 421,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 421,
+          "stable": false,
+          "textCount": 8,
+          "nodeCount": 8,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 421,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 433,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 433,
+          "stable": false,
+          "textCount": 8,
+          "nodeCount": 8,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 433,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 449,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 449,
+          "stable": false,
+          "textCount": 9,
+          "nodeCount": 9,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 449,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 458,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 458,
+          "stable": true,
+          "textCount": 9,
+          "nodeCount": 9,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 458,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 459,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 459,
+          "stable": true,
+          "textCount": 9,
+          "nodeCount": 9,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 459,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 538,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 538,
+          "stable": true,
+          "textCount": 9,
+          "nodeCount": 9,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 538,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "frame": 539,
+      "checks": [
+        {
+          "sceneId": "curiosity",
+          "frame": 539,
+          "stable": true,
+          "textCount": 9,
+          "nodeCount": 9,
+          "images": [
+            {
+              "visible": {
+                "x": 124.0512927439533,
+                "y": 580,
+                "width": 286.8974145120934,
+                "height": 262.1875
+              },
+              "areaFraction": 0.047273074325910935,
+              "fitUtilization": 0.07846432942993689,
+              "source": {
+                "width": 1312,
+                "height": 1199
+              },
+              "focused": false
+            }
+          ],
+          "issues": [
+            {
+              "sceneId": "curiosity",
+              "frame": 539,
+              "code": "media-small",
+              "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+              "severity": "warning"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "issues": [
+    {
+      "sceneId": "curiosity",
+      "frame": 33,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 42,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 132,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 144,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 154,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 163,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 181,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 193,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 252,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 264,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 274,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 283,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 301,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 313,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 372,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 384,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 394,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 403,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 421,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 433,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 449,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 458,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 459,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 538,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    },
+    {
+      "sceneId": "curiosity",
+      "frame": 539,
+      "code": "media-small",
+      "message": "图片实际显示只利用可行展示面积的 8%；核对主体与内部文字可读性",
+      "severity": "warning"
+    }
+  ],
+  "adjacentPairs": [],
+  "verification": "Chromium text ranges and object-fit image bounds at scene events and adjacent handoffs; source-image text and full playback require manual review"
+}

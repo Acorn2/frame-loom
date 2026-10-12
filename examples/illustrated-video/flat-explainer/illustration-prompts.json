@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "1.0",
+  "tool": "imagegen",
+  "style": {
+    "id": "flat-explainer",
+    "version": "1.0.0"
+  },
+  "planHash": "6afc3dc40f845fb0fad9e2b0ef956d4e728b76fbae7072fec75adf905a73a36b",
+  "assets": [
+    {
+      "id": "organizer",
+      "path": "assets/organizer-v2.png",
+      "subject": "A friendly young adult with short dark hair and a blue shirt actively organizing three large document sheets and a yellow sticky note on a small desk. Waist-up three-quarter view, expressive attentive face, both hands clearly visible. Papers have simple abstract shapes only. One coherent isolated person-and-desk subject, no surroundings.",
+      "purpose": "主体介绍与资料编排示意；虚构讲解人物",
+      "sourceClaim": "source.md: 整理主张与关系，再编排可见解释",
+      "prompt": "Use case: illustration-story. Asset type: an independent transparent subject for a narrated explainer video.\nSubject: A friendly young adult with short dark hair and a blue shirt actively organizing three large document sheets and a yellow sticky note on a small desk. Waist-up three-quarter view, expressive attentive face, both hands clearly visible. Papers have simple abstract shapes only. One coherent isolated person-and-desk subject, no surroundings.\nStyle: Friendly hand-drawn educational cartoon, thick dark charcoal organic outlines with rounded line caps, rounded approachable characters, expressive simple faces, pastel light blue shirts, pale yellow, mint green and blush pink props, peach skin. Soft subtle gradients and gentle volume inside color fills. Match the supplied reference drawing language. Entire person, hands and props have the SAME thick black contour treatment. No paper grain, cut edges, paper layers, photo or plastic 3D.\nPalette: #24282b, #8bcbf2, #ffe7a0, #a7e3be, #ffc4c2.\nKeep the entire subject intact with generous clear margin. Use a genuinely transparent background.\nNo text, letters, numbers, logos, watermark, captions, arrows, labels or surrounding slide. Text and relationships will be rendered separately.",
+      "promptHash": "95e451e012087942d17d1141dd257645ea82bafc4c0dc8e54b9d9122693f60fe",
+      "planHash": "23d429dec4bbb0eb8bd82a8bffca261f8ab8e5afb77b617ee0ad5f9033125020"
+    },
+    {
+      "id": "loose-papers",
+      "path": "assets/loose-papers-v2.png",
+      "subject": "Three overlapping loose document sheets in a disorganized pile, simple abstract bars on pages, one small yellow sticky note. Isolated coherent object.",
+      "purpose": "展示尚未整理的资料",
+      "sourceClaim": "source.md: 三份示意资料的整理过程，不代表真实业务指标",
+      "prompt": "Use case: illustration-story. Asset type: an independent transparent subject for a narrated explainer video.\nSubject: Three overlapping loose document sheets in a disorganized pile, simple abstract bars on pages, one small yellow sticky note. Isolated coherent object.\nStyle: Friendly hand-drawn educational cartoon, thick dark charcoal organic outlines with rounded line caps, rounded approachable characters, expressive simple faces, pastel light blue shirts, pale yellow, mint green and blush pink props, peach skin. Soft subtle gradients and gentle volume inside color fills. Match the supplied reference drawing language. Entire person, hands and props have the SAME thick black contour treatment. No paper grain, cut edges, paper layers, photo or plastic 3D.\nPalette: #24282b, #8bcbf2, #ffe7a0, #a7e3be, #ffc4c2.\nKeep the entire subject intact with generous clear margin. Use a genuinely transparent background.\nNo text, letters, numbers, logos, watermark, captions, arrows, labels or surrounding slide. Text and relationships will be rendered separately.",
+      "promptHash": "8bc362dd5fad6adaeef9eb121580a4c4c9d70f9fca8a539a5fd48f8a9652a177",
+      "planHash": "5a60a949c87e3cb64a844510ca3f05a3ed5c7c97c5277d1c07ee0460a48b65d2"
+    },
+    {
+      "id": "organized-folder",
+      "path": "assets/organized-folder-v2.png",
+      "subject": "A single blue open folder containing three neatly arranged document sheets and one small yellow tab. Simple abstract marks only. Isolated coherent object.",
+      "purpose": "展示完成编排的资料",
+      "sourceClaim": "source.md: 三份示意资料的整理过程，不代表真实业务指标",
+      "prompt": "Use case: illustration-story. Asset type: an independent transparent subject for a narrated explainer video.\nSubject: A single blue open folder containing three neatly arranged document sheets and one small yellow tab. Simple abstract marks only. Isolated coherent object.\nStyle: Friendly hand-drawn educational cartoon, thick dark charcoal organic outlines with rounded line caps, rounded approachable characters, expressive simple faces, pastel light blue shirts, pale yellow, mint green and blush pink props, peach skin. Soft subtle gradients and gentle volume inside color fills. Match the supplied reference drawing language. Entire person, hands and props have the SAME thick black contour treatment. No paper grain, cut edges, paper layers, photo or plastic 3D.\nPalette: #24282b, #8bcbf2, #ffe7a0, #a7e3be, #ffc4c2.\nKeep the entire subject intact with generous clear margin. Use a genuinely transparent background.\nNo text, letters, numbers, logos, watermark, captions, arrows, labels or surrounding slide. Text and relationships will be rendered separately.",
+      "promptHash": "9253a9b079334f12c4e46b90c56d0da8998b7f30a3fe52354efdd518a8b42d94",
+      "planHash": "5dd9960a7b63b805c7b87aab05149be63e65d3b1c79254568c10998afa433211"
+    },
+    {
+      "id": "curious-family",
+      "path": "assets/curious-family.png",
+      "subject": "The same friendly parent and curious child as the supplied reference, seated together observing a potted leafy plant. Preserve the parent's round glasses, loose dark hair bun and pale blue shirt, the child's short tousled dark hair and pale yellow shirt, the small magnifying glass near a leaf, pointing gesture, complete figures and plant. Keep the same scene and characters while translating the entire drawing into this style's own medium. One coherent isolated group, no room or surrounding slide.",
+      "purpose": "三套主风格同内容对照：亲子共同观察、比较与提问；虚构角色",
+      "sourceClaim": "source.md: 好问题，从观察开始；一起观察，也一起提问",
+      "references": [
+        "references/curious-family-whiteboard.png"
+      ],
+      "prompt": "Use case: illustration-story. Asset type: an independent transparent subject for a narrated explainer video.\nSubject: The same friendly parent and curious child as the supplied reference, seated together observing a potted leafy plant. Preserve the parent's round glasses, loose dark hair bun and pale blue shirt, the child's short tousled dark hair and pale yellow shirt, the small magnifying glass near a leaf, pointing gesture, complete figures and plant. Keep the same scene and characters while translating the entire drawing into this style's own medium. One coherent isolated group, no room or surrounding slide.\nStyle: Friendly hand-drawn educational cartoon, thick dark charcoal organic outlines with rounded line caps, rounded approachable characters, expressive simple faces, pastel light blue shirts, pale yellow, mint green and blush pink props, peach skin. Soft subtle gradients and gentle volume inside color fills. Match the supplied reference drawing language. Entire person, hands and props have the SAME thick black contour treatment. No paper grain, cut edges, paper layers, photo or plastic 3D.\nPalette: #24282b, #8bcbf2, #ffe7a0, #a7e3be, #ffc4c2.\nKeep the entire subject intact with generous clear margin. Use a genuinely transparent background.\nNo text, letters, numbers, logos, watermark, captions, arrows, labels or surrounding slide. Text and relationships will be rendered separately.\nUse supplied references for drawing style and consistent subject appearance; do not copy their text or background.",
+      "promptHash": "e9dddf94c6f7715136a97c169c006e6013c852bd54972a1b7ee8436f48bba944",
+      "planHash": "5204c971d3aa32915256aa08cfec218c5114f1497849dbdda1a0a33b541e3c54"
+    }
+  ]
+}

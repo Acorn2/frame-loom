@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "id": "organizer",
+      "path": "assets/organizer-v2.png",
+      "type": "image",
+      "source": "AI-generated illustration; imagegen; illustration-plan.json#organizer; source claim: source.md: 整理主张与关系，再编排可见解释",
+      "license": "AI-generated output; use subject to image provider terms; not a factual photograph or official interface",
+      "intendedUse": "主体介绍与资料编排示意；虚构讲解人物",
+      "usage": "scene-media",
+      "generation": {
+        "tool": "imagegen",
+        "style": {
+          "id": "paper-collage",
+          "version": "1.0.0"
+        },
+        "planId": "organizer",
+        "planHash": "09040fa8bfc785c82f2abea04015794e51cb2eb7efa1b694f3d8540981fafe9c",
+        "promptHash": "8b9c064c67fcd9a19f576bcb9d1464dc8066faba3f5eed5237e9a70b42304be1",
+        "fileHash": "5f40a2d74dbdf921568f9053f5cc393359d65e58a160a43c8ce4f9187cfd20e3",
+        "review": {
+          "reviewer": "Codex: inspected native output, subject medium and complete geometry",
+          "reviewedAt": "2026-10-11T11:08:18.989Z"
+        }
+      }
+    },
+    {
+      "id": "loose-papers",
+      "path": "assets/loose-papers-v2.png",
+      "type": "image",
+      "source": "AI-generated illustration; imagegen; illustration-plan.json#loose-papers; source claim: source.md: 三份示意资料的整理过程，不代表真实业务指标",
+      "license": "AI-generated output; use subject to image provider terms; not a factual photograph or official interface",
+      "intendedUse": "展示尚未整理的资料",
+      "usage": "scene-media",
+      "generation": {
+        "tool": "imagegen",
+        "style": {
+          "id": "paper-collage",
+          "version": "1.0.0"
+        },
+        "planId": "loose-papers",
+        "planHash": "88b557f08c05ee3d1301686f046aa614df059704445543ba74f87453d0743739",
+        "promptHash": "642db7d3fb4b015e339f258c86958339230a63486f19df31ed59af78c5e5bb13",
+        "fileHash": "50e3979c47a790ab2bb7762366465ebf9ebb526c53b5cf7d039659ecdbf3a908",
+        "review": {
+          "reviewer": "Codex: inspected native output, media matches the person and all papers intact",
+          "reviewedAt": "2026-10-11T11:08:38.882Z"
+        }
+      }
+    },
+    {
+      "id": "organized-folder",
+      "path": "assets/organized-folder-v2.png",
+      "type": "image",
+      "usage": "scene-media",
+      "source": "AI-generated illustration; imagegen; illustration-plan.json#organized-folder; source claim: source.md: 三份示意资料的整理过程，不代表真实业务指标",
+      "license": "AI-generated output; use subject to image provider terms; not a factual photograph or official interface",
+      "intendedUse": "展示完成编排的资料",
+      "generation": {
+        "tool": "imagegen",
+        "style": {
+          "id": "paper-collage",
+          "version": "1.0.0"
+        },
+        "planId": "organized-folder",
+        "planHash": "240c9f565590ee6a51959c203cb89d8bdca7d2ddc2481de067366c03df69abf1",
+        "promptHash": "2e924f7e327d600069ef53aa4e42caeea532c1bf08df3cea0d7c9b0151ecffaa",
+        "fileHash": "8dee1e17475803e8cb3a546bf0fa4fe83ebe5ab6fe78d071bcb4223d61304913",
+        "review": {
+          "reviewer": "Codex: inspected fibrous cut-paper folder, complete subject and no ink contours",
+          "reviewedAt": "2026-10-11T11:10:31.808Z"
+        }
+      }
+    }
+  ]
+}

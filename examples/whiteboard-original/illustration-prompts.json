@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0",
+  "tool": "imagegen",
+  "style": {
+    "id": "whiteboard",
+    "version": "1.0.0"
+  },
+  "planHash": "5cccae018d1a90dd28fdbd412c5bcffc5fc8341b0389589155587c6e4fccf1e8",
+  "assets": [
+    {
+      "id": "curious-family",
+      "path": "assets/curious-family.png",
+      "subject": "A warm friendly parent and a curious young child observing one simple potted leafy plant together. The parent has round glasses, dark hair tied in a loose bun and a pale blue shirt; the child has short tousled dark hair and a pale yellow shirt, holds one small magnifying glass near a leaf and points with the other hand. Simple round heads, dot eyes, small smiling mouths and soft pink cheeks, cheerful natural interaction. Full complete seated figures with simple trousers and shoes, the whole plant and all hands visible, compact balanced silhouette. Match the friendly rounded parent-and-child hand-drawn sticker language described here. One coherent isolated group; no room, desk background or slide.",
+      "purpose": "原创白板样片中的共同观察情境；虚构亲子人物，不代表产品使用效果",
+      "sourceClaim": "source.md: 亲子一起观察，也一起提问，把好奇变成自己的发现",
+      "prompt": "Use case: illustration-story. Asset type: an independent transparent subject for a narrated explainer video.\nSubject: A warm friendly parent and a curious young child observing one simple potted leafy plant together. The parent has round glasses, dark hair tied in a loose bun and a pale blue shirt; the child has short tousled dark hair and a pale yellow shirt, holds one small magnifying glass near a leaf and points with the other hand. Simple round heads, dot eyes, small smiling mouths and soft pink cheeks, cheerful natural interaction. Full complete seated figures with simple trousers and shoes, the whole plant and all hands visible, compact balanced silhouette. Match the friendly rounded parent-and-child hand-drawn sticker language described here. One coherent isolated group; no room, desk background or slide.\nStyle: Bold slightly irregular charcoal marker outlines, flat pastel fills, simple expressive proportions, Excalidraw-inspired hand-drawn educational sticker. No shadow, texture, gradients or photorealism.\nPalette: #24272c, #a5d8ff, #ffec99, #b2f2bb, #ffc9c9.\nKeep the entire subject intact with generous clear margin. Use a genuinely transparent background.\nNo text, letters, numbers, logos, watermark, captions, arrows, labels or surrounding slide. Text and relationships will be rendered separately.",
+      "promptHash": "6e3c53435a73ec2a2fdf2730281ffd2dc718a1d8e328eded5f39e06df8e09c5b",
+      "planHash": "a43f0556879ed14fd554c97f0a920295febdc95a1d4993fe2cb8304acab3db5f"
+    }
+  ]
+}

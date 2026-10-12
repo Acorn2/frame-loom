@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FrameLoom Illustration Guide",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "style": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "whiteboard",
+            "flat-explainer",
+            "paper-collage",
+            "annotated-reasoning",
+            "editorial-typography"
+          ]
+        },
+        "version": {
+          "type": "string",
+          "const": "1.0.0"
+        }
+      },
+      "required": [
+        "id",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "medium": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subjectPrompt": {
+      "type": "string",
+      "minLength": 1
+    },
+    "palette": {
+      "minItems": 3,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^#[0-9a-f]{6}$"
+      }
+    },
+    "composition": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "motion": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "style",
+    "medium",
+    "subjectPrompt",
+    "palette",
+    "composition",
+    "motion"
+  ],
+  "additionalProperties": false
+}

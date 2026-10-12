@@ -6,6 +6,7 @@ import {getSceneTimeline} from '../timeline/scene-timeline';
 import {sceneRegions, type Rect} from './scene-layout';
 import {analyzeMeasurement, LAYOUT_LOG_PREFIX, type TextBox} from './diagnostics';
 import type {StyleTokens} from '../styles/style-loader';
+import {brandRegion} from '../branding/config';
 
 function visible(element: Element, root: Element) {
   for (let current: Element | null = element; current; current = current.parentElement) {
@@ -57,6 +58,12 @@ export function LayoutDiagnostics({board, tokens, frames, captions}: {board: Sto
         const bounds = root.getBoundingClientRect();
         const sx = bounds.width / board.project.width, sy = bounds.height / board.project.height;
         const rect = (r: DOMRect): Rect => ({x: (r.x - bounds.x) / sx, y: (r.y - bounds.y) / sy, width: r.width / sx, height: r.height / sy});
+        const brandElement = document.querySelector<HTMLElement>('[data-layout-brand]');
+        const brand = brandElement && visible(brandElement, brandElement) ? rect(brandElement.getBoundingClientRect()) : undefined;
+        if (brand) {
+          const reserved = brandRegion(board.project.width);
+          if (brand.x < reserved.x || brand.y < reserved.y || brand.x + brand.width > reserved.x + reserved.width + 1 || brand.y + brand.height > reserved.y + reserved.height + 1) throw new Error('品牌标识超出右上角预留区域。');
+        }
         const content = sceneRegions({width: board.project.width, height: board.project.height, safeArea: tokens.safeArea, captions: captions || item.scene.captions.length > 0}).content;
         const texts: TextBox[] = [];
         const context = document.createElement('canvas').getContext('2d')!;
@@ -94,7 +101,7 @@ export function LayoutDiagnostics({board, tokens, frames, captions}: {board: Sto
         }
         const images = Array.from(root.querySelectorAll<HTMLImageElement>('img')).filter(image => visible(image, root)).map(image => ({rect: rect(image.getBoundingClientRect()), source: {width: image.naturalWidth, height: image.naturalHeight}, fit: getComputedStyle(image).objectFit, focused: Boolean(item.scene.visual?.mediaFocus)}));
         const nodes = Array.from(root.querySelectorAll<HTMLElement>('[data-layout-node]')).filter(node => visible(node, root)).map(node => rect(node.getBoundingClientRect()));
-        return analyzeMeasurement({sceneId: item.scene.id, frame, stable, content, texts, images, nodes});
+        return analyzeMeasurement({sceneId: item.scene.id, frame, stable, content, texts, images, nodes, brand: brand ? brandRegion(board.project.width) : undefined});
       });
       console.debug(`${LAYOUT_LOG_PREFIX}${JSON.stringify({frame, checks})}`);
     };

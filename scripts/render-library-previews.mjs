@@ -4,14 +4,17 @@ import path from 'node:path';
 import {bundle} from '@remotion/bundler';
 import {getCompositions, openBrowser, renderMedia, renderStill} from '@remotion/renderer';
 import {libraryPreviewFixtures, previewFingerprint, previewRoot} from './lib/library-catalog.mjs';
-import {projectRoot} from './lib/style-catalog.mjs';
+import {loadStyleIndex, projectRoot} from './lib/style-catalog.mjs';
 import {StylePackSchema, MotionPackSchema} from '../src/schemas/style-pack.ts';
 import {createStyleTokens} from '../src/styles/style-loader.ts';
 import {getSceneTimeline} from '../src/timeline/scene-timeline.ts';
 import {checkStoryboardInput, checkAssetInput, checkVisualInput} from './lib/preflight.mjs';
 import {layoutCollector} from './lib/layout-qa.mjs';
 
-if (process.argv.slice(2).length) throw new Error('Usage: npm run preview:library');
+const args = process.argv.slice(2);
+if (args.length && (args.length !== 2 || args[0] !== '--styles')) throw new Error('Usage: npm run preview:library -- [--styles annotated-reasoning,editorial-typography]');
+const selectedStyles = args.length ? args[1].split(',') : loadStyleIndex().styles.filter(style => style.status !== 'deprecated').map(style => style.id);
+if (selectedStyles.some(id => !loadStyleIndex().styles.some(style => style.id === id && style.status !== 'deprecated')) || new Set(selectedStyles).size !== selectedStyles.length) throw new Error('请选择已注册且不重复的风格。');
 const lockRoot = path.join(projectRoot, '.tmp/library-render');
 fs.mkdirSync(lockRoot, {recursive: true});
 const lockPath = path.join(lockRoot, 'run.lock');
@@ -30,7 +33,7 @@ const fingerprint = previewFingerprint();
 const manifestPath = path.join(previewRoot, 'manifest.json');
 const prior = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, 'utf8')) : null;
 const manifest = {fingerprint, purpose: 'public-recipe-samples', samples: prior?.fingerprint === fingerprint ? prior.samples : []};
-const fixtures = libraryPreviewFixtures();
+const fixtures = libraryPreviewFixtures().filter(fixture => selectedStyles.includes(fixture.styleId));
 const pending = fixtures.filter(item => !manifest.samples.some(sample => sample.id === item.id) || !fs.existsSync(path.join(previewRoot, `${item.id}.mp4`)) || !fs.existsSync(path.join(previewRoot, `${item.id}.png`)));
 if (!pending.length) {console.log(`LIBRARY PREVIEWS current (${fixtures.length} samples)`); process.exit(0);}
 console.log(`Preparing ${pending.length} public recipe samples; no user project or TTS involved.`);

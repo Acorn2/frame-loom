@@ -3,8 +3,8 @@ import {Buffer} from 'node:buffer';
 import {spawnSync} from 'node:child_process';
 import crypto from 'node:crypto';
 import {URL} from 'node:url';
-import {resolveTtsVoiceType} from './tts-profiles.mjs';
-import {TtsConfigSchema} from '../../src/schemas/tts-config.ts';
+import {resolveDoubaoV3Auth, resolveTtsVoiceType} from './tts-profiles.mjs';
+import {parseDoubaoAdditions, TtsConfigSchema} from '../../src/schemas/tts-config.ts';
 
 const PROVIDER_HOSTS = {
   minimax: new Set(['api.minimax.cn', 'api.minimax.io']),
@@ -217,13 +217,10 @@ async function requestDoubao(text, config) {
   const apiKey = config.apiKeyEnv ? process.env[config.apiKeyEnv] : process.env.VOLC_TTS_API_KEY ?? process.env.DOUBAO_TTS_API_KEY;
   const accessToken = envValue(config.accessTokenEnv, undefined) ?? process.env.DOUBAO_TTS_ACCESS_TOKEN;
   const appId = envValue(config.appIdEnv, undefined) ?? process.env.DOUBAO_TTS_APP_ID;
-  const resourceId = config.resourceIdEnv ? process.env[config.resourceIdEnv] : process.env.VOLC_TTS_RESOURCE_ID ?? process.env.DOUBAO_TTS_RESOURCE_ID;
   if (config.apiVersion === 'v3') {
-    if (!apiKey || !resourceId) {
-      throw new Error('豆包 TTS v3 需要 API key 和 resource id；请配置 apiKeyEnv/resourceIdEnv 并设置对应环境变量。');
-    }
-    headers['X-Api-Key'] = apiKey;
-    headers['X-Api-Resource-Id'] = resourceId;
+    const auth = resolveDoubaoV3Auth(config);
+    Object.assign(headers, auth.headers);
+    headers['X-Api-Resource-Id'] = auth.resourceId;
     headers['X-Api-Request-Id'] = crypto.randomUUID();
   } else {
     if (apiKey) headers.authorization = `Bearer ${apiKey}`;
@@ -238,6 +235,7 @@ async function requestDoubao(text, config) {
         ...(config.requestBody?.req_params ?? {}),
         text,
         speaker: config.voiceType,
+        ...(config.instructions ? {additions: JSON.stringify({...parseDoubaoAdditions(config.requestBody?.req_params?.additions), context_texts: [config.instructions]})} : {}),
         audio_params: {
           ...(config.requestBody?.req_params?.audio_params ?? {}),
           format: config.format,
@@ -273,6 +271,14 @@ async function requestDoubao(text, config) {
   if (contentType.includes('audio/')) return {audio: responseBuffer};
   if (config.apiVersion === 'v3') {
     const chunks = [];
+    const speechWords = [];
+    const collectWords = (node) => {
+      if (!node || typeof node !== 'object') return;
+      if (Array.isArray(node.words)) {
+        for (const word of node.words) speechWords.push({text: word?.word, startSec: word?.startTime, endSec: word?.endTime});
+      }
+      for (const [key, child] of Object.entries(node)) if (key !== 'words') collectWords(child);
+    };
     for (const line of responseBuffer.toString('utf8').split(/\r?\n/u)) {
       const value = line.startsWith('data:') ? line.slice(5).trim() : line.trim();
       if (!value || !value.startsWith('{')) continue;
@@ -283,10 +289,11 @@ async function requestDoubao(text, config) {
         throw new Error(`豆包 TTS 合成失败（code: ${code}）。请检查音色、资源 ID 和服务权限。`);
       }
       if (event.data) chunks.push(readAudioPayload(event.data));
+      collectWords(event);
     }
     const audio = Buffer.concat(chunks.filter(Boolean));
     if (audio.length === 0) throw new Error('豆包 TTS 流式响应中没有音频数据；请检查音色、资源 ID 和服务权限。');
-    return {audio};
+    return {audio, speechWords};
   }
   let parsed;
   try { parsed = JSON.parse(responseBuffer.toString('utf8')); } catch {
@@ -312,7 +319,7 @@ export async function synthesizeSpeech({text, config, outputPath}) {
   if (!request) throw new Error(`不支持的 TTS provider：${config.provider}`);
   const result = await request(text, {...config, voiceType: resolveTtsVoiceType(config)});
   fs.writeFileSync(outputPath, result.audio);
-  return {};
+  return result.speechWords ? {speechWords: result.speechWords} : {};
 }
 
 export function probeAudioDuration(filePath) {

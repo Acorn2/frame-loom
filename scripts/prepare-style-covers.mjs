@@ -10,12 +10,14 @@ const folder = path.join(projectRoot, 'library/style-covers');
 fs.mkdirSync(folder, {recursive: true});
 const covers = [];
 for (const style of loadStyleIndex().styles.filter(item => item.status !== 'deprecated')) {
-  const source = `examples/template-families/previews/${style.id}-semantic.mp4`;
+  const source = `examples/template-families/previews/${style.id}-${style.id === 'whiteboard' ? 'original' : ['annotated-reasoning', 'editorial-typography'].includes(style.id) ? 'text-led' : style.role === 'primary' ? 'illustrated' : 'semantic'}.mp4`;
   const file = path.join(projectRoot, source);
   const cover = path.join(folder, `${style.id}.png`);
-  const result = spawnSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', '4.5', '-i', file, '-frames:v', '1', '-vf', 'scale=960:540', cover], {encoding:'utf8'});
+  const board = ['annotated-reasoning', 'editorial-typography'].includes(style.id) ? JSON.parse(fs.readFileSync(path.join(projectRoot, 'examples/text-led-video', style.id, 'storyboard.json'))) : style.id === 'whiteboard' ? JSON.parse(fs.readFileSync(path.join(projectRoot, 'examples/whiteboard-original/storyboard.json'))) : null;
+  const timeSec = board ? Math.min(board.project.durationFrames - 1, Math.max(...board.scenes[0].beats.map(beat => beat.start + beat.duration)) + Math.ceil(board.project.fps * .5)) / board.project.fps : 4.5;
+  const result = spawnSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', String(timeSec), '-i', file, '-frames:v', '1', '-vf', 'scale=960:540', cover], {encoding:'utf8'});
   if (result.error || result.status !== 0) throw new Error(`无法准备 ${style.id} 封面：${result.error?.message ?? result.stderr}`);
-  covers.push({id:style.id, source, sourceSha256:createHash('sha256').update(fs.readFileSync(file)).digest('hex'), timeSec:4.5, width:960, height:540});
+  covers.push({id:style.id, source, sourceSha256:createHash('sha256').update(fs.readFileSync(file)).digest('hex'), timeSec, width:960, height:540});
 }
 fs.writeFileSync(path.join(folder, 'manifest.json'), `${JSON.stringify({purpose:'public-style-card-covers', covers}, null, 2)}\n`);
 console.log(`STYLE COVERS ${covers.length} title frames extracted from existing public videos`);

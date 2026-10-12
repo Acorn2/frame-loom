@@ -43,6 +43,7 @@
     "list:tts-profiles": "node --import tsx/esm scripts/list-tts-profiles.mjs",
     "preview:tts": "node --import tsx/esm scripts/preview-tts.mjs",
     "synthesize:voiceover": "node --import tsx/esm scripts/synthesize-voiceover.mjs",
+    "render:cover": "node --import tsx/esm scripts/render-cover.mjs",
     "render:storyboard": "node --import tsx/esm scripts/render-storyboard.mjs",
     "inspect:output": "node scripts/inspect-output.mjs",
     "inspect:audio": "node --import tsx/esm scripts/inspect-audio.mjs",
@@ -56,7 +57,10 @@
     "list:video-templates": "node --import tsx/esm scripts/list-video-templates.mjs",
     "list:shots": "node --import tsx/esm scripts/list-shots.mjs",
     "migrate:storyboard": "node --import tsx/esm scripts/migrate-storyboard.mjs",
-    "test:shots": "vitest run --dir tests shot-recipes.test.mjs shortlist-recipes.test.mjs p1-recipes.test.mjs shot-expansion.test.mjs"
+    "test:shots": "vitest run --dir tests shot-recipes.test.mjs shortlist-recipes.test.mjs p1-recipes.test.mjs shot-expansion.test.mjs whiteboard-recipes.test.mjs illustrated-recipes.test.mjs whiteboard-board.test.mjs text-led-recipes.test.mjs",
+    "prepare:illustrations": "node --import tsx/esm scripts/prepare-illustrations.mjs",
+    "register:illustration": "node --import tsx/esm scripts/register-illustration.mjs",
+    "preview:illustrated": "node --import tsx/esm scripts/preview-illustrated-styles.mjs"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.522",
@@ -65,6 +69,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "remotion": "4.0.522",
+    "roughjs": "4.6.6",
     "zod": "4.5.4"
   },
   "devDependencies": {

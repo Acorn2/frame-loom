@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "id": "notebook",
+      "path": "assets/notebook.svg",
+      "type": "image",
+      "source": "FrameLoom original SVG illustration",
+      "license": "MIT",
+      "intendedUse": "公开主体解释镜头示意",
+      "usage": "scene-media"
+    }
+  ]
+}

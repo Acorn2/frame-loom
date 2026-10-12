@@ -14,9 +14,10 @@ import {recipeOverview, recipeSections} from '../library/detail.mjs';
 import {initProject} from '../scripts/init-project.mjs';
 import {projectRoot} from '../scripts/lib/style-catalog.mjs';
 import {publicTtsPresets} from '../scripts/lib/library-tts-catalog.mjs';
+import {fixedStyleRecipeIds} from '../library/style-policy.mjs';
 
 const catalog = {...buildLibraryCatalog(), ttsPresets: publicTtsPresets()};
-const defaultProduction = {goal: 'narrated', audio: 'tts', ttsPreset: 'configured', review: false, colorMode: 'auto'};
+const defaultProduction = {goal: 'narrated', audio: 'tts', ttsPreset: 'configured', review: false, colorMode: 'auto', brandName: ''};
 fs.mkdirSync(path.join(projectRoot, '.tmp'), {recursive: true});
 const directory = fs.mkdtempSync(path.join(projectRoot, '.tmp/library-test-'));
 const output = await buildLibrary(path.join(directory, 'site'));
@@ -26,23 +27,61 @@ const base = `http://127.0.0.1:${server.address().port}`;
 afterAll(async () => {await new Promise(resolve => server.close(resolve));});
 
 describe('local library capabilities and selection', () => {
+  it.each(['annotated-reasoning', 'editorial-typography'])('keeps %s primary sample copy aligned with the original whiteboard', style => {
+    const load = file => JSON.parse(fs.readFileSync(path.join(projectRoot, file)));
+    const original = load('examples/whiteboard-original/storyboard.json');
+    const sample = load(`examples/text-led-video/${style}/storyboard.json`);
+    const visibleCopy = board => [...new Set(board.scenes.flatMap(scene => [scene.title, ...scene.layers.flatMap(layer => [layer.label, layer.text])]).filter(Boolean))].sort();
+    expect(sample.project.title).toBe(original.project.title);
+    expect(sample.project.durationFrames).toBe(original.project.durationFrames);
+    expect(sample.scenes.map(scene => scene.narration).join('')).toBe(original.scenes.map(scene => scene.narration).join(''));
+    expect(visibleCopy(sample)).toEqual(visibleCopy(original));
+    expect(sample.scenes.filter(scene => scene.layers.some(layer => layer.asset)).every(scene => scene.layers.some(layer => layer.asset === 'assets/family.png'))).toBe(true);
+  });
+  it('showcases original whiteboard content without bundling upstream reader or private project assets', () => {
+    const fixture = libraryFixtures().find(item => item.id === 'whiteboard-board');
+    expect(fixture.source).toBe('examples/whiteboard-original/storyboard.json');
+    const board = JSON.parse(fs.readFileSync(path.join(projectRoot, fixture.source)));
+    expect(board.scenes[0].title).not.toBe('道理都懂，日子没变');
+    const subjects = board.scenes.flatMap(scene => scene.layers.filter(layer => layer.asset));
+    expect(subjects.length).toBeGreaterThan(0);
+    for (const subject of subjects) {
+      expect(subject.asset).not.toContain('reader.png'); expect(subject.asset).not.toContain('projects/');
+    }
+    expect(catalog.styles.find(style => style.id === 'whiteboard').videoSource).toContain('whiteboard-original.mp4');
+  });
+  it.each(['whiteboard', 'annotated-reasoning', 'editorial-typography'])('fixes primary style %s despite stored or linked manual selections', style => {
+    const stale = {style, canvas: 'landscape', shotSelection: 'manual', selected: ['semantic-default', 'paper-title']};
+    const state = normalizeSelection(catalog, stale);
+    expect(state.shotSelection).toBe('fixed'); expect(state.selected).toEqual([]);
+    const prompt = createExports(catalog, stale).prompt;
+    expect(prompt).toContain('固定内置流程'); expect(prompt).not.toContain('可用镜头配方：'); expect(prompt).not.toContain('list:shots');
+    expect(prompt).toContain('不要求用户选择 --shots');
+    expect(normalizeSelection(catalog, JSON.parse(JSON.stringify(state)))).toEqual(state);
+    const target = initProject(['--slug', `fixed-${style}`, '--style', style, '--projects-dir', path.join(directory, 'projects')]);
+    const draft = JSON.parse(fs.readFileSync(path.join(target, 'storyboard.draft.json')));
+    expect(draft.schemaVersion).toBe('2.4'); expect(draft.scenes).toEqual([]);
+    expect(draft.shotRecipes.map(recipe => recipe.id)).toEqual(fixedStyleRecipeIds(style));
+    expect(() => initProject(['--slug', 'reject-manual', '--style', style, '--shots', 'semantic-default', '--projects-dir', path.join(directory, 'projects')])).toThrow(/固定内置镜头/);
+    expect(normalizeSelection(catalog, {...state, style: 'retro-zine'}).shotSelection).toBe('auto');
+  });
   it('joins actual catalog entries and public fixtures without counting hosted actions as scenes', () => {
-    expect(catalog.styles).toHaveLength(6);
-    expect(catalog.recipes.filter(item => item.kind === 'scene')).toHaveLength(40);
+    expect(catalog.styles).toHaveLength(9);
+    expect(catalog.recipes.filter(item => item.kind === 'scene')).toHaveLength(52);
     expect(catalog.recipes.filter(item => item.kind === 'hosted-action')).toHaveLength(9);
     expect(catalog.recipes.filter(item => item.kind === 'cross-scene-transition')).toHaveLength(5);
     for (const fixture of libraryFixtures()) expect(fs.existsSync(path.join(projectRoot, fixture.source))).toBe(true);
     for (const recipe of catalog.recipes) {
       expect(recipe.name).toBeTruthy(); expect(recipe.recipe).toBeTruthy();
-      if (recipe.posterSource) expect(recipe.posterSource).toBe(`library/previews/${recipe.id}.png`);
+      if (recipe.posterSource) expect(recipe.posterSource).toBe(`library/previews/${recipe.styles.includes('retro-zine') ? recipe.id : `${recipe.id}--${recipe.styles[0]}`}.png`);
       else expect(['stale', 'missing']).toContain(recipe.previewStatus);
     }
   });
   it('filters all style and orientation combinations using manifest compatibility', () => {
     for (const style of catalog.styles) for (const canvas of ['landscape', 'portrait']) {
       const recipes = catalog.recipes.filter(item => compatible(item, style.id, canvas));
-      expect(recipes).toHaveLength(canvas === 'landscape' ? 40 : 4);
-      expect(recipes.some(item => item.id === 'semantic-default')).toBe(true);
+      expect(recipes).toHaveLength(style.role === 'primary' ? canvas === 'landscape' ? style.id === 'whiteboard' ? 11 : 2 : 0 : canvas === 'landscape' ? 43 : 4);
+      expect(recipes.some(item => item.id === 'semantic-default')).toBe(canvas === 'landscape' || style.role !== 'primary');
     }
   });
   it('restores only unique, current and compatible selected scene recipes', () => {
@@ -50,10 +89,11 @@ describe('local library capabilities and selection', () => {
       .toEqual({style: 'signal', font: 'source-han-sans-sc', fontMode: 'recommended', canvas: 'portrait', selected: ['semantic-default'], shotSelection: 'manual', production: defaultProduction});
   });
   it('defaults a new visit to document-driven selection and preserves legacy manual intent', () => {
-    expect(normalizeSelection(catalog).shotSelection).toBe('auto');
-    expect(normalizeSelection(catalog, {selected: ['paper-title']}).shotSelection).toBe('manual');
-    expect(normalizeSelection(catalog, {selected: ['missing']}).shotSelection).toBe('manual');
-    const automatic = normalizeSelection(catalog, {shotSelection: 'auto', selected: ['paper-title']});
+    expect(normalizeSelection(catalog).shotSelection).toBe('fixed');
+    expect(normalizeSelection(catalog, {style: 'retro-zine'}).shotSelection).toBe('auto');
+    expect(normalizeSelection(catalog, {style: 'retro-zine', selected: ['paper-title']}).shotSelection).toBe('manual');
+    expect(normalizeSelection(catalog, {style: 'retro-zine', selected: ['missing']}).shotSelection).toBe('manual');
+    const automatic = normalizeSelection(catalog, {style: 'retro-zine', shotSelection: 'auto', selected: ['paper-title']});
     expect(normalizeSelection(catalog, JSON.parse(JSON.stringify(automatic)))).toEqual(automatic);
     expect(createExports(catalog, automatic).prompt).not.toContain('可用镜头配方：paper-title');
   });
@@ -76,7 +116,7 @@ describe('local library capabilities and selection', () => {
     expect(shotSelectionWarning(catalog, {...selection, shotSelection: 'auto'})).toBe('');
   });
   it('requires review only when requested and rejects stale selection modes', () => {
-    const value = createExports(catalog, {selected: [], production: {...defaultProduction, review: true}});
+    const value = createExports(catalog, {style: 'retro-zine', selected: [], production: {...defaultProduction, review: true}});
     expect(value.prompt).toContain('先展示推荐组合、讲稿、分镜和时间安排，等我审核后再渲染');
     expect(value.prompt).not.toContain('不新增组合确认步骤');
     expect(() => createExports(catalog, {shotSelection: 'invalid', selected: []})).toThrow('镜头选择方式');
@@ -143,7 +183,7 @@ describe('local library capabilities and selection', () => {
   });
   it('restores public workflow preferences and safely resets stale options from local storage', () => {
     const selection={style:'retro-zine',canvas:'landscape',selected:['paper-title'],production:{goal:'master',audio:'external',ttsPreset:'elevenlabs',review:true,colorMode:'source'}};
-    expect(normalizeSelection(catalog,selection).production).toEqual(selection.production);
+    expect(normalizeSelection(catalog,selection).production).toEqual({...selection.production, brandName: ''});
     expect(normalizeSelection(catalog,{...selection,production:{goal:'unknown',audio:'invalid',ttsPreset:'stale',review:'true'}}).production).toEqual(defaultProduction);
   });
   it('publishes only allowlisted TTS example metadata, never credentials, local profiles or availability', async () => {
@@ -280,12 +320,12 @@ describe('Pages publication gate', () => {
   });
   it('requires public style videos as well as recipe previews', () => {
     const incomplete = structuredClone(catalog);
-    incomplete.styles[0].videoSource = null;
+    incomplete.styles.find(style => style.id === 'retro-zine').videoSource = null;
     expect(() => assertLibraryPreviews(incomplete)).toThrow(/retro-zine\/video/u);
   });
   it('checks that referenced posters exist and are not just catalog entries', () => {
     const incomplete = structuredClone(catalog);
-    incomplete.styles[0].posterSource = 'library/previews/nonexistent.png';
+    incomplete.styles.find(style => style.id === 'retro-zine').posterSource = 'library/previews/nonexistent.png';
     expect(() => assertLibraryPreviews(incomplete)).toThrow(/retro-zine\/poster/u);
   });
 });
@@ -330,10 +370,10 @@ describe('portable recipe copying', () => {
 describe('style card capability and preview evidence', () => {
   it('counts compatible scenes for the current canvas, excluding auxiliary actions and chapter transitions', () => {
     const retro = catalog.styles.find(style => style.id === 'retro-zine');
-    expect(styleCardInfo(retro, catalog.recipes, 'landscape').count).toBe(40);
+    expect(styleCardInfo(retro, catalog.recipes, 'landscape').count).toBe(43);
     expect(styleCardInfo(retro, catalog.recipes, 'portrait').count).toBe(4);
     expect(styleCardInfo(retro, catalog.recipes, 'portrait').basicOnly).toBe(false);
-    for (const style of catalog.styles.filter(style => style.id !== 'retro-zine')) expect(styleCardInfo(style, catalog.recipes, 'landscape').capability).toBe('40 个可用镜头');
+    for (const style of catalog.styles.filter(style => style.id !== 'retro-zine')) expect(styleCardInfo(style, catalog.recipes, 'landscape').capability).toBe(style.role === 'primary' ? '风格内置镜头' : '43 个可用镜头');
   });
   it('publishes readable covers from the same video and color roles from the actual style tokens', async () => {
     const published = await (await fetch(`${base}/catalog.json`)).json();

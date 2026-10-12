@@ -5,7 +5,8 @@ import {AudioManifestSchema} from '../src/schemas/audio-manifest.ts';
 import {TtsConfigSchema} from '../src/schemas/tts-config.ts';
 import {StoryboardSchema} from '../src/schemas/storyboard.ts';
 import {hashNarration} from '../src/audio/text-hash.ts';
-import {splitCaptionWindow} from '../src/audio/captions.ts';
+import {speechCaptions} from '../src/audio/speech-timing.ts';
+import {SpeechCuesSchema} from '../src/audio/whiteboard-timing.ts';
 import {getSceneTimeline} from '../src/timeline/scene-timeline.ts';
 import {combineAudioSegments} from './lib/tts-provider.mjs';
 import {resolveManualCues} from './lib/caption-cues.mjs';
@@ -13,6 +14,7 @@ import {cachedSpeech} from './lib/voice-cache.mjs';
 import {proposeAudioTiming} from '../src/audio/retime.ts';
 import {analyzeSceneAudioAlignment} from '../src/audio/timing.ts';
 import {fingerprintFiles, fingerprintTtsConfig} from './lib/input-fingerprint.mjs';
+import {hashValue} from './lib/production-lock.mjs';
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -42,6 +44,9 @@ function parseArgs(args) {
     } else if (arg === '--plan-timing') {
       options.timingOutput = args[++index];
       if (!options.timingOutput) throw new Error('--plan-timing 需要新文件路径。');
+    } else if (arg === '--speech-cues') {
+      options.speechCuesPath = args[++index];
+      if (!options.speechCuesPath) throw new Error('--speech-cues 需要 JSON 路径。');
     } else if (arg === '--refresh-voice') {
       options.refreshVoice = true;
     } else if (arg === '--force') {
@@ -53,9 +58,10 @@ function parseArgs(args) {
     }
   }
   if (positional.length !== 1) {
-    throw new Error('Usage: npm run synthesize:voiceover -- <project-dir> [--tts-config <tts-config.json>] [--reuse] [--force] [--refresh-voice] [--plan-timing <new-storyboard.json>]');
+    throw new Error('Usage: npm run synthesize:voiceover -- <project-dir> [--tts-config <tts-config.json>] [--reuse] [--force] [--refresh-voice] [--plan-timing <new-storyboard.json>] [--speech-cues <json>]');
   }
   options.projectPath = path.resolve(process.cwd(), positional[0]);
+  if (options.speechCuesPath && !options.timingOutput) throw new Error('--speech-cues 仅用于 --plan-timing 时间提案。');
   return options;
 }
 
@@ -125,13 +131,13 @@ function createAudioConfig(projectPath, outputDirectory, format) {
       enabled: true,
       path: path.join(generatedDirectory, 'captions.srt'),
       format: 'srt',
-      source: 'scene.narration; cue timing estimated unless audio-manifest marks manual'
+      source: 'scene.narration; timing source recorded per scene in audio-manifest.json'
     },
     sfx: []
   };
 }
 
-async function main(options) {
+export async function main(options) {
   const projectPath = options.projectPath;
   const storyboardPath = path.join(projectPath, 'storyboard.json');
   const defaultTtsConfigPath = path.join(projectPath, 'audio', 'tts-config.json');
@@ -149,6 +155,9 @@ async function main(options) {
   }
   const config = ttsResult.data;
   if (!config.enabled) throw new Error('tts-config.json 的 enabled 为 false，不能运行 TTS 合成。');
+  if (options.speechCuesPath && !options.timingOutput) throw new Error('--speech-cues 仅用于 --plan-timing 时间提案。');
+  const speechCues = options.speechCuesPath ? SpeechCuesSchema.parse(readJson(options.speechCuesPath)) : undefined;
+  if (options.timingOutput && (fs.existsSync(path.resolve(options.timingOutput)) || fs.existsSync(`${path.resolve(options.timingOutput)}.timing.json`))) throw new Error('时间提案与证据必须使用新的输出路径。');
 
   const outputDirectory = resolveOutputDirectory(projectPath, config.outputDirectory);
   const extension = config.format === 'mp3' ? 'mp3' : 'wav';
@@ -202,7 +211,7 @@ async function main(options) {
       const finalSegmentPath = path.join(outputDirectory, `${scene.id}.${extension}`);
       console.log(`SYNTHESIZE ${scene.id} provider=${config.provider}`);
       const speechConfig = withSceneContext(config, narratedTexts, segments.length);
-      const {durationSec, reused} = await cachedSpeech({projectPath, text, config: speechConfig, outputPath: segmentPath, refresh: options.refreshVoice});
+      const {durationSec, reused, speechWords} = await cachedSpeech({projectPath, text, config: speechConfig, outputPath: segmentPath, refresh: options.refreshVoice});
       console.log(`${reused ? 'VOICE CACHE HIT' : 'VOICE GENERATED'} ${scene.id}`);
       const endSec = startSec + durationSec;
       segments.push({
@@ -215,16 +224,20 @@ async function main(options) {
         durationSec,
         endSec,
         source: 'tts',
+        ...(speechWords ? {speechWords} : {}),
         sceneEndSec
       });
     }
     if (segments.length === 0) throw new Error('storyboard 没有可用于 TTS 的 scene.narration。');
 
     if (options.timingOutput) {
-      const proposed = proposeAudioTiming(storyboardResult.data, segments);
+      const whiteboard = [];
+      const proposed = proposeAudioTiming(storyboardResult.data, segments, speechCues, evidence => whiteboard.push(evidence));
       const timingOutput = path.resolve(options.timingOutput);
       fs.mkdirSync(path.dirname(timingOutput), {recursive: true});
       fs.writeFileSync(timingOutput, `${JSON.stringify(proposed, null, 2)}\n`, {flag: 'wx'});
+      fs.writeFileSync(`${timingOutput}.timing.json`, `${JSON.stringify({schemaVersion: '1.0', sourceStoryboardHash: hashValue(storyboardResult.data), proposedStoryboardHash: hashValue(proposed), speechCuesHash: speechCues ? hashValue(speechCues) : null, audioFingerprint: fingerprintFiles(segments.map(segment => segment.absolutePath), stagingDirectory), segments: segments.map(({sceneId, durationSec, speechWords}) => ({sceneId, durationSec, speechWords})), whiteboard, note: '提案证据，不能直接用于生产或替代分镜审核；非白板动作沿用比例调整'}, null, 2)}\n`, {flag: 'wx'});
+      for (const evidence of whiteboard) console.log(`WHITEBOARD TIMING ${evidence.sceneId} source=${evidence.timingSource}`);
       console.log(`TIMING PROPOSAL ${timingOutput}; review beats/readability, then adopt explicitly. Source unchanged.`);
       return {timingOutput};
     }
@@ -238,7 +251,10 @@ async function main(options) {
     const stagedFullAudioPath = path.join(stagingDirectory, `voiceover.${extension}`);
     combineAudioSegments(segments, stagedFullAudioPath, projectDurationSec, config.outputSampleRate);
     const manualCues = fs.existsSync(manualCuesPath);
-    const cues = manualCues ? resolveManualCues(readJson(manualCuesPath), segments) : segments.flatMap((segment) => splitCaptionWindow(segment.text, segment.startSec, segment.endSec));
+    const captionSegments = segments.map(segment => speechCaptions(segment.text, segment.startSec, segment.durationSec, segment.speechWords));
+    const cues = manualCues ? resolveManualCues(readJson(manualCuesPath), segments) : captionSegments.flatMap(segment => segment.cues);
+    segments.forEach((segment, index) => {segment.captionTimingSource = manualCues ? 'manual' : captionSegments[index].source;});
+    const sources = new Set(segments.map(segment => segment.captionTimingSource));
     const captions = cues.map((cue, index) => [
       String(index + 1),
       `${formatTimestamp(cue.start)} --> ${formatTimestamp(cue.end)}`,
@@ -262,7 +278,7 @@ async function main(options) {
       captionsPath: path.relative(projectPath, captionsPath),
       audioConfigPath: path.relative(projectPath, audioConfigPath),
       projectDurationSec,
-      captionTimingSource: manualCues ? 'manual' : 'estimated',
+      captionTimingSource: sources.size === 1 ? [...sources][0] : 'mixed',
       captionInputFingerprint,
       notes: ['每个 scene 的旁白文本来自 scene.narration；音频 duration 来自 ffprobe 实测值。']
     });

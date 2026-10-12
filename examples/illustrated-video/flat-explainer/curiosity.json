@@ -1,0 +1,271 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "flat-explainer",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "illustrated-hero",
+      "version": "1.2.0"
+    },
+    {
+      "id": "illustrated-compare",
+      "version": "1.2.0"
+    },
+    {
+      "id": "illustrated-process",
+      "version": "1.2.0"
+    },
+    {
+      "id": "illustrated-explain",
+      "version": "1.2.0"
+    },
+    {
+      "id": "illustrated-breakdown",
+      "version": "1.2.0"
+    },
+    {
+      "id": "illustrated-metric",
+      "version": "1.2.0"
+    }
+  ],
+  "layoutPolicy": "content-first-v1",
+  "font": {
+    "id": "source-han-sans-sc",
+    "version": "2.005"
+  },
+  "project": {
+    "title": "好问题，从观察开始",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 18,
+    "durationFrames": 540,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "curiosity-opening",
+      "template": "statement",
+      "purpose": "opening",
+      "title": "好问题，从观察开始",
+      "primaryClaim": "把好奇，变成自己的发现",
+      "visual": {
+        "kind": "statement",
+        "explanation": "亲子共同观察植物，先看清细节，再比较差异，最后提出问题；与原创白板样片使用同一文案",
+        "representation": "diagram",
+        "source": "source.md；FrameLoom 原创公开示意"
+      },
+      "shot": {
+        "id": "illustrated-hero",
+        "version": "1.2.0",
+        "slots": {
+          "subject": "family",
+          "items": [
+            "claim"
+          ]
+        }
+      },
+      "narration": "好问题，从观察开始。",
+      "durationFrames": 150,
+      "layers": [
+        {
+          "id": "family",
+          "type": "object",
+          "asset": "assets/curious-family.png",
+          "label": "一起观察，也一起提问",
+          "fit": "contain"
+        },
+        {
+          "id": "claim",
+          "type": "node",
+          "label": "看见细节",
+          "text": "先看清楚"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "family-reveal",
+          "target": "family",
+          "action": "reveal",
+          "start": 12,
+          "duration": 24
+        },
+        {
+          "id": "claim-reveal",
+          "target": "claim",
+          "action": "reveal",
+          "start": 45,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "curiosity-process",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "好问题，从观察开始",
+      "primaryClaim": "从观察细节、比较差异到提出问题",
+      "visual": {
+        "kind": "sequence",
+        "explanation": "亲子共同观察植物，先看清细节，再比较差异，最后提出问题；与原创白板样片使用同一文案",
+        "representation": "diagram",
+        "source": "source.md；FrameLoom 原创公开示意"
+      },
+      "shot": {
+        "id": "illustrated-process",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "notice",
+            "compare",
+            "question"
+          ]
+        }
+      },
+      "narration": "先看清细节，再比较差异，最后把疑问说出来。",
+      "durationFrames": 240,
+      "layers": [
+        {
+          "id": "notice",
+          "type": "node",
+          "glyph": "search",
+          "label": "看见细节",
+          "text": "先看清楚"
+        },
+        {
+          "id": "compare",
+          "type": "node",
+          "glyph": "list",
+          "label": "比较差异",
+          "text": "找出不一样"
+        },
+        {
+          "id": "question",
+          "type": "node",
+          "glyph": "quote",
+          "label": "提出问题",
+          "text": "问一句为什么"
+        }
+      ],
+      "connections": [
+        {
+          "id": "notice-compare",
+          "from": "notice",
+          "to": "compare"
+        },
+        {
+          "id": "compare-question",
+          "from": "compare",
+          "to": "question"
+        }
+      ],
+      "beats": [
+        {
+          "id": "notice-reveal",
+          "target": "notice",
+          "action": "reveal",
+          "start": 12,
+          "duration": 24
+        },
+        {
+          "id": "compare-reveal",
+          "target": "compare",
+          "action": "reveal",
+          "start": 72,
+          "duration": 24
+        },
+        {
+          "id": "notice-compare-draw",
+          "target": "notice-compare",
+          "action": "draw",
+          "start": 104,
+          "duration": 18
+        },
+        {
+          "id": "question-reveal",
+          "target": "question",
+          "action": "reveal",
+          "start": 132,
+          "duration": 24
+        },
+        {
+          "id": "compare-question-draw",
+          "target": "compare-question",
+          "action": "draw",
+          "start": 164,
+          "duration": 18
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "curiosity-closing",
+      "template": "statement",
+      "purpose": "closing",
+      "title": "好问题，从观察开始",
+      "primaryClaim": "把好奇，变成自己的发现",
+      "visual": {
+        "kind": "statement",
+        "explanation": "亲子共同观察植物，先看清细节，再比较差异，最后提出问题；与原创白板样片使用同一文案",
+        "representation": "diagram",
+        "source": "source.md；FrameLoom 原创公开示意"
+      },
+      "shot": {
+        "id": "illustrated-hero",
+        "version": "1.2.0",
+        "slots": {
+          "subject": "family",
+          "items": [
+            "claim"
+          ]
+        }
+      },
+      "narration": "一起观察，也一起提问，把好奇变成自己的发现。",
+      "durationFrames": 150,
+      "layers": [
+        {
+          "id": "family",
+          "type": "object",
+          "asset": "assets/curious-family.png",
+          "label": "一起观察，也一起提问",
+          "fit": "contain"
+        },
+        {
+          "id": "claim",
+          "type": "node",
+          "label": "把好奇，变成自己的发现",
+          "text": "一起观察，也一起提问"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "family-reveal",
+          "target": "family",
+          "action": "reveal",
+          "start": 12,
+          "duration": 24
+        },
+        {
+          "id": "claim-reveal",
+          "target": "claim",
+          "action": "reveal",
+          "start": 45,
+          "duration": 24
+        },
+        {
+          "id": "claim-highlight",
+          "target": "claim",
+          "action": "highlight",
+          "start": 90,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

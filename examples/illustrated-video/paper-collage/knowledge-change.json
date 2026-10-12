@@ -1,0 +1,287 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "paper-collage",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "illustrated-hero",
+      "version": "1.2.0"
+    },
+    {
+      "id": "illustrated-explain",
+      "version": "1.2.0"
+    }
+  ],
+  "layoutPolicy": "content-first-v1",
+  "font": {
+    "id": "source-han-sans-sc",
+    "version": "2.005"
+  },
+  "project": {
+    "title": "道理都懂，日子没变：像素讲解笔记",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 21,
+    "durationFrames": 630,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "understanding",
+      "template": "statement",
+      "purpose": "opening",
+      "title": "道理都懂，日子没变",
+      "primaryClaim": "懂了很多，不等于做出改变",
+      "visual": {
+        "kind": "statement",
+        "explanation": "FrameLoom 自写资料编排示意，人物为虚构角色，数字为三份示意资料的计数",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "illustrated-hero",
+        "version": "1.2.0",
+        "slots": {
+          "subject": "subject",
+          "items": [
+            "a"
+          ]
+        }
+      },
+      "narration": "书看了，课听了，懂了很多。但懂得多，不等于做出了改变。",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "subject",
+          "type": "object",
+          "asset": "assets/organizer-pixel.png",
+          "label": "书看了，课听了",
+          "fit": "contain"
+        },
+        {
+          "id": "a",
+          "type": "node",
+          "label": "懂了很多 ≠ 做出改变",
+          "text": "懂得越来越多，不代表生活就会自动改变"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "subject-reveal",
+          "target": "subject",
+          "action": "reveal",
+          "start": 12,
+          "duration": 30
+        },
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 57,
+          "duration": 30
+        },
+        {
+          "id": "conclusion-highlight",
+          "target": "a",
+          "action": "highlight",
+          "start": 102,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "intentions",
+      "template": "graph-explainer",
+      "purpose": "claim",
+      "title": "知道该做什么",
+      "primaryClaim": "知道行动方向，还需要实际去做",
+      "visual": {
+        "kind": "network",
+        "explanation": "FrameLoom 自写资料编排示意，人物为虚构角色，数字为三份示意资料的计数",
+        "representation": "diagram",
+        "source": "source.md",
+        "anchorId": "subject"
+      },
+      "shot": {
+        "id": "illustrated-explain",
+        "version": "1.2.0",
+        "slots": {
+          "subject": "subject",
+          "items": [
+            "a",
+            "b",
+            "c"
+          ]
+        }
+      },
+      "narration": "我们知道要早睡，要运动，要少刷手机。接下来，要把这些变成行动。",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "subject",
+          "type": "object",
+          "asset": "assets/organizer-pixel.png",
+          "label": "计划很清楚",
+          "fit": "contain"
+        },
+        {
+          "id": "a",
+          "type": "node",
+          "label": "早睡",
+          "text": "按时上床"
+        },
+        {
+          "id": "b",
+          "type": "node",
+          "label": "运动",
+          "text": "让身体动起来"
+        },
+        {
+          "id": "c",
+          "type": "node",
+          "label": "少刷手机",
+          "text": "给屏幕时间设限"
+        }
+      ],
+      "connections": [
+        {
+          "id": "link-0",
+          "from": "subject",
+          "to": "a"
+        },
+        {
+          "id": "link-1",
+          "from": "subject",
+          "to": "b"
+        },
+        {
+          "id": "link-2",
+          "from": "subject",
+          "to": "c"
+        }
+      ],
+      "beats": [
+        {
+          "id": "subject-reveal",
+          "target": "subject",
+          "action": "reveal",
+          "start": 0,
+          "duration": 24
+        },
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 36,
+          "duration": 18
+        },
+        {
+          "id": "link-0-draw",
+          "target": "link-0",
+          "action": "draw",
+          "start": 54,
+          "duration": 16
+        },
+        {
+          "id": "b-reveal",
+          "target": "b",
+          "action": "reveal",
+          "start": 76,
+          "duration": 18
+        },
+        {
+          "id": "link-1-draw",
+          "target": "link-1",
+          "action": "draw",
+          "start": 94,
+          "duration": 16
+        },
+        {
+          "id": "c-reveal",
+          "target": "c",
+          "action": "reveal",
+          "start": 116,
+          "duration": 18
+        },
+        {
+          "id": "link-2-draw",
+          "target": "link-2",
+          "action": "draw",
+          "start": 134,
+          "duration": 16
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "one-year-later",
+      "template": "statement",
+      "purpose": "opening",
+      "title": "一年后，生活还是老样子",
+      "primaryClaim": "懂了很多，不等于做出改变",
+      "visual": {
+        "kind": "statement",
+        "explanation": "FrameLoom 自写资料编排示意，人物为虚构角色，数字为三份示意资料的计数",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "illustrated-hero",
+        "version": "1.2.0",
+        "slots": {
+          "subject": "subject",
+          "items": [
+            "a"
+          ]
+        }
+      },
+      "narration": "一年后，生活还是老样子。懂了很多，不等于做出改变。",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "subject",
+          "type": "object",
+          "asset": "assets/organizer-pixel.png",
+          "label": "书看了，课听了",
+          "fit": "contain"
+        },
+        {
+          "id": "a",
+          "type": "node",
+          "label": "懂了很多 ≠ 做出改变",
+          "text": "把一个道理，变成一次实际行动"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "subject-reveal",
+          "target": "subject",
+          "action": "reveal",
+          "start": 12,
+          "duration": 30
+        },
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 57,
+          "duration": 30
+        },
+        {
+          "id": "conclusion-highlight",
+          "target": "a",
+          "action": "highlight",
+          "start": 102,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

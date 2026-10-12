@@ -7,6 +7,7 @@ import {hydrateLibraryAssets} from './lib/library-assets.mjs';
 import {layoutCollector} from './lib/layout-qa.mjs';
 import {createStyleTokens} from '../src/styles/style-loader.ts';
 import {FONT_CATALOG} from '../src/fonts/catalog.ts';
+import {loadStyleIndex} from './lib/style-catalog.mjs';
 
 const all = process.argv.includes('--all');
 const onlyIndex = process.argv.indexOf('--only');
@@ -17,7 +18,7 @@ fs.mkdirSync(root, {recursive: true});
 const candidates = [...libraryPreviewFixtures(), ...libraryStyleIds.flatMap(styleId => [
   {id: `semantic-kinds--${styleId}`, source: 'examples/content-layout/storyboard.json', recipeId: 'semantic-default', styleId, canvas: 'landscape'},
   {id: `semantic-kinds--${styleId}--portrait`, source: 'examples/content-layout/storyboard.json', recipeId: 'semantic-default', styleId, canvas: 'portrait', portrait: true}
-]), ...FONT_CATALOG.filter(font => font.id !== 'lxgw-wenkai').map(font => ({id: `semantic-font--${font.id}`, source: 'examples/content-layout/storyboard.json', recipeId: 'semantic-default', styleId: 'retro-zine', canvas: 'landscape', fontId: font.id}))];
+]).filter(item => loadStyleIndex().styles.find(style => style.id === item.styleId).canvas.includes(item.canvas)), ...FONT_CATALOG.filter(font => font.id !== 'lxgw-wenkai').map(font => ({id: `semantic-font--${font.id}`, source: 'examples/content-layout/storyboard.json', recipeId: 'semantic-default', styleId: 'retro-zine', canvas: 'landscape', fontId: font.id}))];
 const fixtures = candidates.filter(item => (all || item.styleId === 'retro-zine' || ['semantic-default', 'network-expand', 'compare-reveal'].includes(item.recipeId) || item.canvas === 'portrait') && (!only || only.includes(item.id)));
 if (!fixtures.length) throw new Error('没有匹配的实际布局样例。');
 const serveUrl = await bundle({entryPoint: path.resolve('src/index.ts'), outDir: path.join(root, 'bundle')});

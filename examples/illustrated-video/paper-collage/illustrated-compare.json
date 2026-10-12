@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "paper-collage",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "illustrated-compare",
+      "version": "1.2.0"
+    }
+  ],
+  "layoutPolicy": "content-first-v1",
+  "font": {
+    "id": "source-han-sans-sc",
+    "version": "2.005"
+  },
+  "project": {
+    "title": "插画讲解镜头样片",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 7,
+    "durationFrames": 210,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "illustrated-compare",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "资料多，不等于讲得清楚",
+      "primaryClaim": "资料多，不等于讲得清楚",
+      "visual": {
+        "kind": "compare",
+        "explanation": "FrameLoom 自写资料编排示意，人物为虚构角色，数字为三份示意资料的计数",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "illustrated-compare",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "a",
+            "b"
+          ]
+        }
+      },
+      "narration": "资料多，不等于讲得清楚",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "a",
+          "type": "object",
+          "asset": "assets/loose-papers-pixel.png",
+          "label": "原始资料",
+          "fit": "contain",
+          "text": "三份资料保留各自来源"
+        },
+        {
+          "id": "b",
+          "type": "object",
+          "asset": "assets/organized-folder-pixel.png",
+          "label": "编排结果",
+          "fit": "contain",
+          "text": "按主张和关系整理讲解"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 12,
+          "duration": 30
+        },
+        {
+          "id": "b-reveal",
+          "target": "b",
+          "action": "reveal",
+          "start": 57,
+          "duration": 30
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

@@ -1,0 +1,663 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "editorial-typography",
+    "version": "1.0.0"
+  },
+  "font": {
+    "id": "source-han-sans-sc",
+    "version": "2.005"
+  },
+  "shotRecipes": [
+    {
+      "id": "editorial-flow",
+      "version": "1.2.0"
+    },
+    {
+      "id": "semantic-default",
+      "version": "1.0.0"
+    }
+  ],
+  "layoutPolicy": "content-first-v1",
+  "project": {
+    "title": "好问题，从观察开始",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 18,
+    "durationFrames": 540,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "curiosity",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "好问题，从观察开始",
+      "narration": "好问题，从观察开始。先看清细节，再比较差异，最后把疑问说出来。一起观察，也一起提问，把好奇变成自己的发现。",
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "好问题，从观察开始"
+        },
+        {
+          "id": "illustration",
+          "type": "object",
+          "label": "一起观察，也一起提问",
+          "asset": "assets/family.png",
+          "fit": "contain"
+        },
+        {
+          "id": "step-0",
+          "type": "node",
+          "label": "看见细节"
+        },
+        {
+          "id": "note-0",
+          "type": "node",
+          "label": "先看清楚"
+        },
+        {
+          "id": "step-1",
+          "type": "node",
+          "label": "比较差异"
+        },
+        {
+          "id": "note-1",
+          "type": "node",
+          "label": "找出不一样"
+        },
+        {
+          "id": "step-2",
+          "type": "node",
+          "label": "提出问题"
+        },
+        {
+          "id": "note-2",
+          "type": "node",
+          "label": "问一句为什么"
+        },
+        {
+          "id": "summary",
+          "type": "node",
+          "label": "把好奇，变成自己的发现"
+        }
+      ],
+      "connections": [
+        {
+          "id": "step01",
+          "from": "step-0",
+          "to": "step-1"
+        },
+        {
+          "id": "step12",
+          "from": "step-1",
+          "to": "step-2"
+        }
+      ],
+      "beats": [
+        {
+          "id": "title-reveal",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "illustration-reveal",
+          "target": "illustration",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "step-0-reveal",
+          "target": "step-0",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "note-0-reveal",
+          "target": "note-0",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "step-1-reveal",
+          "target": "step-1",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "note-1-reveal",
+          "target": "note-1",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "step-2-reveal",
+          "target": "step-2",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "note-2-reveal",
+          "target": "note-2",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "summary-reveal",
+          "target": "summary",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "stage-1",
+          "target": "step-1",
+          "action": "focus",
+          "start": 144,
+          "duration": 36
+        },
+        {
+          "id": "stage-2",
+          "target": "step-2",
+          "action": "focus",
+          "start": 276,
+          "duration": 36
+        },
+        {
+          "id": "stage-3",
+          "target": "summary",
+          "action": "focus",
+          "start": 408,
+          "duration": 36
+        },
+        {
+          "id": "step01-draw",
+          "target": "step01",
+          "action": "draw",
+          "start": 448,
+          "duration": 18
+        },
+        {
+          "id": "step12-draw",
+          "target": "step12",
+          "action": "draw",
+          "start": 474,
+          "duration": 18
+        }
+      ],
+      "captions": [],
+      "shot": {
+        "id": "editorial-flow",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "title",
+            "illustration",
+            "step-0",
+            "note-0",
+            "step-1",
+            "note-1",
+            "step-2",
+            "note-2",
+            "summary"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 110,
+            "y": 100,
+            "width": 1420,
+            "height": 65,
+            "fontSize": 44,
+            "weight": "medium",
+            "align": "left",
+            "color": "ink",
+            "opacity": 1
+          },
+          "illustration": {
+            "kind": "sticker",
+            "x": 110,
+            "y": 590,
+            "width": 315,
+            "height": 300,
+            "fontSize": 28,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 1
+          },
+          "step-0": {
+            "kind": "text",
+            "x": 650,
+            "y": 345,
+            "width": 520,
+            "height": 145,
+            "fontSize": 82,
+            "weight": "medium",
+            "align": "center",
+            "color": "ink",
+            "opacity": 1
+          },
+          "note-0": {
+            "kind": "text",
+            "x": 650,
+            "y": 490,
+            "width": 520,
+            "height": 70,
+            "fontSize": 40,
+            "weight": "regular",
+            "align": "center",
+            "color": "muted",
+            "opacity": 1
+          },
+          "step-1": {
+            "kind": "text",
+            "x": 650,
+            "y": 345,
+            "width": 520,
+            "height": 145,
+            "fontSize": 82,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 0
+          },
+          "note-1": {
+            "kind": "text",
+            "x": 650,
+            "y": 490,
+            "width": 520,
+            "height": 70,
+            "fontSize": 40,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 0
+          },
+          "step-2": {
+            "kind": "text",
+            "x": 650,
+            "y": 345,
+            "width": 520,
+            "height": 145,
+            "fontSize": 82,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 0
+          },
+          "note-2": {
+            "kind": "text",
+            "x": 650,
+            "y": 490,
+            "width": 520,
+            "height": 70,
+            "fontSize": 40,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 0
+          },
+          "summary": {
+            "kind": "text",
+            "x": 530,
+            "y": 790,
+            "width": 1240,
+            "height": 80,
+            "fontSize": 48,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 0
+          }
+        },
+        "stages": [
+          {
+            "trigger": "stage-1",
+            "placements": {
+              "title": {
+                "x": 110,
+                "y": 100,
+                "width": 1420,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "medium",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "illustration": {
+                "x": 110,
+                "y": 590,
+                "width": 315,
+                "height": 300,
+                "fontSize": 28,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "step-0": {
+                "x": 470,
+                "y": 425,
+                "width": 270,
+                "height": 72,
+                "fontSize": 48,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "note-0": {
+                "x": 470,
+                "y": 510,
+                "width": 270,
+                "height": 55,
+                "fontSize": 32,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 1
+              },
+              "step-1": {
+                "x": 920,
+                "y": 345,
+                "width": 520,
+                "height": 145,
+                "fontSize": 82,
+                "weight": "medium",
+                "align": "center",
+                "color": "ink",
+                "opacity": 1
+              },
+              "note-1": {
+                "x": 920,
+                "y": 490,
+                "width": 520,
+                "height": 70,
+                "fontSize": 40,
+                "weight": "regular",
+                "align": "center",
+                "color": "muted",
+                "opacity": 1
+              },
+              "step-2": {
+                "x": 650,
+                "y": 345,
+                "width": 520,
+                "height": 145,
+                "fontSize": 82,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              },
+              "note-2": {
+                "x": 650,
+                "y": 490,
+                "width": 520,
+                "height": 70,
+                "fontSize": 40,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              },
+              "summary": {
+                "x": 530,
+                "y": 790,
+                "width": 1240,
+                "height": 80,
+                "fontSize": 48,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              }
+            }
+          },
+          {
+            "trigger": "stage-2",
+            "placements": {
+              "title": {
+                "x": 110,
+                "y": 100,
+                "width": 1420,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "medium",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "illustration": {
+                "x": 110,
+                "y": 590,
+                "width": 315,
+                "height": 300,
+                "fontSize": 28,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "step-0": {
+                "x": 470,
+                "y": 485,
+                "width": 250,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "note-0": {
+                "x": 470,
+                "y": 560,
+                "width": 250,
+                "height": 55,
+                "fontSize": 32,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 1
+              },
+              "step-1": {
+                "x": 860,
+                "y": 485,
+                "width": 250,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "note-1": {
+                "x": 860,
+                "y": 560,
+                "width": 250,
+                "height": 55,
+                "fontSize": 32,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 1
+              },
+              "step-2": {
+                "x": 1180,
+                "y": 360,
+                "width": 590,
+                "height": 125,
+                "fontSize": 76,
+                "weight": "medium",
+                "align": "center",
+                "color": "ink",
+                "opacity": 1
+              },
+              "note-2": {
+                "x": 1180,
+                "y": 505,
+                "width": 590,
+                "height": 70,
+                "fontSize": 40,
+                "weight": "regular",
+                "align": "center",
+                "color": "muted",
+                "opacity": 1
+              },
+              "summary": {
+                "x": 530,
+                "y": 790,
+                "width": 1240,
+                "height": 80,
+                "fontSize": 48,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              }
+            }
+          },
+          {
+            "trigger": "stage-3",
+            "placements": {
+              "title": {
+                "x": 110,
+                "y": 100,
+                "width": 1420,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "medium",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "illustration": {
+                "x": 110,
+                "y": 590,
+                "width": 315,
+                "height": 300,
+                "fontSize": 28,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "step-0": {
+                "x": 470,
+                "y": 505,
+                "width": 290,
+                "height": 75,
+                "fontSize": 48,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "note-0": {
+                "x": 470,
+                "y": 590,
+                "width": 290,
+                "height": 60,
+                "fontSize": 32,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 1
+              },
+              "step-1": {
+                "x": 865,
+                "y": 505,
+                "width": 290,
+                "height": 75,
+                "fontSize": 48,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "note-1": {
+                "x": 865,
+                "y": 590,
+                "width": 290,
+                "height": 60,
+                "fontSize": 32,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 1
+              },
+              "step-2": {
+                "x": 1260,
+                "y": 505,
+                "width": 430,
+                "height": 75,
+                "fontSize": 48,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "note-2": {
+                "x": 1260,
+                "y": 590,
+                "width": 430,
+                "height": 60,
+                "fontSize": 32,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 1
+              },
+              "summary": {
+                "x": 530,
+                "y": 785,
+                "width": 1240,
+                "height": 80,
+                "fontSize": 48,
+                "weight": "regular",
+                "align": "left",
+                "color": "accent",
+                "opacity": 1
+              }
+            }
+          }
+        ],
+        "routes": {
+          "step01": {
+            "stage": 3,
+            "arrow": true,
+            "track": true
+          },
+          "step12": {
+            "stage": 3,
+            "arrow": true,
+            "track": true
+          }
+        }
+      },
+      "durationFrames": 540,
+      "primaryClaim": "好问题，从观察开始",
+      "visual": {
+        "kind": "network",
+        "representation": "diagram",
+        "source": "source.md",
+        "explanation": "文案驱动的原创图解，辅助人物为虚构AI插画；连线表达文本中明确的解释关系"
+      }
+    }
+  ]
+}

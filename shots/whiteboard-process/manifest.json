@@ -1,0 +1,84 @@
+{
+  "id": "whiteboard-process",
+  "version": "1.2.0",
+  "status": "experimental",
+  "registered": true,
+  "visualKinds": [
+    "sequence"
+  ],
+  "purpose": "逐笔流程",
+  "inputModes": [
+    "document-only",
+    "document-with-assets"
+  ],
+  "requiredAssets": [],
+  "styles": [
+    "retro-zine",
+    "signal",
+    "scatterbrain",
+    "archive-grid",
+    "signal-noir",
+    "studio-frame",
+    "whiteboard"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "slots": {
+    "items": {
+      "min": 2,
+      "max": 4,
+      "labelMax": 14,
+      "textMax": 48
+    }
+  },
+  "timing": {
+    "actions": {
+      "trace": {
+        "minSec": 0.4,
+        "maxSec": 2
+      },
+      "reveal": {
+        "minSec": 0.4,
+        "maxSec": 5
+      },
+      "draw": {
+        "minSec": 0.3,
+        "maxSec": 2
+      },
+      "highlight": {
+        "minSec": 0.3,
+        "maxSec": 1.5
+      }
+    },
+    "readingSec": 1.2,
+    "titleHoldSec": 0.6,
+    "sourceHoldSec": 0.6,
+    "itemHoldSec": 0.3
+  },
+  "motion": {
+    "recipeOwned": [
+      "fixed-seed-path",
+      "single-pen-order",
+      "outline-then-text",
+      "connection-after-endpoints"
+    ],
+    "styleOwned": [
+      "color",
+      "font-family",
+      "safe-area",
+      "surface-treatment"
+    ],
+    "continuousDrift": false
+  },
+  "qa": [
+    "action-mid",
+    "action-complete",
+    "complete",
+    "before-handoff"
+  ],
+  "sound": {
+    "enabled": false,
+    "events": []
+  }
+}

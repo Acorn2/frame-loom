@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "1.0",
+  "style": {
+    "id": "paper-collage",
+    "version": "1.0.0"
+  },
+  "assets": [
+    {
+      "id": "organizer-pixel",
+      "path": "assets/organizer-pixel.png",
+      "subject": "An expressive young adult with tousled dark hair, pale blue casual shirt, charcoal trousers, seated cross-legged, holding an open blue book and resting their cheek thoughtfully on one hand; a small stack of three books immediately beside them. Front three-quarter view, full body, centered compact silhouette. Thoughtful everyday reading scene.",
+      "purpose": "主体介绍与资料编排示意；虚构讲解人物",
+      "sourceClaim": "source.md: 整理主张与关系，再编排可见解释"
+    },
+    {
+      "id": "loose-papers-pixel",
+      "path": "assets/loose-papers-pixel.png",
+      "subject": "Three overlapping loose document sheets in a disorganized pile, simple abstract bars on pages, one small blue sticky note. Isolated coherent everyday object. Crisp navy outlines, ivory pages, blue and coral highlights.",
+      "purpose": "展示尚未整理的资料",
+      "sourceClaim": "source.md: 三份示意资料的整理过程，不代表真实业务指标"
+    },
+    {
+      "id": "organized-folder-pixel",
+      "path": "assets/organized-folder-pixel.png",
+      "subject": "A single blue open folder containing three neatly arranged ivory document sheets and one small coral tab. Simple abstract pixel marks only. Isolated coherent everyday object. Crisp navy outlines, blue highlights and limited-palette pixel shading.",
+      "purpose": "展示完成编排的资料",
+      "sourceClaim": "source.md: 三份示意资料的整理过程，不代表真实业务指标"
+    },
+    {
+      "id": "curious-family",
+      "path": "assets/curious-family.png",
+      "subject": "The same friendly parent and curious child as the supplied reference, seated together observing a potted leafy plant. Preserve the parent's round glasses, loose dark hair bun and pale blue shirt, the child's short tousled dark hair and pale yellow shirt, the small magnifying glass near a leaf, pointing gesture, complete figures and plant. Keep the same scene and characters while translating the entire drawing into this style's own medium. One coherent isolated group, no room or surrounding slide.",
+      "purpose": "三套主风格同内容对照：亲子共同观察、比较与提问；虚构角色",
+      "sourceClaim": "source.md: 好问题，从观察开始；一起观察，也一起提问",
+      "references": [
+        "references/curious-family-whiteboard.png"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0",
+  "brand": {
+    "name": "Your Brand",
+    "watermark": {
+      "enabled": true,
+      "position": "top-right",
+      "opacity": 0.72,
+      "size": 36,
+      "margin": 56,
+      "drawInSeconds": 1.2,
+      "sparkle": true,
+      "underline": true
+    }
+  }
+}

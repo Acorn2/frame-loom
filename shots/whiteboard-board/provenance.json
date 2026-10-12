@@ -1,0 +1,11 @@
+{
+  "id": "whiteboard-board",
+  "mode": "code-adaptation",
+  "source": "https://github.com/trustfuture/simon-skills/tree/master/skills/whiteboard-video",
+  "files": [
+    "lib/render.html",
+    "references/scene-patterns.md"
+  ],
+  "license": "MIT; see references/licenses/simon-whiteboard-MIT.txt",
+  "changes": "Ported the sequential rough stroke pairs, text timing, sticker wipe and pencil geometry to a deterministic Remotion renderer. Strict JSON geometry replaces executable scenes.js; selected fonts remain independent."
+}

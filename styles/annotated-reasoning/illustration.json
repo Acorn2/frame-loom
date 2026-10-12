@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0",
+  "style": {
+    "id": "annotated-reasoning",
+    "version": "1.0.0"
+  },
+  "medium": "Annotated Reasoning",
+  "subjectPrompt": "Refined quiet editorial ink illustration for a small supporting corner cutout. Fine dark slate outlines, flat muted pale blue and ivory colors, complete simple figures and objects. No glossy highlights, gradients, shadow haze, 3D volume, scene background, giant characters or surrounding slide. Text-led canvas: illustration supports rather than replaces writing.",
+  "palette": [
+    "#262c35",
+    "#9bbbea",
+    "#fffefa"
+  ],
+  "composition": [
+    "文字和图解是主体，插画位于角落，所有插画框总面积最多8%",
+    "图片不得包含文字、箭头或整个页面"
+  ],
+  "motion": [
+    "主体短暂入场后保持稳定",
+    "正文批注或文字归组、路径追踪由 renderer 完成"
+  ]
+}

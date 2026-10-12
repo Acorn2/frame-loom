@@ -1,6 +1,14 @@
+import {isTextLedShot} from './text-led/schema';
+import {textLedAllowed, validateTextLed} from './text-led/validate';
 import {p2SlotType, p2Allowed, validateP2} from './p2/validate';
 import {isP2Shot} from './p2/schema';
 import {isExpansionShot} from './expansion/schema';
+import {isIllustratedShot} from './illustrated/schema';
+import {illustratedSlotType, illustratedAllowed, validateIllustrated} from './illustrated/validate';
+import {isWhiteboardShot} from './whiteboard/schema';
+import {validateBoard} from './whiteboard-board/validate';
+import {compatibleCanvases} from './compatibility';
+import {whiteboardSlotType, whiteboardAllowed, validateWhiteboard} from './whiteboard/validate';
 import {expansionAllowed, expansionSlotType, validateExpansion} from './expansion/validate';
 import {validateChapterTransitions} from './shortlist/chapter-transitions';
 import {p1SlotType, p1Allowed, validateP1} from './shortlist/validate-p1';
@@ -36,7 +44,7 @@ export function compileShot(scene: StoryboardScene, context: ShotContext): ShotP
   const {fps, width, height, style} = context;
   const layout = width < height ? 'portrait' : 'landscape';
   if (!recipe.styles.includes(style.id) || (shot.id !== 'semantic-default' && style.version !== '1.0.0')) fail('未支持的风格或精确版本。');
-  if (!recipe.orientations.includes(layout)) fail(`尚未支持 ${layout}。`);
+  if (!compatibleCanvases(recipe, style.id).includes(layout)) fail(`尚未支持 ${layout}。`);
   if (shot.id !== 'semantic-default' && Math.abs(width / height - (layout === 'portrait' ? 9 / 16 : 16 / 9)) > 0.001) fail('只适配声明过的16:9或9:16画幅。');
   if (!scene.visual || !recipe.visualKinds.includes(scene.visual.kind)) fail('visual.kind 与配方冲突。');
   const visual = scene.visual ?? fail('缺少 visual。');
@@ -55,8 +63,8 @@ export function compileShot(scene: StoryboardScene, context: ShotContext): ShotP
       const layer = get(id);
       if (name !== 'emphasis') allIds.push(id);
       const titleSlot = name === 'phrases' || name === 'title' || name === 'emphasis' || name === 'subtitle';
-      const explicitType = expansionSlotType(shot, name) ?? p2SlotType(shot) ?? p1SlotType(shot, name);
-      if (explicitType ? layer.type !== explicitType : titleSlot ? layer.type !== 'label' : !['node', 'card'].includes(layer.type)) fail(`${id} 的图层类型不符合 ${name} 槽位。`);
+      const explicitType = (shot.id === 'whiteboard-board' || isTextLedShot(shot)) ? ['node', 'object'] : illustratedSlotType(shot, name) ?? whiteboardSlotType(shot, name) ?? expansionSlotType(shot, name) ?? p2SlotType(shot) ?? p1SlotType(shot, name);
+      if (explicitType ? !(Array.isArray(explicitType) ? explicitType.includes(layer.type) : layer.type === explicitType) : titleSlot ? layer.type !== 'label' : !['node', 'card'].includes(layer.type)) fail(`${id} 的图层类型不符合 ${name} 槽位。`);
       if (!layer.label?.trim()) fail(`${id} 需要明确的 label。`);
       if (budget.textMax && !layer.text?.trim()) fail(`${id} 需要可见正文 text。`);
       if (budget.labelMax && [...(layer.label ?? '')].length > budget.labelMax) fail(`${id} 标题超过 ${budget.labelMax} 字，请缩短或拆镜头。`);
@@ -83,7 +91,7 @@ export function compileShot(scene: StoryboardScene, context: ShotContext): ShotP
     if (!budget || beat.duration < Math.ceil(budget.minSec * fps) || beat.duration > Math.ceil(budget.maxSec * fps)) fail(`${beat.id} 动作窗口不符合配方范围。`);
     if (beat.start < 0 || endOf(beat) > stableEndFrame) fail(`${beat.id} 超出有效镜头时间。`);
     if (shot.id === 'semantic-default' || shot.id === 'compare-reveal' || shot.id === 'network-expand') continue;
-    const allowed = isExpansionShot(shot) ? expansionAllowed(shot, beat) : isP2Shot(shot) ? p2Allowed(shot, beat, scene) : p1Allowed(shot, beat);
+    const allowed = isTextLedShot(shot) ? textLedAllowed(shot, beat, scene) : shot.id === 'whiteboard-board' ? scene.connections.some(link => link.id === beat.target) ? ['draw'] : shot.slots.items.includes(beat.target) ? ['reveal'] : [] : isIllustratedShot(shot) ? illustratedAllowed(shot, beat, scene) : isWhiteboardShot(shot) ? whiteboardAllowed(shot, beat, scene) : isExpansionShot(shot) ? expansionAllowed(shot, beat) : isP2Shot(shot) ? p2Allowed(shot, beat, scene) : p1Allowed(shot, beat);
     if (shot.id === 'paper-title' && beat.target === shot.slots.emphasis) allowed.push('highlight');
     if ((shot.id === 'blur-slide' || shot.id === 'split-text-stagger') && beat.target === shot.slots.emphasis) allowed.push('highlight');
     if (shot.id === 'card-stack' && beat.target === shot.slots.items[0]) allowed.push('focus');
@@ -181,7 +189,11 @@ export function compileShot(scene: StoryboardScene, context: ShotContext): ShotP
   validateP1(scene, shot, fps, get, entry, fail);
   validateP2(scene, shot, fps, get, entry, fail);
   validateExpansion(scene, shot, fps, get, entry, fail);
-  if ('items' in shot.slots && !isP2Shot(shot) && !isExpansionShot(shot)) {
+  validateWhiteboard(scene, shot, fps, get, entry, fail);
+  validateIllustrated(scene, shot, fps, get, entry, fail);
+  validateBoard(scene, shot, fps, get, entry, fail);
+  validateTextLed(scene, shot, fps, get, entry, fail);
+  if ('items' in shot.slots && !isTextLedShot(shot) && !isP2Shot(shot) && !isExpansionShot(shot) && !isWhiteboardShot(shot) && shot.id !== 'whiteboard-board') {
     const entries = shot.slots.items.map(entry);
     entries.forEach((beat, index) => {
       if (index && beat.start - entries[index - 1]!.start < Math.ceil(recipe.timing.itemHoldSec * fps)) fail('逐项提示间隔过短，请缩短内容或拆镜头。');

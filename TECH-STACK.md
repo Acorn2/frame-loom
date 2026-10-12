@@ -1,5 +1,7 @@
 # Tech Stack
 
+插画风格差异化复用 React、Remotion、原生 SVG/HTML 和 Vitest，不新增依赖。有机曲面与阶梯边框按固定几何绘制；连续入场与像素显现由镜头帧数确定，完成后静止阅读。各风格文字区域和连线端点由共享 TypeScript 函数定义，预检与实际渲染共同验证。
+
 本地风格与镜头配方库使用原生 HTML/CSS/ES modules 与 Node.js 静态文件服务，不新增依赖。构建时从既有 catalog 输出 JSON 和公开媒体；Remotion 复用同一打包生成配方样片。三个独立 HTML 页面使用相对链接、共享 CSS 与 ES module，支持 GitHub Pages 子路径。浏览器存储保存风格、镜头选择和样片播放位置，不要求填写文档路径；禁用存储时 URL 参数仅携带公开选择。导出逻辑与 DOM 分离，Vitest 覆盖兼容性、制作路由、公开TTS元数据与媒体请求。
 
 公开页面使用 GitHub Pages + Actions 静态 artifact 发布，生成产物不提交到 Git。独立工作流固定 Ubuntu 24.04 / Node.js 24，安装 FFmpeg、Noto CJK 和 Liberation 字体；预览以输入指纹缓存，发布构建检查全部图片与动画完整性。没有增加项目 npm 依赖或运行时后台。
@@ -54,3 +56,30 @@ P2 继续使用现有 React / Remotion / Zod；SVG 滤镜与确定性闭式粒�
 ## 内容布局验证
 
 复用React/Remotion、Chromium的DOM Range、Canvas字体墨迹测量及现有Vitest；不新增依赖。共享TypeScript布局函数提供确定性区域和节点边界，渲染器在同帧加载字体和图片后记录布局证据，Node端在候选发布和QA时校验。回归入口 `npm run test:content-layout`，完整矩阵使用 `--all`；见[布局契约](references/content-layout.md)。
+
+## 白板绘制
+
+三个基础白板镜头复用 React、Remotion 与原生 SVG/HTML：固定种子折线路径、归一化 stroke-dashoffset 和基于帧的笔尖插值，使用受控字体加载后的横向文字揭示。新的开放白板另外使用 Rough.js 4.6.6，移植上游的双线、填充、逐行文字与铅笔绘制方法；均未实现字形笔顺，不安装系统字体或执行上游场景脚本。方法来源固定于 simon-skills 提交 `3ad0a25127c17da48a0e869c9efbf4136c40848b`，各镜头 provenance 记录改编或独立实现范围。
+
+## 插画讲解素材
+
+三套主风格提供 `illustration.json`；`illustration-plan.json` 经严格 schema 与本地路径检查生成提示词，Agent 调用原生 imagegen，检查结果后由 `register:illustration` 复制透明 PNG 并登记风格、计划、提示词与字节指纹。渲染时只读取本地素材；截图输入拒绝生成策略。六个 illustrated-* 静态 renderer 共享槽位几何与预检，字体沿用既有受控清单。未新增外部服务或密钥配置，原六套保留兼容。
+
+## Whiteboard 视觉基准修正
+
+以用户提供的上游 sample-preview.gif 为基准，whiteboard-board 提供开放白板的明确元素几何、实际选定字体的逐行擦出、贴纸擦出、Rough.js 双线分段／填充及同步铅笔。移植代码保留 trustfuture MIT 声明，新增固定 roughjs 4.6.6；不引入上游 TTS 或可执行场景脚本。FrameLoom 的分镜、字体、素材、生产锁与审核仍为唯一生产入口。Flat 的有机情境舞台和像素讲解笔记的阶梯模块使用各自布局，文字预检与 renderer 共享该布局。
+
+两种插画媒介不增加依赖：原生 imagegen 生成独立 PNG 主体，Remotion 用帧数确定平滑漫画或像素素材按块显现；SVG clipPath 以确定性的方块序列揭示图片，关系使用直角折线，文字保留正常字体。
+
+## 语音时间与增量渲染
+
+复用 Zod、Node crypto、ffprobe / FFmpeg 与 Remotion 4.0.522 的 frameRange / WAV 输出，不新增依赖。豆包 v3 可保留 sentence.words 的秒级时间戳；是否请求时间戳继续由用户的 requestBody 设置决定。分场缓存保存 H.264 静音画面，整片音频只编码一次 AAC。契约与限制见 [生产说明](references/speech-driven-production.md)。
+
+## 品牌标识
+
+复用 Zod、Node 文件和字节摘要、ffprobe / FFmpeg、本地 Remotion 图层与浏览器字体测量，不新增依赖。原生 SVG 绘制星形和下划线；品牌名继承项目字体，Logo 使用本地 PNG。
+
+
+## 文案优先风格接入
+
+文案优先风格继续使用现有 Remotion、React、Zod、本地字体与 PNG，不增加依赖。批注绑定文字短语，排印阶段绑定 focus beat，renderer 与预检共用几何。

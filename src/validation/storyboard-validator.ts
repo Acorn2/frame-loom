@@ -58,6 +58,8 @@ function validateStyleReference(storyboard: Storyboard, styleRoot: string, issue
     if (entry.version !== storyboard.style.version) {
       issues.push(issue('style.version', `Style Pack "${storyboard.style.id}" 需要版本 ${entry.version}。`));
     }
+    const canvas = storyboard.project.width < storyboard.project.height ? 'portrait' : 'landscape';
+    if (!entry.canvas.includes(canvas)) issues.push(issue('style.canvas', `Style Pack "${entry.id}" 不支持 ${canvas}。`));
     if (storyboard.schemaVersion === '2.2' && !isTemplateFamily(entry.id)) {
       issues.push(issue('style.id', `Style Pack "${entry.id}" 暂不支持 Storyboard 2.2 的镜头职责版式。`));
     }

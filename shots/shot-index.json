@@ -309,6 +309,96 @@
       "purpose": "单位点阵重组",
       "manifest": "unit-dot-regroup/manifest.json",
       "recipe": "unit-dot-regroup/recipe.md"
+    },
+    {
+      "id": "whiteboard-process",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "逐笔流程",
+      "manifest": "whiteboard-process/manifest.json",
+      "recipe": "whiteboard-process/recipe.md"
+    },
+    {
+      "id": "whiteboard-compare",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "逐笔对照",
+      "manifest": "whiteboard-compare/manifest.json",
+      "recipe": "whiteboard-compare/recipe.md"
+    },
+    {
+      "id": "whiteboard-explain",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "主体解释",
+      "manifest": "whiteboard-explain/manifest.json",
+      "recipe": "whiteboard-explain/recipe.md"
+    },
+    {
+      "id": "illustrated-hero",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "illustrated-hero/manifest.json",
+      "recipe": "illustrated-hero/recipe.md"
+    },
+    {
+      "id": "illustrated-compare",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "illustrated-compare/manifest.json",
+      "recipe": "illustrated-compare/recipe.md"
+    },
+    {
+      "id": "illustrated-process",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "illustrated-process/manifest.json",
+      "recipe": "illustrated-process/recipe.md"
+    },
+    {
+      "id": "illustrated-explain",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "illustrated-explain/manifest.json",
+      "recipe": "illustrated-explain/recipe.md"
+    },
+    {
+      "id": "illustrated-breakdown",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "illustrated-breakdown/manifest.json",
+      "recipe": "illustrated-breakdown/recipe.md"
+    },
+    {
+      "id": "illustrated-metric",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "illustrated-metric/manifest.json",
+      "recipe": "illustrated-metric/recipe.md"
+    },
+    {
+      "id": "whiteboard-board",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "开放白板逐笔讲解",
+      "manifest": "whiteboard-board/manifest.json",
+      "recipe": "whiteboard-board/recipe.md"
+    },
+    {
+      "id": "annotated-manuscript",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "批注推演",
+      "manifest": "annotated-manuscript/manifest.json",
+      "recipe": "annotated-manuscript/recipe.md"
+    },
+    {
+      "id": "editorial-flow",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "编辑式排印",
+      "manifest": "editorial-flow/manifest.json",
+      "recipe": "editorial-flow/recipe.md"
     }
   ]
 }

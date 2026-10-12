@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import {illustrationFiles} from './illustrations.mjs';
 import {createHash} from 'node:crypto';
 import {resolveProductionLock} from './production-lock.mjs';
 import {fontAssetFiles} from '../../src/fonts/assets.ts';
@@ -18,6 +19,7 @@ export function storyboardApprovalFingerprint(projectPath) {
   const files = ['storyboard.json', 'script.md', 'asset-manifest.json'].map((name) => path.join(projectPath, name));
   files.push(...collectFiles(path.join(projectPath, 'assets')));
   files.push(...collectManifestAssetFiles(projectPath));
+  files.push(...illustrationFiles(projectPath));
   const handoffPath = path.join(projectPath, 'visual-handoff.json');
   if (fs.existsSync(handoffPath)) files.push(handoffPath);
   try {

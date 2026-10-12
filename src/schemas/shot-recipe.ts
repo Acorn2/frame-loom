@@ -1,8 +1,12 @@
+import {TEXT_LED_IDS, TEXT_LED_SCHEMAS} from '../shots/text-led/schema';
 import {P2_IDS, P2_SCHEMAS} from '../shots/p2/schema';
 import {EXPANSION_IDS, EXPANSION_SCHEMAS} from '../shots/expansion/schema';
 import {z} from 'zod';
+import {ILLUSTRATED_IDS, ILLUSTRATED_SCHEMAS} from '../shots/illustrated/schema';
+import {WHITEBOARD_IDS, WHITEBOARD_SCHEMAS} from '../shots/whiteboard/schema';
+import {WHITEBOARD_BOARD_IDS, WHITEBOARD_BOARD_SCHEMAS} from '../shots/whiteboard-board/schema';
 
-export const SHOT_IDS = ['semantic-default', 'paper-title', 'title-to-label', 'document-conclusions', 'list-reveal', 'compare-reveal', 'network-expand', 'blur-slide', 'split-text-stagger', 'card-stack', 'concept-matrix', 'platform-hinge-rise', 'source-converge', 'diagram-cascade', 'lead-word-assemble', 'brace-expand', 'pill-slot-cycle', 'word-roll', 'text-column-converge', 'evidence-relay', 'row-embed', 'structure-then-text', 'timeline-travel', 'odometer-roll', ...P2_IDS, ...EXPANSION_IDS] as const;
+export const SHOT_IDS = ['semantic-default', 'paper-title', 'title-to-label', 'document-conclusions', 'list-reveal', 'compare-reveal', 'network-expand', 'blur-slide', 'split-text-stagger', 'card-stack', 'concept-matrix', 'platform-hinge-rise', 'source-converge', 'diagram-cascade', 'lead-word-assemble', 'brace-expand', 'pill-slot-cycle', 'word-roll', 'text-column-converge', 'evidence-relay', 'row-embed', 'structure-then-text', 'timeline-travel', 'odometer-roll', ...P2_IDS, ...EXPANSION_IDS, ...WHITEBOARD_IDS, ...ILLUSTRATED_IDS, ...WHITEBOARD_BOARD_IDS, ...TEXT_LED_IDS] as const;
 export const ShotRefSchema = z.object({id: z.enum(SHOT_IDS), version: z.enum(['1.0.0', '1.1.0', '1.2.0'])}).strict();
 export const ShotSelectionSchema = z.array(ShotRefSchema).min(1).max(SHOT_IDS.length).refine((shots) => new Set(shots.map((shot) => shot.id)).size === shots.length, '镜头配方集合不能包含重复 ID。');
 export type ShotRef = z.infer<typeof ShotRefSchema>;
@@ -10,8 +14,12 @@ const ref = z.string().min(1);
 const identity = {version: z.enum(['1.0.0', '1.1.0', '1.2.0'])};
 export const DocumentConclusionsSchema = z.object({id: z.literal('document-conclusions'), ...identity, slots: z.object({source: ref, items: z.array(ref).length(3)}).strict()}).strict();
 export const ShotSchema = z.discriminatedUnion('id', [
+  ...TEXT_LED_SCHEMAS,
   ...P2_SCHEMAS,
   ...EXPANSION_SCHEMAS,
+  ...WHITEBOARD_SCHEMAS,
+  ...WHITEBOARD_BOARD_SCHEMAS,
+  ...ILLUSTRATED_SCHEMAS,
   z.object({id: z.literal('semantic-default'), ...identity, slots: z.object({}).strict()}).strict(),
   z.object({id: z.literal('paper-title'), ...identity, slots: z.object({phrases: z.array(ref).min(1).max(4), emphasis: ref.optional()}).strict()}).strict(),
   z.object({id: z.literal('title-to-label'), ...identity, slots: z.object({title: ref, items: z.array(ref).min(2).max(4)}).strict()}).strict(),

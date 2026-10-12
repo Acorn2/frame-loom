@@ -5,7 +5,8 @@ import type {StyleTokens} from '../../styles/style-loader';
 // while composition, typography, shapes and entrances retain a distinct identity.
 export const STYLE_LANGUAGES = {
   'retro-zine': 'editorial', 'archive-grid': 'swiss', scatterbrain: 'notes',
-  signal: 'signal', 'signal-noir': 'blueprint', 'studio-frame': 'product'
+  'annotated-reasoning': 'manuscript', 'editorial-typography': 'typeset',
+  whiteboard: 'whiteboard', 'flat-explainer': 'flat', 'paper-collage': 'pixel', signal: 'signal', 'signal-noir': 'blueprint', 'studio-frame': 'product'
 } as const;
 export type StyleLanguage = typeof STYLE_LANGUAGES[keyof typeof STYLE_LANGUAGES];
 export function styleLanguage(id: string): StyleLanguage | undefined {
@@ -32,8 +33,13 @@ export function fittedSemanticFont(text: string, width: number, height: number, 
 export function statementTitleLayout(id: string, width: number, height: number, portrait: boolean, scale: number) {
   const family = styleLanguage(id);
   const layouts = {
+    manuscript: [.02, .22, .90, .44, 110],
+    typeset: [.02, .22, .90, .44, 110],
     editorial: [.02, .22, portrait ? .92 : .78, .44, 158],
     swiss: [.02, .23, portrait ? .86 : .63, .47, 146],
+    flat: [.04, .20, .88, .44, 142],
+    pixel: [.04, .20, .88, .44, 142],
+    whiteboard: [.04, .20, .88, .44, 142],
     notes: [.06, .20, portrait ? .84 : .66, .42, 142],
     signal: [.08, .24, .84, .40, 148],
     blueprint: [.02, .15, .94, .38, 140],
@@ -53,18 +59,19 @@ export function languageEntrance(progress: number, tokens: StyleTokens, scale: n
   const p = Math.max(0, Math.min(1, progress)); const offset = (1 - p) * tokens.motion.enterOffset * scale;
   const family = styleLanguage(tokens.id);
   return {
-    opacity: p,
+    opacity: family === 'pixel' ? Math.min(1, p * 3) : p,
     transform: family === 'editorial' ? `translateX(${-offset}px)`
-      : family === 'notes' ? `translateY(${offset}px) rotate(${(index % 2 ? 1 : -1) * (1 - p) * 5}deg)`
-        : family === 'signal' ? `scale(${.96 + .04 * p})`
+      : family === 'pixel' ? undefined
+        : family === 'notes' ? `translateY(${offset}px) rotate(${(index % 2 ? 1 : -1) * (1 - p) * 5}deg)`
+        : family === 'signal' || family === 'flat' ? `scale(${.96 + .04 * p})`
           : family === 'blueprint' ? undefined : `translateY(${offset}px)`,
-    clipPath: family === 'swiss' ? `inset(0 ${(1 - p) * 100}% 0 0)` : undefined
+    clipPath: ['swiss', 'whiteboard'].includes(family ?? '') ? `inset(0 ${(1 - p) * 100}% 0 0)` : undefined
   };
 }
 
 export function languageBackground(tokens: StyleTokens, scale: number): CSSProperties {
   const family = styleLanguage(tokens.id);
   if (family === 'blueprint') return {backgroundImage: `linear-gradient(${tokens.grid}90 1px, transparent 1px),linear-gradient(90deg, ${tokens.grid}90 1px, transparent 1px)`, backgroundSize: `${84 * scale}px ${84 * scale}px`};
-  if (family === 'notes') return {backgroundImage: `radial-gradient(${tokens.grid} 1.5px, transparent 1.5px)`, backgroundSize: `${46 * scale}px ${46 * scale}px`};
+  if (family === 'notes' || family === 'whiteboard') return {backgroundImage: `radial-gradient(${tokens.grid} 1.5px, transparent 1.5px)`, backgroundSize: `${46 * scale}px ${46 * scale}px`};
   return {};
 }

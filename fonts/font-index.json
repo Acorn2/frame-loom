@@ -7,7 +7,12 @@
     "archive-grid": "source-han-sans-sc",
     "signal-noir": "source-han-sans-sc",
     "studio-frame": "source-han-sans-sc",
-    "retro-windows": "source-han-sans-sc"
+    "retro-windows": "source-han-sans-sc",
+    "whiteboard": "xiaolai",
+    "flat-explainer": "source-han-sans-sc",
+    "paper-collage": "source-han-sans-sc",
+    "annotated-reasoning": "source-han-serif-sc",
+    "editorial-typography": "source-han-sans-sc"
   },
   "fonts": [
     {

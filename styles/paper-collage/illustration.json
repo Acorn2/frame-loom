@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0",
+  "style": {
+    "id": "paper-collage",
+    "version": "1.0.0"
+  },
+  "medium": "Pixel Explainer Notes",
+  "subjectPrompt": "Refined editorial 16-bit pixel illustration of expressive everyday people, objects or a compact local situation. Crisp square pixel clusters on a consistent grid, stepped silhouettes, carefully placed limited-palette highlights and shadows, dark navy pixel outlines, readable expressive faces and interesting small details. Blue, coral and warm natural skin colors. Apparent subject resolution about 160–200 pixels high enlarged with nearest-neighbor crisp edges. The subject itself must be pixel art, not a smooth cartoon inside a pixel frame. NO blur, smooth vector curves, paper fibers, tape, card, castle, game level, map, adventure, quest, HUD or in-image text. Isolated complete subject on genuine transparency.",
+  "palette": [
+    "#172033",
+    "#1688f8",
+    "#de3e49",
+    "#a7c9ed",
+    "#edbc96"
+  ],
+  "composition": [
+    "干净白色或冷灰画布，像素人物、物件和局部情境直接出镜",
+    "主体小巧、有表情、有细节；说明文字使用项目所选正常中文字体",
+    "以讲解关系和清单组织画面，不加入城堡、关卡、地图或冒险叙事"
+  ],
+  "motion": [
+    "像素素材按块显现，文字逐项出现；关系箭头随讲解展开",
+    "重点标记轻闪一次后落定，不持续闪烁、抖动或分格位移"
+  ]
+}

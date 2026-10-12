@@ -1,0 +1,508 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "whiteboard",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "illustrated-hero",
+      "version": "1.2.0"
+    },
+    {
+      "id": "illustrated-compare",
+      "version": "1.2.0"
+    },
+    {
+      "id": "illustrated-process",
+      "version": "1.2.0"
+    },
+    {
+      "id": "illustrated-explain",
+      "version": "1.2.0"
+    },
+    {
+      "id": "illustrated-breakdown",
+      "version": "1.2.0"
+    },
+    {
+      "id": "illustrated-metric",
+      "version": "1.2.0"
+    }
+  ],
+  "layoutPolicy": "content-first-v1",
+  "font": {
+    "id": "xiaolai",
+    "version": "3.126"
+  },
+  "project": {
+    "title": "插画讲解风格示例",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 42,
+    "durationFrames": 1260,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "illustrated-hero",
+      "template": "statement",
+      "purpose": "opening",
+      "title": "从资料到解释",
+      "primaryClaim": "从资料到解释",
+      "visual": {
+        "kind": "statement",
+        "explanation": "FrameLoom 自写资料编排示意，人物为虚构角色，数字为三份示意资料的计数",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "illustrated-hero",
+        "version": "1.2.0",
+        "slots": {
+          "subject": "subject",
+          "items": [
+            "a"
+          ]
+        }
+      },
+      "narration": "从资料到解释",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "subject",
+          "type": "object",
+          "asset": "assets/organizer.png",
+          "label": "资料编排者",
+          "fit": "contain"
+        },
+        {
+          "id": "a",
+          "type": "node",
+          "label": "让观众跟上解释",
+          "text": "人物建立情境，文字说清主张，连线解释关系"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "subject-reveal",
+          "target": "subject",
+          "action": "reveal",
+          "start": 12,
+          "duration": 30
+        },
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 57,
+          "duration": 30
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "illustrated-compare",
+      "template": "statement",
+      "purpose": "claim",
+      "title": "资料多，不等于讲得清楚",
+      "primaryClaim": "资料多，不等于讲得清楚",
+      "visual": {
+        "kind": "compare",
+        "explanation": "FrameLoom 自写资料编排示意，人物为虚构角色，数字为三份示意资料的计数",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "illustrated-compare",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "a",
+            "b"
+          ]
+        }
+      },
+      "narration": "资料多，不等于讲得清楚",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "a",
+          "type": "object",
+          "asset": "assets/loose-papers.png",
+          "label": "原始资料",
+          "fit": "contain",
+          "text": "三份资料保留各自来源"
+        },
+        {
+          "id": "b",
+          "type": "object",
+          "asset": "assets/organized-folder.png",
+          "label": "编排结果",
+          "fit": "contain",
+          "text": "按主张和关系整理讲解"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 12,
+          "duration": 30
+        },
+        {
+          "id": "b-reveal",
+          "target": "b",
+          "action": "reveal",
+          "start": 57,
+          "duration": 30
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "illustrated-process",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "先整理，再编排",
+      "primaryClaim": "先整理，再编排",
+      "visual": {
+        "kind": "sequence",
+        "explanation": "FrameLoom 自写资料编排示意，人物为虚构角色，数字为三份示意资料的计数",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "illustrated-process",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "a",
+            "b"
+          ]
+        }
+      },
+      "narration": "先整理，再编排",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "a",
+          "type": "object",
+          "asset": "assets/loose-papers.png",
+          "label": "原始资料",
+          "fit": "contain",
+          "text": "三份资料保留各自来源"
+        },
+        {
+          "id": "b",
+          "type": "object",
+          "asset": "assets/organized-folder.png",
+          "label": "编排结果",
+          "fit": "contain",
+          "text": "按主张和关系整理讲解"
+        }
+      ],
+      "connections": [
+        {
+          "id": "link-0",
+          "from": "a",
+          "to": "b"
+        }
+      ],
+      "beats": [
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 12,
+          "duration": 30
+        },
+        {
+          "id": "b-reveal",
+          "target": "b",
+          "action": "reveal",
+          "start": 57,
+          "duration": 30
+        },
+        {
+          "id": "link-0-draw",
+          "target": "link-0",
+          "action": "draw",
+          "start": 93,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "illustrated-explain",
+      "template": "graph-explainer",
+      "purpose": "claim",
+      "title": "先说主张，再解释关系",
+      "primaryClaim": "先说主张，再解释关系",
+      "visual": {
+        "kind": "network",
+        "explanation": "FrameLoom 自写资料编排示意，人物为虚构角色，数字为三份示意资料的计数",
+        "representation": "diagram",
+        "source": "source.md",
+        "anchorId": "subject"
+      },
+      "shot": {
+        "id": "illustrated-explain",
+        "version": "1.2.0",
+        "slots": {
+          "subject": "subject",
+          "items": [
+            "a",
+            "b"
+          ]
+        }
+      },
+      "narration": "先说主张，再解释关系",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "subject",
+          "type": "object",
+          "asset": "assets/organizer.png",
+          "label": "资料编排者",
+          "fit": "contain"
+        },
+        {
+          "id": "a",
+          "type": "node",
+          "label": "保留原始主张",
+          "text": "每句解释都能回到来源"
+        },
+        {
+          "id": "b",
+          "type": "node",
+          "label": "让关系看得见",
+          "text": "按讲解顺序揭示文字与连接"
+        }
+      ],
+      "connections": [
+        {
+          "id": "link-0",
+          "from": "subject",
+          "to": "a"
+        },
+        {
+          "id": "link-1",
+          "from": "subject",
+          "to": "b"
+        }
+      ],
+      "beats": [
+        {
+          "id": "subject-reveal",
+          "target": "subject",
+          "action": "reveal",
+          "start": 12,
+          "duration": 30
+        },
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 57,
+          "duration": 30
+        },
+        {
+          "id": "b-reveal",
+          "target": "b",
+          "action": "reveal",
+          "start": 102,
+          "duration": 30
+        },
+        {
+          "id": "link-0-draw",
+          "target": "link-0",
+          "action": "draw",
+          "start": 93,
+          "duration": 24
+        },
+        {
+          "id": "link-1-draw",
+          "target": "link-1",
+          "action": "draw",
+          "start": 138,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "illustrated-breakdown",
+      "template": "graph-explainer",
+      "purpose": "claim",
+      "title": "让主张与关系各司其职",
+      "primaryClaim": "让主张与关系各司其职",
+      "visual": {
+        "kind": "network",
+        "explanation": "FrameLoom 自写资料编排示意，人物为虚构角色，数字为三份示意资料的计数",
+        "representation": "diagram",
+        "source": "source.md",
+        "anchorId": "subject"
+      },
+      "shot": {
+        "id": "illustrated-breakdown",
+        "version": "1.2.0",
+        "slots": {
+          "subject": "subject",
+          "items": [
+            "a",
+            "b"
+          ]
+        }
+      },
+      "narration": "让主张与关系各司其职",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "subject",
+          "type": "object",
+          "asset": "assets/organizer.png",
+          "label": "资料编排者",
+          "fit": "contain"
+        },
+        {
+          "id": "a",
+          "type": "object",
+          "asset": "assets/loose-papers.png",
+          "label": "原始资料",
+          "fit": "contain",
+          "text": "三份资料保留各自来源"
+        },
+        {
+          "id": "b",
+          "type": "object",
+          "asset": "assets/organized-folder.png",
+          "label": "编排结果",
+          "fit": "contain",
+          "text": "按主张和关系整理讲解"
+        }
+      ],
+      "connections": [
+        {
+          "id": "link-0",
+          "from": "subject",
+          "to": "a"
+        },
+        {
+          "id": "link-1",
+          "from": "subject",
+          "to": "b"
+        }
+      ],
+      "beats": [
+        {
+          "id": "subject-reveal",
+          "target": "subject",
+          "action": "reveal",
+          "start": 12,
+          "duration": 30
+        },
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 57,
+          "duration": 30
+        },
+        {
+          "id": "b-reveal",
+          "target": "b",
+          "action": "reveal",
+          "start": 102,
+          "duration": 30
+        },
+        {
+          "id": "link-0-draw",
+          "target": "link-0",
+          "action": "draw",
+          "start": 93,
+          "duration": 24
+        },
+        {
+          "id": "link-1-draw",
+          "target": "link-1",
+          "action": "draw",
+          "start": 138,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "illustrated-metric",
+      "template": "metric-grid",
+      "purpose": "evidence",
+      "title": "数字来自资料，不来自插画",
+      "primaryClaim": "数字来自资料，不来自插画",
+      "visual": {
+        "kind": "metric",
+        "explanation": "FrameLoom 自写资料编排示意，人物为虚构角色，数字为三份示意资料的计数",
+        "representation": "diagram",
+        "source": "source.md",
+        "unit": "份"
+      },
+      "shot": {
+        "id": "illustrated-metric",
+        "version": "1.2.0",
+        "slots": {
+          "subject": "subject",
+          "items": [
+            "a"
+          ]
+        }
+      },
+      "narration": "数字来自资料，不来自插画",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "subject",
+          "type": "object",
+          "asset": "assets/organizer.png",
+          "label": "资料编排者",
+          "fit": "contain"
+        },
+        {
+          "id": "a",
+          "type": "metric",
+          "label": "示意资料数量",
+          "value": 3
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "subject-reveal",
+          "target": "subject",
+          "action": "reveal",
+          "start": 12,
+          "duration": 30
+        },
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 57,
+          "duration": 30
+        },
+        {
+          "id": "a-count",
+          "target": "a",
+          "action": "count",
+          "start": 96,
+          "duration": 36
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

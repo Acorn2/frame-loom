@@ -1,3 +1,4 @@
+import {isFixedStyle} from '../library/style-policy.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {describe, expect, it} from 'vitest';
@@ -5,7 +6,7 @@ import {libraryStyleIds, libraryPreviewFixtures, buildLibraryCatalog} from '../s
 import {checkStoryboardInput, checkVisualInput, checkAssetInput} from '../scripts/lib/preflight.mjs';
 import {recipeAppearance} from '../src/shots/appearance.ts';
 import {createStyleTokens} from '../src/styles/style-loader.ts';
-import {normalizeSelection, createExports} from '../library/selection.mjs';
+import {normalizeSelection, createExports, compatible} from '../library/selection.mjs';
 import {assertShotSelectionCompatibility} from '../src/shots/selection.ts';
 import {recipePreview} from '../library/presentation.mjs';
 const luminance=hex=>{const [r,g,b]=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return r*.2126+g*.7152+b*.0722;};
@@ -13,7 +14,7 @@ const contrast=(a,b)=>{const x=luminance(a),y=luminance(b);return(Math.max(x,y)+
 describe('independent landscape style and shot combinations',()=>{
  const catalog=buildLibraryCatalog();
  it.each(libraryStyleIds)('%s accepts every scene, hosted action, transition and variant fixture',style=>{
-  const fixtures=libraryPreviewFixtures().filter(f=>f.styleId===style);expect(fixtures).toHaveLength(60);
+  const fixtures=libraryPreviewFixtures().filter(f=>f.styleId===style);expect(fixtures).toHaveLength(style === 'whiteboard' ? 11 : ['annotated-reasoning', 'editorial-typography'].includes(style) ? 2 : 63);
 
   for(const fixture of fixtures){
    const storyboardPath=path.resolve(fixture.source),board=JSON.parse(fs.readFileSync(storyboardPath));board.style.id=style;delete board.videoTemplate;
@@ -26,7 +27,7 @@ describe('independent landscape style and shot combinations',()=>{
     expect(contrast(appearance.stageInk,appearance.tokens.background),fixture.id).toBeGreaterThanOrEqual(7);
     expect(contrast(appearance.stageMuted,appearance.tokens.background),fixture.id).toBeGreaterThanOrEqual(4.5);
     expect(contrast(appearance.tokens.captionInk,appearance.tokens.background),fixture.id).toBeGreaterThanOrEqual(4.5);
-    if(!['semantic-default','compare-reveal','network-expand'].includes(scene.shot.id)) expect(contrast(appearance.tokens.accentAlt,appearance.tokens.paper),fixture.id).toBeGreaterThanOrEqual(4.5);
+    if(!['semantic-default','compare-reveal','network-expand','annotated-manuscript','editorial-flow'].includes(scene.shot.id) && !scene.shot.id.startsWith('whiteboard-') && !scene.shot.id.startsWith('illustrated-')) expect(contrast(appearance.tokens.accentAlt,appearance.tokens.paper),fixture.id).toBeGreaterThanOrEqual(4.5);
     expect(appearance.tokens.bodyFont).toBe(tokens.bodyFont);expect(appearance.tokens.safeArea).toEqual(tokens.safeArea);
    }
   }
@@ -34,7 +35,7 @@ describe('independent landscape style and shot combinations',()=>{
  it('retains the full chosen pool across styles and exports the current style',()=>{
   const selected=catalog.recipes.filter(r=>r.kind==='scene').map(r=>r.id);
   for(const style of libraryStyleIds){
-   const next=normalizeSelection(catalog,{style,canvas:'landscape',selected});expect(next.selected).toEqual(selected);
+   const next=normalizeSelection(catalog,{style,canvas:'landscape',selected});expect(next.selected).toEqual(isFixedStyle(style) ? [] : selected.filter(id => compatible(catalog.recipes.find(r => r.id === id), style, 'landscape')));
    expect(createExports(catalog,next).prompt).toContain(`视频风格：${style}\n`);
   }
  });

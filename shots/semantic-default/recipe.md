@@ -4,7 +4,7 @@ FrameLoom 原生语义画面的显式配方入口。用于专用配方尚未覆�
 
 ## 输入与选用
 
-slots 为空对象，内容仍使用 visual、layers、connections 与 beats。可用 visual.kind 为 statement、compare、sequence、network、change、metric、media；遵守各自语义、来源与素材契约。保留全部已安装风格与横竖屏。
+slots 为空对象，内容仍使用 visual、layers、connections 与 beats。可用 visual.kind 为 statement、compare、sequence、network、change、metric、media；遵守各自语义、来源与素材契约。画幅取所选风格 canvas 与配方 orientations 的交集；原六套当前风格支持横竖屏，whiteboard 首轮仅支持横屏。
 
 ## 动作与边界
 

@@ -55,7 +55,7 @@ export async function buildLibrary(output = path.join(projectRoot, 'dist/library
   fs.mkdirSync(output, {recursive: true});
   fs.mkdirSync(path.join(output, 'font-samples'), {recursive: true});
   for (const sample of sampleFiles) fs.copyFileSync(sample.file, path.join(output, 'font-samples', `${sample.id}.woff2`));
-  for (const name of ['index.html', 'shots.html', 'selection.html', 'library.css', 'app.mjs', 'selection.mjs', 'dropdown.mjs', 'presentation.mjs', 'detail.mjs', 'recipe-copy.mjs', 'style-cards.mjs', 'font-picker.mjs', 'playback.mjs']) {
+  for (const name of ['index.html', 'shots.html', 'selection.html', 'library.css', 'app.mjs', 'selection.mjs', 'style-policy.mjs', 'dropdown.mjs', 'presentation.mjs', 'detail.mjs', 'recipe-copy.mjs', 'style-cards.mjs', 'font-picker.mjs', 'playback.mjs']) {
     fs.copyFileSync(path.join(projectRoot, 'library', name), path.join(output, name));
   }
   fs.mkdirSync(path.join(output, 'brand'), {recursive: true});

@@ -1,6 +1,7 @@
 import {CHAPTER_TRANSITIONS} from '../src/shots/shortlist/chapter-transitions.tsx';
 import {pathToFileURL} from 'node:url';
 import {SHOT_CATALOG} from '../src/shots/catalog.ts';
+import {compatibleCanvases} from '../src/shots/compatibility.ts';
 import {AUXILIARY_CATALOG} from '../src/shots/auxiliary-catalog.ts';
 import {loadStyleIndex, getOption} from './lib/style-catalog.mjs';
 
@@ -15,7 +16,7 @@ export function listShots(args = process.argv.slice(2), {log = console.log} = {}
   if (canvas && !['landscape', 'portrait'].includes(canvas)) throw new Error('--canvas 只能是 landscape 或 portrait。');
   if (args.includes('--auxiliary') && args.includes('--transitions')) throw new Error('宿主动作与跨场转场需分别查询。');
   const catalog = args.includes('--transitions') ? CHAPTER_TRANSITIONS : args.includes('--auxiliary') ? AUXILIARY_CATALOG : SHOT_CATALOG;
-  const choices = catalog.filter((shot) => (!styleId || shot.styles.includes(styleId)) && (!canvas || shot.orientations.includes(canvas)));
+  const choices = catalog.filter((shot) => (!styleId || shot.styles.includes(styleId)) && (!canvas || (styleId ? compatibleCanvases(shot, styleId).includes(canvas) : shot.orientations.includes(canvas))));
   if (args.includes('--json')) log(JSON.stringify(choices, null, 2));
   else for (const shot of choices) {
     if ('type' in shot) {log(`${shot.id}@${shot.version} (${shot.status}): transitionIn=${shot.type}; ${shot.minSec}–${shot.maxSec}s; chapterBoundary=true`); continue;}

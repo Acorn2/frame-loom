@@ -1,0 +1,131 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "paper-collage",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "illustrated-breakdown",
+      "version": "1.2.0"
+    }
+  ],
+  "layoutPolicy": "content-first-v1",
+  "font": {
+    "id": "source-han-sans-sc",
+    "version": "2.005"
+  },
+  "project": {
+    "title": "插画讲解镜头样片",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 7,
+    "durationFrames": 210,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "illustrated-breakdown",
+      "template": "graph-explainer",
+      "purpose": "claim",
+      "title": "让主张与关系各司其职",
+      "primaryClaim": "让主张与关系各司其职",
+      "visual": {
+        "kind": "network",
+        "explanation": "FrameLoom 自写资料编排示意，人物为虚构角色，数字为三份示意资料的计数",
+        "representation": "diagram",
+        "source": "source.md",
+        "anchorId": "subject"
+      },
+      "shot": {
+        "id": "illustrated-breakdown",
+        "version": "1.2.0",
+        "slots": {
+          "subject": "subject",
+          "items": [
+            "a",
+            "b"
+          ]
+        }
+      },
+      "narration": "让主张与关系各司其职",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "subject",
+          "type": "object",
+          "asset": "assets/organizer-pixel.png",
+          "label": "资料编排者",
+          "fit": "contain"
+        },
+        {
+          "id": "a",
+          "type": "object",
+          "asset": "assets/loose-papers-pixel.png",
+          "label": "原始资料",
+          "fit": "contain",
+          "text": "三份资料保留各自来源"
+        },
+        {
+          "id": "b",
+          "type": "object",
+          "asset": "assets/organized-folder-pixel.png",
+          "label": "编排结果",
+          "fit": "contain",
+          "text": "按主张和关系整理讲解"
+        }
+      ],
+      "connections": [
+        {
+          "id": "link-0",
+          "from": "subject",
+          "to": "a"
+        },
+        {
+          "id": "link-1",
+          "from": "subject",
+          "to": "b"
+        }
+      ],
+      "beats": [
+        {
+          "id": "subject-reveal",
+          "target": "subject",
+          "action": "reveal",
+          "start": 12,
+          "duration": 30
+        },
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 57,
+          "duration": 30
+        },
+        {
+          "id": "b-reveal",
+          "target": "b",
+          "action": "reveal",
+          "start": 102,
+          "duration": 30
+        },
+        {
+          "id": "link-0-draw",
+          "target": "link-0",
+          "action": "draw",
+          "start": 93,
+          "duration": 24
+        },
+        {
+          "id": "link-1-draw",
+          "target": "link-1",
+          "action": "draw",
+          "start": 138,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

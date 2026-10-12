@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "flat-explainer",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "illustrated-metric",
+      "version": "1.2.0"
+    }
+  ],
+  "layoutPolicy": "content-first-v1",
+  "font": {
+    "id": "source-han-sans-sc",
+    "version": "2.005"
+  },
+  "project": {
+    "title": "插画讲解镜头样片",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 7,
+    "durationFrames": 210,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "illustrated-metric",
+      "template": "metric-grid",
+      "purpose": "evidence",
+      "title": "数字来自资料，不来自插画",
+      "primaryClaim": "数字来自资料，不来自插画",
+      "visual": {
+        "kind": "metric",
+        "explanation": "FrameLoom 自写资料编排示意，人物为虚构角色，数字为三份示意资料的计数",
+        "representation": "diagram",
+        "source": "source.md",
+        "unit": "份"
+      },
+      "shot": {
+        "id": "illustrated-metric",
+        "version": "1.2.0",
+        "slots": {
+          "subject": "subject",
+          "items": [
+            "a"
+          ]
+        }
+      },
+      "narration": "数字来自资料，不来自插画",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "subject",
+          "type": "object",
+          "asset": "assets/organizer-v2.png",
+          "label": "资料编排者",
+          "fit": "contain"
+        },
+        {
+          "id": "a",
+          "type": "metric",
+          "label": "示意资料数量",
+          "value": 3
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "subject-reveal",
+          "target": "subject",
+          "action": "reveal",
+          "start": 12,
+          "duration": 30
+        },
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 57,
+          "duration": 30
+        },
+        {
+          "id": "a-count",
+          "target": "a",
+          "action": "count",
+          "start": 96,
+          "duration": 36
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "id": "curious-family",
+      "path": "assets/curious-family.png",
+      "type": "image",
+      "usage": "scene-media",
+      "source": "AI-generated illustration; imagegen; illustration-plan.json#curious-family; source claim: source.md: 亲子一起观察，也一起提问，把好奇变成自己的发现",
+      "license": "AI-generated output; use subject to image provider terms; not a factual photograph or official interface",
+      "intendedUse": "原创白板样片中的共同观察情境；虚构亲子人物，不代表产品使用效果",
+      "generation": {
+        "tool": "imagegen",
+        "style": {
+          "id": "whiteboard",
+          "version": "1.0.0"
+        },
+        "planId": "curious-family",
+        "planHash": "a43f0556879ed14fd554c97f0a920295febdc95a1d4993fe2cb8304acab3db5f",
+        "promptHash": "6e3c53435a73ec2a2fdf2730281ffd2dc718a1d8e328eded5f39e06df8e09c5b",
+        "fileHash": "4977e7fdb2c94b8f75d1ab1296ec979a7d1df9d93742162b39d1166d30e5244f",
+        "review": {
+          "reviewer": "Codex",
+          "reviewedAt": "2026-10-12T06:29:40.858Z"
+        }
+      }
+    }
+  ]
+}

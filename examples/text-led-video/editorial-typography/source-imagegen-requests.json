@@ -1,0 +1,13 @@
+{
+  "tool": "imagegen",
+  "assets": [
+    {
+      "path": "assets/researcher.png",
+      "prompt": "Use case: illustration-story. Asset type: a SMALL supporting transparent cutout for a text-led editorial explainer video, never a hero illustration. Draw a friendly adult researcher with short dark hair, a pale muted blue shirt, seated at a tiny desk quietly reading a blue folder. Include exactly two ivory paper sheets resting on desk. Refined understated editorial ink illustration: thin dark slate outlines, simple flat pale blue and warm ivory fills, subtle human expression, no glossy highlights or gradients, no heavy cartoon contour. The complete person, hands, desk and folder are visible as one compact coherent silhouette, generous transparent margin. Facing slightly right, unobtrusive and calm. Genuine transparent background. No text, labels, numbers, symbols, logos, watermark, arrows, background scenery, solid backdrop, paper texture, surrounding panel or shadow haze. This asset will sit in a corner at only five percent of a video canvas."
+    },
+    {
+      "path": "assets/folder.png",
+      "prompt": "Use case: illustration-story. Asset type: a SMALL supporting transparent cutout for a text-led editorial explainer video. Draw one simple open pale-blue document folder with exactly two ivory paper sheets protruding. Flat editorial ink illustration with fine dark slate outlines, simple muted blue fill, clean front three-quarter silhouette, one tiny abstract line on each sheet, no readable text. Refined, quiet, understated, not an emoji or glossy stock icon. No gradients, highlights, shadows, 3D volume, texture, desk, character or scenery. Entire folder and sheets visible with generous transparent margin. Genuinely transparent background. No labels, letters, numbers, logos, watermark, arrows, surrounding slide or white backdrop. Used only in the bottom corner of a video at around three percent of total image area."
+    }
+  ]
+}

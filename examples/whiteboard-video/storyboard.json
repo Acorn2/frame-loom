@@ -1,0 +1,438 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "whiteboard",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "semantic-default",
+      "version": "1.0.0"
+    },
+    {
+      "id": "whiteboard-process",
+      "version": "1.2.0"
+    },
+    {
+      "id": "whiteboard-compare",
+      "version": "1.2.0"
+    },
+    {
+      "id": "whiteboard-explain",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "手绘白板组合示例",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 48.4,
+    "durationFrames": 1452,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "whiteboard-opening",
+      "template": "statement",
+      "purpose": "opening",
+      "title": "把讲解一步步画出来",
+      "primaryClaim": "白板风格、字体与镜头独立组合",
+      "visual": {
+        "kind": "statement",
+        "representation": "diagram",
+        "explanation": "FrameLoom 自写的组合能力说明",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "semantic-default",
+        "version": "1.0.0",
+        "slots": {}
+      },
+      "narration": "白板风格、字体与镜头独立组合",
+      "durationFrames": 180,
+      "layers": [
+        {
+          "id": "label",
+          "type": "label",
+          "label": "风格 × 字体 × 镜头"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "label-reveal",
+          "target": "label",
+          "action": "reveal",
+          "start": 20,
+          "duration": 30
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "whiteboard-process",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "逐笔流程",
+      "primaryClaim": "按来源顺序画出节点、文字与连接，解释两到四步流程。",
+      "visual": {
+        "kind": "sequence",
+        "explanation": "FrameLoom 自写流程示意，不代表实际用户数据",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "whiteboard-process",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "a",
+            "b",
+            "c"
+          ]
+        }
+      },
+      "narration": "按来源顺序画出节点、文字与连接，解释两到四步流程。",
+      "durationFrames": 432,
+      "layers": [
+        {
+          "id": "a",
+          "type": "node",
+          "label": "原文",
+          "text": "保留来源与主张"
+        },
+        {
+          "id": "b",
+          "type": "node",
+          "label": "编排",
+          "text": "解释步骤和关系"
+        },
+        {
+          "id": "c",
+          "type": "node",
+          "label": "成片",
+          "text": "检查画面与阅读时间"
+        }
+      ],
+      "connections": [
+        {
+          "id": "ab",
+          "from": "a",
+          "to": "b"
+        },
+        {
+          "id": "bc",
+          "from": "b",
+          "to": "c"
+        }
+      ],
+      "beats": [
+        {
+          "id": "a-trace",
+          "target": "a",
+          "action": "trace",
+          "start": 0,
+          "duration": 30
+        },
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 30,
+          "duration": 45
+        },
+        {
+          "id": "b-trace",
+          "target": "b",
+          "action": "trace",
+          "start": 90,
+          "duration": 30
+        },
+        {
+          "id": "b-reveal",
+          "target": "b",
+          "action": "reveal",
+          "start": 120,
+          "duration": 45
+        },
+        {
+          "id": "ab-draw",
+          "target": "ab",
+          "action": "draw",
+          "start": 175,
+          "duration": 30
+        },
+        {
+          "id": "c-trace",
+          "target": "c",
+          "action": "trace",
+          "start": 220,
+          "duration": 30
+        },
+        {
+          "id": "c-reveal",
+          "target": "c",
+          "action": "reveal",
+          "start": 250,
+          "duration": 45
+        },
+        {
+          "id": "bc-draw",
+          "target": "bc",
+          "action": "draw",
+          "start": 305,
+          "duration": 30
+        },
+        {
+          "id": "c-highlight",
+          "target": "c",
+          "action": "highlight",
+          "start": 348,
+          "duration": 30
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "whiteboard-compare",
+      "template": "metric-grid",
+      "purpose": "evidence",
+      "title": "逐笔对照",
+      "primaryClaim": "先画两侧证据，再圈出一个关键差异，不补造因果连线。",
+      "visual": {
+        "kind": "compare",
+        "explanation": "FrameLoom 自写流程示意，不代表实际用户数据",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "whiteboard-compare",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "a",
+            "b"
+          ]
+        }
+      },
+      "narration": "先画两侧证据，再圈出一个关键差异，不补造因果连线。",
+      "durationFrames": 300,
+      "layers": [
+        {
+          "id": "a",
+          "type": "card",
+          "label": "一次铺满",
+          "text": "步骤同时出现，关系难以跟随"
+        },
+        {
+          "id": "b",
+          "type": "card",
+          "label": "逐项解释",
+          "text": "轮廓、文字和关系按讲解推进"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "a-trace",
+          "target": "a",
+          "action": "trace",
+          "start": 0,
+          "duration": 30
+        },
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 30,
+          "duration": 60
+        },
+        {
+          "id": "b-trace",
+          "target": "b",
+          "action": "trace",
+          "start": 108,
+          "duration": 30
+        },
+        {
+          "id": "b-reveal",
+          "target": "b",
+          "action": "reveal",
+          "start": 138,
+          "duration": 60
+        },
+        {
+          "id": "b-highlight",
+          "target": "b",
+          "action": "highlight",
+          "start": 216,
+          "duration": 30
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "whiteboard-explain",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "主体解释",
+      "primaryClaim": "先完整展示有来源的主体图片，再逐笔解释两到三条关系。",
+      "visual": {
+        "kind": "network",
+        "explanation": "FrameLoom 自写流程示意，不代表实际用户数据",
+        "representation": "diagram",
+        "source": "source.md",
+        "anchorId": "subject"
+      },
+      "shot": {
+        "id": "whiteboard-explain",
+        "version": "1.2.0",
+        "slots": {
+          "subject": "subject",
+          "items": [
+            "a",
+            "b"
+          ]
+        }
+      },
+      "narration": "先完整展示有来源的主体图片，再逐笔解释两到三条关系。",
+      "durationFrames": 420,
+      "layers": [
+        {
+          "id": "subject",
+          "type": "object",
+          "label": "本地生产笔记",
+          "asset": "assets/notebook.svg",
+          "fit": "contain"
+        },
+        {
+          "id": "a",
+          "type": "node",
+          "label": "保留输入",
+          "text": "原始来源留在本地"
+        },
+        {
+          "id": "b",
+          "type": "node",
+          "label": "形成输出",
+          "text": "检查图解与可读性"
+        }
+      ],
+      "connections": [
+        {
+          "id": "sa",
+          "from": "subject",
+          "to": "a"
+        },
+        {
+          "id": "sb",
+          "from": "subject",
+          "to": "b"
+        }
+      ],
+      "beats": [
+        {
+          "id": "subject-reveal",
+          "target": "subject",
+          "action": "reveal",
+          "start": 0,
+          "duration": 60
+        },
+        {
+          "id": "a-trace",
+          "target": "a",
+          "action": "trace",
+          "start": 75,
+          "duration": 30
+        },
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 105,
+          "duration": 45
+        },
+        {
+          "id": "sa-draw",
+          "target": "sa",
+          "action": "draw",
+          "start": 160,
+          "duration": 30
+        },
+        {
+          "id": "b-trace",
+          "target": "b",
+          "action": "trace",
+          "start": 205,
+          "duration": 30
+        },
+        {
+          "id": "b-reveal",
+          "target": "b",
+          "action": "reveal",
+          "start": 235,
+          "duration": 45
+        },
+        {
+          "id": "sb-draw",
+          "target": "sb",
+          "action": "draw",
+          "start": 290,
+          "duration": 30
+        },
+        {
+          "id": "b-highlight",
+          "target": "b",
+          "action": "highlight",
+          "start": 335,
+          "duration": 30
+        }
+      ],
+      "captions": []
+    },
+    {
+      "id": "whiteboard-closing",
+      "template": "statement",
+      "purpose": "closing",
+      "title": "让观众跟上解释",
+      "primaryClaim": "白板风格、字体与镜头独立组合",
+      "visual": {
+        "kind": "statement",
+        "representation": "diagram",
+        "explanation": "FrameLoom 自写的组合能力说明",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "semantic-default",
+        "version": "1.0.0",
+        "slots": {}
+      },
+      "narration": "白板风格、字体与镜头独立组合",
+      "durationFrames": 120,
+      "layers": [
+        {
+          "id": "label",
+          "type": "label",
+          "label": "画轮廓 → 揭示文字 → 连接关系"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "label-reveal",
+          "target": "label",
+          "action": "reveal",
+          "start": 20,
+          "duration": 30
+        }
+      ],
+      "captions": []
+    }
+  ],
+  "layoutPolicy": "content-first-v1",
+  "font": {
+    "id": "xiaolai",
+    "version": "3.126"
+  }
+}

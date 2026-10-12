@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "whiteboard",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "illustrated-explain",
+      "version": "1.2.0"
+    }
+  ],
+  "layoutPolicy": "content-first-v1",
+  "font": {
+    "id": "xiaolai",
+    "version": "3.126"
+  },
+  "project": {
+    "title": "插画讲解镜头样片",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 7,
+    "durationFrames": 210,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "illustrated-explain",
+      "template": "graph-explainer",
+      "purpose": "claim",
+      "title": "先说主张，再解释关系",
+      "primaryClaim": "先说主张，再解释关系",
+      "visual": {
+        "kind": "network",
+        "explanation": "FrameLoom 自写资料编排示意，人物为虚构角色，数字为三份示意资料的计数",
+        "representation": "diagram",
+        "source": "source.md",
+        "anchorId": "subject"
+      },
+      "shot": {
+        "id": "illustrated-explain",
+        "version": "1.2.0",
+        "slots": {
+          "subject": "subject",
+          "items": [
+            "a",
+            "b"
+          ]
+        }
+      },
+      "narration": "先说主张，再解释关系",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "subject",
+          "type": "object",
+          "asset": "assets/organizer.png",
+          "label": "资料编排者",
+          "fit": "contain"
+        },
+        {
+          "id": "a",
+          "type": "node",
+          "label": "保留原始主张",
+          "text": "每句解释都能回到来源"
+        },
+        {
+          "id": "b",
+          "type": "node",
+          "label": "让关系看得见",
+          "text": "按讲解顺序揭示文字与连接"
+        }
+      ],
+      "connections": [
+        {
+          "id": "link-0",
+          "from": "subject",
+          "to": "a"
+        },
+        {
+          "id": "link-1",
+          "from": "subject",
+          "to": "b"
+        }
+      ],
+      "beats": [
+        {
+          "id": "subject-reveal",
+          "target": "subject",
+          "action": "reveal",
+          "start": 12,
+          "duration": 30
+        },
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 57,
+          "duration": 30
+        },
+        {
+          "id": "b-reveal",
+          "target": "b",
+          "action": "reveal",
+          "start": 102,
+          "duration": 30
+        },
+        {
+          "id": "link-0-draw",
+          "target": "link-0",
+          "action": "draw",
+          "start": 93,
+          "duration": 24
+        },
+        {
+          "id": "link-1-draw",
+          "target": "link-1",
+          "action": "draw",
+          "start": 138,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

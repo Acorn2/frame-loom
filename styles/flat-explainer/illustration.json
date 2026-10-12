@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0",
+  "style": {
+    "id": "flat-explainer",
+    "version": "1.0.0"
+  },
+  "medium": "Color Cartoon Explainer",
+  "subjectPrompt": "Friendly hand-drawn educational cartoon, thick dark charcoal organic outlines with rounded line caps, rounded approachable characters, expressive simple faces, pastel light blue shirts, pale yellow, mint green and blush pink props, peach skin. Soft subtle gradients and gentle volume inside color fills. Match the supplied reference drawing language. Entire person, hands and props have the SAME thick black contour treatment. No paper grain, cut edges, paper layers, photo or plastic 3D.",
+  "palette": [
+    "#24282b",
+    "#8bcbf2",
+    "#ffe7a0",
+    "#a7e3be",
+    "#ffc4c2"
+  ],
+  "composition": [
+    "大幅情境漫画配短句，保留人物动作与道具互动",
+    "粗黑轮廓、柔和彩色、轻微渐变贯穿人物和物件",
+    "不用纸卡胶带和纸片层叠；文字和关系由 renderer 单独生成"
+  ],
+  "motion": [
+    "平滑弹性入场，局部重点轻微放大",
+    "连接连续绘制，完成后静止阅读"
+  ]
+}

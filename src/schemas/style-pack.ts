@@ -48,7 +48,8 @@ export const StyleIndexEntrySchema = z.object({
   id: z.string().min(1), name: z.string().min(1), version: z.string().min(1), category: z.string().min(1),
   mood: z.array(z.string().min(1)).min(1), bestFor: z.array(z.string().min(1)).min(1),
   canvas: z.array(z.enum(['landscape', 'portrait'])).min(1), templates: z.array(z.enum(TEMPLATE_IDS)).min(1),
-  preview: z.string().min(1), status: z.enum(['experimental', 'stable', 'deprecated'])
+  preview: z.string().min(1), status: z.enum(['experimental', 'stable', 'deprecated']),
+  role: z.enum(['primary', 'legacy']).optional()
 }).strict();
 
 export const StyleIndexSchema = z.object({schemaVersion: z.literal('1.0'), styles: z.array(StyleIndexEntrySchema).min(1)}).strict();

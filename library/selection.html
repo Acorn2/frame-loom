@@ -23,7 +23,7 @@
       <aside class="combination-card"><p class="meta-label">我的制作组合</p><div class="combination-style"><img id="selected-style-poster" alt="当前风格原始字体样片" width="960" height="540"><div><strong id="current-style"></strong><p id="current-font" class="section-note"></p><a href="index.html" class="text-button">更换风格 ↗</a></div></div><p id="auto-shots-note" class="inline-note">镜头由 Agent 读取文档后推荐。无需预先挑选，复制指令并附上文档即可。</p><div id="manual-shots" hidden><div class="selected-heading"><h2>手动镜头集合 <span id="selected-count">0 个</span></h2><button id="clear" class="text-button">清空</button></div><div id="selected-list" class="selected-list"></div><a href="shots.html" class="button secondary wide">继续挑选镜头 <span aria-hidden="true">→</span></a><p class="section-note">Agent 只在此集合内编排，可重复使用，也无需全部出场。</p></div></aside>
       <section class="export-main" aria-label="视频制作向导">
         <!-- Approved flow: the Agent recommends from the document; manual pools remain strict. -->
-        <div class="form-card wizard-card">
+        <div id="shot-selection-section" class="form-card wizard-card">
           <div class="wizard-heading"><span class="step-number" aria-hidden="true">1</span><div><h2>镜头怎么选？</h2><p class="section-note">让画面解释内容，按文档需要搭配，不必每个分类选一个。</p></div></div>
           <fieldset class="choice-grid"><legend class="sr-only">镜头选择方式</legend>
             <label class="choice-card"><input type="radio" name="shot-selection" value="auto" checked><span><strong>根据文档自动选镜头（推荐）</strong><small>Agent 读取文档，推荐组合并逐场编排，随后按制作方式继续。</small></span></label>
@@ -38,6 +38,16 @@
             <label class="choice-card"><input type="radio" name="goal" value="master"><span><strong>仅画面，供后期剪辑</strong><small>保留标题与图解，无配音、旁白字幕和审片标记，方便自行剪辑。</small></span></label>
           </fieldset>
           <p id="master-note" class="inline-note" hidden>会同时提供讲稿与逐镜时间表，你可以在剪辑软件中继续配音和加字幕。</p>
+        </div>
+        <div id="brand-section" class="form-card brand-settings" hidden>
+          <h2>品牌标识</h2>
+          <p class="brand-description">固定显示在画面右上角，视频与封面同步。</p>
+          <div class="brand-name-field">
+            <label class="brand-name-label" for="brand-name">品牌名或账号名 <span>选填</span></label>
+            <input id="brand-name" type="text" maxlength="40" placeholder="例如：Hresh赫什" autocomplete="off" aria-describedby="brand-name-note brand-logo-note">
+            <p id="brand-name-note" class="brand-field-note">留空沿用已有设置，默认显示 Your Brand。</p>
+          </div>
+          <p id="brand-logo-note" class="brand-logo-note">Logo 可在制作时交给 Agent 配置。</p>
         </div>
         <div id="voice-section" class="form-card wizard-card">
           <div class="wizard-heading"><span class="step-number" aria-hidden="true">3</span><div><h2>旁白从哪里来？</h2><p class="section-note">自动配音，或使用你已经录好的声音。</p></div></div>

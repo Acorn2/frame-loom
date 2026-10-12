@@ -1,0 +1,8 @@
+{
+  "type": "original",
+  "source": "FrameLoom original implementation; production workflow inspired by simon-skills/whiteboard-video",
+  "url": "https://github.com/trustfuture/simon-skills/tree/master/skills/whiteboard-video",
+  "license": "FrameLoom MIT for implementation; generated assets governed by image provider terms",
+  "id": "illustrated-process",
+  "mode": "native"
+}

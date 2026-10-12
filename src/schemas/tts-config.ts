@@ -3,6 +3,15 @@ import {z} from 'zod';
 // Bump when adapter behavior changes without a change to a user's JSON fields.
 export const TTS_SYNTHESIS_REVISION = 2;
 
+export function parseDoubaoAdditions(value: unknown): Record<string, unknown> {
+  if (value === undefined) return {};
+  if (typeof value !== 'string') throw new Error('豆包 v3 additions 必须是 JSON 序列化字符串。');
+  let parsed;
+  try { parsed = JSON.parse(value); } catch { throw new Error('豆包 v3 additions 必须是有效 JSON。'); }
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('豆包 v3 additions 必须包含 JSON 对象。');
+  return parsed;
+}
+
 const TtsConfigBaseSchema = z.object({
   schemaVersion: z.literal('1.0'),
   enabled: z.boolean(),
@@ -85,7 +94,7 @@ export const TtsConfigSchema = z.discriminatedUnion('provider', [
   TtsConfigBaseSchema.extend({provider: z.literal('doubao'), speedRatio: z.number().min(0.5).max(2).default(1),
     volumeRatio: z.number().min(0.5).max(2).default(1),
     sampleRate: z.union([8000, 16000, 22050, 24000, 32000, 44100, 48000].map((value) => z.literal(value))).default(24000),
-    instructions: unavailable, language: unavailable, ...noVoiceControls}),
+    language: unavailable, ...noVoiceControls}),
   TtsConfigBaseSchema.extend({provider: z.literal('mock'), format: z.literal('wav').default('wav'),
     volumeRatio: neutral, pitchRatio: neutral, instructions: unavailable, language: unavailable, ...noVoiceControls})
 ]).superRefine((config, ctx) => {
@@ -126,11 +135,24 @@ export const TtsConfigSchema = z.discriminatedUnion('provider', [
   if (config.provider === 'aliyun' && body.input !== undefined && (!body.input || typeof body.input !== 'object' || Array.isArray(body.input))) issue('requestBody', 'input 必须是对象。');
   if (config.provider === 'aliyun' && ['text', 'voice'].some((field) => input[field] !== undefined)) issue('requestBody', 'input.text / input.voice 由 FrameLoom 管理。');
   if (config.provider === 'doubao' && config.apiVersion === 'v3') {
+    if (config.apiKeyEnv && (config.appIdEnv || config.accessTokenEnv)) issue('apiKeyEnv', '豆包 v3 的 API Key 与 App ID + Access Token 配置只能选一种。');
     const params = body.req_params as Record<string, unknown> | undefined;
     const audio = params?.audio_params as Record<string, unknown> | undefined;
+    if (params !== undefined && (!params || typeof params !== 'object' || Array.isArray(params))) issue('requestBody', 'req_params 必须是对象。');
+    if (audio !== undefined && (!audio || typeof audio !== 'object' || Array.isArray(audio))) issue('requestBody', 'audio_params 必须是对象。');
     if (params?.text !== undefined || params?.speaker !== undefined || ['format', 'sample_rate', 'speech_rate', 'loudness_rate'].some((field) => audio?.[field] !== undefined)) {
       issue('requestBody', 'req_params 中的文本、音色及基本音频参数由 FrameLoom 管理。');
     }
+    for (const flag of ['enable_timestamp', 'enable_subtitle']) {
+      if (audio?.[flag] !== undefined && typeof audio[flag] !== 'boolean') issue('requestBody', `${flag} 必须是布尔值。`);
+    }
+    try {
+      const additions = parseDoubaoAdditions(params?.additions);
+      if (additions.context_texts !== undefined && (!Array.isArray(additions.context_texts) || additions.context_texts.length !== 1 || typeof additions.context_texts[0] !== 'string' || !additions.context_texts[0].trim())) {
+        issue('requestBody', 'context_texts 必须只有一条非空语音指令。');
+      }
+      if (config.instructions && additions.context_texts !== undefined && JSON.stringify(additions.context_texts) !== JSON.stringify([config.instructions])) issue('requestBody', 'context_texts 与顶层 instructions 冲突。');
+    } catch (error) { issue('requestBody', (error as Error).message); }
   }
   const instructions = config.instructions ?? (config.provider === 'aliyun' ? input.instructions : body.instructions);
   const rawInstructions = config.provider === 'aliyun' ? input.instructions : body.instructions;
@@ -142,6 +164,8 @@ export const TtsConfigSchema = z.discriminatedUnion('provider', [
       issue('instructions', 'tts-1 / tts-1-hd 不支持朗读指令。');
     } else if (config.provider === 'aliyun' && !/^qwen3-tts-instruct-flash(?:-|$)/u.test(config.model ?? '')) {
       issue('instructions', '百炼朗读指令需要 qwen3-tts-instruct-flash 系列模型。');
+    } else if (config.provider === 'doubao' && config.apiVersion === 'v3' && rawInstructions === undefined) {
+      // Resource/model support is checked after resolving the environment, before any request.
     } else if (!['openai', 'aliyun'].includes(config.provider)) {
       issue('requestBody', '当前服务不支持 instructions 字段。');
     }
@@ -183,6 +207,7 @@ export function ttsConfigJsonSchema() {
   return {...z.toJSONSchema(TtsConfigSchema), allOf: [
     {anyOf: [{required: ['voiceType']}, {required: ['voiceTypeEnv']}]},
     {if: {properties: {provider: {const: 'doubao'}, apiVersion: {const: 'v3'}}, required: ['provider', 'apiVersion']}, then: {properties: {pitchRatio: {const: 1}}}},
+    {if: {properties: {provider: {const: 'doubao'}, apiVersion: {const: 'generic'}}, required: ['provider']}, then: {not: {required: ['instructions']}}},
     {if: {properties: {provider: {const: 'openai'}, model: {enum: ['tts-1', 'tts-1-hd']}}, required: ['provider', 'model']}, then: {not: {required: ['instructions']}}},
     {if: {properties: {provider: {const: 'aliyun'}}, required: ['provider', 'instructions']}, then: {properties: {model: {pattern: '^qwen3-tts-instruct-flash(-|$)'}}, required: ['model']}},
     {if: {properties: {provider: {const: 'elevenlabs'}}, required: ['provider', 'language']}, then: {properties: {model: {not: {const: 'eleven_multilingual_v2'}}}, required: ['model']}},

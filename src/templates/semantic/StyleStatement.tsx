@@ -22,6 +22,17 @@ export function StyleStatement({scene, tokens, frame, scale, width, height, port
   const title: React.CSSProperties = {position: 'absolute', left: slot.left, top: slot.top, width: slot.width, margin: 0, fontFamily: tokens.displayFont, fontSize: size, fontWeight: family === 'editorial' || family === 'notes' ? 700 : 800, lineHeight: 1.12, overflowWrap: 'anywhere', textWrap: 'balance', textAlign: family === 'signal' ? 'center' : 'left', ...languageEntrance(titleProgress, tokens, scale)};
   const metaStyle: React.CSSProperties = {position: 'absolute', left: width * .02, top: height * .025, right: width * .02, fontSize: 25 * scale, color: tokens.muted, fontFamily: tokens.bodyFont, letterSpacing: 3 * scale};
   const footerLabels = (style: React.CSSProperties = {}) => <div style={{position: 'absolute', left: width * .02, right: width * .02, bottom: height * .17, display: 'flex', flexWrap: 'wrap', gap: 26 * scale, ...style}}>{labels.map((layer, index) => <span key={layer.id} style={{fontSize: 31 * scale, ...languageEntrance(progress(layer.id), tokens, scale, index)}}>{layer.label ?? layer.text}</span>)}</div>;
+  if (family === 'flat' || family === 'pixel') return <div style={{position: 'relative', width, height}}>
+    <div style={{...metaStyle, color: tokens.accentAlt}}>{meta}</div>
+    <h1 style={title}>{tokens.layoutPolicy ? <ReadableText text={scene.title} /> : scene.title}</h1>
+    {footerLabels({color: tokens.muted})}
+  </div>;
+  if (family === 'whiteboard') return <div style={{position: 'relative', width, height}}>
+    <div style={{...metaStyle, color: tokens.accentAlt}}>{meta}</div>
+    <h1 style={title}>{tokens.layoutPolicy ? <ReadableText text={scene.title} /> : scene.title}</h1>
+    <svg aria-hidden width={slot.width} height={24 * scale} style={{position: 'absolute', left: slot.left, top: slot.top + slot.height + 12 * scale}} viewBox="0 0 600 24"><path d="M2 14 Q150 3 310 13 T590 7" fill="none" stroke={tokens.accentAlt} strokeWidth="3" pathLength="1" strokeDasharray="1" strokeDashoffset={1 - titleProgress}/></svg>
+    {footerLabels({color: tokens.muted})}
+  </div>;
   if (family === 'editorial') return <div style={{position: 'relative', width, height}}>
     <div style={{...metaStyle, borderBottom: `2px solid ${tokens.ink}`, paddingBottom: 25 * scale}}>{meta}</div>
     <h1 style={title}>{tokens.layoutPolicy ? <ReadableText text={scene.title} /> : scene.title}</h1>

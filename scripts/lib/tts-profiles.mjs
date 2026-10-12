@@ -2,6 +2,21 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {TtsConfigSchema} from '../../src/schemas/tts-config.ts';
 
+// One credential selection rule for preflight and requests; named credentials never fall back.
+export function resolveDoubaoV3Auth(config) {
+  const resourceId = (config.resourceIdEnv ? process.env[config.resourceIdEnv] : process.env.VOLC_TTS_RESOURCE_ID ?? process.env.DOUBAO_TTS_RESOURCE_ID)?.trim();
+  const legacy = config.appIdEnv || config.accessTokenEnv;
+  const apiKey = legacy ? undefined : (config.apiKeyEnv ? process.env[config.apiKeyEnv] : process.env.VOLC_TTS_API_KEY ?? process.env.DOUBAO_TTS_API_KEY)?.trim();
+  if (!resourceId) throw new Error('豆包 TTS v3 需要 API key 和 resource id，或 App ID + Access Token 和 resource id；请设置对应环境变量。');
+  if (config.instructions && resourceId !== 'seed-tts-2.0') throw new Error('豆包顶层 instructions 当前只接入 seed-tts-2.0 官方音色；请核对资源 ID，不能用于 1.0 或未经确认的复刻模型。');
+  if (apiKey) return {resourceId, headers: {'X-Api-Key': apiKey}};
+  if (config.apiKeyEnv) throw new Error(`豆包 TTS v3 需要 API key 和 resource id；缺少环境变量 ${config.apiKeyEnv}。`);
+  const appId = (config.appIdEnv ? process.env[config.appIdEnv] : process.env.VOLC_TTS_APP_ID ?? process.env.DOUBAO_TTS_APP_ID)?.trim();
+  const accessToken = (config.accessTokenEnv ? process.env[config.accessTokenEnv] : process.env.VOLC_TTS_ACCESS_TOKEN ?? process.env.DOUBAO_TTS_ACCESS_TOKEN)?.trim();
+  if (!appId || !accessToken) throw new Error('豆包 TTS v3 缺少完整凭据：设置 VOLC_TTS_API_KEY，或同时设置 App ID + Access Token；显式环境变量名必须有值。');
+  return {resourceId, headers: {'X-Api-App-Id': appId, 'X-Api-Access-Key': accessToken}};
+}
+
 export function resolveTtsVoiceType(config) {
   if (!config.voiceTypeEnv) return config.voiceType;
   const voiceType = process.env[config.voiceTypeEnv]?.trim();
@@ -42,10 +57,8 @@ export function inspectTtsProfile(filePath, id = path.basename(filePath, '.json'
     if (!endpoint) summary.issues.push('缺少 endpoint 或 VOLC_TTS_ENDPOINT。');
     else if (!TtsConfigSchema.safeParse({...config, endpoint}).success) summary.issues.push('endpoint 必须使用服务商官方 HTTPS 域名。');
     if (config.apiVersion === 'v3') {
-      if (config.apiKeyEnv) missing(config.apiKeyEnv);
-      else if (!(process.env.VOLC_TTS_API_KEY ?? process.env.DOUBAO_TTS_API_KEY)?.trim()) summary.issues.push('缺少 VOLC_TTS_API_KEY。');
-      if (config.resourceIdEnv) missing(config.resourceIdEnv);
-      else if (!(process.env.VOLC_TTS_RESOURCE_ID ?? process.env.DOUBAO_TTS_RESOURCE_ID)?.trim()) summary.issues.push('缺少 VOLC_TTS_RESOURCE_ID。');
+      try { resolveDoubaoV3Auth(config); }
+      catch (error) { summary.issues.push(error.message); }
     } else {
       const hasCredential = config.apiKeyEnv ? process.env[config.apiKeyEnv] : process.env.VOLC_TTS_API_KEY ?? process.env.DOUBAO_TTS_API_KEY;
       const accessToken = config.accessTokenEnv ? process.env[config.accessTokenEnv] : process.env.DOUBAO_TTS_ACCESS_TOKEN;

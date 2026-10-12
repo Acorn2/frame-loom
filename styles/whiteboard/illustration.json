@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0",
+  "style": {
+    "id": "whiteboard",
+    "version": "1.0.0"
+  },
+  "medium": "Hand-drawn whiteboard",
+  "subjectPrompt": "Bold slightly irregular charcoal marker outlines, flat pastel fills, simple expressive proportions, Excalidraw-inspired hand-drawn educational sticker. No shadow, texture, gradients or photorealism.",
+  "palette": [
+    "#24272c",
+    "#a5d8ff",
+    "#ffec99",
+    "#b2f2bb",
+    "#ffc9c9"
+  ],
+  "composition": [
+    "主体完整展示，不用框包围插画",
+    "文字与图解在素材外排版，保留字幕安全区",
+    "以主体和关系建立主次"
+  ],
+  "motion": [
+    "先展示主体，轮廓后文字，最后关系与圈注",
+    "单笔描绘不重叠，不模拟中文笔顺"
+  ]
+}

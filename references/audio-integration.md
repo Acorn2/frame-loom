@@ -72,6 +72,15 @@ variable. Existing projects can copy a preset from the repository. Do not put
 credential values in JSON. The Doubao example reads the voice, API key and
 resource ID from three `VOLC_TTS_*` environment variables. The selected voice
 must be available for the selected resource ID.
+Doubao TTS is the speech model served by Volcengine (also called “Volc TTS”).
+Both HTTP Chunked v3 (`/api/v3/tts/unidirectional`) and the default SSE v3
+endpoint use this adapter. The public preset requests both TTS 1.0 timestamps
+and TTS/ICL 2.0 subtitles; existing project configurations are not changed.
+For legacy v3 credentials, remove `apiKeyEnv`, set `appIdEnv` and
+`accessTokenEnv`, and retain the resource ID. Requests then use
+`X-Api-App-Id` and `X-Api-Access-Key`. Named credentials never fall back to
+other credentials, and preflight applies the same selection rules as synthesis.
+See the [setup guide](tts-setup.md#豆包) for examples and voice-clone resource selection.
 
 | Example file under `audio/` | Provider | Required environment variable | Initial voice / format |
 | --- | --- | --- | --- |
@@ -164,7 +173,7 @@ regenerated automatically.
 
 | Setting | Provider / behavior |
 | --- | --- |
-| `instructions` | OpenAI speech instructions, excluding `tts-1` / `tts-1-hd`; Alibaba requires the `qwen3-tts-instruct-flash` model family and writes to `input.instructions` |
+| `instructions` | OpenAI speech instructions, excluding `tts-1` / `tts-1-hd`; Alibaba requires `qwen3-tts-instruct-flash` and writes to `input.instructions`; Doubao v3 official `seed-tts-2.0` voices write one instruction to `context_texts` inside JSON-string `req_params.additions`, preserving other additions |
 | `language` | Alibaba: `Auto`, `Chinese`, `English`, `German`, `Italian`, `Portuguese`, `Spanish`, `Japanese`, `Korean`, `French`, `Russian`; ElevenLabs: ISO 639-1 code, excluding `eleven_multilingual_v2` |
 | `voiceSettings` | ElevenLabs `stability`, `similarity_boost`, `style` (0–1), and `use_speaker_boost` (boolean); speed uses top-level `speedRatio` |
 | `pronunciationDictionaries` | ElevenLabs: at most three `{pronunciation_dictionary_id, version_id?}` entries referencing existing provider dictionaries |

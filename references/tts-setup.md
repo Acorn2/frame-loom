@@ -26,6 +26,8 @@ macOS/Linux 使用下面各服务的 `export` 示例；Windows PowerShell 对应
 
 ## 豆包
 
+“火山 TTS”与这里的“豆包 TTS”是同一服务的不同称呼：火山引擎提供平台与 API，豆包语音提供模型。作为对照的 [whiteboard-video 实现](https://github.com/trustfuture/simon-skills/blob/master/skills/whiteboard-video/lib/tts/tts.mjs) 使用 HTTP Chunked v3；FrameLoom 默认使用 SSE v3，两者的合成、声音复刻和时间戳能力相同，区别在响应封装。沿用 `provider: "doubao"` 即可；也可显式将 endpoint 改为 `https://openspeech.bytedance.com/api/v3/tts/unidirectional`。
+
 在[火山引擎语音 API Key 控制台](https://console.volcengine.com/speech/new/setting/apikeys?projectName=default)取得 API Key，并在控制台及[音色列表](https://www.volcengine.com/docs/6561/1257544)核对音色 ID 和对应 Resource ID。当前预设使用 [HTTP v3 单向流式接口](https://www.volcengine.com/docs/6561/1598757)。三个值必须属于实际开通的服务组合；不要把其他服务的资源 ID 或音色名称混用。
 
 ```bash
@@ -52,6 +54,14 @@ export VOLC_TTS_SPEAKER='<已开通的音色 ID>'
   "sampleRate": 24000,
   "speedRatio": 1,
   "volumeRatio": 1,
+  "requestBody": {
+    "req_params": {
+      "audio_params": {
+        "enable_timestamp": true,
+        "enable_subtitle": true
+      }
+    }
+  },
   "outputDirectory": "audio/generated",
   "timeoutMs": 30000
 }
@@ -59,7 +69,29 @@ export VOLC_TTS_SPEAKER='<已开通的音色 ID>'
 
 换音色时修改 `VOLC_TTS_SPEAKER`，同时核对 `VOLC_TTS_RESOURCE_ID`。也可移除 `voiceTypeEnv`，改用静态 `voiceType`。如果两者同时存在，以环境变量为准；变量缺失时报错，不回退到静态音色。
 
-当前 v3 适配器支持 `speedRatio` 和 `volumeRatio` 的 0.5–2 范围；`sampleRate` 支持 8000、16000、22050、24000、32000、44100、48000。`format` 可选 MP3/WAV；`pitchRatio` 只能是 1，不支持 `instructions` 或 `pitchSemitones`。该预设使用 API Key，不需要另填 App ID 和 Access Token；鉴权差异见[官方 API Key 说明](https://docs.volcengine.com/docs/DoubaoVoice/APIKeyUsage?lang=zh)。
+当前 v3 适配器支持 `speedRatio` 和 `volumeRatio` 的 0.5–2 范围；`sampleRate` 支持 8000、16000、22050、24000、32000、44100、48000。`format` 可选 MP3/WAV；`pitchRatio` 只能是 1，不支持 `pitchSemitones`。该预设使用 API Key，不需要另填 App ID 和 Access Token；鉴权差异见[官方 API Key 说明](https://docs.volcengine.com/docs/DoubaoVoice/APIKeyUsage?lang=zh)。
+
+公开预设默认请求两种时间戳：`enable_timestamp` 对应 TTS 1.0，`enable_subtitle` 对应 TTS/ICL 2.0，服务按模型返回支持的证据。已有项目配置不自动修改，可按需补入上述 `requestBody`；未返回完整有效时间戳时仍明确使用估算。音频帧之后返回的字幕也会被收集并与同一遍合成的音频一起缓存，见[语音驱动生产](speech-driven-production.md)。
+
+若仍使用旧版控制台凭据，在配置中**移除 `apiKeyEnv`**，添加以下两项，其他字段不变：
+
+```json
+{
+  "appIdEnv": "VOLC_TTS_APP_ID",
+  "accessTokenEnv": "VOLC_TTS_ACCESS_TOKEN"
+}
+```
+
+```bash
+export VOLC_TTS_APP_ID='<旧版控制台的 App ID>'
+export VOLC_TTS_ACCESS_TOKEN='<旧版控制台的 Access Token>'
+```
+
+v3 请求使用 `X-Api-App-Id` + `X-Api-Access-Key`，仍需 `VOLC_TTS_RESOURCE_ID`。两种鉴权配置只能选一种；显式命名的凭据变量缺失时报错，不改用其他凭据。未指定凭据变量名时，优先使用 `VOLC_TTS_API_KEY`（兼容 `DOUBAO_TTS_API_KEY`），没有 Key 才读取完整的 App ID + Access Token。`list:tts-profiles` 与实际请求使用同一预检规则。
+
+使用 `seed-tts-2.0` 官方音色时，可以添加顶层 `"instructions": "语气沉稳，吐字清楚。"`，适配器将其写入 `req_params.additions` 的 JSON 字符串内 `context_texts: [指令]`，并保留已有 additions 的其他字段。不要同时填写冲突的 `context_texts`；该参数只有第一条指令有效，FrameLoom 拒绝多条以免默默丢弃。顶层 instructions 当前只接入这类官方 2.0 音色，其他资源在发送请求前报错；支持范围见[官方 v3 参数说明](https://www.volcengine.com/docs/6561/1598757)。
+
+声音复刻的**合成**仍使用同一 v3 接口：将 `voiceType` 或对应环境变量设为已训练的 `S_...` 音色，并从控制台取得匹配 Resource ID。当前官方文档列出 `seed-icl-2.0`、`seed-icl-1.0` 等版本；不要把上游示例的 `volc.megatts.default` 当成所有复刻音色的固定值。本接入不训练或上传声音；复刻 2.0 表现力增强模型的语音指令需要按已开通模型配置 `requestBody.req_params.model` 与序列化 additions，不能直接套用官方音色的顶层 instructions。若沿用上游的 `VOLC_TTS_VOICE` 变量名，显式将 `voiceTypeEnv` 改为 `VOLC_TTS_VOICE` 即可。
 
 ## OpenAI
 

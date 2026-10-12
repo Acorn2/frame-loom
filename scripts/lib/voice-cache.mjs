@@ -4,6 +4,7 @@ import {createHash, randomUUID} from 'node:crypto';
 import {ttsEnvironmentSettings} from './tts-profiles.mjs';
 import {probeAudioDuration, synthesizeSpeech} from './tts-provider.mjs';
 import {TTS_SYNTHESIS_REVISION} from '../../src/schemas/tts-config.ts';
+import {validateSpeechWords} from '../../src/audio/speech-timing.ts';
 
 function canonical(value) {
   if (Array.isArray(value)) return value.map(canonical);
@@ -14,7 +15,7 @@ function canonical(value) {
 export function voiceCacheKey(text, config) {
   const settings = {...config, ...ttsEnvironmentSettings(config)};
   for (const key of ['enabled', 'outputDirectory', 'outputSampleRate', 'timeoutMs', 'apiKeyEnv', 'accessTokenEnv', 'appIdEnv', 'voiceTypeEnv', 'resourceIdEnv']) delete settings[key];
-  return createHash('sha256').update(JSON.stringify(canonical({version: TTS_SYNTHESIS_REVISION, text, settings}))).digest('hex');
+  return createHash('sha256').update(JSON.stringify(canonical({version: TTS_SYNTHESIS_REVISION, ...(config.provider === 'doubao' && config.apiVersion === 'v3' ? {speechEvidenceRevision: 1} : {}), text, settings}))).digest('hex');
 }
 
 const bytesHash = (file) => createHash('sha256').update(fs.readFileSync(file)).digest('hex');
@@ -36,19 +37,24 @@ export async function cachedSpeech({projectPath, text, config, outputPath, refre
       const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
       if (metadata.hash !== bytesHash(cachedPath)) throw new Error('hash');
       durationSec = probeAudioDuration(cachedPath);
+      if (metadata.speechWords && (!validateSpeechWords(text, metadata.speechWords, durationSec) || metadata.evidenceHash !== evidenceHash(metadata.hash, metadata.speechWords))) throw new Error('speech evidence');
       fs.copyFileSync(cachedPath, outputPath);
-      return {durationSec, cacheKey: key, reused: true};
+      return {durationSec, cacheKey: key, reused: true, ...(metadata.speechWords ? {speechWords: metadata.speechWords} : {})};
     } catch {
       // Corrupt entries are never reused; generate a new immutable take.
     }
   }
-  await synthesizeSpeech({text, config, outputPath});
+  const result = await synthesizeSpeech({text, config, outputPath});
   durationSec = probeAudioDuration(outputPath);
+  const speechWords = result.speechWords && validateSpeechWords(text, result.speechWords, durationSec) ? result.speechWords : undefined;
   const temporary = path.join(directory, `${key}-${randomUUID()}.tmp`);
   fs.copyFileSync(outputPath, temporary);
   fs.renameSync(temporary, cachedPath);
   const temporaryMetadata = `${temporary}.json`;
-  fs.writeFileSync(temporaryMetadata, JSON.stringify({hash: bytesHash(cachedPath)}), {flag: 'wx'});
+  const hash = bytesHash(cachedPath);
+  fs.writeFileSync(temporaryMetadata, JSON.stringify({hash, ...(speechWords ? {speechWords, evidenceHash: evidenceHash(hash, speechWords)} : {})}), {flag: 'wx'});
   fs.renameSync(temporaryMetadata, metadataPath);
-  return {durationSec, cacheKey: key, reused: false};
+  return {durationSec, cacheKey: key, reused: false, ...(speechWords ? {speechWords} : {})};
 }
+
+const evidenceHash = (hash, words) => createHash('sha256').update(JSON.stringify(canonical({hash, words}))).digest('hex');

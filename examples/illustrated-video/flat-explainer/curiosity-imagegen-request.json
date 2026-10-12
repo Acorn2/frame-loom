@@ -1,0 +1,10 @@
+{
+  "tool": "imagegen",
+  "transparent_background": true,
+  "assetId": "curious-family",
+  "prompt": "Use case: illustration-story. Asset type: an independent transparent subject for a narrated explainer video.\nSubject: The same friendly parent and curious child as the supplied reference, seated together observing a potted leafy plant. Preserve the parent's round glasses, loose dark hair bun and pale blue shirt, the child's short tousled dark hair and pale yellow shirt, the small magnifying glass near a leaf, pointing gesture, complete figures and plant. Keep the same scene and characters while translating the entire drawing into this style's own medium. One coherent isolated group, no room or surrounding slide.\nStyle: Friendly hand-drawn educational cartoon, thick dark charcoal organic outlines with rounded line caps, rounded approachable characters, expressive simple faces, pastel light blue shirts, pale yellow, mint green and blush pink props, peach skin. Soft subtle gradients and gentle volume inside color fills. Match the supplied reference drawing language. Entire person, hands and props have the SAME thick black contour treatment. No paper grain, cut edges, paper layers, photo or plastic 3D.\nPalette: #24282b, #8bcbf2, #ffe7a0, #a7e3be, #ffc4c2.\nKeep the entire subject intact with generous clear margin. Use a genuinely transparent background.\nNo text, letters, numbers, logos, watermark, captions, arrows, labels or surrounding slide. Text and relationships will be rendered separately.\nUse supplied references for drawing style and consistent subject appearance; do not copy their text or background.",
+  "promptHash": "e9dddf94c6f7715136a97c169c006e6013c852bd54972a1b7ee8436f48bba944",
+  "planHash": "5204c971d3aa32915256aa08cfec218c5114f1497849dbdda1a0a33b541e3c54",
+  "reference": "references/curious-family-whiteboard.png",
+  "referenceSource": "examples/whiteboard-original/assets/curious-family.png；FrameLoom 原创公开素材"
+}

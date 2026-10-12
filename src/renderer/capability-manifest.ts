@@ -3,6 +3,8 @@ import {PROJECT_PALETTE_STYLES} from '../schemas/project-palette';
 import type {ActionId, LayerType, TemplateId, TransitionId, SceneVisual} from '../schemas/storyboard';
 
 export const CAPABILITY_MANIFEST = {
+  branding: {styles: ['whiteboard', 'flat-explainer', 'paper-collage', 'annotated-reasoning', 'editorial-typography'], position: 'top-right', sources: ['text', 'local-png']},
+  illustrations: {styles: ['whiteboard', 'flat-explainer', 'paper-collage', 'annotated-reasoning', 'editorial-typography'], policy: 'generated-subjects-v1', inputMode: 'document', preparationTool: 'imagegen'},
   layoutPolicies: ['content-first-v1'],
   projectPalette: {schemaVersion: '1.0', orientations: ['landscape'], styles: PROJECT_PALETTE_STYLES, sources: ['assets', 'custom']},
   shots: SHOT_IDS,

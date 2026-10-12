@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "whiteboard-compare",
+      "version": "1.2.0"
+    }
+  ],
+  "project": {
+    "title": "逐笔对照",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 10.0,
+    "durationFrames": 300,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "whiteboard-compare",
+      "template": "metric-grid",
+      "purpose": "evidence",
+      "title": "逐笔对照",
+      "primaryClaim": "先画两侧证据，再圈出一个关键差异，不补造因果连线。",
+      "visual": {
+        "kind": "compare",
+        "explanation": "FrameLoom 自写流程示意，不代表实际用户数据",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "whiteboard-compare",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "a",
+            "b"
+          ]
+        }
+      },
+      "narration": "先画两侧证据，再圈出一个关键差异，不补造因果连线。",
+      "durationFrames": 300,
+      "layers": [
+        {
+          "id": "a",
+          "type": "card",
+          "label": "一次铺满",
+          "text": "步骤同时出现，关系难以跟随"
+        },
+        {
+          "id": "b",
+          "type": "card",
+          "label": "逐项解释",
+          "text": "轮廓、文字和关系按讲解推进"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "a-trace",
+          "target": "a",
+          "action": "trace",
+          "start": 0,
+          "duration": 30
+        },
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 30,
+          "duration": 60
+        },
+        {
+          "id": "b-trace",
+          "target": "b",
+          "action": "trace",
+          "start": 108,
+          "duration": 30
+        },
+        {
+          "id": "b-reveal",
+          "target": "b",
+          "action": "reveal",
+          "start": 138,
+          "duration": 60
+        },
+        {
+          "id": "b-highlight",
+          "target": "b",
+          "action": "highlight",
+          "start": 216,
+          "duration": 30
+        }
+      ],
+      "captions": []
+    }
+  ],
+  "layoutPolicy": "content-first-v1"
+}

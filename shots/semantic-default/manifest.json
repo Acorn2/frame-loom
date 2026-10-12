@@ -25,7 +25,12 @@
     "signal",
     "signal-noir",
     "studio-frame",
-    "retro-windows"
+    "retro-windows",
+    "whiteboard",
+    "flat-explainer",
+    "paper-collage",
+    "annotated-reasoning",
+    "editorial-typography"
   ],
   "orientations": [
     "landscape",

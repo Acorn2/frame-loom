@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "flat-explainer",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "illustrated-process",
+      "version": "1.2.0"
+    }
+  ],
+  "layoutPolicy": "content-first-v1",
+  "font": {
+    "id": "source-han-sans-sc",
+    "version": "2.005"
+  },
+  "project": {
+    "title": "插画讲解镜头样片",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 7,
+    "durationFrames": 210,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "illustrated-process",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "先整理，再编排",
+      "primaryClaim": "先整理，再编排",
+      "visual": {
+        "kind": "sequence",
+        "explanation": "FrameLoom 自写资料编排示意，人物为虚构角色，数字为三份示意资料的计数",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "illustrated-process",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "a",
+            "b"
+          ]
+        }
+      },
+      "narration": "先整理，再编排",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "a",
+          "type": "object",
+          "asset": "assets/loose-papers-v2.png",
+          "label": "原始资料",
+          "fit": "contain",
+          "text": "三份资料保留各自来源"
+        },
+        {
+          "id": "b",
+          "type": "object",
+          "asset": "assets/organized-folder-v2.png",
+          "label": "编排结果",
+          "fit": "contain",
+          "text": "按主张和关系整理讲解"
+        }
+      ],
+      "connections": [
+        {
+          "id": "link-0",
+          "from": "a",
+          "to": "b"
+        }
+      ],
+      "beats": [
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 12,
+          "duration": 30
+        },
+        {
+          "id": "b-reveal",
+          "target": "b",
+          "action": "reveal",
+          "start": 57,
+          "duration": 30
+        },
+        {
+          "id": "link-0-draw",
+          "target": "link-0",
+          "action": "draw",
+          "start": 93,
+          "duration": 24
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

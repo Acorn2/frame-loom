@@ -5,16 +5,24 @@ import path from 'node:path';
 import {z} from 'zod';
 import {ShotSchema, ShotManifestSchema} from '../src/schemas/shot-recipe.ts';
 import {VideoTemplateSchema} from '../src/schemas/video-template.ts';
+import {IllustrationPlanSchema, IllustrationGuideSchema} from '../src/schemas/illustration.ts';
 import {AssetManifestSchema} from '../src/schemas/asset-manifest.ts';
 import {StoryboardSchema} from '../src/schemas/storyboard.ts';
 import {MotionPackSchema, StylePackSchema} from '../src/schemas/style-pack.ts';
 import {AudioConfigSchema} from '../src/schemas/audio-config.ts';
 import {AudioManifestSchema} from '../src/schemas/audio-manifest.ts';
+import {SpeechCuesSchema} from '../src/audio/whiteboard-timing.ts';
 import {ProjectInputSchema} from '../src/schemas/project-input.ts';
 import {ProjectPaletteSchema} from '../src/schemas/project-palette.ts';
 import {TtsConfigSchema, ttsConfigJsonSchema} from '../src/schemas/tts-config.ts';
 
+import {BrandConfigSchema} from '../src/branding/config.ts';
+
 const schemas = [
+  ['brand-config.schema.json', 'FrameLoom Brand Config', BrandConfigSchema],
+  ['speech-cues.schema.json', 'FrameLoom Speech Cue Groups', SpeechCuesSchema],
+  ['illustration-plan.schema.json', 'FrameLoom Illustration Plan', IllustrationPlanSchema],
+  ['illustration-guide.schema.json', 'FrameLoom Illustration Guide', IllustrationGuideSchema],
   ['project-palette.schema.json', 'FrameLoom Project Palette', ProjectPaletteSchema],
   ['auxiliary-recipe.schema.json', 'FrameLoom Hosted Action Recipe', AuxiliaryManifestSchema],
   ['chapter-transition.schema.json', 'FrameLoom Chapter Transition Recipe', ChapterManifestSchema],

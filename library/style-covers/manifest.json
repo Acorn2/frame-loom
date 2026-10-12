@@ -48,6 +48,30 @@
       "timeSec": 4.5,
       "width": 960,
       "height": 540
+    },
+    {
+      "id": "whiteboard",
+      "source": "examples/template-families/previews/whiteboard-original.mp4",
+      "sourceSha256": "e39d6e757ee9347ece3418a5cecf1991358f6bd1491b382a5f435fc1b2f744ed",
+      "timeSec": 16.1,
+      "width": 960,
+      "height": 540
+    },
+    {
+      "id": "annotated-reasoning",
+      "source": "examples/template-families/previews/annotated-reasoning-text-led.mp4",
+      "sourceSha256": "eb3697ef0970fdb538395b8a58193e92744d0c72061269fe6f89d781470530a6",
+      "timeSec": 15.766666666666667,
+      "width": 960,
+      "height": 540
+    },
+    {
+      "id": "editorial-typography",
+      "source": "examples/template-families/previews/editorial-typography-text-led.mp4",
+      "sourceSha256": "fd3206c8829f39796090cb520344574c17505d82a1f0efbf3f4c64b2c02b98d1",
+      "timeSec": 16.9,
+      "width": 960,
+      "height": 540
     }
   ]
 }

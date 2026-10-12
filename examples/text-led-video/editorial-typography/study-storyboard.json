@@ -1,0 +1,1469 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "editorial-typography",
+    "version": "1.0.0"
+  },
+  "font": {
+    "id": "source-han-sans-sc",
+    "version": "2.005"
+  },
+  "shotRecipes": [
+    {
+      "id": "editorial-flow",
+      "version": "1.2.0"
+    },
+    {
+      "id": "semantic-default",
+      "version": "1.0.0"
+    }
+  ],
+  "layoutPolicy": "content-first-v1",
+  "project": {
+    "title": "资料多，不等于讲得清楚",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 26,
+    "durationFrames": 780,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "text-led-study",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "资料多，不等于讲得清楚",
+      "narration": "资料多，不等于讲得清楚。先明确问题，围绕什么来讲？再核对来源，这句话从哪里来？最后连接证据与结论，解释要有依据。",
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "资料多，不等于讲得清楚"
+        },
+        {
+          "id": "illustration",
+          "type": "object",
+          "label": "资料文件夹",
+          "asset": "assets/folder.png",
+          "fit": "contain"
+        },
+        {
+          "id": "many",
+          "type": "node",
+          "label": "资料多"
+        },
+        {
+          "id": "neq",
+          "type": "node",
+          "label": "≠"
+        },
+        {
+          "id": "clear",
+          "type": "node",
+          "label": "讲得清楚"
+        },
+        {
+          "id": "data-0",
+          "type": "node",
+          "label": "资料"
+        },
+        {
+          "id": "data-1",
+          "type": "node",
+          "label": "资料"
+        },
+        {
+          "id": "data-2",
+          "type": "node",
+          "label": "资料"
+        },
+        {
+          "id": "data-3",
+          "type": "node",
+          "label": "资料"
+        },
+        {
+          "id": "data-4",
+          "type": "node",
+          "label": "资料"
+        },
+        {
+          "id": "data-5",
+          "type": "node",
+          "label": "资料"
+        },
+        {
+          "id": "question",
+          "type": "node",
+          "label": "问题"
+        },
+        {
+          "id": "raw",
+          "type": "node",
+          "label": "原文"
+        },
+        {
+          "id": "origin",
+          "type": "node",
+          "label": "出处"
+        },
+        {
+          "id": "source",
+          "type": "node",
+          "label": "来源"
+        },
+        {
+          "id": "evidence",
+          "type": "node",
+          "label": "证据"
+        },
+        {
+          "id": "conclusion",
+          "type": "node",
+          "label": "结论"
+        },
+        {
+          "id": "h-question",
+          "type": "node",
+          "label": "先明确问题"
+        },
+        {
+          "id": "h-source",
+          "type": "node",
+          "label": "再核对来源"
+        },
+        {
+          "id": "h-result",
+          "type": "node",
+          "label": "最后连接证据与结论"
+        }
+      ],
+      "connections": [
+        {
+          "id": "data-question-a",
+          "from": "data-0",
+          "to": "question"
+        },
+        {
+          "id": "data-question-b",
+          "from": "data-1",
+          "to": "question"
+        },
+        {
+          "id": "question-raw",
+          "from": "question",
+          "to": "raw"
+        },
+        {
+          "id": "raw-origin",
+          "from": "raw",
+          "to": "origin"
+        },
+        {
+          "id": "origin-evidence",
+          "from": "origin",
+          "to": "evidence"
+        },
+        {
+          "id": "data-question",
+          "from": "data-0",
+          "to": "question"
+        },
+        {
+          "id": "question-source",
+          "from": "question",
+          "to": "source"
+        },
+        {
+          "id": "source-evidence",
+          "from": "source",
+          "to": "evidence"
+        },
+        {
+          "id": "evidence-conclusion",
+          "from": "evidence",
+          "to": "conclusion"
+        }
+      ],
+      "beats": [
+        {
+          "id": "title-reveal",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "illustration-reveal",
+          "target": "illustration",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "many-reveal",
+          "target": "many",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "neq-reveal",
+          "target": "neq",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "clear-reveal",
+          "target": "clear",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "data-0-reveal",
+          "target": "data-0",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "data-1-reveal",
+          "target": "data-1",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "data-2-reveal",
+          "target": "data-2",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "data-3-reveal",
+          "target": "data-3",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "data-4-reveal",
+          "target": "data-4",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "data-5-reveal",
+          "target": "data-5",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "question-reveal",
+          "target": "question",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "raw-reveal",
+          "target": "raw",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "origin-reveal",
+          "target": "origin",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "source-reveal",
+          "target": "source",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "evidence-reveal",
+          "target": "evidence",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "conclusion-reveal",
+          "target": "conclusion",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "h-question-reveal",
+          "target": "h-question",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "h-source-reveal",
+          "target": "h-source",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "h-result-reveal",
+          "target": "h-result",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "stage-1",
+          "target": "question",
+          "action": "focus",
+          "start": 120,
+          "duration": 48
+        },
+        {
+          "id": "stage-2",
+          "target": "raw",
+          "action": "focus",
+          "start": 300,
+          "duration": 48
+        },
+        {
+          "id": "stage-3",
+          "target": "evidence",
+          "action": "focus",
+          "start": 480,
+          "duration": 48
+        },
+        {
+          "id": "data-question-a-draw",
+          "target": "data-question-a",
+          "action": "draw",
+          "start": 177,
+          "duration": 24
+        },
+        {
+          "id": "data-question-b-draw",
+          "target": "data-question-b",
+          "action": "draw",
+          "start": 177,
+          "duration": 24
+        },
+        {
+          "id": "question-raw-draw",
+          "target": "question-raw",
+          "action": "draw",
+          "start": 354,
+          "duration": 22
+        },
+        {
+          "id": "raw-origin-draw",
+          "target": "raw-origin",
+          "action": "draw",
+          "start": 380,
+          "duration": 24
+        },
+        {
+          "id": "origin-evidence-draw",
+          "target": "origin-evidence",
+          "action": "draw",
+          "start": 410,
+          "duration": 24
+        },
+        {
+          "id": "data-question-draw",
+          "target": "data-question",
+          "action": "draw",
+          "start": 540,
+          "duration": 20
+        },
+        {
+          "id": "question-source-draw",
+          "target": "question-source",
+          "action": "draw",
+          "start": 550,
+          "duration": 20
+        },
+        {
+          "id": "source-evidence-draw",
+          "target": "source-evidence",
+          "action": "draw",
+          "start": 560,
+          "duration": 20
+        },
+        {
+          "id": "evidence-conclusion-draw",
+          "target": "evidence-conclusion",
+          "action": "draw",
+          "start": 584,
+          "duration": 24
+        }
+      ],
+      "captions": [
+        {
+          "id": "caption-0",
+          "start": 0,
+          "end": 120,
+          "text": "资料多，不等于讲得清楚"
+        },
+        {
+          "id": "caption-1",
+          "start": 120,
+          "end": 200,
+          "text": "先明确问题"
+        },
+        {
+          "id": "caption-2",
+          "start": 200,
+          "end": 300,
+          "text": "围绕什么来讲？"
+        },
+        {
+          "id": "caption-3",
+          "start": 300,
+          "end": 380,
+          "text": "再核对来源"
+        },
+        {
+          "id": "caption-4",
+          "start": 380,
+          "end": 480,
+          "text": "这句话从哪里来？"
+        },
+        {
+          "id": "caption-5",
+          "start": 480,
+          "end": 575,
+          "text": "最后连接证据与结论"
+        },
+        {
+          "id": "caption-6",
+          "start": 575,
+          "end": 700,
+          "text": "解释要有依据"
+        },
+        {
+          "id": "caption-7",
+          "start": 700,
+          "end": 780,
+          "text": "从资料到清晰解释"
+        }
+      ],
+      "shot": {
+        "id": "editorial-flow",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "title",
+            "illustration",
+            "many",
+            "neq",
+            "clear",
+            "data-0",
+            "data-1",
+            "data-2",
+            "data-3",
+            "data-4",
+            "data-5",
+            "question",
+            "raw",
+            "origin",
+            "source",
+            "evidence",
+            "conclusion",
+            "h-question",
+            "h-source",
+            "h-result"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 110,
+            "y": 100,
+            "width": 1420,
+            "height": 65,
+            "fontSize": 44,
+            "weight": "medium",
+            "align": "left",
+            "color": "ink",
+            "opacity": 1
+          },
+          "illustration": {
+            "kind": "sticker",
+            "x": 1580,
+            "y": 690,
+            "width": 210,
+            "height": 190,
+            "fontSize": 28,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 1
+          },
+          "many": {
+            "kind": "text",
+            "x": 350,
+            "y": 330,
+            "width": 310,
+            "height": 135,
+            "fontSize": 94,
+            "weight": "medium",
+            "align": "left",
+            "color": "ink",
+            "opacity": 1
+          },
+          "neq": {
+            "kind": "text",
+            "x": 850,
+            "y": 310,
+            "width": 170,
+            "height": 160,
+            "fontSize": 108,
+            "weight": "regular",
+            "align": "center",
+            "color": "accentAlt",
+            "opacity": 1
+          },
+          "clear": {
+            "kind": "text",
+            "x": 1130,
+            "y": 330,
+            "width": 580,
+            "height": 135,
+            "fontSize": 94,
+            "weight": "medium",
+            "align": "left",
+            "color": "ink",
+            "opacity": 1
+          },
+          "data-0": {
+            "kind": "text",
+            "x": 405,
+            "y": 515,
+            "width": 110,
+            "height": 65,
+            "fontSize": 44,
+            "weight": "regular",
+            "align": "left",
+            "color": "muted",
+            "opacity": 1
+          },
+          "data-1": {
+            "kind": "text",
+            "x": 580,
+            "y": 515,
+            "width": 110,
+            "height": 65,
+            "fontSize": 44,
+            "weight": "regular",
+            "align": "left",
+            "color": "muted",
+            "opacity": 1
+          },
+          "data-2": {
+            "kind": "text",
+            "x": 405,
+            "y": 599,
+            "width": 110,
+            "height": 65,
+            "fontSize": 44,
+            "weight": "regular",
+            "align": "left",
+            "color": "muted",
+            "opacity": 1
+          },
+          "data-3": {
+            "kind": "text",
+            "x": 580,
+            "y": 599,
+            "width": 110,
+            "height": 65,
+            "fontSize": 44,
+            "weight": "regular",
+            "align": "left",
+            "color": "muted",
+            "opacity": 1
+          },
+          "data-4": {
+            "kind": "text",
+            "x": 405,
+            "y": 683,
+            "width": 110,
+            "height": 65,
+            "fontSize": 44,
+            "weight": "regular",
+            "align": "left",
+            "color": "muted",
+            "opacity": 1
+          },
+          "data-5": {
+            "kind": "text",
+            "x": 580,
+            "y": 683,
+            "width": 110,
+            "height": 65,
+            "fontSize": 44,
+            "weight": "regular",
+            "align": "left",
+            "color": "muted",
+            "opacity": 1
+          },
+          "question": {
+            "kind": "text",
+            "x": 830,
+            "y": 450,
+            "width": 260,
+            "height": 120,
+            "fontSize": 82,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 0
+          },
+          "raw": {
+            "kind": "text",
+            "x": 330,
+            "y": 570,
+            "width": 180,
+            "height": 100,
+            "fontSize": 64,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 0
+          },
+          "origin": {
+            "kind": "text",
+            "x": 780,
+            "y": 570,
+            "width": 180,
+            "height": 100,
+            "fontSize": 64,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 0
+          },
+          "source": {
+            "kind": "text",
+            "x": 670,
+            "y": 576,
+            "width": 180,
+            "height": 65,
+            "fontSize": 38,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 0
+          },
+          "evidence": {
+            "kind": "text",
+            "x": 1245,
+            "y": 570,
+            "width": 180,
+            "height": 115,
+            "fontSize": 64,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 0
+          },
+          "conclusion": {
+            "kind": "text",
+            "x": 1410,
+            "y": 551,
+            "width": 180,
+            "height": 115,
+            "fontSize": 80,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 0
+          },
+          "h-question": {
+            "kind": "text",
+            "x": 110,
+            "y": 245,
+            "width": 1000,
+            "height": 90,
+            "fontSize": 62,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 0
+          },
+          "h-source": {
+            "kind": "text",
+            "x": 110,
+            "y": 245,
+            "width": 1000,
+            "height": 90,
+            "fontSize": 62,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 0
+          },
+          "h-result": {
+            "kind": "text",
+            "x": 110,
+            "y": 245,
+            "width": 1000,
+            "height": 90,
+            "fontSize": 62,
+            "weight": "regular",
+            "align": "left",
+            "color": "ink",
+            "opacity": 0
+          }
+        },
+        "stages": [
+          {
+            "trigger": "stage-1",
+            "placements": {
+              "title": {
+                "x": 110,
+                "y": 100,
+                "width": 1420,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "medium",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "illustration": {
+                "x": 1580,
+                "y": 690,
+                "width": 210,
+                "height": 190,
+                "fontSize": 28,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "many": {
+                "x": 350,
+                "y": 330,
+                "width": 310,
+                "height": 135,
+                "fontSize": 94,
+                "weight": "medium",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              },
+              "neq": {
+                "x": 850,
+                "y": 310,
+                "width": 170,
+                "height": 160,
+                "fontSize": 108,
+                "weight": "regular",
+                "align": "center",
+                "color": "accentAlt",
+                "opacity": 0
+              },
+              "clear": {
+                "x": 1130,
+                "y": 330,
+                "width": 580,
+                "height": 135,
+                "fontSize": 94,
+                "weight": "medium",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              },
+              "data-0": {
+                "x": 380,
+                "y": 390,
+                "width": 110,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "regular",
+                "align": "left",
+                "color": "accent",
+                "opacity": 1
+              },
+              "data-1": {
+                "x": 1480,
+                "y": 390,
+                "width": 110,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "regular",
+                "align": "left",
+                "color": "accent",
+                "opacity": 1
+              },
+              "data-2": {
+                "x": 380,
+                "y": 478,
+                "width": 110,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 1
+              },
+              "data-3": {
+                "x": 1480,
+                "y": 478,
+                "width": 110,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 1
+              },
+              "data-4": {
+                "x": 380,
+                "y": 566,
+                "width": 110,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 1
+              },
+              "data-5": {
+                "x": 1480,
+                "y": 566,
+                "width": 110,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 1
+              },
+              "question": {
+                "x": 830,
+                "y": 450,
+                "width": 260,
+                "height": 120,
+                "fontSize": 82,
+                "weight": "medium",
+                "align": "center",
+                "color": "ink",
+                "opacity": 1
+              },
+              "raw": {
+                "x": 330,
+                "y": 570,
+                "width": 180,
+                "height": 100,
+                "fontSize": 64,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              },
+              "origin": {
+                "x": 780,
+                "y": 570,
+                "width": 180,
+                "height": 100,
+                "fontSize": 64,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              },
+              "source": {
+                "x": 670,
+                "y": 576,
+                "width": 180,
+                "height": 65,
+                "fontSize": 38,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              },
+              "evidence": {
+                "x": 1245,
+                "y": 570,
+                "width": 180,
+                "height": 115,
+                "fontSize": 64,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              },
+              "conclusion": {
+                "x": 1410,
+                "y": 551,
+                "width": 180,
+                "height": 115,
+                "fontSize": 80,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              },
+              "h-question": {
+                "x": 110,
+                "y": 245,
+                "width": 1000,
+                "height": 90,
+                "fontSize": 62,
+                "weight": "medium",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "h-source": {
+                "x": 110,
+                "y": 245,
+                "width": 1000,
+                "height": 90,
+                "fontSize": 62,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              },
+              "h-result": {
+                "x": 110,
+                "y": 245,
+                "width": 1000,
+                "height": 90,
+                "fontSize": 62,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              }
+            }
+          },
+          {
+            "trigger": "stage-2",
+            "placements": {
+              "title": {
+                "x": 110,
+                "y": 100,
+                "width": 1420,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "medium",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "illustration": {
+                "x": 1580,
+                "y": 690,
+                "width": 210,
+                "height": 190,
+                "fontSize": 28,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "many": {
+                "x": 350,
+                "y": 330,
+                "width": 310,
+                "height": 135,
+                "fontSize": 94,
+                "weight": "medium",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              },
+              "neq": {
+                "x": 850,
+                "y": 310,
+                "width": 170,
+                "height": 160,
+                "fontSize": 108,
+                "weight": "regular",
+                "align": "center",
+                "color": "accentAlt",
+                "opacity": 0
+              },
+              "clear": {
+                "x": 1130,
+                "y": 330,
+                "width": 580,
+                "height": 135,
+                "fontSize": 94,
+                "weight": "medium",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              },
+              "data-0": {
+                "x": 380,
+                "y": 390,
+                "width": 110,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "regular",
+                "align": "left",
+                "color": "accent",
+                "opacity": 0
+              },
+              "data-1": {
+                "x": 1480,
+                "y": 390,
+                "width": 110,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "regular",
+                "align": "left",
+                "color": "accent",
+                "opacity": 0
+              },
+              "data-2": {
+                "x": 380,
+                "y": 478,
+                "width": 110,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 0
+              },
+              "data-3": {
+                "x": 1480,
+                "y": 478,
+                "width": 110,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 0
+              },
+              "data-4": {
+                "x": 380,
+                "y": 566,
+                "width": 110,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 0
+              },
+              "data-5": {
+                "x": 1480,
+                "y": 566,
+                "width": 110,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 0
+              },
+              "question": {
+                "x": 330,
+                "y": 365,
+                "width": 180,
+                "height": 65,
+                "fontSize": 42,
+                "weight": "regular",
+                "align": "center",
+                "color": "ink",
+                "opacity": 1
+              },
+              "raw": {
+                "x": 330,
+                "y": 570,
+                "width": 180,
+                "height": 100,
+                "fontSize": 64,
+                "weight": "regular",
+                "align": "center",
+                "color": "ink",
+                "opacity": 1
+              },
+              "origin": {
+                "x": 780,
+                "y": 570,
+                "width": 180,
+                "height": 100,
+                "fontSize": 64,
+                "weight": "regular",
+                "align": "center",
+                "color": "ink",
+                "opacity": 1
+              },
+              "source": {
+                "x": 670,
+                "y": 576,
+                "width": 180,
+                "height": 65,
+                "fontSize": 38,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              },
+              "evidence": {
+                "x": 1245,
+                "y": 570,
+                "width": 180,
+                "height": 115,
+                "fontSize": 64,
+                "weight": "regular",
+                "align": "center",
+                "color": "ink",
+                "opacity": 1
+              },
+              "conclusion": {
+                "x": 1410,
+                "y": 551,
+                "width": 180,
+                "height": 115,
+                "fontSize": 80,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              },
+              "h-question": {
+                "x": 110,
+                "y": 245,
+                "width": 1000,
+                "height": 90,
+                "fontSize": 62,
+                "weight": "medium",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              },
+              "h-source": {
+                "x": 110,
+                "y": 245,
+                "width": 1000,
+                "height": 90,
+                "fontSize": 62,
+                "weight": "medium",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "h-result": {
+                "x": 110,
+                "y": 245,
+                "width": 1000,
+                "height": 90,
+                "fontSize": 62,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              }
+            }
+          },
+          {
+            "trigger": "stage-3",
+            "placements": {
+              "title": {
+                "x": 110,
+                "y": 100,
+                "width": 1420,
+                "height": 65,
+                "fontSize": 44,
+                "weight": "medium",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "illustration": {
+                "x": 1580,
+                "y": 690,
+                "width": 210,
+                "height": 190,
+                "fontSize": 28,
+                "weight": "regular",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              },
+              "many": {
+                "x": 350,
+                "y": 330,
+                "width": 310,
+                "height": 135,
+                "fontSize": 94,
+                "weight": "medium",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              },
+              "neq": {
+                "x": 850,
+                "y": 310,
+                "width": 170,
+                "height": 160,
+                "fontSize": 108,
+                "weight": "regular",
+                "align": "center",
+                "color": "accentAlt",
+                "opacity": 0
+              },
+              "clear": {
+                "x": 1340,
+                "y": 740,
+                "width": 240,
+                "height": 80,
+                "fontSize": 54,
+                "weight": "regular",
+                "align": "left",
+                "color": "accent",
+                "opacity": 1
+              },
+              "data-0": {
+                "x": 150,
+                "y": 515,
+                "width": 90,
+                "height": 50,
+                "fontSize": 32,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 1
+              },
+              "data-1": {
+                "x": 250,
+                "y": 515,
+                "width": 90,
+                "height": 50,
+                "fontSize": 32,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 1
+              },
+              "data-2": {
+                "x": 150,
+                "y": 581,
+                "width": 90,
+                "height": 50,
+                "fontSize": 32,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 1
+              },
+              "data-3": {
+                "x": 250,
+                "y": 581,
+                "width": 90,
+                "height": 50,
+                "fontSize": 32,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 1
+              },
+              "data-4": {
+                "x": 150,
+                "y": 647,
+                "width": 90,
+                "height": 50,
+                "fontSize": 32,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 1
+              },
+              "data-5": {
+                "x": 250,
+                "y": 647,
+                "width": 90,
+                "height": 50,
+                "fontSize": 32,
+                "weight": "regular",
+                "align": "left",
+                "color": "muted",
+                "opacity": 1
+              },
+              "question": {
+                "x": 420,
+                "y": 576,
+                "width": 180,
+                "height": 65,
+                "fontSize": 38,
+                "weight": "regular",
+                "align": "center",
+                "color": "ink",
+                "opacity": 1
+              },
+              "raw": {
+                "x": 330,
+                "y": 570,
+                "width": 180,
+                "height": 100,
+                "fontSize": 64,
+                "weight": "regular",
+                "align": "center",
+                "color": "ink",
+                "opacity": 0
+              },
+              "origin": {
+                "x": 780,
+                "y": 570,
+                "width": 180,
+                "height": 100,
+                "fontSize": 64,
+                "weight": "regular",
+                "align": "center",
+                "color": "ink",
+                "opacity": 0
+              },
+              "source": {
+                "x": 670,
+                "y": 576,
+                "width": 180,
+                "height": 65,
+                "fontSize": 38,
+                "weight": "regular",
+                "align": "center",
+                "color": "ink",
+                "opacity": 1
+              },
+              "evidence": {
+                "x": 980,
+                "y": 551,
+                "width": 200,
+                "height": 115,
+                "fontSize": 80,
+                "weight": "medium",
+                "align": "center",
+                "color": "ink",
+                "opacity": 1
+              },
+              "conclusion": {
+                "x": 1410,
+                "y": 551,
+                "width": 180,
+                "height": 115,
+                "fontSize": 80,
+                "weight": "medium",
+                "align": "center",
+                "color": "ink",
+                "opacity": 1
+              },
+              "h-question": {
+                "x": 110,
+                "y": 245,
+                "width": 1000,
+                "height": 90,
+                "fontSize": 62,
+                "weight": "medium",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              },
+              "h-source": {
+                "x": 110,
+                "y": 245,
+                "width": 1000,
+                "height": 90,
+                "fontSize": 62,
+                "weight": "medium",
+                "align": "left",
+                "color": "ink",
+                "opacity": 0
+              },
+              "h-result": {
+                "x": 110,
+                "y": 245,
+                "width": 1200,
+                "height": 90,
+                "fontSize": 62,
+                "weight": "medium",
+                "align": "left",
+                "color": "ink",
+                "opacity": 1
+              }
+            }
+          }
+        ],
+        "routes": {
+          "data-question-a": {
+            "stage": 1,
+            "arrow": false,
+            "track": false
+          },
+          "data-question-b": {
+            "stage": 1,
+            "arrow": false,
+            "track": false
+          },
+          "question-raw": {
+            "stage": 2,
+            "arrow": true,
+            "track": false
+          },
+          "raw-origin": {
+            "stage": 2,
+            "arrow": true,
+            "track": true
+          },
+          "origin-evidence": {
+            "stage": 2,
+            "arrow": true,
+            "track": true
+          },
+          "data-question": {
+            "stage": 3,
+            "arrow": true,
+            "track": false
+          },
+          "question-source": {
+            "stage": 3,
+            "arrow": true,
+            "track": false
+          },
+          "source-evidence": {
+            "stage": 3,
+            "arrow": true,
+            "track": false
+          },
+          "evidence-conclusion": {
+            "stage": 3,
+            "arrow": true,
+            "track": true
+          }
+        }
+      },
+      "durationFrames": 780,
+      "primaryClaim": "资料多，不等于讲得清楚",
+      "visual": {
+        "kind": "network",
+        "representation": "diagram",
+        "source": "source.md",
+        "explanation": "文案驱动的原创图解，辅助人物为虚构AI插画；连线表达文本中明确的解释关系"
+      }
+    }
+  ]
+}

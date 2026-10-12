@@ -1,6 +1,7 @@
 import {SHOT_CATALOG} from '../src/shots/catalog.ts';
 import {VIDEO_TEMPLATES} from '../src/video-templates/resolve-template.ts';
 import fs from 'node:fs';
+import {ILLUSTRATION_STYLES} from '../src/schemas/illustration.ts';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {resolveVideoTemplate} from '../src/video-templates/resolve-template.ts';
@@ -9,9 +10,12 @@ import {assertShotSelectionCompatibility} from '../src/shots/selection.ts';
 import {getOption, loadStyleIndex, projectRoot} from './lib/style-catalog.mjs';
 import {FONT_CATALOG, recommendedFont} from '../src/fonts/catalog.ts';
 import {verifyFontAssets} from '../src/fonts/assets.ts';
+import {fixedStyleRecipeIds} from '../library/style-policy.mjs';
+import {BrandConfigSchema} from '../src/branding/config.ts';
+import {resolveBrand} from './lib/branding.mjs';
 
 const VIDEO_ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const PROJECT_OPTIONS = new Set(['--slug', '--style', '--font', '--shots', '--canvas', '--input-mode', '--color-mode', '--projects-dir', '--video-template']);
+const PROJECT_OPTIONS = new Set(['--slug', '--style', '--font', '--shots', '--canvas', '--input-mode', '--color-mode', '--projects-dir', '--video-template', '--brand-name']);
 
 function positionalArgs(args) {
   const positional = [];
@@ -47,7 +51,7 @@ export function initProject(args = process.argv.slice(2), {now = new Date()} = {
   const slug = getOption(args, '--slug');
   const positional = positionalArgs(args);
   if ((slug && positional.length > 0) || (!slug && positional.length !== 1)) {
-    throw new Error('Usage: npm run init:project -- --slug <topic-slug> [--style <id>] [--font <id>] [--shots <id,id,...>] [--video-template <preset-id>] [--canvas landscape|portrait] [--input-mode document|document-images] [--color-mode auto|style|source] [--projects-dir <path>]\n也可传入一个显式 video-id 以兼容已有流程。');
+    throw new Error('Usage: npm run init:project -- --slug <topic-slug> [--style <id>] [--font <id>] [--brand-name <name>] [--shots <id,id,...>] [--video-template <preset-id>] [--canvas landscape|portrait] [--input-mode document|document-images] [--color-mode auto|style|source] [--projects-dir <path>]\n也可传入一个显式 video-id 以兼容已有流程。');
   }
   const suppliedId = slug ?? positional[0];
   if (!suppliedId || !VIDEO_ID_PATTERN.test(suppliedId) || (slug && /^\d{8}-/.test(slug))) {
@@ -57,8 +61,15 @@ export function initProject(args = process.argv.slice(2), {now = new Date()} = {
   const templateId = getOption(args, '--video-template');
   const videoTemplate = templateId ? resolveVideoTemplate({id: templateId, version: VIDEO_TEMPLATES.find(item => item.id === templateId)?.version}) : undefined;
   const shotIds = getOption(args, '--shots');
-  const shotRecipes = shotIds ? ShotSelectionSchema.parse(shotIds.split(',').map((id) => ({id: id.trim(), version: SHOT_CATALOG.find(item => item.id === id.trim())?.version}))) : undefined;
   const styleId = getOption(args, '--style') ?? videoTemplate?.defaultStyle.id ?? 'retro-zine';
+  const fixedRecipes = fixedStyleRecipeIds(styleId);
+  const brandName = getOption(args, '--brand-name');
+  if (brandName && !fixedRecipes) throw new Error('--brand-name 仅支持三套主风格。');
+  const inheritedBrand = brandName ? resolveBrand(styleId).evidence.config : undefined;
+  const brandOverride = inheritedBrand ? BrandConfigSchema.parse({schemaVersion: '1.0', brand: {...inheritedBrand, name: brandName, ...(inheritedBrand.logo ? {logo: {...inheritedBrand.logo, path: path.resolve(projectRoot, inheritedBrand.logo.path)}} : {})}}) : undefined;
+  if (fixedRecipes && shotIds && JSON.stringify([...new Set(shotIds.split(',').map(id => id.trim()))].sort()) !== JSON.stringify([...fixedRecipes].sort())) throw new Error('此风格使用固定内置镜头，不支持手动限定 --shots；请只指定 --style。');
+  const recipeIds = fixedRecipes ?? (shotIds ? shotIds.split(',').map(id => id.trim()) : undefined);
+  const shotRecipes = recipeIds ? ShotSelectionSchema.parse(recipeIds.map(id => ({id, version: SHOT_CATALOG.find(item => item.id === id)?.version}))) : undefined;
   const fontId = getOption(args, '--font');
   const fontEntry = fontId ? FONT_CATALOG.find(item => item.id === fontId) : undefined;
   if (fontId && !fontEntry) throw new Error(`未知字体：${fontId}`);
@@ -103,8 +114,9 @@ export function initProject(args = process.argv.slice(2), {now = new Date()} = {
   fs.mkdirSync(path.join(target, 'assets'), {recursive: true});
   fs.mkdirSync(path.join(target, 'audio'), {recursive: true});
   fs.mkdirSync(path.join(target, 'output'), {recursive: true});
+  if (brandOverride) write(path.join(target, 'config.json'), `${JSON.stringify(brandOverride, null, 2)}\n`);
   write(path.join(target, 'source/source.md'), `# ${videoId}\n\n在这里放入原始 Markdown、事实和来源。不要把未经核实的推断写成事实。\n`);
-  write(path.join(target, 'project-input.json'), `${JSON.stringify({schemaVersion: '1.0', inputMode, colorMode, palettePolicy: 'source-roles-v1'}, null, 2)}\n`);
+  write(path.join(target, 'project-input.json'), `${JSON.stringify({schemaVersion: '1.0', inputMode, colorMode, palettePolicy: 'source-roles-v1', ...(inputMode === 'document' && ILLUSTRATION_STYLES.includes(styleId) ? {illustrationPolicy: 'generated-subjects-v1'} : {})}, null, 2)}\n`);
   write(path.join(target, 'visual-sources.md'), '# Visual Sources\n\nRecord local image paths or exact creator-provided URLs, original/final URL, capture time, viewport and visible state.\n\n## Project colors\n\n- Color mode: ' + colorMode + '\n- Palette policy: source-roles-v1; new palettes use schemaVersion 1.1\n- Subject product and source role: [palette-reference / scene-media / both]\n- Sample background, title/body text, surface and accent separately; one button sample is insufficient.\n- For every color role, record asset ID, original-pixel region, sampled color, adopted color and any derivation reason in storyboard.palette.evidence. Background, ink and accent require direct samples.\n- Missing screenshot roles: [derive from sampled roles with reasons; never silently replace them with style/neutral defaults]\n- Adopted palette or fallback reason: [write final colors to storyboard.palette; do not infer a brand from a citation or competitor]\n- Representative-shot review: [compare canvas, titles/body, cards, diagram labels and captions to source screenshots; record readable adjustments and full-playback status]\n');
   write(path.join(target, 'production-brief.md'), `# Production Brief\n\n- Video ID: ${videoId} (internal; do not ask the creator to provide it)\n- Audience: [infer from source, or mark unspecified]\n- Platform / use: [record only when supplied or supported by source; do not block a first preview]\n- Viewer takeaway: [derive one sentence from supported source claims]\n- Canvas: ${canvas}\n- Style candidate: ${styleId}\n- Font: ${font.id} (one family for all generated text)\n- Duration constraint: [optional user limit; otherwise derive from script, reading time and scene holds]\n- Output purpose: [visual-preview / visual-master / in-project-video / script handoff]\n- Audio route: [silent / selected TTS profile / external voiceover]\n- Input mode: ${inputMode}\n\n## Source boundary\n\nRecord the original document path and which claims need verification. Keep an unchanged copy under source/. ${inputMode === 'document' ? 'This mode uses document-derived text and graphics; no images are required.' : 'This mode uses the document plus local images or screenshots captured from user-provided URLs. Record every visual source before rendering.'}\n\n## Review gates\n\n- [ ] Source and key claims checked against the document\n- [ ] Document route and content gaps checked\n${inputMode === 'document-images' ? '- [ ] Image sources, capture details and intended shots checked\n' : ''}- [ ] Style Pack selected after route\n- [ ] Storyboard approved by creator (review mode only)\n- [ ] Selected output watched in full after automated QA\n`);
   if (inputMode === 'document-images') {
@@ -118,6 +130,10 @@ export function initProject(args = process.argv.slice(2), {now = new Date()} = {
   write(path.join(target, 'content-brief.md'), '# Content Brief\n\n## Narrative order\n\n## Claims and evidence\n\nKeep detailed source-to-shot links in shot-map.md.\n\n## Visual targets and exclusions\n');
   write(path.join(target, 'script.md'), '# Script\n\n> Give each scene its final ID and use the exact scene.narration text. Timing is provisional until narration is measured or the picture is locked.\n\n## opening\n\n[Replace with the exact opening narration.]\n');
   write(path.join(target, 'visual-handoff.json'), `${JSON.stringify({schemaVersion: '1.0', facecamRightFraction: 0, subtitleBottomFraction: 0, timelinePolicy: 'picture-locked'}, null, 2)}\n`);
+  if (inputMode === 'document' && ILLUSTRATION_STYLES.includes(styleId)) {
+    write(path.join(target, 'illustration-plan.json'), `${JSON.stringify({schemaVersion: '1.0', style: {id: style.id, version: style.version}, assets: []}, null, 2)}\n`);
+    fs.appendFileSync(path.join(target, 'production-brief.md'), '\n## Generated subjects\n\nRead references/illustrated-production.md. Populate illustration-plan.json from source claims, prepare prompts, invoke native imagegen, inspect and register each asset. Preparation is not generation. Text and relationships stay native; failed generation must not silently fall back.\n');
+  }
   write(path.join(target, 'asset-manifest.json'), `${JSON.stringify({schemaVersion: '1.0', assets: []}, null, 2)}\n`);
   write(path.join(target, 'audio/audio-config.example.json'), `${JSON.stringify({
     schemaVersion: '1.0',

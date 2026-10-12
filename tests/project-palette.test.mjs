@@ -17,7 +17,7 @@ import {initProject} from '../scripts/init-project.mjs';
 import {normalizeSelection, createExports} from '../library/selection.mjs';
 import {buildLibraryCatalog} from '../scripts/lib/library-catalog.mjs';
 
-const read = id => JSON.parse(fs.readFileSync(`examples/shot-recipes/${id}/storyboard.json`, 'utf8'));
+const read = id => JSON.parse(fs.readFileSync(id.startsWith('illustrated-') ? `examples/illustrated-video/whiteboard/${id}.json` : `examples/shot-recipes/${id}/storyboard.json`, 'utf8'));
 const palette = (accent = '#2563eb') => ({schemaVersion: '1.0', source: 'custom', referenceAssets: [], colors: {accent, accentAlt: accent, lightBackground: '#f4f6f8', darkBackground: '#151a22', surface: '#ffffff'}});
 const fullPalette = () => ({schemaVersion: '1.1', source: 'custom', referenceAssets: [], colors: {
   accent: '#2563eb', accentAlt: '#1a311e', lightBackground: '#f6f3e4', darkBackground: '#102218', surface: '#fffdf5',
@@ -44,11 +44,11 @@ describe('project palette contract and rendering', () => {
       const base = createStyleTokens(JSON.parse(fs.readFileSync(`styles/${id}/style.json`)), JSON.parse(fs.readFileSync(`styles/${id}/motion.json`)), 1920, 1080, {id: 'lxgw-wenkai', version: '1.522'});
       const selected = fullPalette();
       const chosen = applyProjectPalette(base, selected);
-      for (const shot of SHOT_CATALOG) {
+      for (const shot of SHOT_CATALOG.filter(shot => shot.styles.includes(id))) {
         const appearance = recipeAppearance(read(shot.id).scenes[0].shot, chosen);
         expect(appearance.background).toBe(appearance.dark ? selected.colors.darkBackground : selected.colors.lightBackground);
         expect(appearance.tokens.paper).toBe(selected.colors.surface);
-        expect(appearance.tokens.ink).toBe(selected.colors.ink);
+        expect(appearance.tokens.ink).toBe(shot.id.startsWith('whiteboard-') ? chosen.ink : selected.colors.ink);
         expect(appearance.tokens.captionInk).toBe(appearance.dark ? '#ffffff' : selected.colors.captionInk);
         expect(contrastRatio(appearance.stageInk, appearance.background)).toBeGreaterThanOrEqual(7);
         expect(contrastRatio(appearance.tokens.captionInk, appearance.background)).toBeGreaterThanOrEqual(4.5);
@@ -89,7 +89,7 @@ describe('project palette contract and rendering', () => {
         expect(chosen.accent).toBe(accent); expect(chosen.displayFont).toBe(base.displayFont);
         expect(chosen.motion).toEqual(base.motion); expect(chosen.safeArea).toEqual(base.safeArea);
         expect(contrastRatio(chosen.onAccent, accent)).toBeGreaterThanOrEqual(4.5);
-        for (const shot of SHOT_CATALOG) {
+        for (const shot of SHOT_CATALOG.filter(shot => shot.styles.includes(id))) {
           const scene = read(shot.id).scenes[0];
           const before = JSON.stringify(scene);
           const appearance = recipeAppearance(scene.shot, chosen);
@@ -97,9 +97,9 @@ describe('project palette contract and rendering', () => {
           expect(contrastRatio(appearance.stageInk, appearance.background)).toBeGreaterThanOrEqual(7);
           expect(contrastRatio(appearance.stageMuted, appearance.background)).toBeGreaterThanOrEqual(4.5);
           expect(contrastRatio(appearance.tokens.captionInk, appearance.background)).toBeGreaterThanOrEqual(4.5);
-          expect(contrastRatio(appearance.tokens.ink, appearance.tokens.paper)).toBeGreaterThanOrEqual(7);
+          expect(contrastRatio(appearance.tokens.ink, shot.id.startsWith('whiteboard-') ? appearance.background : appearance.tokens.paper)).toBeGreaterThanOrEqual(7);
           expect(contrastRatio(appearance.tokens.paperAccent, appearance.tokens.paper)).toBeGreaterThanOrEqual(4.5);
-          if (!['semantic-default', 'compare-reveal', 'network-expand'].includes(shot.id)) expect(contrastRatio(appearance.tokens.accentAlt, appearance.tokens.paper)).toBeGreaterThanOrEqual(4.5);
+          if (!['semantic-default', 'compare-reveal', 'network-expand'].includes(shot.id) && !shot.id.startsWith('whiteboard-')) expect(contrastRatio(appearance.tokens.accentAlt, appearance.tokens.paper)).toBeGreaterThanOrEqual(4.5);
           expect(JSON.stringify(scene)).toBe(before);
         }
       }

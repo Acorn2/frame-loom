@@ -50,6 +50,84 @@
               "palette-reference",
               "both"
             ]
+          },
+          "generation": {
+            "type": "object",
+            "properties": {
+              "tool": {
+                "type": "string",
+                "const": "imagegen"
+              },
+              "style": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "enum": [
+                      "whiteboard",
+                      "flat-explainer",
+                      "paper-collage",
+                      "annotated-reasoning",
+                      "editorial-typography"
+                    ]
+                  },
+                  "version": {
+                    "type": "string",
+                    "const": "1.0.0"
+                  }
+                },
+                "required": [
+                  "id",
+                  "version"
+                ],
+                "additionalProperties": false
+              },
+              "planId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "planHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "promptHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "fileHash": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "review": {
+                "type": "object",
+                "properties": {
+                  "reviewer": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "reviewedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                  }
+                },
+                "required": [
+                  "reviewer",
+                  "reviewedAt"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "tool",
+              "style",
+              "planId",
+              "planHash",
+              "promptHash",
+              "fileHash",
+              "review"
+            ],
+            "additionalProperties": false
           }
         },
         "required": [

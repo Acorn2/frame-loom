@@ -1,0 +1,89 @@
+{
+  "id": "whiteboard",
+  "version": "1.0.0",
+  "tokens": {
+    "background": "#fffdf7",
+    "ink": "#1e1e1e",
+    "captionInk": "#31312d",
+    "muted": "#666960",
+    "accent": "#f5b942",
+    "accentAlt": "#2f9e44",
+    "paper": "#fffdf7",
+    "grid": "#d9d4c7",
+    "displayFont": "\"Kaiti SC\", STKaiti, KaiTi, \"PingFang SC\", sans-serif",
+    "bodyFont": "\"Kaiti SC\", STKaiti, KaiTi, \"PingFang SC\", sans-serif",
+    "pattern": "dots",
+    "surfaceRadius": 0,
+    "surfaceBorder": "1px solid #b7c2ce",
+    "surfaceShadow": "none",
+    "labelRadius": 8,
+    "titleFontSize": 90
+  },
+  "safeArea": {
+    "landscape": {
+      "top": 56,
+      "right": 56,
+      "bottom": 40,
+      "left": 56
+    },
+    "portrait": {
+      "top": 128,
+      "right": 72,
+      "bottom": 144,
+      "left": 72
+    }
+  },
+  "supports": {
+    "purposes": [
+      "opening",
+      "claim",
+      "process",
+      "evidence",
+      "media",
+      "closing"
+    ],
+    "templates": [
+      "statement",
+      "graph-explainer",
+      "metric-grid",
+      "interaction-flow"
+    ],
+    "layers": [
+      "label",
+      "card",
+      "annotation",
+      "metric",
+      "node",
+      "screenshot",
+      "object",
+      "callout"
+    ],
+    "actions": [
+      "enter",
+      "reveal",
+      "draw",
+      "focus",
+      "highlight",
+      "count",
+      "camera-push",
+      "rotate",
+      "set-state",
+      "trace"
+    ],
+    "transitions": [
+      "fade",
+      "slide",
+      "paper-wipe",
+      "carry"
+    ],
+    "overlapTransitions": [
+      "overlap-fade",
+      "overlap-slide",
+      "overlap-carry"
+    ]
+  },
+  "provenance": {
+    "fonts": "Default system Kaiti stack for raw style samples; Xiaolai 3.126 is the recommended explicit storyboard.font from the fingerprinted catalog and overrides all generated text.",
+    "assets": "Rough.js 4.6.6 and pencil/writing adaptation from simon-skills whiteboard-video (MIT). Reference sample sticker is explicitly attributed; production assets remain separately generated."
+  }
+}

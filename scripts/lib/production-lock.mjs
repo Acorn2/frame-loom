@@ -10,6 +10,7 @@ import {assertTemplateCompatibility} from '../../src/video-templates/resolve-tem
 import {ShotManifestSchema} from '../../src/schemas/shot-recipe.ts';
 import {VideoTemplateSchema} from '../../src/schemas/video-template.ts';
 import {verifyFontAssets} from '../../src/fonts/assets.ts';
+import {resolveBrand} from './branding.mjs';
 import {resolvePaletteEvidence} from './project-palette.mjs';
 
 const defaultRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -49,7 +50,7 @@ export function resolveProductionLock(input, root = defaultRoot, projectPath) {
     if (manifest.id !== storyboard.videoTemplate.id || manifest.version !== storyboard.videoTemplate.version) throw new Error('视频模板精确版本不一致。');
     template = {...storyboard.videoTemplate, manifestHash: fileHash(file)};
   }
-  const rendererScripts = ['scripts/render-storyboard.mjs', 'scripts/lib/audio-runtime.mjs', 'scripts/lib/output-purpose.mjs', 'scripts/lib/verified-render-output.mjs', 'scripts/lib/render-receipt.mjs', 'scripts/lib/layout-qa.mjs'];
+  const rendererScripts = ['scripts/render-storyboard.mjs', 'scripts/lib/branding.mjs', 'scripts/lib/scene-cache.mjs', 'scripts/lib/audio-runtime.mjs', 'scripts/lib/output-purpose.mjs', 'scripts/lib/verified-render-output.mjs', 'scripts/lib/render-receipt.mjs', 'scripts/lib/layout-qa.mjs'];
   const runtime = [...files(path.join(root, 'src')), ...rendererScripts.map((name) => path.join(root, name)), path.join(root, 'package-lock.json'), path.join(root, 'tsconfig.json')].sort().map((file) => [path.relative(root, file), fileHash(file)]);
   const style = {...storyboard.style, contentHash: hashValue(['style.json', 'motion.json'].map((name) => fileHash(path.join(root, 'styles', storyboard.style.id, name))))};
   const font = storyboard.font ? verifyFontAssets(storyboard.font, root) : undefined;
@@ -68,6 +69,8 @@ export function resolveProductionLock(input, root = defaultRoot, projectPath) {
   });
   const lock = {transitions, schemaVersion: '1.0', template, style, ...(font ? {font: {id: font.id, version: font.version, manifestHash: fileHash(path.join(root, 'fonts/font-index.json')), faces: font.faces.map(({file, sha256}) => ({file, sha256})), licenseSha256: font.licenseSha256}} : {}), shots, auxiliaries, rendererBuildHash: hashValue(runtime), storyboardHash: hashValue(storyboard), planHash: hashValue(plans)};
   if (palette) lock.palette = palette;
+  const brand = resolveBrand(storyboard.style.id, {root, projectPath});
+  if (brand) lock.brand = brand.evidence;
   return {lock: {...lock, hash: hashValue(lock)}, plans};
 }
 export const productionDirectory = (videoPath) => `${videoPath}.production`;

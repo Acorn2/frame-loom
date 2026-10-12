@@ -68,8 +68,8 @@ describe('Style Pack workflow', () => {
 
   it('loads the Style Pack index and filters by content and canvas', () => {
     const index = loadStyleIndex();
-    expect(index.styles).toHaveLength(7);
-    expect(index.styles.map((item) => item.id).sort()).toEqual(['archive-grid', 'retro-windows', 'retro-zine', 'scatterbrain', 'signal-noir', 'signal', 'studio-frame'].sort());
+    expect(index.styles).toHaveLength(12);
+    expect(index.styles.map((item) => item.id).sort()).toEqual(['archive-grid', 'retro-windows', 'retro-zine', 'scatterbrain', 'signal-noir', 'signal', 'studio-frame', 'whiteboard', 'flat-explainer', 'paper-collage', 'annotated-reasoning', 'editorial-typography'].sort());
     expect(CAPABILITY_MANIFEST.templates).toEqual(['statement', 'graph-explainer', 'metric-grid', 'interaction-flow']);
     expect(CAPABILITY_MANIFEST.actions).toContain('draw');
     expect(filterStyles(index.styles, {content: 'software', canvas: 'landscape'}).map((item) => item.id)).toEqual(['signal-noir', 'studio-frame']);
@@ -159,9 +159,10 @@ describe('Style Pack workflow', () => {
     for (const style of loadStyleIndex().styles) {
       const project = initProject([`semantic-${style.id}`, '--style', style.id, '--projects-dir', temp]);
       const draft = JSON.parse(fs.readFileSync(path.join(project, 'storyboard.draft.json'), 'utf8'));
-      expect(draft.schemaVersion).toBe('2.3');
+      expect(draft.schemaVersion).toBe(style.role === 'primary' ? '2.4' : '2.3');
       expect(draft.style.id).toBe(style.id);
-      expect(draft.scenes[0].visual.kind).toBe('statement');
+      if (style.role === 'primary') expect(draft.scenes).toEqual([]);
+      else expect(draft.scenes[0].visual.kind).toBe('statement');
     }
   });
 

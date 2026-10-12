@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "paper-collage",
+    "version": "1.0.0"
+  },
+  "shotRecipes": [
+    {
+      "id": "illustrated-hero",
+      "version": "1.2.0"
+    }
+  ],
+  "layoutPolicy": "content-first-v1",
+  "font": {
+    "id": "source-han-sans-sc",
+    "version": "2.005"
+  },
+  "project": {
+    "title": "像素讲解笔记样片",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 7,
+    "durationFrames": 210,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "illustrated-hero",
+      "template": "statement",
+      "purpose": "opening",
+      "title": "从资料到解释",
+      "primaryClaim": "从资料到解释",
+      "visual": {
+        "kind": "statement",
+        "explanation": "FrameLoom 自写资料编排示意，人物为虚构角色，数字为三份示意资料的计数",
+        "representation": "diagram",
+        "source": "source.md"
+      },
+      "shot": {
+        "id": "illustrated-hero",
+        "version": "1.2.0",
+        "slots": {
+          "subject": "subject",
+          "items": [
+            "a"
+          ]
+        }
+      },
+      "narration": "从资料到解释",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "subject",
+          "type": "object",
+          "asset": "assets/organizer-pixel.png",
+          "label": "资料编排者",
+          "fit": "contain"
+        },
+        {
+          "id": "a",
+          "type": "node",
+          "label": "让观众跟上解释",
+          "text": "人物建立情境，文字说清主张，连线解释关系"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "subject-reveal",
+          "target": "subject",
+          "action": "reveal",
+          "start": 12,
+          "duration": 30
+        },
+        {
+          "id": "a-reveal",
+          "target": "a",
+          "action": "reveal",
+          "start": 57,
+          "duration": 30
+        }
+      ],
+      "captions": []
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "id": "organizer",
+      "path": "assets/organizer.png",
+      "type": "image",
+      "source": "AI-generated illustration; imagegen; illustration-plan.json#organizer; source claim: source.md: 整理主张与关系，再编排可见解释",
+      "license": "AI-generated output; use subject to image provider terms; not a factual photograph or official interface",
+      "intendedUse": "主体介绍与资料编排示意；虚构讲解人物",
+      "usage": "scene-media",
+      "generation": {
+        "tool": "imagegen",
+        "style": {
+          "id": "whiteboard",
+          "version": "1.0.0"
+        },
+        "planId": "organizer",
+        "planHash": "8c1f443dcb80fa82924a9cc4468dcb4e980b88c2e28ae26ed1546ae0e436c3b8",
+        "promptHash": "deeeb26a8ae1cc886cdba91a51d4eef7052a5e15a03a737efaa37517c4ac2417",
+        "fileHash": "45a68cc57a9405f2496e11bd709d7796c20c9bd24aeae1b1baf77d0db8c3b5b7",
+        "review": {
+          "reviewer": "Codex: inspected native imagegen output",
+          "reviewedAt": "2026-10-11T05:45:33.653Z"
+        }
+      }
+    },
+    {
+      "id": "loose-papers",
+      "path": "assets/loose-papers.png",
+      "type": "image",
+      "source": "AI-generated illustration; imagegen; illustration-plan.json#loose-papers; source claim: source.md: 三份示意资料的整理过程，不代表真实业务指标",
+      "license": "AI-generated output; use subject to image provider terms; not a factual photograph or official interface",
+      "intendedUse": "展示尚未整理的资料",
+      "usage": "scene-media",
+      "generation": {
+        "tool": "imagegen",
+        "style": {
+          "id": "whiteboard",
+          "version": "1.0.0"
+        },
+        "planId": "loose-papers",
+        "planHash": "8b14ec8ff28b5d93b7defe018b047a81feeb71f78c68922ebc38ac2a2125ac80",
+        "promptHash": "519128b47b525b0c2492dd3830da7185fbcaea8781b5f93c0b39bea25f7fc80b",
+        "fileHash": "80854b7be927ca837776a1afbaea6a20cc6e8d8dfdc34be0c773d669ae988376",
+        "review": {
+          "reviewer": "Codex: inspected native imagegen output",
+          "reviewedAt": "2026-10-11T05:45:33.986Z"
+        }
+      }
+    },
+    {
+      "id": "organized-folder",
+      "path": "assets/organized-folder.png",
+      "type": "image",
+      "usage": "scene-media",
+      "source": "AI-generated illustration; imagegen; illustration-plan.json#organized-folder; source claim: source.md: 三份示意资料的整理过程，不代表真实业务指标",
+      "license": "AI-generated output; use subject to image provider terms; not a factual photograph or official interface",
+      "intendedUse": "展示完成编排的资料",
+      "generation": {
+        "tool": "imagegen",
+        "style": {
+          "id": "whiteboard",
+          "version": "1.0.0"
+        },
+        "planId": "organized-folder",
+        "planHash": "f7eadd0f65bc3f49e8b6a6d6aec4ae630ef1780673f17ee2307e5aa05d1486af",
+        "promptHash": "e63a58aa69f14badb1bdca150652c17682f0dea930fb3d175523cea9759edda1",
+        "fileHash": "4caf6fb487e5fb48245833c1f225d1430f61d71122b0ff75ea6b99aa30ced067",
+        "review": {
+          "reviewer": "Codex: inspected native imagegen output",
+          "reviewedAt": "2026-10-11T05:45:34.096Z"
+        }
+      }
+    }
+  ]
+}

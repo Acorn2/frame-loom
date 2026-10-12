@@ -1,0 +1,86 @@
+{
+  "id": "illustrated-hero",
+  "version": "1.2.0",
+  "status": "experimental",
+  "registered": true,
+  "visualKinds": [
+    "statement"
+  ],
+  "purpose": "主体开场",
+  "inputModes": [
+    "document-with-assets"
+  ],
+  "requiredAssets": [
+    "subject"
+  ],
+  "styles": [
+    "whiteboard",
+    "flat-explainer",
+    "paper-collage"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "slots": {
+    "items": {
+      "min": 1,
+      "max": 1,
+      "labelMax": 18,
+      "textMax": 42
+    },
+    "subject": {
+      "min": 1,
+      "max": 1,
+      "labelMax": 18
+    }
+  },
+  "timing": {
+    "actions": {
+      "reveal": {
+        "minSec": 0.3,
+        "maxSec": 2
+      },
+      "draw": {
+        "minSec": 0.3,
+        "maxSec": 2
+      },
+      "highlight": {
+        "minSec": 0.3,
+        "maxSec": 2
+      },
+      "count": {
+        "minSec": 0.3,
+        "maxSec": 2
+      }
+    },
+    "readingSec": 1.2,
+    "titleHoldSec": 0.6,
+    "sourceHoldSec": 0.6,
+    "itemHoldSec": 0.3
+  },
+  "motion": {
+    "recipeOwned": [
+      "subject-and-live-text",
+      "explicit-relationship",
+      "complete-state-reading"
+    ],
+    "styleOwned": [
+      "subject-medium",
+      "entrance",
+      "surface-treatment",
+      "font-family",
+      "palette"
+    ],
+    "continuousDrift": false
+  },
+  "qa": [
+    "action-mid",
+    "action-complete",
+    "complete",
+    "before-handoff"
+  ],
+  "sound": {
+    "enabled": false,
+    "events": []
+  }
+}

@@ -106,7 +106,16 @@ Attach product screenshots if available, or provide an exact URL for the agent t
 
 ## Choose a style
 
-Six styles use the same storyboard for comparison. These frames show the completed diagrams; the links open actual silent samples.
+The nine video styles fall into two groups based on how their visuals are built:
+
+- **AI illustration styles**: Whiteboard (`whiteboard`), Annotated Reasoning (`annotated-reasoning`), and Editorial Typography (`editorial-typography`). Text and diagrams lead the explanation. Annotations bind to explicit phrases; typography repositions persistent words across declared stages. AI illustrations support the narration, occupying at most 8% of the canvas in the two new styles. For document-only production, the agent actually generates auxiliary illustrations. Supplied screenshots are used directly without automatic image generation. Each style has a fixed built-in shot workflow; see [text-led production (Chinese)](references/text-led-production.md). The old flat-explainer and paper-collage packs remain available for existing projects.
+- **Text and graphics motion styles**: Editorial Ink, Signal, Sketch Notes, Swiss Blue, Blueprint, and Product Frame. They compose typography, shapes, charts, and interface assets with shot animation, and can also use real images and screenshots. The agent can recommend shots, or you can restrict the selection manually.
+
+These groups describe visual construction; explainers, product introductions, tutorials, and stories are content uses. The six text and graphics motion styles below use the same storyboard for comparison. These frames show the completed diagrams; the links open actual silent samples.
+
+Color Cartoon uses large illustrations, organic stages, surrounding explanations, horizontal sequences, and smooth entrances. Pixel Explainer Notes uses compact subjects, stepped modules, vertical entries, orthogonal connections, and block reveals. Compare all three primary styles with the same copy in the [illustrated examples (Chinese)](examples/illustrated-video/README.md).
+
+All three primary public samples use the same original Chinese title, narration text, on-screen copy, and parent-and-child observation situation. Each runs for 18 seconds as a silent preview. Whiteboard uses an open board; Color Cartoon and Pixel Explainer Notes use their own generated family illustration and shot arrangement. The upstream content comparison remains a separate attributed method reference.
 
 | Editorial Ink | Signal | Sketch Notes |
 | --- | --- | --- |
@@ -124,7 +133,7 @@ Choose a style in the [online library](https://acorn2.github.io/frame-loom/), co
 
 | Desired result | Next step and output |
 | --- | --- |
-| A narrated video | Configure one of [Doubao, OpenAI, ElevenLabs, Alibaba, or MiniMax (Chinese guide)](references/tts-setup.md), or provide matching external voiceover; output: `output/pilot-audio.mp4` |
+| A narrated video | Configure one of [Doubao TTS (provided through Volcengine), OpenAI, ElevenLabs, Alibaba, or MiniMax (Chinese guide)](references/tts-setup.md), or provide matching external voiceover; output: `output/pilot-audio.mp4` |
 | Clean visuals for an external editor | Ask for a visual master; output: `output/visual-master-vNNN.mp4`, without audio, narration captions, or review markers, plus script and shot timings |
 | Record voiceover before making visuals | Ask for a script handoff; output: `output/script-handoff/`, then bring your recording back |
 
@@ -144,7 +153,7 @@ See the [usage guide (Chinese)](references/usage-guide.md) for configuration, ex
 
 **Do I need voiceover? Are there charges?** The first silent preview needs no voiceover. Configure just one TTS provider if you want narration. Agent and TTS charges depend on their services; local rendering does not call a generative video API.
 
-**Does it support portrait video?** All six styles and 40 scene recipes work in 16:9 landscape. 9:16 portrait supports four recipes: semantic diagrams, type and filter, AI response generation, and unit-dot regrouping. Fonts are independently selectable; see the [font catalog (Chinese)](fonts/README.md).
+**Does it support portrait video?** The six text and graphics motion styles support 43 scene recipes in 16:9 landscape. The three AI illustration styles support landscape semantic diagrams and six illustrated recipes; Whiteboard also supports the open board and three basic whiteboard recipes. 9:16 portrait currently supports semantic diagrams, type and filter, AI response generation, and unit-dot regrouping. Fonts are independently selectable; see the [font catalog (Chinese)](fonts/README.md).
 
 **Are documents uploaded to the library website?** The website does not receive documents. Rendering is local; your chosen agent or TTS service may receive source content or narration according to its configuration and terms.
 

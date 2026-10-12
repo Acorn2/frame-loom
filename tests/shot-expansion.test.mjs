@@ -13,7 +13,7 @@ import os from 'node:os';
 const ids = ['type-and-filter','ai-stream-response','unit-dot-regroup'];
 const fixture = (id, canvas = 'landscape') => JSON.parse(fs.readFileSync(`examples/shot-recipes/${id}/${canvas === 'portrait' ? 'portrait' : 'storyboard'}.json`));
 describe('source-driven landscape and portrait recipes', () => {
-  it.each(libraryStyleIds)('%s accepts both orientations, captions and explicit fonts', style => {
+  it.each(libraryStyleIds.filter(style => !['whiteboard', 'flat-explainer', 'paper-collage', 'annotated-reasoning', 'editorial-typography'].includes(style)))('%s accepts both orientations, captions and explicit fonts', style => {
     for (const id of ids) for (const canvas of ['landscape','portrait']) {
       const board = fixture(id, canvas); board.style.id = style;
       board.font = {id:'source-han-sans-sc',version:'2.005'};

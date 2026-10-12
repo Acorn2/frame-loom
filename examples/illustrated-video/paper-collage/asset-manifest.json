@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "id": "organizer-pixel",
+      "path": "assets/organizer-pixel.png",
+      "type": "image",
+      "source": "AI-generated illustration; imagegen; illustration-plan.json#organizer-pixel; source claim: source.md: 整理主张与关系，再编排可见解释",
+      "license": "AI-generated output; use subject to image provider terms; not a factual photograph or official interface",
+      "intendedUse": "主体介绍与资料编排示意；虚构讲解人物",
+      "usage": "scene-media",
+      "generation": {
+        "tool": "imagegen",
+        "style": {
+          "id": "paper-collage",
+          "version": "1.0.0"
+        },
+        "planId": "organizer-pixel",
+        "planHash": "f341fe8704b61a555676ec2fd89bad1a997abab58baab666b1575bff3416afc0",
+        "promptHash": "2583c7c0baf1ced80c45f7a3a4b2e145ffa827bf3e40a6d761c9b5ea2eeb11d4",
+        "fileHash": "6640d0d6d65761d95b04973a9bc509983dbdcf96a8d06d5101dc065704a8e520",
+        "review": {
+          "reviewer": "Codex",
+          "reviewedAt": "2026-10-11T14:30:25.132Z"
+        }
+      }
+    },
+    {
+      "id": "loose-papers-pixel",
+      "path": "assets/loose-papers-pixel.png",
+      "type": "image",
+      "source": "AI-generated illustration; imagegen; illustration-plan.json#loose-papers-pixel; source claim: source.md: 三份示意资料的整理过程，不代表真实业务指标",
+      "license": "AI-generated output; use subject to image provider terms; not a factual photograph or official interface",
+      "intendedUse": "展示尚未整理的资料",
+      "usage": "scene-media",
+      "generation": {
+        "tool": "imagegen",
+        "style": {
+          "id": "paper-collage",
+          "version": "1.0.0"
+        },
+        "planId": "loose-papers-pixel",
+        "planHash": "0312681409fa9d73d31230f3ff50c28a1b7e51f6a212f5d33f08461a75be7519",
+        "promptHash": "46b2e3d6f2cd4e78b4fad2bab7997e393f7aad08e488769e58b1d83f5b0ba48b",
+        "fileHash": "e647f7a9657ed8faea8d9d2625c114ec4cb96fd23c89d3d5242fef98803d4141",
+        "review": {
+          "reviewer": "Codex",
+          "reviewedAt": "2026-10-11T14:30:54.859Z"
+        }
+      }
+    },
+    {
+      "id": "organized-folder-pixel",
+      "path": "assets/organized-folder-pixel.png",
+      "type": "image",
+      "source": "AI-generated illustration; imagegen; illustration-plan.json#organized-folder-pixel; source claim: source.md: 三份示意资料的整理过程，不代表真实业务指标",
+      "license": "AI-generated output; use subject to image provider terms; not a factual photograph or official interface",
+      "intendedUse": "展示完成编排的资料",
+      "usage": "scene-media",
+      "generation": {
+        "tool": "imagegen",
+        "style": {
+          "id": "paper-collage",
+          "version": "1.0.0"
+        },
+        "planId": "organized-folder-pixel",
+        "planHash": "87f82b006bd899d2a47401b28e0c1f3a8e7b7983343a6a81cbeec0a06edc5949",
+        "promptHash": "08fd8c9e32f1813581293667b14afc601ee95a7b689d9f2c236214863ec576a4",
+        "fileHash": "403aa45e68d966b641fed2e8619adbcc92d6837ad446f2d78846e687a4c84409",
+        "review": {
+          "reviewer": "Codex",
+          "reviewedAt": "2026-10-11T14:32:55.879Z"
+        }
+      }
+    },
+    {
+      "id": "curious-family",
+      "path": "assets/curious-family.png",
+      "type": "image",
+      "usage": "scene-media",
+      "source": "AI-generated illustration; imagegen; illustration-plan.json#curious-family; source claim: source.md: 好问题，从观察开始；一起观察，也一起提问",
+      "license": "AI-generated output; use subject to image provider terms; not a factual photograph or official interface",
+      "intendedUse": "三套主风格同内容对照：亲子共同观察、比较与提问；虚构角色",
+      "generation": {
+        "tool": "imagegen",
+        "style": {
+          "id": "paper-collage",
+          "version": "1.0.0"
+        },
+        "planId": "curious-family",
+        "planHash": "cf00e702cc0c1f96c68d0422fd326984415da1fd53ed93419f205740613cfc8a",
+        "promptHash": "ea8ef03781a82f98b0a32cb057b8eb61e65463a6287e33727c084ea8d8fec81f",
+        "fileHash": "b55de2477522504147c56ef6dbce5a4c9ac55915b02367ae47772517c57d7de9",
+        "review": {
+          "reviewer": "Codex",
+          "reviewedAt": "2026-10-12T06:59:04.059Z"
+        }
+      }
+    }
+  ]
+}

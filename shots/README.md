@@ -1,8 +1,8 @@
 # 镜头配方库
 
-FrameLoom 的制作选择分为两层：**视频风格决定画面语言，镜头配方决定信息怎样出现、变化与停留**。用户可以选一套风格和多个配方，Agent 按原文决定每场使用哪个、是否重复及顺序。`video-templates/` 是预设组合的快捷入口，不是使用配方库的前提。
+FrameLoom 的制作选择分为两层：**视频风格决定画面语言，镜头配方决定信息怎样出现、变化与停留**。用户可以选一套风格和多个配方，Agent 按原文决定每场使用哪个、是否重复及顺序。`video-templates/` 是预设组合的快捷入口，不是使用配方库的前提。三套主风格使用固定内置范围；批注推演与编辑式排印的字段、阶段与限额见[文案动画制作](../references/text-led-production.md)，无需用户选择镜头集合。
 
-**有主体截图时，全片配色优先参考截图的背景、文字、卡片和强调色，风格保留构图与动效。** 本目录配方说明中的白色、冷灰、石墨等外观，以及公开样片的颜色，描述的是默认参考，不强制覆盖素材配色。仅指定风格或镜头不会取消截图配色参考；明确选择“使用风格配色”时才保留默认色。当前素材配色支持六套风格与40个当前横屏场景，真实截图不染色。详见[项目配色](../references/project-palette.md)。
+**有主体截图时，全片配色优先参考截图的背景、文字、卡片和强调色，风格保留构图与动效。** 本目录配方说明中的白色、冷灰、石墨等外观，以及公开样片的颜色，描述的是默认参考，不强制覆盖素材配色。仅指定风格或镜头不会取消截图配色参考；明确选择“使用风格配色”时才保留默认色。当前素材配色支持已声明兼容的当前横屏风格与镜头，真实截图不染色。详见[项目配色](../references/project-palette.md)。
 
 ```text
 请读取 <文档路径>，先编排讲稿和分镜。
@@ -22,6 +22,8 @@ npm run init:project -- --slug my-topic --style retro-zine --shots paper-title,d
 
 | 配方 | 表达任务 | 输入边界 | 方法来源 |
 | --- | --- | --- | --- |
+| [annotated-manuscript](annotated-manuscript/recipe.md) | 正文落定后累积圈注、旁注和明确关系 | 唯一原文短语、显式布局、小幅辅助插画 | 原创批注推演 |
+| [editorial-flow](editorial-flow/recipe.md) | 同一批关键词在阶段间连续重排 | focus绑定完整位置表，关系绑定阶段 | 原创编辑式排印 |
 | [paper-title](paper-title/recipe.md) | 一句主张或章节路标按短语显影，强调一个关键词 | 1–4 个标题短语；可选单重点 | Shotcraft paper-title-card |
 | [title-to-label](title-to-label/recipe.md) | 主题先建立，再连续缩为章节标签，正文随后出现 | 短标题与 2–4 个正文块 | Shotcraft title-demote-to-label |
 | [document-conclusions](document-conclusions/recipe.md) | 来源原文驻留，三条结论逐一展开 | 一段原文、恰好三条有依据结论及连接 | Shotcraft doc-park-left-pill-deal |
@@ -61,7 +63,7 @@ npm run init:project -- --slug my-topic --style retro-zine --shots paper-title,d
 
 ## 清单实施数量与宿主动作
 
-按 2026-09-30 筛选清单计数，当前接入 **48/48**，加3个原生场景共37个原清单场景入口；另有3个新增横竖屏场景，共40个场景入口。9个宿主动作和5个换章配方分别查询，不计入正文镜头。家族只适配台账声明的变体，例如 chart-live 使用 OscilloscopeStreamV2、scroll-brake 使用 ChangelogScrollBrake、page-turn 使用 BarnDoorSplit，不宣称全部变体可用。
+按 2026-09-30 筛选清单计数，当前接入 **48/48**，加3个原生场景共37个原清单场景入口；另有3个新增横竖屏场景及3个逐笔白板横屏场景，再加6个插画讲解场景，加1个开放白板，共50个场景入口。9个宿主动作和5个换章配方分别查询，不计入正文镜头。家族只适配台账声明的变体，例如 chart-live 使用 OscilloscopeStreamV2、scroll-brake 使用 ChangelogScrollBrake、page-turn 使用 BarnDoorSplit，不宣称全部变体可用。
 
 ```bash
 npm run list:shots -- --style retro-zine --canvas landscape
@@ -92,3 +94,11 @@ C09/C11/C12 分别对应 `overlap-line-carry` / `overlap-ink` / `overlap-barn-do
 ## 横竖屏扩充
 
 新增[操作筛选与详情](type-and-filter/recipe.md)、[结果生成与确认](ai-stream-response/recipe.md)、[单位点阵重组](unit-dot-regroup/recipe.md)，均支持六套当前风格、16:9和9:16。竖屏共4个可选场景（含基础语义配方）；其余原专用镜头保留横屏边界。新三项不计入既有48项筛选清单。详情见[接入记录](../references/shot-expansion-20261009.md)。
+
+## 逐笔白板
+
+新增[逐笔流程](whiteboard-process/recipe.md)、[逐笔对照](whiteboard-compare/recipe.md)与[主体解释](whiteboard-explain/recipe.md)，均支持七套当前风格的横屏。`whiteboard` 默认使用[开放白板](whiteboard-board/recipe.md)，另支持这三项、六个 `illustrated-*` 与 `semantic-default`；字体独立选择，推荐 `xiaolai`。新三项不计入既有48项筛选清单。主体解释要求本地图片和 asset-manifest，三条说明使用更紧凑的共享文字槽位；正文不够放时必须缩短或拆镜头。
+
+## 插画讲解镜头
+
+`illustrated-hero`、`illustrated-compare`、`illustrated-process`、`illustrated-explain`、`illustrated-breakdown` 与 `illustrated-metric` 共用独立主体素材与原生文字，支持 whiteboard、flat-explainer、paper-collage 三套主风格的横屏。实际生图、原生图解与截图分别记录，不互相冒充；详见[插画生产](../references/illustrated-production.md)。

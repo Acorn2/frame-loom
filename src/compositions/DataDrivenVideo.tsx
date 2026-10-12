@@ -12,6 +12,8 @@ import type {CaptionCue} from '../audio/captions';
 import {getMusicVolumeAtFrame, type MusicDucking} from '../audio/ducking';
 import {getSceneTimeline} from '../timeline/scene-timeline';
 import {LayoutDiagnostics} from '../layout/LayoutDiagnostics';
+import {BrandOverlay} from '../branding/BrandOverlay';
+import {DEMO_BRAND, hasBrandStyle, type BrandRuntime} from '../branding/config';
 
 export interface AudioRuntime {
   voiceoverDataUri?: string;
@@ -36,6 +38,7 @@ export interface DataDrivenVideoProps extends Record<string, unknown> {
     facecamRightFraction?: number;
     subtitleBottomFraction?: number;
     layoutCheckFrames?: number[];
+    brand?: BrandRuntime | null;
   };
 }
 
@@ -51,6 +54,7 @@ export function DataDrivenVideo({storyboard, styleTokens, audioRuntime, renderPr
   const tokens = {...applyProjectPalette(applyProjectFont(styleTokens ?? getDefaultStyleTokens(storyboard.project.width, storyboard.project.height), storyboard.font), storyboard.palette), layoutPolicy: storyboard.layoutPolicy};
   const fontReady = useProjectFont(storyboard.font);
   const captionTokens = captionTokensAtFrame(storyboard, useCurrentFrame(), tokens);
+  const brand = hasBrandStyle(storyboard.style.id) ? renderProfile?.brand === undefined ? DEMO_BRAND : renderProfile.brand : null;
   const cleanMaster = renderProfile?.purpose === 'visual-master';
   const showSceneCaptions = !cleanMaster && shouldRenderSceneCaptions(audioRuntime);
   const musicVolume = audioRuntime?.musicVolume ?? 0.2;
@@ -108,6 +112,7 @@ export function DataDrivenVideo({storyboard, styleTokens, audioRuntime, renderPr
         {audioRuntime?.voiceoverDataUri || audioRuntime?.musicDataUri || audioRuntime?.sfx?.length ? 'AUDIO PILOT' : 'SILENT PREVIEW'}
       </div> : null}
       {!cleanMaster && audioRuntime?.captions ? <CaptionOverlay captions={audioRuntime.captions} tokens={captionTokens} /> : null}
+      {brand ? <AbsoluteFill style={{transform: scale < 1 ? `scale(${scale})` : undefined, transformOrigin: 'top left'}}><BrandOverlay brand={brand} tokens={tokens}/></AbsoluteFill> : null}
       {storyboard.layoutPolicy && renderProfile?.layoutCheckFrames ? <LayoutDiagnostics board={storyboard} tokens={tokens} frames={renderProfile.layoutCheckFrames} captions={!cleanMaster && Boolean(audioRuntime?.captions?.length)} /> : null}
     </AbsoluteFill>
   );

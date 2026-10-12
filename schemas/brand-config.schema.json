@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FrameLoom Brand Config",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "brand": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "accent": {
+          "type": "string",
+          "pattern": "^#[a-fA-F0-9]{6}$"
+        },
+        "ink": {
+          "type": "string",
+          "pattern": "^#[a-fA-F0-9]{6}$"
+        },
+        "logo": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "source": {
+              "type": "string",
+              "minLength": 1
+            },
+            "license": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "path",
+            "source",
+            "license"
+          ],
+          "additionalProperties": false
+        },
+        "watermark": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "default": true,
+              "type": "boolean"
+            },
+            "position": {
+              "default": "top-right",
+              "type": "string",
+              "const": "top-right"
+            },
+            "opacity": {
+              "default": 0.72,
+              "type": "number",
+              "minimum": 0.5,
+              "maximum": 1
+            },
+            "size": {
+              "default": 36,
+              "type": "number",
+              "minimum": 24,
+              "maximum": 40
+            },
+            "margin": {
+              "default": 56,
+              "type": "number",
+              "minimum": 40,
+              "maximum": 64
+            },
+            "drawInSeconds": {
+              "default": 1.2,
+              "type": "number",
+              "minimum": 0,
+              "maximum": 3
+            },
+            "sparkle": {
+              "default": true,
+              "type": "boolean"
+            },
+            "underline": {
+              "default": true,
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled",
+            "position",
+            "opacity",
+            "size",
+            "margin",
+            "drawInSeconds",
+            "sparkle",
+            "underline"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "name",
+        "watermark"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "brand"
+  ],
+  "additionalProperties": false
+}

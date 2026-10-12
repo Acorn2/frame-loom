@@ -3,10 +3,16 @@ import {resolveShot} from '../shots/catalog';
 import type {StoryboardScene} from '../schemas/storyboard';
 import {getTimelineDuration} from '../timeline/scene-timeline';
 import type {Storyboard} from '../schemas/storyboard';
+import {scheduleWhiteboard, type SpeechCues, type WhiteboardTimingEvidence} from './whiteboard-timing';
+import type {SpeechWord} from './speech-timing';
 
 // Explicit proposal only. Never mutate the source or preserve an old approval.
-export function proposeAudioTiming(source: Storyboard, measured: Array<{sceneId: string; durationSec: number}>): Storyboard {
+export function proposeAudioTiming(source: Storyboard, measured: Array<{sceneId: string; durationSec: number; speechWords?: SpeechWord[]}>, speechCues?: SpeechCues, onWhiteboardSchedule?: (evidence: WhiteboardTimingEvidence) => void): Storyboard {
   const result = structuredClone(source);
+  if (speechCues) {
+    const ids = speechCues.scenes.map(scene => scene.sceneId);
+    if (new Set(ids).size !== ids.length || ids.some(id => !source.scenes.some(scene => scene.id === id && scene.shot?.id === 'whiteboard-board' && scene.narration.trim()))) throw new Error('语音分组包含重复、未知或不支持的场景。');
+  }
   const fps = result.project.fps;
   for (const [index, scene] of result.scenes.entries()) {
     if (!scene.narration.trim()) continue;
@@ -19,7 +25,11 @@ export function proposeAudioTiming(source: Storyboard, measured: Array<{sceneId:
       scene.visual.mediaFocus.start = Math.floor(scene.visual.mediaFocus.start * ratio);
       scene.visual.mediaFocus.duration = Math.max(1, Math.floor(scene.visual.mediaFocus.duration * ratio));
     }
-    if (result.schemaVersion === '2.4') retimeRecipe(scene, ratio, fps);
+    if (result.schemaVersion === '2.4' && scene.shot?.id === 'whiteboard-board') {
+      const evidence = scheduleWhiteboard(scene, fps, ratio, duration, measured.find(segment => segment.sceneId === scene.id)?.speechWords, speechCues?.scenes.find(cue => cue.sceneId === scene.id));
+      onWhiteboardSchedule?.(evidence);
+    }
+    else if (result.schemaVersion === '2.4') retimeRecipe(scene, ratio, fps);
     else scene.beats = scene.beats.map((beat) => ({...beat, start: Math.floor(beat.start * ratio), duration: Math.max(1, Math.floor(beat.duration * ratio))}));
     scene.captions = scene.captions.map((cue) => ({...cue, start: Math.floor(cue.start * ratio), end: Math.max(Math.floor(cue.start * ratio) + 1, Math.floor(cue.end * ratio))}));
     for (const layer of scene.layers) {

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0",
+  "style": {
+    "id": "whiteboard",
+    "version": "1.0.0"
+  },
+  "assets": [
+    {
+      "id": "curious-family",
+      "path": "assets/curious-family.png",
+      "subject": "A warm friendly parent and a curious young child observing one simple potted leafy plant together. The parent has round glasses, dark hair tied in a loose bun and a pale blue shirt; the child has short tousled dark hair and a pale yellow shirt, holds one small magnifying glass near a leaf and points with the other hand. Simple round heads, dot eyes, small smiling mouths and soft pink cheeks, cheerful natural interaction. Full complete seated figures with simple trousers and shoes, the whole plant and all hands visible, compact balanced silhouette. Match the friendly rounded parent-and-child hand-drawn sticker language described here. One coherent isolated group; no room, desk background or slide.",
+      "purpose": "原创白板样片中的共同观察情境；虚构亲子人物，不代表产品使用效果",
+      "sourceClaim": "source.md: 亲子一起观察，也一起提问，把好奇变成自己的发现"
+    }
+  ]
+}

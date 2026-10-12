@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import {IllustrationGuideSchema} from '../src/schemas/illustration.ts';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {MotionPackSchema, StyleIndexSchema, StylePackSchema} from '../src/schemas/style-pack.ts';
@@ -29,6 +30,10 @@ try {
     assertParsed(MotionPackSchema, readJson(path.join(directory, 'motion.json')), `${entry.id}/motion.json`);
     if (style.id !== entry.id || style.version !== entry.version) throw new Error(`${entry.id}: index 与 style.json 的 id/version 不一致。`);
     if (!fs.existsSync(path.resolve(projectRoot, entry.preview))) throw new Error(`${entry.id}: preview 不存在：${entry.preview}`);
+    if (entry.role === 'primary') {
+      const guide = assertParsed(IllustrationGuideSchema, readJson(path.join(directory, 'illustration.json')), `${entry.id}/illustration.json`);
+      if (guide.style.id !== entry.id || guide.style.version !== entry.version) throw new Error('插画规范与风格不一致。');
+    }
     console.log(`VALID STYLE ${entry.id}@${entry.version}`);
   }
 } catch (error) {

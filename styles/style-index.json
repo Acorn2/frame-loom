@@ -27,7 +27,8 @@
         "interaction-flow"
       ],
       "preview": "styles/retro-zine/preview.md",
-      "status": "stable"
+      "status": "stable",
+      "role": "legacy"
     },
     {
       "id": "signal",
@@ -56,7 +57,8 @@
         "interaction-flow"
       ],
       "preview": "styles/signal/preview.md",
-      "status": "experimental"
+      "status": "experimental",
+      "role": "legacy"
     },
     {
       "id": "retro-windows",
@@ -84,7 +86,8 @@
         "interaction-flow"
       ],
       "preview": "styles/retro-windows/preview.md",
-      "status": "deprecated"
+      "status": "deprecated",
+      "role": "legacy"
     },
     {
       "id": "scatterbrain",
@@ -113,7 +116,8 @@
         "interaction-flow"
       ],
       "preview": "styles/scatterbrain/preview.md",
-      "status": "stable"
+      "status": "stable",
+      "role": "legacy"
     },
     {
       "id": "archive-grid",
@@ -142,7 +146,8 @@
         "interaction-flow"
       ],
       "preview": "styles/archive-grid/preview.md",
-      "status": "experimental"
+      "status": "experimental",
+      "role": "legacy"
     },
     {
       "id": "signal-noir",
@@ -172,7 +177,8 @@
         "interaction-flow"
       ],
       "preview": "styles/signal-noir/preview.md",
-      "status": "experimental"
+      "status": "experimental",
+      "role": "legacy"
     },
     {
       "id": "studio-frame",
@@ -200,7 +206,148 @@
         "interaction-flow"
       ],
       "preview": "styles/studio-frame/preview.md",
-      "status": "experimental"
+      "status": "experimental",
+      "role": "legacy"
+    },
+    {
+      "id": "whiteboard",
+      "name": "手绘白板",
+      "version": "1.0.0",
+      "category": "notes",
+      "mood": [
+        "clear",
+        "hand-drawn",
+        "sequential"
+      ],
+      "bestFor": [
+        "knowledge",
+        "learning",
+        "tutorial"
+      ],
+      "canvas": [
+        "landscape"
+      ],
+      "templates": [
+        "statement",
+        "graph-explainer",
+        "metric-grid",
+        "interaction-flow"
+      ],
+      "preview": "styles/whiteboard/preview.md",
+      "status": "experimental",
+      "role": "primary"
+    },
+    {
+      "id": "flat-explainer",
+      "name": "Color Cartoon",
+      "version": "1.0.0",
+      "category": "illustration",
+      "mood": [
+        "pastel",
+        "outlined",
+        "friendly"
+      ],
+      "bestFor": [
+        "knowledge",
+        "learning",
+        "tutorial"
+      ],
+      "canvas": [
+        "landscape"
+      ],
+      "templates": [
+        "statement",
+        "graph-explainer",
+        "metric-grid",
+        "interaction-flow"
+      ],
+      "preview": "styles/flat-explainer/preview.md",
+      "status": "deprecated",
+      "role": "primary"
+    },
+    {
+      "id": "paper-collage",
+      "name": "Pixel Explainer Notes",
+      "version": "1.0.0",
+      "category": "illustration",
+      "mood": [
+        "pixel-art",
+        "expressive",
+        "clear"
+      ],
+      "bestFor": [
+        "knowledge",
+        "learning",
+        "tutorial"
+      ],
+      "canvas": [
+        "landscape"
+      ],
+      "templates": [
+        "statement",
+        "graph-explainer",
+        "metric-grid",
+        "interaction-flow"
+      ],
+      "preview": "styles/paper-collage/preview.md",
+      "status": "deprecated",
+      "role": "primary"
+    },
+    {
+      "id": "annotated-reasoning",
+      "name": "Annotated Reasoning",
+      "version": "1.0.0",
+      "category": "editorial",
+      "mood": [
+        "clear",
+        "text-first",
+        "annotated"
+      ],
+      "bestFor": [
+        "knowledge",
+        "learning",
+        "tutorial"
+      ],
+      "canvas": [
+        "landscape"
+      ],
+      "templates": [
+        "statement",
+        "graph-explainer",
+        "metric-grid",
+        "interaction-flow"
+      ],
+      "preview": "styles/annotated-reasoning/preview.md",
+      "status": "experimental",
+      "role": "primary"
+    },
+    {
+      "id": "editorial-typography",
+      "name": "Editorial Typography",
+      "version": "1.0.0",
+      "category": "editorial",
+      "mood": [
+        "clear",
+        "text-first",
+        "organized"
+      ],
+      "bestFor": [
+        "knowledge",
+        "learning",
+        "tutorial"
+      ],
+      "canvas": [
+        "landscape"
+      ],
+      "templates": [
+        "statement",
+        "graph-explainer",
+        "metric-grid",
+        "interaction-flow"
+      ],
+      "preview": "styles/editorial-typography/preview.md",
+      "status": "experimental",
+      "role": "primary"
     }
   ]
 }

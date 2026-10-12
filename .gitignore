@@ -5,6 +5,7 @@ library/previews/
 library/font-previews/
 designs/library-redesign/
 .tmp/
+.cache/
 .idea/
 .DS_Store
 .env
@@ -14,6 +15,13 @@ projects/*/output/*
 projects/*/audio/*
 *.mp4
 !examples/template-families/previews/*-semantic.mp4
+!examples/template-families/previews/annotated-reasoning-text-led.mp4
+!examples/template-families/previews/editorial-typography-text-led.mp4
+!examples/template-families/previews/whiteboard-original.mp4
+!examples/template-families/previews/flat-explainer-illustrated.mp4
+!examples/template-families/previews/paper-collage-illustrated.mp4
+*.mp4.render.json
+*.mp4.production/
 !examples/nature-museum-case/previews/nature-museum-narrated.mp4
 /examples/nature-museum-case/*
 !/examples/nature-museum-case/README.md

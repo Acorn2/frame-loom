@@ -1,5 +1,6 @@
 import {createHash} from 'node:crypto';
 import fs from 'node:fs';
+import {illustrationFiles} from './illustrations.mjs';
 import path from 'node:path';
 import {resolveProductionLock} from './production-lock.mjs';
 import {fontAssetFiles} from '../../src/fonts/assets.ts';
@@ -72,6 +73,7 @@ export function fingerprintProjectInputs(projectPath, styleRoot, audioConfigPath
     files.push(...collectFiles(path.join(projectPath, directory)));
   }
   files.push(...collectManifestAssetFiles(projectPath));
+  files.push(...illustrationFiles(projectPath));
   const configuredAudio = audioConfigPath ? path.resolve(audioConfigPath) : path.join(projectPath, 'audio', 'audio-config.json');
   if (includeAudio && fs.existsSync(configuredAudio)) {
     files.push(configuredAudio);

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "1.0",
+  "notes": "明确来源素材路线：复用本次原生 imagegen 已生成且视觉检查的小插画，不冒充依据新指南重新生图的结果。",
+  "assets": [
+    {
+      "id": "family",
+      "path": "assets/family.png",
+      "type": "image",
+      "usage": "scene-media",
+      "source": "FrameLoom original native-imagegen output; examples/whiteboard-original/assets/curious-family.png",
+      "license": "AI-generated output, provider terms; fictional illustration, no factual photo or official interface",
+      "intendedUse": "小范围辅助情境；文案与图解为主体"
+    },
+    {
+      "id": "folder",
+      "path": "assets/folder.png",
+      "type": "image",
+      "usage": "scene-media",
+      "source": "FrameLoom original native-imagegen output; 20261012 approved text-first study/assets/folder.png",
+      "license": "AI-generated output, provider terms; fictional illustration, no factual photo or official interface",
+      "intendedUse": "小范围辅助情境；文案与图解为主体"
+    }
+  ]
+}

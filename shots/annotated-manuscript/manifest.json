@@ -1,0 +1,75 @@
+{
+  "id": "annotated-manuscript",
+  "version": "1.2.0",
+  "status": "experimental",
+  "registered": true,
+  "visualKinds": [
+    "statement",
+    "compare",
+    "sequence",
+    "network",
+    "change",
+    "metric"
+  ],
+  "purpose": "批注推演",
+  "inputModes": [
+    "document-only",
+    "document-with-assets"
+  ],
+  "requiredAssets": [],
+  "styles": [
+    "annotated-reasoning"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "slots": {
+    "items": {
+      "min": 2,
+      "max": 36,
+      "labelMax": 80
+    }
+  },
+  "timing": {
+    "actions": {
+      "reveal": {
+        "minSec": 0.2,
+        "maxSec": 8
+      },
+      "draw": {
+        "minSec": 0.2,
+        "maxSec": 6
+      },
+      "highlight": {
+        "minSec": 0.2,
+        "maxSec": 6
+      }
+    },
+    "readingSec": 1.2,
+    "titleHoldSec": 0.6,
+    "sourceHoldSec": 0.6,
+    "itemHoldSec": 0.12
+  },
+  "motion": {
+    "recipeOwned": [
+      "strict-text-geometry",
+      "phrase-bound-annotations",
+      "explicit-relations"
+    ],
+    "styleOwned": [
+      "palette",
+      "font-family"
+    ],
+    "continuousDrift": false
+  },
+  "qa": [
+    "action-mid",
+    "action-complete",
+    "complete",
+    "before-handoff"
+  ],
+  "sound": {
+    "enabled": false,
+    "events": []
+  }
+}

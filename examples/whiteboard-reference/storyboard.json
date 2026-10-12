@@ -1,0 +1,333 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "whiteboard",
+    "version": "1.0.0"
+  },
+  "font": {
+    "id": "xiaolai",
+    "version": "3.126"
+  },
+  "shotRecipes": [
+    {
+      "id": "whiteboard-board",
+      "version": "1.2.0"
+    }
+  ],
+  "layoutPolicy": "content-first-v1",
+  "project": {
+    "title": "道理都懂，日子没变",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 20,
+    "durationFrames": 600,
+    "status": "validated"
+  },
+  "scenes": [
+    {
+      "id": "know",
+      "template": "statement",
+      "purpose": "opening",
+      "title": "道理都懂，日子没变",
+      "primaryClaim": "懂了很多，生活几乎没变",
+      "visual": {
+        "kind": "change",
+        "explanation": "先呈现知道的行动清单，再写出一年后的实际状态",
+        "representation": "diagram",
+        "source": "source.md；上游公开示例第一场景"
+      },
+      "shot": {
+        "id": "whiteboard-board",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "heading",
+            "reader",
+            "sleep",
+            "exercise",
+            "phone",
+            "reading",
+            "year",
+            "result",
+            "claim"
+          ]
+        },
+        "elements": {
+          "heading": {
+            "kind": "text",
+            "x": 120,
+            "y": 65,
+            "width": 1340,
+            "height": 110,
+            "fontSize": 80,
+            "align": "left",
+            "color": "accent"
+          },
+          "reader": {
+            "kind": "sticker",
+            "x": 190,
+            "y": 280,
+            "width": 420,
+            "height": 480,
+            "labelSize": 36
+          },
+          "sleep": {
+            "kind": "checkbox",
+            "x": 820,
+            "y": 300,
+            "width": 360,
+            "height": 68,
+            "fontSize": 46,
+            "align": "left",
+            "color": "ink",
+            "fill": "none"
+          },
+          "exercise": {
+            "kind": "checkbox",
+            "x": 820,
+            "y": 400,
+            "width": 360,
+            "height": 68,
+            "fontSize": 46,
+            "align": "left",
+            "color": "ink",
+            "fill": "none"
+          },
+          "phone": {
+            "kind": "checkbox",
+            "x": 1320,
+            "y": 300,
+            "width": 460,
+            "height": 68,
+            "fontSize": 46,
+            "align": "left",
+            "color": "ink",
+            "fill": "none"
+          },
+          "reading": {
+            "kind": "checkbox",
+            "x": 1320,
+            "y": 400,
+            "width": 460,
+            "height": 68,
+            "fontSize": 46,
+            "align": "left",
+            "color": "ink",
+            "fill": "none"
+          },
+          "year": {
+            "kind": "text",
+            "x": 1160,
+            "y": 555,
+            "width": 240,
+            "height": 55,
+            "fontSize": 36,
+            "align": "left",
+            "color": "muted"
+          },
+          "result": {
+            "kind": "rectangle",
+            "x": 800,
+            "y": 650,
+            "width": 900,
+            "height": 160,
+            "fontSize": 54,
+            "align": "center",
+            "color": "negative",
+            "fill": "red",
+            "fillStyle": "solid"
+          },
+          "claim": {
+            "kind": "text",
+            "x": 800,
+            "y": 840,
+            "width": 900,
+            "height": 72,
+            "fontSize": 52,
+            "align": "center",
+            "color": "ink"
+          }
+        },
+        "routes": {
+          "one-year": {
+            "points": [
+              [
+                1120,
+                520
+              ],
+              [
+                1120,
+                630
+              ]
+            ],
+            "color": "muted",
+            "dashed": false
+          }
+        }
+      },
+      "narration": "道理你都懂：早睡、运动、少刷手机、多读书。书看了不少，课也听了几门，点头点得很真诚。可一年过去，作息还是那样，体重还是那样，手机还是刷到半夜。懂了很多，生活几乎没变。",
+      "durationFrames": 600,
+      "layers": [
+        {
+          "id": "heading",
+          "type": "node",
+          "label": "道理都懂，日子没变"
+        },
+        {
+          "id": "reader",
+          "type": "object",
+          "label": "书看了，课听了",
+          "asset": "assets/reader.png",
+          "fit": "contain"
+        },
+        {
+          "id": "sleep",
+          "type": "node",
+          "label": "早睡"
+        },
+        {
+          "id": "exercise",
+          "type": "node",
+          "label": "运动"
+        },
+        {
+          "id": "phone",
+          "type": "node",
+          "label": "少刷手机"
+        },
+        {
+          "id": "reading",
+          "type": "node",
+          "label": "多读书"
+        },
+        {
+          "id": "year",
+          "type": "node",
+          "label": "一年后"
+        },
+        {
+          "id": "result",
+          "type": "node",
+          "label": "作息、体重、手机，还是那样"
+        },
+        {
+          "id": "claim",
+          "type": "node",
+          "label": "懂了很多 ≠ 变了"
+        }
+      ],
+      "connections": [
+        {
+          "id": "one-year",
+          "from": "year",
+          "to": "result"
+        }
+      ],
+      "beats": [
+        {
+          "id": "heading-write",
+          "target": "heading",
+          "action": "reveal",
+          "start": 0,
+          "duration": 45
+        },
+        {
+          "id": "reader-write",
+          "target": "reader",
+          "action": "reveal",
+          "start": 51,
+          "duration": 60
+        },
+        {
+          "id": "sleep-write",
+          "target": "sleep",
+          "action": "reveal",
+          "start": 117,
+          "duration": 30
+        },
+        {
+          "id": "exercise-write",
+          "target": "exercise",
+          "action": "reveal",
+          "start": 153,
+          "duration": 30
+        },
+        {
+          "id": "phone-write",
+          "target": "phone",
+          "action": "reveal",
+          "start": 189,
+          "duration": 39
+        },
+        {
+          "id": "reading-write",
+          "target": "reading",
+          "action": "reveal",
+          "start": 234,
+          "duration": 36
+        },
+        {
+          "id": "year-write",
+          "target": "year",
+          "action": "reveal",
+          "start": 282,
+          "duration": 24
+        },
+        {
+          "id": "result-write",
+          "target": "result",
+          "action": "reveal",
+          "start": 342,
+          "duration": 66
+        },
+        {
+          "id": "claim-write",
+          "target": "claim",
+          "action": "reveal",
+          "start": 417,
+          "duration": 42
+        },
+        {
+          "id": "year-arrow",
+          "target": "one-year",
+          "action": "draw",
+          "start": 312,
+          "duration": 24
+        }
+      ],
+      "captions": [
+        {
+          "id": "caption-0",
+          "text": "道理你都懂：早睡、运动",
+          "start": 0,
+          "end": 120
+        },
+        {
+          "id": "caption-1",
+          "text": "少刷手机、多读书",
+          "start": 120,
+          "end": 230
+        },
+        {
+          "id": "caption-2",
+          "text": "书看了不少，课也听了几门",
+          "start": 230,
+          "end": 300
+        },
+        {
+          "id": "caption-3",
+          "text": "可一年过去，生活还是那样",
+          "start": 300,
+          "end": 420
+        },
+        {
+          "id": "caption-4",
+          "text": "懂了很多，生活几乎没变",
+          "start": 420,
+          "end": 600
+        }
+      ]
+    }
+  ]
+}

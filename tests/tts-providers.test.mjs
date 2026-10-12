@@ -5,6 +5,7 @@ import {Buffer} from 'node:buffer';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {TtsConfigSchema} from '../src/schemas/tts-config.ts';
 import {synthesizeSpeech} from '../scripts/lib/tts-provider.mjs';
+import {inspectTtsProfile} from '../scripts/lib/tts-profiles.mjs';
 import aliyunPreset from '../examples/tts-profiles/aliyun.json' with {type: 'json'};
 import doubaoPreset from '../examples/tts-profiles/doubao.json' with {type: 'json'};
 import elevenlabsPreset from '../examples/tts-profiles/elevenlabs.json' with {type: 'json'};
@@ -92,9 +93,56 @@ describe('built-in TTS provider requests', () => {
     expect(fetch.mock.calls[0][1].headers).not.toHaveProperty('X-Api-App-Id');
     expect(fetch.mock.calls[0][1].headers).not.toHaveProperty('X-Api-Access-Key');
     const body = JSON.parse(fetch.mock.calls[0][1].body);
-    expect(body).toMatchObject({req_params: {text: '你好，世界。', speaker: 'zh_male_dayi_uranus_bigtts', audio_params: {format: 'mp3', sample_rate: 24000, speech_rate: 0}}});
+    expect(body).toMatchObject({req_params: {text: '你好，世界。', speaker: 'zh_male_dayi_uranus_bigtts', audio_params: {format: 'mp3', sample_rate: 24000, speech_rate: 0, enable_timestamp: true, enable_subtitle: true}}});
     expect(body.req_params).not.toHaveProperty('sample_rate');
     expect(fs.readFileSync(outputPath)).toEqual(Buffer.from([1, 2, 3]));
+  });
+
+  it.each([false, true])('uses legacy v3 authentication with matching preflight (explicit names: %s)', async (explicit) => {
+    vi.stubEnv('VOLC_TTS_API_KEY', explicit ? 'unselected-key' : '');
+    vi.stubEnv('DOUBAO_TTS_API_KEY', '');
+    vi.stubEnv('VOLC_TTS_APP_ID', 'test-app');
+    vi.stubEnv('VOLC_TTS_ACCESS_TOKEN', 'test-access-token');
+    vi.stubEnv('VOLC_TTS_RESOURCE_ID', 'seed-icl-2.0');
+    const fetch = vi.fn(async () => globalThis.Response.json({code: 0, data: Buffer.from([1, 2, 3]).toString('base64')}));
+    vi.stubGlobal('fetch', fetch);
+    const {apiKeyEnv, voiceTypeEnv, ...preset} = doubaoPreset;
+    const config = TtsConfigSchema.parse({...preset, enabled: true, voiceType: 'S_test', ...(explicit ? {appIdEnv: 'VOLC_TTS_APP_ID', accessTokenEnv: 'VOLC_TTS_ACCESS_TOKEN'} : {})});
+    const profile = path.join(outputDir, 'tts-config.json');
+    fs.writeFileSync(profile, JSON.stringify(config));
+    expect(inspectTtsProfile(profile).status).toBe('ready');
+    await synthesizeSpeech({text: '测试', config, outputPath: path.join(outputDir, 'legacy.mp3')});
+    expect(fetch.mock.calls[0][1].headers).toMatchObject({'X-Api-App-Id': 'test-app', 'X-Api-Access-Key': 'test-access-token', 'X-Api-Resource-Id': 'seed-icl-2.0'});
+    expect(fetch.mock.calls[0][1].headers).not.toHaveProperty('X-Api-Key');
+    expect(JSON.parse(fetch.mock.calls[0][1].body).req_params.speaker).toBe('S_test');
+  });
+
+  it('rejects incomplete explicitly selected legacy credentials in preflight and synthesis', async () => {
+    vi.stubEnv('VOLC_TTS_API_KEY', 'unselected-key');
+    vi.stubEnv('VOLC_TTS_RESOURCE_ID', 'seed-tts-2.0');
+    vi.stubEnv('LEGACY_TEST_APP', 'app');
+    vi.stubEnv('LEGACY_TEST_TOKEN', '');
+    vi.stubEnv('DOUBAO_TTS_ACCESS_TOKEN', 'unselected-token');
+    const fetch = vi.fn(); vi.stubGlobal('fetch', fetch);
+    const config = TtsConfigSchema.parse({schemaVersion: '1.0', provider: 'doubao', enabled: true, apiVersion: 'v3', endpoint: doubaoPreset.endpoint, voiceType: 'test', appIdEnv: 'LEGACY_TEST_APP', accessTokenEnv: 'LEGACY_TEST_TOKEN'});
+    const profile = path.join(outputDir, 'tts-config.json'); fs.writeFileSync(profile, JSON.stringify(config));
+    expect(inspectTtsProfile(profile).status).toBe('needs-environment');
+    await expect(synthesizeSpeech({text: '测试', config, outputPath: path.join(outputDir, 'blocked.mp3')})).rejects.toThrow(/完整凭据/);
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it.each(['sse', 'chunked'])('preserves late subtitle words with %s response framing', async (framing) => {
+    vi.stubEnv('VOLC_TTS_API_KEY', 'test-key');
+    vi.stubEnv('VOLC_TTS_RESOURCE_ID', 'seed-tts-2.0');
+    vi.stubEnv('VOLC_TTS_SPEAKER', 'zh_male_dayi_uranus_bigtts');
+    const events = [{code: 0, data: Buffer.from([1, 2]).toString('base64')}, {code: 0, data: Buffer.from([3]).toString('base64')},
+      {code: 0, event: 'TTSSubtitle', sentence: {words: [{word: '测试', startTime: 0, endTime: .8}]}}, {code: 20000000}];
+    const payload = events.map(event => `${framing === 'sse' ? 'data: ' : ''}${JSON.stringify(event)}`).join('\n');
+    vi.stubGlobal('fetch', vi.fn(async () => new globalThis.Response(payload, {headers: {'content-type': framing === 'sse' ? 'text/event-stream' : 'application/json'}})));
+    const config = TtsConfigSchema.parse({...doubaoPreset, enabled: true, endpoint: doubaoPreset.endpoint.replace(/\/sse$/u, framing === 'sse' ? '/sse' : '')});
+    const result = await synthesizeSpeech({text: '测试', config, outputPath: path.join(outputDir, 'words.mp3')});
+    expect(result.speechWords).toEqual([{text: '测试', startSec: 0, endSec: .8}]);
+    expect(fs.readFileSync(path.join(outputDir, 'words.mp3'))).toEqual(Buffer.from([1, 2, 3]));
   });
 
   it('accepts a Doubao success frame with code 3000 when it contains audio', async () => {

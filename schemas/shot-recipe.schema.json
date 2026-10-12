@@ -45,7 +45,19 @@
         "letterspace-materialize",
         "type-and-filter",
         "ai-stream-response",
-        "unit-dot-regroup"
+        "unit-dot-regroup",
+        "whiteboard-process",
+        "whiteboard-compare",
+        "whiteboard-explain",
+        "illustrated-hero",
+        "illustrated-compare",
+        "illustrated-process",
+        "illustrated-explain",
+        "illustrated-breakdown",
+        "illustrated-metric",
+        "whiteboard-board",
+        "annotated-manuscript",
+        "editorial-flow"
       ]
     },
     "version": {

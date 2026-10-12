@@ -1,0 +1,262 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "whiteboard",
+    "version": "1.0.0"
+  },
+  "font": {
+    "id": "xiaolai",
+    "version": "3.126"
+  },
+  "shotRecipes": [
+    {
+      "id": "whiteboard-board",
+      "version": "1.2.0"
+    }
+  ],
+  "layoutPolicy": "content-first-v1",
+  "project": {
+    "title": "好问题，从观察开始",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 18,
+    "durationFrames": 540,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "curiosity",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "好问题，从观察开始",
+      "primaryClaim": "从观察细节、比较差异到提出问题",
+      "visual": {
+        "kind": "sequence",
+        "explanation": "亲子共同观察情境配合三个明确步骤，最后写出原创结论",
+        "representation": "diagram",
+        "source": "source.md；FrameLoom 原创公开示意"
+      },
+      "shot": {
+        "id": "whiteboard-board",
+        "version": "1.2.0",
+        "slots": {
+          "items": [
+            "heading",
+            "family",
+            "notice",
+            "compare",
+            "question",
+            "claim"
+          ]
+        },
+        "elements": {
+          "heading": {
+            "kind": "text",
+            "x": 120,
+            "y": 65,
+            "width": 1350,
+            "height": 110,
+            "fontSize": 80,
+            "align": "left",
+            "color": "accent"
+          },
+          "family": {
+            "kind": "sticker",
+            "x": 150,
+            "y": 220,
+            "width": 690,
+            "height": 570,
+            "labelSize": 36
+          },
+          "notice": {
+            "kind": "rectangle",
+            "x": 1030,
+            "y": 230,
+            "width": 700,
+            "height": 130,
+            "fontSize": 46,
+            "align": "center",
+            "color": "ink",
+            "fill": "blue",
+            "fillStyle": "hachure"
+          },
+          "compare": {
+            "kind": "rectangle",
+            "x": 1030,
+            "y": 420,
+            "width": 700,
+            "height": 130,
+            "fontSize": 46,
+            "align": "center",
+            "color": "ink",
+            "fill": "yellow",
+            "fillStyle": "hachure"
+          },
+          "question": {
+            "kind": "rectangle",
+            "x": 1030,
+            "y": 610,
+            "width": 700,
+            "height": 130,
+            "fontSize": 46,
+            "align": "center",
+            "color": "ink",
+            "fill": "green",
+            "fillStyle": "hachure"
+          },
+          "claim": {
+            "kind": "text",
+            "x": 260,
+            "y": 835,
+            "width": 1400,
+            "height": 72,
+            "fontSize": 48,
+            "align": "center",
+            "color": "ink"
+          }
+        },
+        "routes": {
+          "notice-compare": {
+            "points": [
+              [
+                1380,
+                372
+              ],
+              [
+                1380,
+                410
+              ]
+            ],
+            "color": "muted",
+            "dashed": false
+          },
+          "compare-question": {
+            "points": [
+              [
+                1380,
+                562
+              ],
+              [
+                1380,
+                600
+              ]
+            ],
+            "color": "muted",
+            "dashed": false
+          }
+        }
+      },
+      "narration": "好问题，从观察开始。先看清细节，再比较差异，最后把疑问说出来。一起观察，也一起提问，把好奇变成自己的发现。",
+      "durationFrames": 540,
+      "layers": [
+        {
+          "id": "heading",
+          "type": "node",
+          "label": "好问题，从观察开始"
+        },
+        {
+          "id": "family",
+          "type": "object",
+          "label": "一起观察，也一起提问",
+          "asset": "assets/curious-family.png",
+          "fit": "contain"
+        },
+        {
+          "id": "notice",
+          "type": "node",
+          "label": "看见细节",
+          "text": "先看清楚"
+        },
+        {
+          "id": "compare",
+          "type": "node",
+          "label": "比较差异",
+          "text": "找出不一样"
+        },
+        {
+          "id": "question",
+          "type": "node",
+          "label": "提出问题",
+          "text": "问一句为什么"
+        },
+        {
+          "id": "claim",
+          "type": "node",
+          "label": "把好奇，变成自己的发现"
+        }
+      ],
+      "connections": [
+        {
+          "id": "notice-compare",
+          "from": "notice",
+          "to": "compare"
+        },
+        {
+          "id": "compare-question",
+          "from": "compare",
+          "to": "question"
+        }
+      ],
+      "beats": [
+        {
+          "id": "heading-write",
+          "target": "heading",
+          "action": "reveal",
+          "start": 0,
+          "duration": 48
+        },
+        {
+          "id": "family-write",
+          "target": "family",
+          "action": "reveal",
+          "start": 54,
+          "duration": 72
+        },
+        {
+          "id": "notice-write",
+          "target": "notice",
+          "action": "reveal",
+          "start": 138,
+          "duration": 54
+        },
+        {
+          "id": "first-arrow",
+          "target": "notice-compare",
+          "action": "draw",
+          "start": 204,
+          "duration": 18
+        },
+        {
+          "id": "compare-write",
+          "target": "compare",
+          "action": "reveal",
+          "start": 234,
+          "duration": 54
+        },
+        {
+          "id": "second-arrow",
+          "target": "compare-question",
+          "action": "draw",
+          "start": 300,
+          "duration": 18
+        },
+        {
+          "id": "question-write",
+          "target": "question",
+          "action": "reveal",
+          "start": 330,
+          "duration": 54
+        },
+        {
+          "id": "claim-write",
+          "target": "claim",
+          "action": "reveal",
+          "start": 402,
+          "duration": 66
+        }
+      ],
+      "captions": []
+    }
+  ]
+}
