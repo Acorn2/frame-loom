@@ -5,8 +5,14 @@ body:
   - type: markdown
     attributes:
       value: |
-        请先查看 README 中的安装与排错指南。分享日志前删除密钥、私人路径和私有材料。
-        Check the installation guide linked from the README first. Remove credentials, private paths, and private material from logs.
+        请先查看[安装与排错指南](https://github.com/Acorn2/frame-loom/blob/main/references/installation.md)。分享日志前删除密钥、私人路径和私有材料。
+        Check the [installation guide](https://github.com/Acorn2/frame-loom/blob/main/references/installation.en.md) first. Remove credentials, private paths, and private material from logs. For suspected vulnerabilities, follow [Security](https://github.com/Acorn2/frame-loom/blob/main/SECURITY.md).
+  - type: input
+    id: revision
+    attributes:
+      label: 版本或提交号 / Version or commit
+      description: 在仓库根目录运行 git rev-parse --short HEAD；固定版本可填写 tag。Run git rev-parse --short HEAD from the repository root, or provide the installed tag.
+      placeholder: "commit … / tag …"
   - type: dropdown
     id: operating-system
     attributes:

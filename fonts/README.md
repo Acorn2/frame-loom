@@ -1,5 +1,7 @@
 # 项目字体
 
+[项目首页](../README.md) · [文档导航](../references/README.md) · [字体选用步骤](../references/usage-guide.md#全片字体选择)
+
 全片字体与视频风格独立选择，一次选择一个字体家族。受控清单 [font-index.json](font-index.json) 记录文件、固定版本、上游下载地址、SHA-256、字重映射和许可。文件保存于 `public/fonts/`，网页与 Remotion 共用。
 
 | ID | 名称 | 官方来源 | 文件 |
@@ -10,7 +12,7 @@
 | smiley-sans | 得意黑 | [atelierAnchor](https://github.com/atelier-anchor/smiley-sans) | 官方 v2.0.1 压缩包中的 TTF WOFF2，400 |
 | xiaolai | 小赖字体 | [LXGW](https://github.com/lxgw/kose-font) | 官方 v3.126 比例版 Regular TTF，400 |
 
-霞鹜文楷 400 使用 Regular，500–900 映射到 Medium 文件；此映射保持统一家族，但不是连续可变字重，选型时以实际样片为准。所有文件保持官方原始字节，未裁剪或转换；浏览器 family 使用项目内别名，不修改字体文件内部名称。
+霞鹜文楷 400 使用 Regular，500–900 映射到 Medium 文件；此映射保持统一家族，但不是连续可变字重，选型时以实际样片为准。上述生产字体文件保持官方原始字节，未裁剪或转换；浏览器 family 使用项目内别名，不修改字体文件内部名称。
 
 得意黑和小赖字体为单字重；页面或镜头请求粗体时由浏览器合成，得意黑的倾斜来自原始字形。得意黑文件从官方 release 压缩包提取，清单同时记录压缩包 SHA-256 与成员路径；小赖字体使用比例版，未选用等宽版。得意黑的官方建议主要面向标题、字幕与短句，较长正文仍需在实际项目中复核可读性。
 

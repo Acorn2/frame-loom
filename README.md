@@ -108,10 +108,12 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文、编写讲稿�
 
 当前九套视频风格按画面构建方式分为两类：
 
-- **AI 插画风格**：手绘白板、批注推演、编辑式排印。纯文档制作时，Agent 调用 AI 生成人物、物件或情境插画，再编排文字、图解与动画；提供真实截图时直接使用截图，不自动生图。三套使用各自的固定内置镜头流程，详见[制作说明](#三套-ai-插画风格)。
+- **AI 插画风格**：手绘白板、批注推演、编辑式排印。纯文档制作时，Agent 调用 AI 生成人物、物件或情境插画，再编排文字、图解与动画；提供真实截图时直接使用截图，不自动生图。三套使用各自的[固定内置镜头流程](references/primary-style-production.md)。
 - **图文动效风格**：墨白杂志、暗场信号、手绘便签、瑞士蓝、工程蓝图、产品演示。以文字排版、图形、图表与界面素材构成画面，通过镜头动效逐步呈现，也可使用真实图片和截图；镜头可由 Agent 推荐或手动限定。
 
 这两类描述画面构建方式，知识讲解、产品介绍、教程或故事属于内容用途。
+
+### 三套 AI 插画风格
 
 三套 AI 插画风格使用同一份“好问题，从观察开始”的文案，均为18秒横屏静音样片。下面展示实际视频的完成态，点击封面或“观看样片”即可查看动画；文案、图解为主体，插画辅助表达。
 
@@ -120,6 +122,10 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文、编写讲稿�
 | [![手绘白板样片：好问题，从观察开始](examples/template-families/previews/whiteboard-original.png)](examples/template-families/previews/whiteboard-original.mp4) | [![批注推演样片：好问题，从观察开始](examples/template-families/previews/annotated-reasoning-text-led.png)](examples/template-families/previews/annotated-reasoning-text-led.mp4) | [![编辑式排印样片：好问题，从观察开始](examples/template-families/previews/editorial-typography-text-led.png)](examples/template-families/previews/editorial-typography-text-led.mp4) |
 | 逐行书写 · 同步铅笔 · 小赖字体 | 圈词旁注 · 关系累积 · 思源宋体 | 关键词重排 · 关系展开 · 思源黑体 |
 | [观看样片](examples/template-families/previews/whiteboard-original.mp4) | [观看样片](examples/template-families/previews/annotated-reasoning-text-led.mp4) | [观看样片](examples/template-families/previews/editorial-typography-text-led.mp4) |
+
+三套均支持横屏，用户选风格即可，不需要再选镜头集合。批注推演与编辑式排印以正文、数字和关系为主体，辅助插画的声明框总面积最多占画布 8%。全片字体可独立选择，详见[字体清单](fonts/README.md)；素材准备见[插画生产流程](references/illustrated-production.md)，分镜编排见[文案动画制作](references/text-led-production.md)。
+
+### 六套图文动效风格
 
 下面六套图文动效风格使用同一份分镜，便于比较；展示图解完成态，可点击观看实际静音样片。
 
@@ -152,13 +158,15 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文、编写讲稿�
 
 配置细节、外部配音和审核步骤见[使用指南](references/usage-guide.md)。有声视频与底片交接需要你完整播放复核；自动 QA 通过不等于事实、发音和视觉效果均已人工验收。
 
+需要进一步调整时，可以让 Agent 按[实测语音时间](references/speech-driven-production.md)安排字幕与镜头。三套 AI 插画风格还支持右上角品牌名或本地 Logo，视频与同源封面共用配置，详见[品牌设置](references/branding.md)。
+
 ## 常见问题
 
 **需要会写代码或分镜 JSON 吗？** 不需要手写。你需要安装本地工具、能使用 Coding Agent，并检查它生成的内容；CLI 和 JSON 是 Agent 的工作入口。
 
 **必须配置配音吗？是否收费？** 第一条静音预览无需配音。使用 TTS 时只配置一家服务；Agent 和 TTS 的费用取决于各自服务，本地渲染不调用生成式视频 API。
 
-**支持竖屏吗？** 16:9 横屏中，六套图文动效风格支持 43 个场景配方；三套 AI 插画风格支持基础语义与六个插画镜头，白板另支持开放白板及三个逐笔图解镜头；9:16 竖屏目前支持基础语义、操作筛选、结果生成和单位点阵重组四项配方。字体可独立选择，详见[字体清单](fonts/README.md)。
+**支持竖屏吗？** 六套图文动效风格支持 16:9 横屏和 9:16 竖屏：横屏每套有 43 个场景配方，竖屏支持基础语义、操作筛选、结果生成和单位点阵重组四项配方。三套 AI 插画风格目前只支持横屏，并按各自内置流程编排；完整兼容范围见[镜头配方库](shots/README.md)。
 
 **文档会上传到配方库网站吗？** 网站不接收文档。渲染在本机进行；你选择的 Agent 或 TTS 服务可能接收文档内容或旁白，按其配置与服务条款使用。
 
@@ -166,6 +174,7 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文、编写讲稿�
 
 ## 深入使用与参与开发
 
+- [文档导航](references/README.md)：按安装、制作、技术参考与维护查找文档。
 - [使用指南](references/usage-guide.md)：选风格、字体、素材、配音、导出和审核。
 - [TTS 配置](references/tts-setup.md)与[截图配色](references/project-palette.md)：按需加载的操作说明。
 - [共享 Skill](SKILL.md)、[镜头配方](shots/README.md)与[Storyboard 契约](references/storyboard-schema.md)：Agent 与开发者入口。
@@ -176,7 +185,7 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文、编写讲稿�
 
 当前运行时：52 个场景配方、9 个宿主动作、5 个换章配方；筛选清单接入 48/48。
 
-当前场景配方与预设组合为 experimental；兼容范围以[能力清单](src/renderer/capability-manifest.ts)为准。可选预设见[知识讲解组合](video-templates/retro-zine-explainer/guide.md)，本地网页维护见[配方库指南](library/README.md)。
+注册总数包含历史兼容能力，具体风格可用范围与新项目的固定流程分别约束选用。当前场景配方与预设组合为 experimental；兼容范围以[能力清单](src/renderer/capability-manifest.ts)为准。可选预设见[知识讲解组合](video-templates/retro-zine-explainer/guide.md)，本地网页维护见[配方库指南](library/README.md)。
 
 </details>
 
@@ -184,38 +193,9 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文、编写讲稿�
 
 - [Remotion](https://www.remotion.dev/)提供基于 React 的确定性视频渲染能力。
 - [video-shotcraft](https://github.com/Vincentwei1021/video-shotcraft)提供镜头配方方法与展示结构参考；来源及适配许可见各配方 `provenance.json` 与[接入台账](shots/shortlist-coverage.json)。
+- [whiteboard-video](https://github.com/trustfuture/simon-skills/tree/3ad0a25127c17da48a0e869c9efbf4136c40848b/skills/whiteboard-video)提供白板绘制与生产方法参考，保留[原始 MIT 署名](references/licenses/simon-whiteboard-MIT.txt)。
 - 项目字体保留原始版权与 SIL OFL 1.1 许可，见[字体目录](fonts/README.md)。
 
 FrameLoom 自有代码采用 [MIT](LICENSE)。Remotion 使用独立的[官方许可](https://www.remotion.dev/license)；字体、图片、配乐和 TTS 输出按各自来源条款使用，本项目的 MIT 不替代这些许可。
 
 由 **Hresh赫什** 维护，持续实践用 AI 把想法做成产品。其他产品与实践见[个人网站](https://hreshhao.com/)。
-
-### 三套 AI 插画风格
-
-参考 [whiteboard-video](https://github.com/trustfuture/simon-skills/tree/3ad0a25127c17da48a0e869c9efbf4136c40848b/skills/whiteboard-video) 的生产方法，引入三套 AI 插画风格。纯文档路线实际生成主体插画，文字、关系与数字由视频绘制；素材生成与登记见[插画生产流程](references/illustrated-production.md)。
-
-| 风格 | 视觉与运动 | 推荐字体 |
-| --- | --- | --- |
-| `whiteboard` | 开放白板、小贴纸、逐行书写与同步铅笔 | 小赖 |
-| `annotated-reasoning` | 批注推演：正文先落定，圈词、划线、旁注和连线随讲解展开 | 思源宋体 |
-| `editorial-typography` | 编辑式排印：关键词持续在场，随论证重排字号、位置与关系 | 思源黑体 |
-
-三套以文案和图解为主体：手绘白板使用开放画布、逐行书写和同步铅笔；批注推演把圈注绑定正文中的明确短语，再展开旁注与关系；编辑式排印把同一批文字在连续阶段中重排，逐步显露论证结构。后两套辅助插画的框面积合计最多为画布的8%，中文、数字和箭头由 renderer 独立绘制。首轮横屏，字体独立选择。旧 `flat-explainer`、`paper-collage` 与六个 `illustrated-*` 配方保留兼容，不自动迁移已有项目。六套图文动效风格保持原有能力。
-
-三套 AI 插画风格的公开样片统一使用“好问题，从观察开始”：相同标题、旁白和画面文字，均为18秒横屏静音预览。白板使用[原创开放白板样例](examples/whiteboard-original/README.md)，后两套使用[文案动画样例](examples/text-led-video/README.md)，该目录还包含两套26秒“从资料到解释”能力样片。公开样例的既有 AI 素材按来源素材登记；新纯文档项目仍实际生成辅助插画。白板绘制方法参考上游并保留 [MIT 署名](references/licenses/simon-whiteboard-MIT.txt)。新白板项目使用 `--style whiteboard --font xiaolai` 初始化，再按自己的文档编排，字体可独立替换。
-
-纯文档由 Agent 实际调用原生 imagegen，生成独立透明主体，再登记来源与指纹；文档＋截图保留真实素材，不自动生图。文字、数字、箭头和字幕均由 renderer 绘制。准备提示词不代表生图完成，缺少生成能力或素材校验失败时停止依赖步骤。
-
-```bash
-npm run init:project -- --slug annotated-demo --style annotated-reasoning --font source-han-serif-sc --canvas landscape --input-mode document
-```
-
-初始化只创建待编排文件。完整的素材计划、生图与登记步骤见[插画生产流程](references/illustrated-production.md)，后两套的分镜、阶段与来源登记见[文案动画制作](references/text-led-production.md)。
-
-### 语音同步与局部重渲
-
-豆包 v3 的完整逐字时间证据可用于字幕和开放白板时间提案；其他服务或缺失证据明确使用估算，人工字幕优先。2.4 无重叠场景默认缓存静音画面，音频保持整片合成；缓存命中仍需 QA 和播放复核。`--plan-timing` 仅写新分镜，可加 `--speech-cues <json>` 按明确旁白分组排期；`render:storyboard --no-scene-cache` 使用整片渲染。[使用、兼容边界和验收](references/speech-driven-production.md)。
-
-三套主风格不开放手动镜头选择，提供文档后直接按各自内置流程编排；字体、成品和旁白继续独立选择。原六套保留自动推荐与手动集合。[固定制作流程](references/primary-style-production.md)。
-
-三套主风格都支持右上角品牌标识：修改根目录 `config.json` 的 `brand.name` 一处，即可替换后续视频与同源封面的 Your Brand；项目也可独立配置名称或本地 Logo。制作页可填写品牌名。[配置与封面说明](references/branding.md)。

@@ -1,5 +1,11 @@
 # Tech Stack
 
+[项目首页](README.md) · [文档导航](references/README.md) · [架构](ARCHITECTURE.md)
+
+运行版本与依赖以 [package.json](package.json) 和锁文件为准。本文说明当前实现选型；带日期的扩展段落保留当时范围。
+
+## 渲染与本地工具
+
 插画风格差异化复用 React、Remotion、原生 SVG/HTML 和 Vitest，不新增依赖。有机曲面与阶梯边框按固定几何绘制；连续入场与像素显现由镜头帧数确定，完成后静止阅读。各风格文字区域和连线端点由共享 TypeScript 函数定义，预检与实际渲染共同验证。
 
 本地风格与镜头配方库使用原生 HTML/CSS/ES modules 与 Node.js 静态文件服务，不新增依赖。构建时从既有 catalog 输出 JSON 和公开媒体；Remotion 复用同一打包生成配方样片。三个独立 HTML 页面使用相对链接、共享 CSS 与 ES module，支持 GitHub Pages 子路径。浏览器存储保存风格、镜头选择和样片播放位置，不要求填写文档路径；禁用存储时 URL 参数仅携带公开选择。导出逻辑与 DOM 分离，Vitest 覆盖兼容性、制作路由、公开TTS元数据与媒体请求。
@@ -39,7 +45,7 @@ P2 继续使用现有 React / Remotion / Zod；SVG 滤镜与确定性闭式粒�
 
 ## 横屏风格与镜头自由组合
 
-跨风格镜头继续使用现有静态 renderer、Zod 校验及 Remotion，不新增依赖。公开样片生成覆盖 53 个示例 × 6 套风格，构建复制对应媒体并检验完整性。深色原生画布依据背景亮度确定文字颜色。
+跨风格镜头继续使用现有静态 renderer、Zod 校验及 Remotion，不新增依赖。公开样片生成覆盖当前catalog声明的风格与画幅组合，构建复制对应媒体并检验完整性。深色原生画布依据背景亮度确定文字颜色。
 
 独立字体选择使用浏览器原生 FontFace/FontFaceSet 与现有 Remotion delayRender，不新增运行时依赖。思源黑体／宋体使用官方 CN 可变 WOFF2，霞鹜文楷使用官方 Regular/Medium TTF；得意黑使用官方 WOFF2，小赖字体使用比例版 Regular TTF。清单固定版本和 SHA-256，保留 SIL OFL 1.1。DOM.Iterable 补全 FontFaceSet 的标准集合方法类型。网页字形示例与 renderer 共用项目字体文件，字重映射在清单记录；组合样片由同一正式 composition 生成。
 
@@ -51,7 +57,7 @@ P2 继续使用现有 React / Remotion / Zod；SVG 滤镜与确定性闭式粒�
 
 ## 横竖屏镜头扩充（2026-10-09）
 
-新增 type-and-filter、ai-stream-response、unit-dot-regroup；六套风格、16:9和9:16共用严格内容契约与独立画幅布局。当前40个横屏场景、4个竖屏场景；原专用配方不自动扩展画幅。搜索结果、任务状态与点阵总数均由输入给定，预检拒绝不一致数据和错误时序。公开库按风格×画幅读取实际样片，旧画幅/版本不迁移，不新增依赖；竖屏素材配色仍保持原限制。范围、验收与验证见[接入记录](references/shot-expansion-20261009.md)。
+新增 type-and-filter、ai-stream-response、unit-dot-regroup；六套风格、16:9和9:16共用严格内容契约与独立画幅布局。该次接入后为40个横屏场景、4个竖屏场景；当前能力以catalog为准；原专用配方不自动扩展画幅。搜索结果、任务状态与点阵总数均由输入给定，预检拒绝不一致数据和错误时序。公开库按风格×画幅读取实际样片，旧画幅/版本不迁移，不新增依赖；竖屏素材配色仍保持原限制。范围、验收与验证见[接入记录](references/shot-expansion-20261009.md)。
 
 ## 内容布局验证
 
@@ -63,7 +69,7 @@ P2 继续使用现有 React / Remotion / Zod；SVG 滤镜与确定性闭式粒�
 
 ## 插画讲解素材
 
-三套主风格提供 `illustration.json`；`illustration-plan.json` 经严格 schema 与本地路径检查生成提示词，Agent 调用原生 imagegen，检查结果后由 `register:illustration` 复制透明 PNG 并登记风格、计划、提示词与字节指纹。渲染时只读取本地素材；截图输入拒绝生成策略。六个 illustrated-* 静态 renderer 共享槽位几何与预检，字体沿用既有受控清单。未新增外部服务或密钥配置，原六套保留兼容。
+三套主风格提供 `illustration.json`；`illustration-plan.json` 经严格 schema 与本地路径检查生成提示词，Agent 调用原生 imagegen，检查结果后由 `register:illustration` 复制透明 PNG 并登记风格、计划、提示词与字节指纹。渲染时只读取本地素材；截图输入拒绝生成策略。历史六个 illustrated-* 静态 renderer 共享槽位几何与预检，字体沿用既有受控清单。未新增外部服务或密钥配置，原六套保留兼容。
 
 ## Whiteboard 视觉基准修正
 

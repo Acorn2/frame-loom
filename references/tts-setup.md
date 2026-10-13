@@ -1,5 +1,9 @@
 # TTS 配置指南
 
+[文档导航](README.md) · [使用指南](usage-guide.md)
+
+[开始前](#开始前) · [豆包](#豆包) · [OpenAI](#openai) · [ElevenLabs](#elevenlabs) · [阿里百炼](#阿里百炼) · [MiniMax](#minimax) · [检查与制作](#检查与制作) · [排错](#常用字段与排错)
+
 FrameLoom 当前接入豆包、OpenAI、ElevenLabs、阿里百炼和 MiniMax。只需配置实际使用的一家。这里说明用户如何启用；请求协议、完整参数契约和音频交付规则见[音频接入说明](audio-integration.md)。
 
 选择页里的“项目内置预设”只指定服务、初始模型和音色，不代表本机已配置凭据，也不会替你开通服务或调用 TTS。使用“沿用本地已配置的 TTS”时，Agent 仍需核对实际配置与本地状态。

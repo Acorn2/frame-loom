@@ -108,10 +108,12 @@ Attach product screenshots if available, or provide an exact URL for the agent t
 
 The nine video styles fall into two groups based on how their visuals are built:
 
-- **AI illustration styles**: Whiteboard (`whiteboard`), Annotated Reasoning (`annotated-reasoning`), and Editorial Typography (`editorial-typography`). Text and diagrams lead the explanation. Annotations bind to explicit phrases; typography repositions persistent words across declared stages. AI illustrations support the narration, occupying at most 8% of the canvas in the two new styles. For document-only production, the agent actually generates auxiliary illustrations. Supplied screenshots are used directly without automatic image generation. Each style has a fixed built-in shot workflow; see [text-led production (Chinese)](references/text-led-production.md). The old flat-explainer and paper-collage packs remain available for existing projects.
+- **AI illustration styles**: Whiteboard (`whiteboard`), Annotated Reasoning (`annotated-reasoning`), and Editorial Typography (`editorial-typography`). For document-only production, the agent generates illustrations to support text and diagrams. Supplied screenshots are used directly without automatic image generation. Each style has a [fixed built-in shot workflow (Chinese)](references/primary-style-production.md).
 - **Text and graphics motion styles**: Editorial Ink, Signal, Sketch Notes, Swiss Blue, Blueprint, and Product Frame. They compose typography, shapes, charts, and interface assets with shot animation, and can also use real images and screenshots. The agent can recommend shots, or you can restrict the selection manually.
 
 These groups describe visual construction; explainers, product introductions, tutorials, and stories are content uses.
+
+### Three AI illustration styles
 
 The three AI illustration samples share the original Chinese copy “好问题，从观察开始” (“Good questions begin with observation”). Each is an 18-second landscape silent preview. These frames come from the actual videos; click a cover or “Watch sample” to see the animation. Text and diagrams lead, with illustrations supporting the explanation.
 
@@ -120,6 +122,10 @@ The three AI illustration samples share the original Chinese copy “好问题�
 | [![Whiteboard sample: good questions begin with observation](examples/template-families/previews/whiteboard-original.png)](examples/template-families/previews/whiteboard-original.mp4) | [![Annotated Reasoning sample: good questions begin with observation](examples/template-families/previews/annotated-reasoning-text-led.png)](examples/template-families/previews/annotated-reasoning-text-led.mp4) | [![Editorial Typography sample: good questions begin with observation](examples/template-families/previews/editorial-typography-text-led.png)](examples/template-families/previews/editorial-typography-text-led.mp4) |
 | Line-by-line writing · synchronized pencil · Xiaolai | Phrase annotations · cumulative relations · Source Han Serif | Persistent word rearrangement · unfolding relations · Source Han Sans |
 | [Watch sample](examples/template-families/previews/whiteboard-original.mp4) | [Watch sample](examples/template-families/previews/annotated-reasoning-text-led.mp4) | [Watch sample](examples/template-families/previews/editorial-typography-text-led.mp4) |
+
+All three support landscape video and require no manual shot selection. Text, numbers, and relations lead in Annotated Reasoning and Editorial Typography; auxiliary illustration boxes occupy at most 8% of the canvas. Select a project-wide font independently from the [font catalog (Chinese)](fonts/README.md). See [illustration production](references/illustrated-production.md) and [text-led production](references/text-led-production.md) for detailed steps (Chinese).
+
+### Six text and graphics motion styles
 
 The six text and graphics motion styles below use the same storyboard for comparison. These frames show the completed diagrams; the links open actual silent samples.
 
@@ -153,13 +159,15 @@ Align the visuals to the measured voiceover duration, render, and run QA.
 
 See the [usage guide (Chinese)](references/usage-guide.md) for configuration, external voiceover, and approval. Narrated deliveries and visual handoffs require your full playback review. Automated QA does not verify every fact, pronunciation, or visual decision.
 
+For further adjustments, ask the agent to arrange captions and shots using [measured speech timing (Chinese)](references/speech-driven-production.md). The three AI illustration styles also support a top-right brand name or local logo, shared by the video and its cover; see [brand settings (Chinese)](references/branding.md).
+
 ## Common questions
 
 **Do I need to write code or storyboard JSON?** No manual authoring is required. You need to install local tools, use a coding agent, and check its output. The CLI and JSON are the agent's working interface.
 
 **Do I need voiceover? Are there charges?** The first silent preview needs no voiceover. Configure just one TTS provider if you want narration. Agent and TTS charges depend on their services; local rendering does not call a generative video API.
 
-**Does it support portrait video?** The six text and graphics motion styles support 43 scene recipes in 16:9 landscape. The three AI illustration styles support landscape semantic diagrams and six illustrated recipes; Whiteboard also supports the open board and three basic whiteboard recipes. 9:16 portrait currently supports semantic diagrams, type and filter, AI response generation, and unit-dot regrouping. Fonts are independently selectable; see the [font catalog (Chinese)](fonts/README.md).
+**Does it support portrait video?** The six text and graphics motion styles support both 16:9 landscape and 9:16 portrait: each has 43 landscape scene recipes, while portrait supports semantic diagrams, type and filter, AI response generation, and unit-dot regrouping. The three AI illustration styles currently support landscape only and follow their built-in workflows. See the [shot catalog (Chinese)](shots/README.md) for compatibility.
 
 **Are documents uploaded to the library website?** The website does not receive documents. Rendering is local; your chosen agent or TTS service may receive source content or narration according to its configuration and terms.
 
@@ -167,15 +175,16 @@ See the [usage guide (Chinese)](references/usage-guide.md) for configuration, ex
 
 ## Guides and contributions
 
+- [Documentation index (Chinese)](references/README.md): installation, production, technical references, and maintenance.
 - [Installation and troubleshooting](references/installation.en.md): English instructions for local tools, the first render, and agent loading.
 - [Usage guide](references/usage-guide.md), [TTS setup](references/tts-setup.md), and [screenshot colors](references/project-palette.md): detailed guides, currently in Chinese.
-- [Shared Skill](SKILL.md): English agent workflow. [Shot catalog](shots/README.md) and [storyboard contract](references/storyboard-schema.md): technical references, currently in Chinese.
-- [Contributing](CONTRIBUTING.md), [changelog](CHANGELOG.md), and [security reporting](SECURITY.md).
+- [Shared Skill](SKILL.md): agent workflow, primarily in English. [Shot catalog](shots/README.md) and [storyboard contract](references/storyboard-schema.md): technical references, currently in Chinese.
+- [Contributing](CONTRIBUTING.md), [changelog (Chinese)](CHANGELOG.md), and [security reporting (Chinese)](SECURITY.md).
 
 <details>
 <summary>Developers: current shot capabilities</summary>
 
-The runtime registers 40 scene recipes, 9 hosted actions, and 5 chapter transitions; 48/48 shortlist candidates are adapted. Scene recipes and presets remain experimental. The [capability manifest](src/renderer/capability-manifest.ts) defines supported combinations. See the [optional explainer preset](video-templates/retro-zine-explainer/guide.md) and [local library guide](library/README.md) for technical details (Chinese).
+The runtime registers 52 scene recipes, 9 hosted actions, and 5 chapter transitions; 48/48 shortlist candidates are adapted. The registered total includes historical compatibility recipes; style support and fixed new-project workflows constrain actual selection. Scene recipes and presets remain experimental. The [capability manifest](src/renderer/capability-manifest.ts) defines supported combinations. See the [optional explainer preset](video-templates/retro-zine-explainer/guide.md) and [local library guide](library/README.md) for technical details (Chinese).
 
 </details>
 
@@ -183,6 +192,7 @@ The runtime registers 40 scene recipes, 9 hosted actions, and 5 chapter transiti
 
 - [Remotion](https://www.remotion.dev/) provides deterministic video rendering with React.
 - [video-shotcraft](https://github.com/Vincentwei1021/video-shotcraft) informed shot recipe methods and the presentation structure. Individual `provenance.json` files and the [coverage ledger](shots/shortlist-coverage.json) record sources and adaptation licenses.
+- [whiteboard-video](https://github.com/trustfuture/simon-skills/tree/3ad0a25127c17da48a0e869c9efbf4136c40848b/skills/whiteboard-video) informed whiteboard drawing and production methods; the [original MIT notice](references/licenses/simon-whiteboard-MIT.txt) is retained.
 - Bundled fonts retain original copyright notices and SIL OFL 1.1 licenses; see the [font directory](fonts/README.md).
 
 FrameLoom's own code is [MIT licensed](LICENSE). Remotion has a separate [official license](https://www.remotion.dev/license). Fonts, images, music, and TTS output follow their own terms; FrameLoom's MIT license does not replace them.

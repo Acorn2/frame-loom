@@ -1,5 +1,7 @@
 # Audio Integration
 
+[Documentation index (Chinese)](README.md) · [TTS setup (Chinese)](tts-setup.md) · [Speech timing (Chinese)](speech-driven-production.md)
+
 FrameLoom supports three audio routes:
 
 1. `silent`: render either an inspection preview or a clean visual master for external editing, chosen with `--output-purpose`.
@@ -10,8 +12,9 @@ FrameLoom supports three audio routes:
 
 The storyboard's `scene.narration` is the only source for built-in TTS. TTS
 does not create one file per sentence: it creates one segment per scene, then
-measures the actual segment duration and uses that duration for the matching
-SRT cue. The segment must fit inside its scene. This is what keeps the
+measures the actual segment duration and places short, single-line caption cues
+within that speech window. Complete validated provider word evidence can supply
+caption timing; otherwise timing is explicitly estimated or manually provided. The segment must fit inside its scene. This is what keeps the
 visual scene, audio and generated subtitle aligned.
 
 When recording external narration after a script handoff, run

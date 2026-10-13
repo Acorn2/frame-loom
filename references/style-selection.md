@@ -1,5 +1,7 @@
 # Style Selection
 
+[Documentation index (Chinese)](README.md) · [Shared Skill](../SKILL.md)
+
 Style selection happens before the final storyboard. The goal is to narrow the visual system without loading every Style Pack's full design specification.
 
 When subject screenshots are provided, their colors take priority over the selected style's default palette. Background, title/body text, card surfaces and accents follow the screenshots; the style keeps composition, decoration and motion. Selecting a style alone does not request its default colors. An explicit **Use style colors** choice does. See [project colors](project-palette.md) for source roles and current landscape support.
@@ -34,7 +36,7 @@ npm run preview:styles -- /tmp/product-styles.html --content product --canvas la
 
 Each card contains hook, content and result frames built from the Style Pack tokens. The gallery is a selection aid, not a rendered storyboard or visual QA result.
 
-For the video-template candidates, generate **real Remotion output** from the same seven-scene Storyboard 2.3 semantic example:
+For the six text and graphics motion styles, generate **real Remotion output** from the same seven-scene Storyboard 2.3 semantic example:
 
 ```bash
 npm run preview:templates
@@ -42,7 +44,9 @@ npm run preview:templates -- --portrait --stills-only
 npm run preview:templates -- --styles archive-grid,signal-noir,studio-frame
 ```
 
-The command writes a new directory under `projects/` containing an HTML gallery, storyboard variants, a sourced demonstration illustration, seven representative frames per selected style and, unless `--stills-only` is set, 50.8-second silent MP4s with automated QA reports and review frames. The illustration is a repository fixture, not a real product screenshot. Creators choose `document` without images or `document-images` with local images or captured webpage screenshots for their own projects. Use `--output <new-directory>` to choose a destination; an existing directory is not overwritten unless `--force` is explicitly passed. Automated QA still requires complete human playback. `retro-windows` is deprecated for new selection but remains loadable for existing 2.1 projects. `signal` and the three design-proposal packs are experimental until broader content and playback review is complete.
+The command writes a new directory under `projects/` containing an HTML gallery, storyboard variants, a sourced demonstration illustration, seven representative frames per selected style and, unless `--stills-only` is set, 50.8-second silent MP4s with automated QA reports and review frames. The illustration is a repository fixture, not a real product screenshot. Creators choose `document` without images or `document-images` with local images or captured webpage screenshots for their own projects. Use `--output <new-directory>` to choose a destination; an existing directory is not overwritten unless `--force` is explicitly passed. Automated QA still requires complete human playback. `retro-windows` is deprecated for new selection but remains loadable for existing 2.1 projects. `signal` and the other packs marked experimental in the index remain experimental until broader content and playback review is complete.
+
+For the three AI illustration styles, compare their actual public samples from the [README](../README.en.md#three-ai-illustration-styles) or the library. The seven-scene comparison above applies to the original six styles, not the primary fixed flows.
 
 When the creator asks to compare styles, present up to three candidates with:
 
@@ -63,7 +67,9 @@ to review. In `review` mode, the chosen style remains part of storyboard review.
 
 ## 5. Load only the selected pack
 
-After selection, read:
+For whiteboard, annotated-reasoning, or editorial-typography, read the [fixed production flow](primary-style-production.md), the selected pack's `style.json`, `motion.json`, `illustration.json`, and `preview.md`. These packs do not have legacy `design.md` or `renderer-map.json` files. Read [illustration production](illustrated-production.md), plus [text-led production](text-led-production.md) for the two text-led styles.
+
+For an original text and graphics motion pack, read:
 
 ```text
 styles/<style-id>/design.md

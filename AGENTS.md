@@ -21,6 +21,8 @@ FrameLoom 是以 Codex 为主要入口、兼容其他 Coding Agent 的本地、�
 
 ## 验证入口
 
+对外文档按读者任务归位：中英文 README 负责效果、首次使用与能力边界，`references/README.md` 索引当前指南和历史记录，详细步骤放对应指南；致谢与许可作为 README 最后章节。带日期的验证记录保留当时事实，不作为当前能力说明；功能摘要须与实际 catalog 和风格固定流程一致。
+
 运行环境要求 Node.js 24+（推荐 Node.js 24 LTS）及 FFmpeg/ffprobe；CI 与 Pages 工作流统一使用 Node.js 24。`validate:shots` 同时核对 README 与共享 Skill 的当前能力摘要。
 
 ```bash

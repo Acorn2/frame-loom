@@ -1,5 +1,7 @@
 # 镜头配方库
 
+[项目首页](../README.md) · [文档导航](../references/README.md) · [镜头编排](../references/shot-planning.md)
+
 FrameLoom 的制作选择分为两层：**视频风格决定画面语言，镜头配方决定信息怎样出现、变化与停留**。用户可以选一套风格和多个配方，Agent 按原文决定每场使用哪个、是否重复及顺序。`video-templates/` 是预设组合的快捷入口，不是使用配方库的前提。三套主风格使用固定内置范围；批注推演与编辑式排印的字段、阶段与限额见[文案动画制作](../references/text-led-production.md)，无需用户选择镜头集合。
 
 **有主体截图时，全片配色优先参考截图的背景、文字、卡片和强调色，风格保留构图与动效。** 本目录配方说明中的白色、冷灰、石墨等外观，以及公开样片的颜色，描述的是默认参考，不强制覆盖素材配色。仅指定风格或镜头不会取消截图配色参考；明确选择“使用风格配色”时才保留默认色。当前素材配色支持已声明兼容的当前横屏风格与镜头，真实截图不染色。详见[项目配色](../references/project-palette.md)。
@@ -49,7 +51,7 @@ npm run init:project -- --slug my-topic --style retro-zine --shots paper-title,d
 | [network-expand](network-expand/recipe.md) | 一个主体向外展开真实关系 | 1 个主体、2–5 个对象及向外连接 | FrameLoom 原生语义组件 |
 | [semantic-default](semantic-default/recipe.md) | 顺序、变化、数据、来源图片或基础收尾 | 遵守既有语义契约 | FrameLoom 原生语义组件 |
 
-39 个专用场景镜头支持六套当前风格与 16:9；`semantic-default` 保留全部已安装风格及横竖屏。`list:shots` 根据实际 manifest 筛选能力，不把参数读自 Style Pack 当作已经完成所有风格适配。所有配方目前为 experimental。
+六套图文动效风格各支持43个横屏和4个竖屏场景配方；三套 AI 插画风格目前仅横屏，按[固定制作流程](../references/primary-style-production.md)编排。注册总数包含历史兼容能力，不代表任一风格可选择全部配方。`list:shots` 根据实际 manifest 筛选能力，不把参数读自 Style Pack 当作已经完成所有风格适配。所有配方目前为 experimental。
 
 ## 编排契约
 
@@ -63,7 +65,7 @@ npm run init:project -- --slug my-topic --style retro-zine --shots paper-title,d
 
 ## 清单实施数量与宿主动作
 
-按 2026-09-30 筛选清单计数，当前接入 **48/48**，加3个原生场景共37个原清单场景入口；另有3个新增横竖屏场景及3个逐笔白板横屏场景，再加6个插画讲解场景，加1个开放白板，共50个场景入口。9个宿主动作和5个换章配方分别查询，不计入正文镜头。家族只适配台账声明的变体，例如 chart-live 使用 OscilloscopeStreamV2、scroll-brake 使用 ChangelogScrollBrake、page-turn 使用 BarnDoorSplit，不宣称全部变体可用。
+按 2026-09-30 筛选清单计数，当前接入 **48/48**，加3个原生场景共37个原清单场景入口；另有3个新增横竖屏场景及3个逐笔白板横屏场景，再加6个插画讲解场景，加1个开放白板，以及2个文案优先镜头，共52个注册场景入口。9个宿主动作和5个换章配方分别查询，不计入正文镜头。家族只适配台账声明的变体，例如 chart-live 使用 OscilloscopeStreamV2、scroll-brake 使用 ChangelogScrollBrake、page-turn 使用 BarnDoorSplit，不宣称全部变体可用。
 
 ```bash
 npm run list:shots -- --style retro-zine --canvas landscape
@@ -101,4 +103,4 @@ C09/C11/C12 分别对应 `overlap-line-carry` / `overlap-ink` / `overlap-barn-do
 
 ## 插画讲解镜头
 
-`illustrated-hero`、`illustrated-compare`、`illustrated-process`、`illustrated-explain`、`illustrated-breakdown` 与 `illustrated-metric` 共用独立主体素材与原生文字，支持 whiteboard、flat-explainer、paper-collage 三套主风格的横屏。实际生图、原生图解与截图分别记录，不互相冒充；详见[插画生产](../references/illustrated-production.md)。
+`illustrated-hero`、`illustrated-compare`、`illustrated-process`、`illustrated-explain`、`illustrated-breakdown` 与 `illustrated-metric` 共用独立主体素材与原生文字，支持 whiteboard 与历史 flat-explainer、paper-collage 的横屏兼容路径；新主风格初始化不选择这套六镜头集合。实际生图、原生图解与截图分别记录，不互相冒充；详见[插画生产](../references/illustrated-production.md)。

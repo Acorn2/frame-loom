@@ -48,10 +48,10 @@ Agent 必须检查并解决实际表达缺口，或记录合理保留原因；�
 
 ## 白板逐笔讲解
 
-先判断来源关系：两到四步顺序用 whiteboard-process；两个有依据的差异用 whiteboard-compare；围绕本地图片的两到三条解释用 whiteboard-explain。三个镜头可以搭配原六套风格；选择 whiteboard 风格时，集合包含这三项、六个 illustrated-* 与基础语义。不得把主体素材需求降级成自动生成占位图。
+先判断来源关系：两到四步顺序用 whiteboard-process；两个有依据的差异用 whiteboard-compare；围绕本地图片的两到三条解释用 whiteboard-explain。三个镜头可以搭配原六套风格；新建 whiteboard 项目固定使用 whiteboard-board 开放白板；这三项及六个 illustrated-* 与基础语义保留历史兼容，不扩大当前内置范围。不得把主体素材需求降级成自动生成占位图。
 
 每项先 trace 再 reveal，单笔不并行。reveal 按字符预算安排，前项可读后留阅读间隔，再推进下一项；连线在两端完成后 draw，每场至多圈出一个重点。绘制预算不足就缩短内容或拆镜头，不压缩成一闪而过的动画。文字横向揭示不等于汉字笔顺；真实旁白仍按项目现有 TTS／外部音频流程校准，完成后检查整个绘制过程及最终可读性。
 
 ## 插画讲解
 
-三套主风格先明确情境、主张与关系，选择有用的独立主体；纯文档使用实际生图，截图路线使用来源素材。六个 illustrated-* 的槽位、生成与登记流程见[插画生产](illustrated-production.md)。原生 glyph 必须显式选择，不能作为生图失败后的自动回退。
+三套主风格按[固定流程](primary-style-production.md)编排，先明确情境、主张与关系，选择有用的独立主体；纯文档使用实际生图，截图路线使用来源素材。当前镜头与历史六个 illustrated-* 的边界、生成及登记流程见[插画生产](illustrated-production.md)。原生 glyph 必须显式选择，不能作为生图失败后的自动回退。

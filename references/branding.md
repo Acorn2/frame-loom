@@ -1,6 +1,8 @@
 # 三套主风格的右上角品牌
 
-手绘白板、彩色手绘讲解、像素讲解笔记共用独立品牌层。标识在片头短暂画入，之后固定在右上角，换场不重新播放；品牌文字继承项目所选字体。白板使用绿色星形和弧形下划线，彩色手绘使用风格强调色，像素风使用方块星形与阶梯线。项目配色可覆盖默认颜色。
+[文档导航](README.md) · [主风格制作](primary-style-production.md)
+
+手绘白板、批注推演、编辑式排印共用独立品牌层。标识在片头短暂画入，之后固定在右上角，换场不重新播放；品牌文字继承项目所选字体。白板默认使用绿色星形和弧形下划线，批注推演与编辑式排印使用各自的强调色。旧彩色手绘和像素笔记保留品牌兼容，像素风使用方块星形与阶梯线。项目配色可覆盖默认颜色。
 
 设计参考 [simon-skills 的品牌配置](https://github.com/trustfuture/simon-skills/blob/3ad0a25127c17da48a0e869c9efbf4136c40848b/skills/whiteboard-video/config.json)及其[独立品牌层](https://github.com/trustfuture/simon-skills/blob/3ad0a25127c17da48a0e869c9efbf4136c40848b/skills/whiteboard-video/render.html)。这里复用可配置品牌的设计思路；片尾关注卡不在此功能内。
 
@@ -30,7 +32,7 @@
 也可以在制作组合页面输入品牌名，复制的指令要求 Agent 设置项目配置；页面不会改写磁盘文件。初始化支持：
 
 ```bash
-npm run init:project -- --slug pixel-brand-test --style paper-collage --brand-name 'Hresh赫什'
+npm run init:project -- --slug annotated-brand --style annotated-reasoning --brand-name 'Hresh赫什'
 ```
 
 该参数复制仓库品牌设置并创建项目 `config.json`，继承的本地 Logo 路径转为绝对路径。没有参数时项目继续使用仓库配置，初始化不生图、不生成视频。

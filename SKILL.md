@@ -44,7 +44,7 @@ source document -> Agent-authored storyboard.draft.json
 The current runtime supports:
 
 - `statement`, `graph-explainer`, `metric-grid` and `interaction-flow` base templates
-- Style Pack and shot recipes are independent choices in Storyboard 2.4; legacy style-only initialization retains 2.3, and existing 2.1 and 2.2 storyboards retain their render paths
+- Storyboard 2.4 uses fixed built-in recipes for the three primary styles and independent compatible recipe pools for the original six; explicit legacy style-only initialization retains 2.3, and existing 2.1 and 2.2 storyboards retain their render paths
 - `statement`, `compare`, `sequence`, `network`, `change`, `metric`, and `media` visual kinds in 2.3; the visual kind determines composition before style tokens determine paper, typography, color and motion feel
 - an opt-in `network` shot pattern, `document-conclusion-deal`, keeps a sourced document excerpt on the left while exactly three connected conclusions enter in narration order; it uses document text and CSS only
 - `opening`, `claim`, `process`, `evidence`, `media`, `closing` scene purposes in 2.2
@@ -53,9 +53,9 @@ The current runtime supports:
 - `fade`, `slide`, `paper-wipe`, `carry` transition declarations
 - `project-input.json` with `document` or `document-images` for new projects; legacy projects without it keep their existing asset behavior
 
-## Select a video style and multiple shot recipes
+## Select a video style and its shot workflow
 
-Style Pack controls visual language and default colors; an explicit project palette overrides colors without changing font or motion (see [project colors](references/project-palette.md)). A shot recipe controls composition and how information appears over time. The original six styles let the creator choose a style and compatible recipes. The three primary explanation styles use their fixed built-in production flow: whiteboard-board for whiteboard, annotated-manuscript plus semantic-default for annotated-reasoning, and editorial-flow plus semantic-default for editorial-typography; do not ask for or recommend a user-editable shot pool. See [primary style production](references/primary-style-production.md). Read the [recipe library](shots/README.md), [shot-index](shots/shot-index.json) and relevant recipes. Use `list:shots -- --style <id> --canvas <orientation>` to inspect actual capabilities, then `init:project -- --slug <topic> --style <id> --shots <id,id,...>` to create a 2.4 planning draft. No preset is required. The selected pool is stored in `shotRecipes`; initialization does not invent scenes or render a video.
+Style Pack controls visual language and default colors; an explicit project palette overrides colors without changing font or motion (see [project colors](references/project-palette.md)). A shot recipe controls composition and how information appears over time. The original six styles let the creator choose a style and compatible recipes. The three primary explanation styles use their fixed built-in production flow: whiteboard-board for whiteboard, annotated-manuscript plus semantic-default for annotated-reasoning, and editorial-flow plus semantic-default for editorial-typography; do not ask for or recommend a user-editable shot pool. See [primary style production](references/primary-style-production.md). Read the [recipe library](shots/README.md), [shot-index](shots/shot-index.json) and relevant recipes. Use `list:shots -- --style <id> --canvas <orientation>` to inspect actual capabilities, then initialize with `init:project -- --slug <topic> --style <id>`. For the original six styles, also pass `--shots <id,id,...>`; primary styles fill their built-in range automatically. This creates a 2.4 planning draft. No preset is required. The selected pool is stored in `shotRecipes`; initialization does not invent scenes or render a video.
 
 The [shortlist coverage ledger](shots/shortlist-coverage.json) records the research candidates. Only entries marked registered-experimental have runtime implementations; native recipes do not count toward the shortlist. Read adaptedImplementations before choosing a family variant. Use `list:shots -- --auxiliary` for hosted actions: marker-underline uses an explicit emphasis phrase and a post-entry highlight beat in its declared title hosts. It is not a scene ID or a pool item. Do not silently substitute pending recipes or unimplemented variants.
 
@@ -63,7 +63,7 @@ The [shortlist coverage ledger](shots/shortlist-coverage.json) records the resea
 
 For the original six styles, default to document-driven recipe selection when the creator supplies no pool or asks for automatic recommendation. Read the source first, identify each scene's explanation job, then query compatible recipes and select a complementary pool. Record source → claim → visible explanation → recipe/reason/assets in `shot-map.md`, and pass the adopted pool explicitly through `init:project --shots`. Follow [document-driven shot planning](references/shot-planning.md). Do not fill every library category or enforce a recipe-count quota. In `fast`, briefly present the recommendation and continue production without another confirmation; in `review`, include it in the existing script/storyboard review. Explicit manual pools remain strict: warn about title-only limitations before using them for a long explainer, and never silently add a recipe.
 
-The original 43 scene recipes support the original six active styles in 16:9 landscape; their portrait combinations support semantic-default (seven semantic visual kinds), type-and-filter, ai-stream-response, and unit-dot-regroup. The three primary explanation styles support landscape semantic-default and six illustrated-* recipes; whiteboard additionally supports whiteboard-board and the three basic whiteboard-* recipes. Switching between the original six landscape styles preserves the creator-selected shot pool; switching to whiteboard requires its declared compatible pool. Hosted actions and chapter transitions inherit the selected host style, while retaining their content and timing requirements. Query `list:shots -- --style <id> --canvas <orientation>` before recommending a pool. Do not silently advertise all style/recipe combinations. A video template is a preset style/recipe combination with matching rules and pacing, available as an optional shortcut through `list:video-templates` and `--video-template`. Currently `retro-zine-explainer@1.2.0` is experimental. Read its [guide](video-templates/retro-zine-explainer/guide.md) only when selecting that preset.
+The original 43 scene recipes support the original six active styles in 16:9 landscape; their portrait combinations support semantic-default (seven semantic visual kinds), type-and-filter, ai-stream-response, and unit-dot-regroup. Current primary production uses whiteboard-board for whiteboard, annotated-manuscript plus semantic-default for annotated-reasoning, and editorial-flow plus semantic-default for editorial-typography, all landscape-only. Whiteboard additionally retains registered semantic, illustrated-* and basic whiteboard-* capabilities for existing storyboards; these do not expand its current fixed initialization pool. Switching between the original six landscape styles preserves the creator-selected shot pool; switching a new production to a primary style uses its fixed flow and requires replanning incompatible scenes. Hosted actions and chapter transitions inherit the selected host style, while retaining their content and timing requirements. Query `list:shots -- --style <id> --canvas <orientation>` before recommending a pool. Do not silently advertise all style/recipe combinations. A video template is a preset style/recipe combination with matching rules and pacing, available as an optional shortcut through `list:video-templates` and `--video-template`. Currently `retro-zine-explainer@1.2.0` is experimental. Read its [guide](video-templates/retro-zine-explainer/guide.md) only when selecting that preset.
 
 Video style and the project-wide font are independent selections. Use `--font <id>` with `--style` and `--shots`; the registered font IDs are `source-han-sans-sc`, `source-han-serif-sc`, `lxgw-wenkai`, `smiley-sans`, and `xiaolai`. Read [fonts/font-index.json](fonts/font-index.json) to resolve exact versions and provenance. Preserve the creator’s explicit font choice when changing styles. New initialization defaults to the style’s recommended font. Keep `font: {id, version}` on the final storyboard, use one family for generated titles, body text, diagram labels and captions, and leave embedded source-image lettering intact. Existing storyboards without `font` retain the original style font stacks. Missing files or mismatched versions must fail; do not substitute a system font. Font changes invalidate production/review fingerprints and require new render and review. `npm run preview:fonts` generates representative landscape combinations; original style/shot samples retain their original typography and do not demonstrate a newly selected font.
 
@@ -73,9 +73,34 @@ Every 2.4 scene needs `shot`, including `semantic-default`. Slots reference exis
 
 2.4 rendering binds a production lock and resolved shot plan to the receipt; `produce`, QA, recovery and approval verify the same hash and video bytes. Derived plans are evidence, not editable production inputs. `migrate:storyboard -- <2.3.json> <new-2.4.json>` leaves the source and prior audio/output untouched, maps the old document pilot explicitly, and clears approval. The old 2.1–2.3 routes remain available. See [the 2.4 contract](references/storyboard-schema.md#storyboard-24-controlled-shots).
 
+## AI 插画风格
+
+The library groups whiteboard, annotated-reasoning and editorial-typography as “AI 插画风格” (AI illustration styles), and the original six as “图文动效风格” (text and graphics motion styles). These names describe visual construction, not content uses. The old flat-explainer/paper-collage packs remain compatible but are hidden from new library selections. Document-only AI illustration production generates subjects; screenshot production uses real supplied images without automatic image generation. Text and graphics motion styles can also display sourced images and screenshots.
+
+For pure documents using any registered illustration style, read [illustrated production](references/illustrated-production.md) before planning assets. Follow the source → subject plan → actual native imagegen call → image inspection → registration → storyboard → render workflow. For whiteboard, default to whiteboard-board and its open-board writing/pencil workflow; for annotated-reasoning/editorial-typography, read [text-led production](references/text-led-production.md), use the declared text-led shot, and keep generated art auxiliary (box area at most 8%); do not reduce the entire illustrated route to text cards or glyphs. Preserve an explicitly native-only selected pool, state that limitation, and never add a recipe without authorization. `prepare:illustrations` only writes prompts and is not generation. For document-images, preserve real screenshots and do not generate substitute interfaces. Keep font selection independent; use the primary style's fixed flow or the original six styles' selected pool.
+
+### Whiteboard
+
+Public Whiteboard style and whiteboard-board recipe samples use `examples/whiteboard-original/`: original copy and a newly generated fictional parent-and-child subject. Keep upstream code attribution; `examples/whiteboard-reference/` is only a method comparison/regression fixture, not the public library showcase. Do not reuse its reader sticker or source narration as default creator content.
+
+`--style whiteboard --font xiaolai` 是推荐组合，字体保持独立；新初始化自动填入 whiteboard-board，不让用户挑选镜头。白板默认使用[开放白板](shots/whiteboard-board/recipe.md)，按上游白板方法布置小贴纸、逐行文字、清单与明确关系，单笔动作不重叠，先渲染代表场景检查。历史基础镜头包括横屏 `semantic-default` 与 `whiteboard-process`、`whiteboard-compare`、`whiteboard-explain`；三个新镜头也适配原六套风格。先读取对应 `shots/<id>/recipe.md`，再逐场编排。流程必须有来源支持的相邻连接；对照不得补造因果；主体解释需要本地图片与 asset-manifest 来源；纯文档生成主体遵循插画生产流程，真实来源图片使用 `document-images`。
+
+每项先 trace 轮廓后 reveal 文字；两端可读后再 draw，单笔动作不得重叠。按字符预算安排文字揭示并保留阅读间隔，预算不足拆镜头，不自动压缩。文字是横向揭示，不声明汉字笔顺。沿用现有字体、配色、音频、QA 与交付审批，不调用上游 DSL；AI 素材通过 Agent 原生生图工具生成。
+
+### Historical illustration styles
+
+The hidden flat-explainer and paper-collage packs retain their six illustrated-* recipes and distinct generation/layout contracts for existing projects. Read [illustrated production](references/illustrated-production.md#历史插画风格兼容) for their organic cartoon and pixel-note media rules; do not register old subjects as generated under a changed guide.
+
+三套 AI 插画风格的风格库主样片使用同一标题、完整旁白文本、画面文字与情境，便于比较画法、构图和动效；参考文案不成为用户生产的系统默认讲稿。
+
+## Brand and same-source cover
+
+The three primary styles share the top-right brand from repository/project `config.json`. Read [branding](references/branding.md) before configuring a name or local PNG logo. The brand inherits the project font, persists across scene cuts, reserves its own area and is bound to production/review/cache evidence. Primary 2.4 renders also extract a cover from the verified video. Public samples always use Your Brand and never load private brand settings.
+
+
 ## Choose project colors
 
-Read [project colors](references/project-palette.md) when the creator supplies product screenshots, exact URLs or explicit brand colors. Initialize with `--color-mode auto|style|source` (default auto). Determine whether the source represents the subject product or is citation/competitor evidence. Capture URLs to local assets using ego-browser when available, register usage as `palette-reference`, `scene-media` or `both`, select meaningful original-pixel regions and run `sample:palette`. For subject-product screenshots, adopt the source background, title/body ink, surfaces and accents, not only a button color; preserve warm or colored source backgrounds instead of forcing neutral defaults. New initialization records `palettePolicy: source-roles-v1`; adopt `palette.schemaVersion: "1.1"` with all eight roles. Asset palettes require original-pixel samples for background, ink and accent, plus sampled or reasoned derived evidence for every remaining role. Preserve evidence in `storyboard.palette.evidence` and explain choices in `visual-sources.md`; validation verifies candidates against local pixels. Style controls composition, decoration and motion, not adopted colors. Do not modify shared Style Packs or tint source images. Reference-only images need no media scene and may accompany document mode. Source mode must fail on absent references; auto fallback from declared references needs `colorFallbackReason`. User-specified colors take priority. Support is explicit: current landscape shots and six active styles only; omit palette for unsupported/legacy combinations and explain the choice. Compare actual representative canvases, titles/body, cards, diagram labels and captions with the source; inspect palette QA adjustments as well as contrast. Automated evidence verification does not approve visual similarity. Review actual representative shots within the existing fast/review route; do not introduce an additional approval gate.
+Read [project colors](references/project-palette.md) when the creator supplies product screenshots, exact URLs or explicit brand colors. Initialize with `--color-mode auto|style|source` (default auto). Determine whether the source represents the subject product or is citation/competitor evidence. Capture URLs to local assets using ego-browser when available, register usage as `palette-reference`, `scene-media` or `both`, select meaningful original-pixel regions and run `sample:palette`. For subject-product screenshots, adopt the source background, title/body ink, surfaces and accents, not only a button color; preserve warm or colored source backgrounds instead of forcing neutral defaults. New initialization records `palettePolicy: source-roles-v1`; adopt `palette.schemaVersion: "1.1"` with all eight roles. Asset palettes require original-pixel samples for background, ink and accent, plus sampled or reasoned derived evidence for every remaining role. Preserve evidence in `storyboard.palette.evidence` and explain choices in `visual-sources.md`; validation verifies candidates against local pixels. Style controls composition, decoration and motion, not adopted colors. Do not modify shared Style Packs or tint source images. Reference-only images need no media scene and may accompany document mode. Source mode must fail on absent references; auto fallback from declared references needs `colorFallbackReason`. User-specified colors take priority. Support is explicit: current landscape shots and styles declared in the capability manifest only; omit palette for unsupported/legacy combinations and explain the choice. Compare actual representative canvases, titles/body, cards, diagram labels and captions with the source; inspect palette QA adjustments as well as contrast. Automated evidence verification does not approve visual similarity. Review actual representative shots within the existing fast/review route; do not introduce an additional approval gate.
 
 ## Content-first video logic for new projects
 
@@ -226,13 +251,27 @@ external voiceover exists, an explicit `in-project-video` request must stop
 with an actionable explanation; do not silently deliver a preview instead.
 `fast` and `review` govern storyboard approval independently of this route.
 
+## Quality, timing and layout
+
+Read [quality-production](references/quality-production.md) when producing narrated work or using the opt-in 2.3 semantic extensions. For TTS, use `synthesize:voiceover -- <project> --plan-timing <new-storyboard.json>` after narration and provider use are authorized; inspect and explicitly adopt the proposal, then reapprove in review mode. The proposal measures speech and reuses cached takes; it does not guarantee semantic beat alignment. Never claim estimated subtitles are speech-aligned. Manual cues must retain the original narration.
+
+Use inward network connections for convergence, changeMode replace for a single object's state, and mediaFocus for a sourced image region only when the content needs them. Verify both entry and complete states. A voiced representative clip can use `preview:shot -- ... --audio-config <config>`; inspect its adjacent handoff and actual audio. Final narrated candidates are clean before review; keep their `.render.json` receipt and never fabricate one for an old video. Approval does not remove a marker or change the file.
+
+当前能力以上面的 catalog 摘要和实际兼容清单为准，`validate:shots` 会检查 README 与本 Skill 的摘要是否一致。三套主风格使用固定内置范围，原六套使用style＋兼容场景配方集合；C类动作只能由声明宿主启用，换章使用transitionIn，不加入--shots。轮换项需独立阅读，证据/词同步，时间线按输入日期等距排序并注明非时间跨度，指标用保留精度的字符串。换章须显式chapterBoundary、无字幕交接窗口；有声换章需字幕时间轴核对关键词。详见[配方库](shots/README.md)。
+
+新建2.4项目默认使用 `layoutPolicy: "content-first-v1"`，旧分镜不自动迁移。遵循[内容优先布局与实际渲染检查](references/content-layout.md)：按素材实际显示尺寸判断可读性，检查正文和节点边界、每种布局以及相邻交接。完成态的生成文字裁切/遮挡与节点碰撞阻止候选发布；主体过小、裁切素材和重复结构需语义复核，不能以装饰动画消除提示。截图内部小字与全片播放仍需人工检查。
+
+## Speech timing and incremental rendering
+
+有声生产及开放白板时间提案按 [references/speech-driven-production.md](references/speech-driven-production.md) 执行。语义分组由 Agent 根据现有旁白与目标编排，不能自动猜测关系；采用提案前复查时间证据来源和单笔书写 / 阅读预算。供应商时间戳不完整时明确标记估算；不得修改朗读文本以迎合返回时间戳。分场缓存默认只支持 2.4 无重叠场景，不能跳过当前输入校验、布局 QA、审核指纹或完整播放复核。
+
 ## Required Gates
 
 1. Keep `storyboard.draft.json` separate from the reviewed `storyboard.json`.
 2. Do not render a storyboard whose `project.status` is `draft`.
 3. Keep every beat target inside its scene and every timing value inside its
    scene duration.
-4. Honor the creator's selected input mode. In `document`, use document-derived text and graphics only. In `document-images`, use at least one real local image or captured screenshot in a visible shot, and verify its provenance before rendering.
+4. Honor the creator's selected input mode. In `document`, use document-derived text and graphics; AI illustration styles also require the actual generated-subject workflow below. In `document-images`, use at least one real local image or captured screenshot in a visible shot, and verify its provenance before rendering.
    Check title, card and caption layout warnings or errors before rendering.
 5. For TTS, generate audio before rendering; for external audio, provide the
    matching audio and captions contract. A subtitle file is not inferred from
@@ -270,8 +309,10 @@ with an actionable explanation; do not silently deliver a preview instead.
 
 ## Commands
 
+Command reference: run only the commands required by the chosen route. Replace project paths with the actual initialized directory; approval commands require genuine review records.
+
 ```bash
-npm install
+npm ci
 npm run typecheck
 npm run lint
 npm test
@@ -336,39 +377,3 @@ schema, capability manifest, validator fixtures and renderer together.
   external-audio route.
 - Webpage screenshots are captured by the Agent before rendering; the CLI and renderer do not fetch URLs or discover images automatically.
 - Automated QA does not replace complete human playback review.
-
-## Quality production updates
-
-Read [quality-production](references/quality-production.md) when producing narrated work or using the opt-in 2.3 semantic extensions. For TTS, use `synthesize:voiceover -- <project> --plan-timing <new-storyboard.json>` after narration and provider use are authorized; inspect and explicitly adopt the proposal, then reapprove in review mode. The proposal measures speech and reuses cached takes; it does not guarantee semantic beat alignment. Never claim estimated subtitles are speech-aligned. Manual cues must retain the original narration.
-
-Use inward network connections for convergence, changeMode replace for a single object's state, and mediaFocus for a sourced image region only when the content needs them. Verify both entry and complete states. A voiced representative clip can use `preview:shot -- ... --audio-config <config>`; inspect its adjacent handoff and actual audio. Final narrated candidates are clean before review; keep their `.render.json` receipt and never fabricate one for an old video. Approval does not remove a marker or change the file.
-
-当前能力以上面的 catalog 摘要和实际兼容清单为准，`validate:shots` 会检查 README 与本 Skill 的摘要是否一致。选择始终是style＋多个场景配方；C类动作只能由声明宿主启用，换章使用transitionIn，不加入--shots。轮换项需独立阅读，证据/词同步，时间线按输入日期等距排序并注明非时间跨度，指标用保留精度的字符串。换章须显式chapterBoundary、无字幕交接窗口；有声换章需字幕时间轴核对关键词。详见[配方库](shots/README.md)。
-
-新建2.4项目默认使用 `layoutPolicy: "content-first-v1"`，旧分镜不自动迁移。遵循[内容优先布局与实际渲染检查](references/content-layout.md)：按素材实际显示尺寸判断可读性，检查正文和节点边界、每种布局以及相邻交接。完成态的生成文字裁切/遮挡与节点碰撞阻止候选发布；主体过小、裁切素材和重复结构需语义复核，不能以装饰动画消除提示。截图内部小字与全片播放仍需人工检查。
-
-## AI 插画风格
-
-The library groups whiteboard, annotated-reasoning and editorial-typography as “AI 插画风格” (AI illustration styles), and the original six as “图文动效风格” (text and graphics motion styles). These names describe visual construction, not content uses. The old flat-explainer/paper-collage packs remain compatible but are hidden from new library selections. Document-only AI illustration production generates subjects; screenshot production uses real supplied images without automatic image generation. Text and graphics motion styles can also display sourced images and screenshots.
-
-For pure documents using any registered illustration style, read [illustrated production](references/illustrated-production.md) before planning assets. Follow the source → subject plan → actual native imagegen call → image inspection → registration → storyboard → render workflow. For whiteboard, default to whiteboard-board and its open-board writing/pencil workflow; for annotated-reasoning/editorial-typography, read [text-led production](references/text-led-production.md), use the declared text-led shot, and keep generated art auxiliary (box area at most 8%); do not reduce the entire illustrated route to text cards or glyphs. Preserve an explicitly native-only selected pool, state that limitation, and never add a recipe without authorization. `prepare:illustrations` only writes prompts and is not generation. For document-images, preserve real screenshots and do not generate substitute interfaces. Keep style, font and shot selection independent.
-
-## 手绘白板
-
-Public Whiteboard style and whiteboard-board recipe samples use `examples/whiteboard-original/`: original copy and a newly generated fictional parent-and-child subject. Keep upstream code attribution; `examples/whiteboard-reference/` is only a method comparison/regression fixture, not the public library showcase. Do not reuse its reader sticker or source narration as default creator content.
-
-`--style whiteboard --font xiaolai` 是推荐组合，字体保持独立；新初始化自动填入 whiteboard-board，不让用户挑选镜头。白板默认使用[开放白板](shots/whiteboard-board/recipe.md)，按上游白板方法布置小贴纸、逐行文字、清单与明确关系，单笔动作不重叠，先渲染代表场景检查。历史基础镜头包括横屏 `semantic-default` 与 `whiteboard-process`、`whiteboard-compare`、`whiteboard-explain`；三个新镜头也适配原六套风格。先读取对应 `shots/<id>/recipe.md`，再逐场编排。流程必须有来源支持的相邻连接；对照不得补造因果；主体解释需要本地图片与 asset-manifest 来源；纯文档生成主体遵循插画生产流程，真实来源图片使用 `document-images`。
-
-每项先 trace 轮廓后 reveal 文字；两端可读后再 draw，单笔动作不得重叠。按字符预算安排文字揭示并保留阅读间隔，预算不足拆镜头，不自动压缩。文字是横向揭示，不声明汉字笔顺。沿用现有字体、配色、音频、QA 与交付审批，不调用上游 DSL；AI 素材通过 Agent 原生生图工具生成。
-
-For historical `flat-explainer` (彩色手绘讲解), generate thick dark organic outlines, friendly round characters and pastel fills with subtle volume. For historical `paper-collage` (像素讲解笔记), generate refined expressive pixel-art people, everyday objects and compact local situations with crisp square clusters, stepped silhouettes and carefully placed pixel shading. Keep a clean canvas and normal readable Chinese rendered with the selected project font. Do not force castles, game levels, maps, adventures or pixel fonts. Inspect medium consistency before registration; the renderer reveals image blocks, draws orthogonal relationships and flashes emphasis once. The internal ID remains for selection compatibility; old cut-paper generation fingerprints require regeneration or an explicit source-media route.
-
-Flat and Pixel Notes keep independent visual structures for all six semantic recipes: Flat uses large subjects, organic stages, surrounding explanations, horizontal sequences and continuous motion; Pixel Notes uses compact subjects, stepped notebook modules, vertical entries, orthogonal connections and block reveals. Shared text/image geometry must drive both preflight and rendering. Compare the same content across the two styles, including dense maximum-slot cases; do not treat swapping the subject image as sufficient differentiation. Existing registered subjects may be reused when their generation guide and plan remain unchanged.
-
-### 语音同步与局部重渲
-
-有声生产及开放白板时间提案按 [references/speech-driven-production.md](references/speech-driven-production.md) 执行。语义分组由 Agent 根据现有旁白与目标编排，不能自动猜测关系；采用提案前复查时间证据来源和单笔书写 / 阅读预算。供应商时间戳不完整时明确标记估算；不得修改朗读文本以迎合返回时间戳。分场缓存默认只支持 2.4 无重叠场景，不能跳过当前输入校验、布局 QA、审核指纹或完整播放复核。
-
-The three primary styles share the top-right brand from repository/project `config.json`. Read [branding](references/branding.md) before configuring a name or local PNG logo. The brand inherits the project font, persists across scene cuts, reserves its own area and is bound to production/review/cache evidence. Primary 2.4 renders also extract a cover from the verified video. Public samples always use Your Brand and never load private brand settings.
-
-三套 AI 插画风格的风格库主样片使用同一标题、完整旁白文本、画面文字与情境，便于比较画法、构图和动效；参考文案不成为用户生产的系统默认讲稿。

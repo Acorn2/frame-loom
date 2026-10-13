@@ -1,5 +1,9 @@
 # FrameLoom 使用指南
 
+[项目首页](../README.md) · [文档导航](README.md)
+
+[制作路线](#选择风格镜头配方模式和交付目标) · [风格](#九套视频风格) · [字体](#全片字体选择) · [手动初始化](#风格--多镜头配方24) · [审核与导出](#进阶选择素材风格与命令行)
+
 首次安装与排错见[安装指南](installation.md)，自带样片和文档试跑见[项目首页](../README.md#快速开始)。本文保留制作路线、手动 CLI、字体与音频配置，以及审核交付的详细步骤；所有命令从仓库根目录运行。
 
 FrameLoom 是一个以 Codex 为主要入口、兼容 Claude Code、Kimi Code、OpenCode 等 Coding Agent 的结构化视频生产 Skill。Agent 负责从文档提炼内容并编写分镜，Remotion 负责校验、渲染和 QA。
@@ -9,22 +13,23 @@ FrameLoom 是一个以 Codex 为主要入口、兼容 Claude Code、Kimi Code、
 从**已有文档**（文章、讲稿或产品说明）开始即可。首次体验默认使用纯文档、横屏和静音预览；有本地图片或指定网页截图时可选择“文档＋图片”。主张提炼、画面路线和内容缺口由 Agent 判断，仍需创作者审阅；CLI 不会自动理解一篇文章。
 
 ```text
-source document + video style + selected shot recipes → claims and shot planning → Storyboard 2.4 → validation → preview / visual master / narrated video → QA report
+source document + video style + built-in or selected shot recipes → claims and shot planning → Storyboard 2.4 → validation → preview / visual master / narrated video → QA report
 ```
 
 **静音 MP4 有两种不同用途。**`preview-silent.mp4` 是带审片标记的画面预览；纯文档静音预览不会为了填充时间自动增加底部旁白字幕。`visual-master-vNNN.mp4` 是无音轨、无旁白字幕和审片标记的干净画面底片，可供创作者在剪辑软件里配音、叠加出镜画面和字幕。底片经完整视觉检查后可以完成 FrameLoom 的**画面交付**；外部剪辑完成的视频由外部流程验收。若要在 FrameLoom 内完成有声讲解视频，则必须接入匹配的旁白，完成音频与画面 QA，再完整播放人工复核。
 
 当前已知限制及实测时间提案、字幕修订、镜头扩展用法见[质量生产说明](quality-production.md)。发布状态与验证缺口见[发布检查记录](release-readiness.md)。
 
-历史 Storyboard 2.3 可选用文档镜头试点 `document-conclusion-deal`：保留来源摘录，并随旁白逐条呈现三条有连接的结论；使用方式和输入约束见[分镜契约](storyboard-schema.md#opt-in-23-quality-extensions)。
-
-较长的 2.3 视频会按每页最多 48 帧生成审片接触表，`review-frames.json.pages` 可定位每页的帧号与时间范围。渲染会先在隔离目录完成媒体检查，失败后可根据 `run.json` 从 `render` 或 `qa` 阶段恢复；人工全片播放仍是交付前提。
-
 ## 选择风格、镜头配方、模式和交付目标
 
 用户只需给出材料和想得到的结果，**不需要知道项目 ID、填写 JSON 或运行 CLI**。先决定交付什么，再决定是否要在渲染前审核分镜；输入是纯文档还是文档＋图片，不影响下面的选择。
 
-**先选视频风格与全片字体，再选多个兼容的镜头配方。**风格决定默认配色、形状与基础入场方式，并为基础图解提供各自的标题构图和流程布局。提供主体截图时，背景、文字、卡片和强调色优先参考截图，风格保留构图、装饰与动效。全片字体独立单选，统一应用于标题、正文、图解和旁白字幕；专用配方负责证据驻留、标题降格、要点展开等具体镜头动作。你可以指定集合，也可以让 Agent 根据原文推荐并说明逐场选择。可用组合见[镜头配方库](../shots/README.md)，`retro-zine-explainer` 仅是预设组合的快捷入口。风格／配方选择与 `fast`／`review`、音频来源、交付目标互不绑定。
+先选择视频风格和全片字体，再按风格进入对应制作流程：
+
+- **三套 AI 插画风格**：手绘白板、批注推演、编辑式排印使用[固定内置镜头流程](primary-style-production.md)，不需要选择镜头集合。纯文档由 Agent 实际生成辅助插画，文档＋截图使用真实素材。
+- **六套图文动效风格**：Agent 根据原文推荐兼容镜头，或遵守你指定的严格集合；详见[镜头编排](shot-planning.md)与[配方目录](../shots/README.md)。`retro-zine-explainer` 是可选预设快捷入口。
+
+风格决定构图、装饰与基础运动；提供主体截图时，全片配色优先参考来源。字体独立单选，覆盖标题、正文、图解和旁白字幕。风格与镜头流程、`fast`／`review`、音频来源和交付目标分别设置。
 
 ### 截图配色与风格配色
 
@@ -36,11 +41,11 @@ source document + video style + selected shot recipes → claims and shot planni
 | 跟随产品素材（`--color-mode source`） | 必须使用有效截图来源及完整取色记录，缺少来源时说明缺口，不静默回退 |
 | 使用风格配色（`--color-mode style`） | 明确保留风格与配方默认色；画面中的真实截图仍保持原貌 |
 
-素材配色目前支持六套当前风格与40个当前横屏场景。Agent 会记录取色与推导理由，并在实际镜头中检查颜色及文字可读性；公开样片仍展示默认色。操作与校验细节见[项目配色](project-palette.md)。
+素材配色支持 Storyboard 2.4 中已声明兼容的当前横屏风格与镜头，不支持竖屏或历史镜头版本。Agent 会记录取色与推导理由，并在实际镜头中检查颜色及文字可读性；公开样片仍展示默认色。操作与校验细节见[项目配色](project-palette.md)。
 
 ### 初始化与审核模式
 
-**默认值要分清：**直接运行 `init:project` 且省略 `--style`，代码默认使用 `retro-zine`；通过 Skill 未指定组合时，Agent 应查可用能力后推荐风格和配方集合。CLI 用 `--style <id> --font <font-id> --shots <id,id,...>` 初始化独立组合；只传 `--style` 的旧 2.3 入口仍保留。`review` 审核组合与逐场编排，`fast` 按已说明的选择继续。
+**默认值要分清：**直接运行 `init:project` 且省略 `--style`，代码默认使用 `retro-zine`；通过 Skill 未指定组合时，Agent 应查可用能力后推荐风格和配方集合。三套主风格用 `--style <id> --font <font-id>` 自动填入 2.4 内置范围；六套图文动效风格用 `--style <id> --font <font-id> --shots <id,id,...>` 初始化 2.4 独立组合。六套图文动效风格只传 `--style` 的旧 2.3 入口仍保留。`review` 审核组合与逐场编排，`fast` 按已说明的选择继续。
 
 | 分镜模式 | 渲染前的停点 | 适合什么时候使用 |
 | --- | --- | --- |
@@ -62,7 +67,7 @@ source document + video style + selected shot recipes → claims and shot planni
 
 ### 先看画面：静音审片预览
 
-首次尝试可用上文的指定风格与配方输入；若要和 `review` 比较同一组合，`fast` 使用：
+下面以墨白杂志为例。使用三套 AI 插画风格时，只替换风格名称并省略镜头配方行。`fast` 使用：
 
 ```text
 请使用 frame-loom Skill，读取 <文档绝对路径>，用 fast 模式制作静音视频预览。
@@ -168,9 +173,62 @@ source document + video style + selected shot recipes → claims and shot planni
 
 ![纯文档试点的流程镜头](../examples/creator-production-pilot/previews/process.png)
 
+## 九套视频风格
+
+风格分为三套 AI 插画风格和六套图文动效风格。实际封面与动画见[首页风格对比](../README.md#选一种喜欢的风格)，本节说明选择边界。
+
+### 三套 AI 插画风格
+
+| 风格（`--style` ID） | 画面表达 | 内置镜头 |
+| --- | --- | --- |
+| 手绘白板 · `whiteboard` | 开放白板、逐行书写、贴纸与同步铅笔 | `whiteboard-board` |
+| 批注推演 · `annotated-reasoning` | 正文先落定，再圈词、划线、展开旁注与关系 | `annotated-manuscript`、`semantic-default` |
+| 编辑式排印 · `editorial-typography` | 关键词持续在场，随阶段重排位置、字号和关系 | `editorial-flow`、`semantic-default` |
+
+三套目前只支持横屏。纯文档路线实际生成透明主体，文档＋截图保留真实来源；后两套辅助插画的声明框总面积最多占画布8%。镜头流程固定，文案、场景数、旁白和字体由项目决定。见[主风格制作](primary-style-production.md)、[插画生产](illustrated-production.md)与[文案动画](text-led-production.md)。
+
+### 六套图文动效风格
+
+六套风格通过标题构图、中文字体、节点形状、流程布局和入场方式形成不同的画面语言。Style Pack 提供配色、默认字体与基础动效，显式选择的全片字体覆盖默认字体，基础语义 renderer 根据风格组织画面；文字、数字、连接和素材仍由分镜提供。
+
+六套风格均支持横屏 `landscape`（1920×1080）和竖屏 `portrait`（1080×1920）。六套风格的 16:9 横屏均有 43 个可用场景配方；竖屏组合支持 `type-and-filter`、`ai-stream-response`、`unit-dot-regroup` 和 `semantic-default`，这一基础配方覆盖观点、对照、顺序、关联、变化、数据和素材七种语义画面，可在同一视频中重复使用。风格支持某种画幅不代表所有专用配方都已适配，实际选择以页面和 catalog 的兼容清单为准。
+
+展示名称已更新，命令行 ID 保持不变：墨白杂志仍使用 `retro-zine`，瑞士蓝使用 `archive-grid`，手绘便签使用 `scatterbrain`。已有分镜更换风格或采用更新后的实现时，需要重新校验布局并渲染。
+
+| 风格（`--style` ID） | 适合的文档 | 构图与动效 | 状态 |
+| --- | --- | --- | --- |
+| [墨白杂志 / Editorial Ink](../styles/retro-zine/preview.md) · `retro-zine` | 观点文章、知识解释、故事 | 中性白底、中文宋体、杂志分栏与朱红印章；横向揭示 | stable |
+| [暗场信号 / Signal](../styles/signal/preview.md) · `signal` | 核心观点、转折、重点说明 | 石墨暗场、淡紫焦点与中央构图；克制缩放 | experimental |
+| [手绘便签 / Sketch Notes](../styles/scatterbrain/preview.md) · `scatterbrain` | 学习笔记、方法拆解、灵感整理 | 白色点阵、黄色便签、中文楷体与蓝色批注；错落贴入 | stable |
+| [瑞士蓝 / Swiss Blue](../styles/archive-grid/preview.md) · `archive-grid` | 报告、分析、结构化方法论 | 克莱因蓝、直角色块与强字号对比；网格裁切揭示 | experimental |
+| [工程蓝图 / Blueprint](../styles/signal-noir/preview.md) · `signal-noir` | 系统、机制、技术流程 | 石墨蓝灰网格、等宽标注与琥珀路由；模块按连接展开 | experimental |
+| [产品演示 / Product Frame](../styles/studio-frame/preview.md) · `studio-frame` | 产品说明、教程、工作流 | 冷灰工作台、窗口层次与绿色状态；说明和来源素材分区 | experimental |
+
+六套使用同一份50.8秒语义分镜进行比较，完成态和动画见[公开样片说明](../examples/template-families/README.md)。样片中的演示插画有来源登记，不代表真实产品界面。
+
+新项目内置思源黑体、思源宋体、霞鹜文楷、得意黑和小赖字体，使用固定版本的本地字体文件；字体来源、许可和 SHA-256 见 [字体清单](../fonts/font-index.json)。未指定 `font` 的历史分镜继续使用原有系统字体栈，不同系统的字形可能略有差异。画布以白色、冷灰或石墨色为主，黄色用于便签等内容形状；字幕直接显示在画布上，按深浅背景使用独立文字颜色。
+
+六套风格已检查同内容的横竖屏代表帧与公开静音样片，具体范围及证据见[风格实施记录](../designs/style-language-redesign/README.md)。`experimental` 表示仍需更多文档与完整播放复核。静音样片供选型和审片参考，项目内有声讲解视频需要匹配旁白与交付检查。旧 `retro-windows` 已标记为 deprecated，仅保留对已有 Storyboard 2.1 项目的兼容。
+
+## 全片字体选择
+
+视频风格与字体独立选择，一次选择一个字体家族。风格页提供五套字体的真实字形与九套风格 × 五套字体的横屏组合样片。墨白杂志与批注推演推荐思源宋体、手绘便签推荐霞鹜文楷、手绘白板推荐小赖，其余风格推荐思源黑体；手动选字体后切换风格保留该选择，“使用当前风格推荐字体”恢复跟随推荐。字体与其他公开选择跨页保存，并进入 Agent 制作指令。
+
+```bash
+npm run validate:fonts
+npm run preview:fonts
+npm run init:project -- --slug font-demo --style scatterbrain --font source-han-sans-sc --shots paper-title,concept-matrix
+```
+
+`--font` 支持 `source-han-sans-sc`、`source-han-serif-sc`、`lxgw-wenkai`、`smiley-sans`、`xiaolai`；新建项目省略时选择当前风格推荐字体。初始化写入独立的 `font: {id, version}`，实际字体文件加载完成后才挂载镜头并测量文字；缺失、损坏、未知字体或版本不匹配会报错。字体与许可进入生产／审核指纹，换字体后需要重新渲染和复核。字号、字重、字幕颜色及安全区仍按原规则；素材截图中的原有文字保持原貌。
+
+风格卡片与镜头库原样片保留其原始字体；风格页的字体组合样片才展示当前风格与所选字体的实际效果。组合样片是横屏静音示例，点击封面后才加载视频；竖屏、真实旁白和长文排版需在实际项目中检查。字体卡片使用仅含固定示例文字的小型字体文件，进入视野或选中时才加载；实际视频制作仍使用完整字体。`preview:fonts` 输出在被忽略的 `library/font-previews/`，普通静态构建对缺失或过期组合样片显示明确状态。
+
+字体采用 SIL OFL 1.1，保留独立的版权及许可文件，不随项目改成 MIT；来源与文件说明见 [项目字体](../fonts/README.md)。字体文件约 88.8 MiB，无需安装到操作系统，也不使用远程字体 CDN。
+
 ## 风格 + 多镜头配方（2.4）
 
-主入口是独立组合，使用配方不必先选预设模板。风格控制外观，配方集合限定可选镜头，Agent 再按内容决定每场使用哪个配方。要直接开始制作，可复制开头的 Agent 指令；下面是手动运行 CLI 的步骤。
+本节面向六套图文动效风格的手动 CLI 操作。三套 AI 插画风格请使用[固定制作流程](primary-style-production.md)中的初始化命令，省略 `--shots`。使用配方不必先选预设模板。风格控制外观，配方集合限定可选镜头，Agent 再按内容决定每场使用哪个配方。要直接开始制作，可复制开头的 Agent 指令；下面是手动运行 CLI 的步骤。
 
 ### 查询组合并初始化项目
 
@@ -186,7 +244,7 @@ npm run init:project -- --slug my-explainer --style retro-zine --shots paper-tit
 
 `--slug` 换成简短的英文主题，不带日期。命令打印 `PROJECT INITIALIZED` 和实际项目绝对路径，目录格式为 `projects/YYYYMMDD-my-explainer`，同日同名会加序号。后续命令使用这个实际路径；继续同一条视频时无需重新初始化。
 
-草稿中的 `shotRecipes` 固定可用集合，逐场 `shot` 填实际选用项；允许重复、调整顺序和只用其中一部分，不能悄悄添加集合外镜头。初始化只创建待编排文件，不读取文档、不渲染视频。具体说明及适配上游的方法见[配方库](../shots/README.md)。当前全部 40 个场景配方支持六套风格的 16:9 横屏；竖屏可选基础语义配方及操作筛选、结果生成和单位点阵重组；不支持的组合会明确报错。`--shots` 只接收场景配方 ID，辅助动作和跨场转场不能填入这个参数。
+草稿中的 `shotRecipes` 固定可用集合，逐场 `shot` 填实际选用项；允许重复、调整顺序和只用其中一部分，不能悄悄添加集合外镜头。初始化只创建待编排文件，不读取文档、不渲染视频。具体说明及适配上游的方法见[配方库](../shots/README.md)。六套图文动效风格各支持 43 个 16:9 横屏场景配方；竖屏可选基础语义配方及操作筛选、结果生成和单位点阵重组；不支持的组合会明确报错。`--shots` 只接收场景配方 ID，辅助动作和跨场转场不能填入这个参数。
 
 ### 让 Agent 完成原文到分镜的编排
 
@@ -227,7 +285,7 @@ npm run produce -- "$video_project" --mode fast --audio-mode tts --output-purpos
 
 `--tts-config` 指向实际启用的配置文件，不能使用默认关闭的 `.example.json`。如果实测语音时长与分镜不匹配，命令会报错；让 Agent 根据[质量生产说明](quality-production.md)生成时间提案、检查镜头动作和阅读窗口，再采用提案重新校验、制作。成功后的有声输出是 `output/pilot-audio.mp4`，自动 QA 后仍需完整播放复核。外部录音和 `review` 模式的命令见下文；`review` 需要先审过分镜并记录当前版本的审核指纹，不能只替换命令中的模式就直接渲染。
 
-镜头配方当前使用白色、冷灰或石墨底色，封面和样片由同一 renderer 生成；风格提供强调色；新项目的全片字体独立选择。P1 视觉优化记录见[P1复核](../examples/shot-recipes/p1-visual-review/README.md)；新增 P2 的输入条件、动效阶段与实际检查见[P2施工清单](p2-recipe-implementation.md)。
+无项目配色时，图文动效镜头使用白色、冷灰或石墨底色；开放白板使用点阵纸色。封面和样片由同一 renderer 生成，字体独立选择；使用主体素材配色时按来源角色覆盖默认色。
 
 ### 预设组合快捷入口
 
@@ -245,72 +303,17 @@ npm run validate:shots
 npm run migrate:storyboard -- <old-2.3.json> <new-2.4.json>
 ```
 
-Agent 按原文选择镜头，逐场显式填写精确 `shot` 与 layer 槽位；模板不会强制每篇文章使用全部镜头。指定模板与 `style` 必须匹配，未支持画幅或镜头会报错。仍说“视频模板：retro-zine”时按历史风格选择理解，不自动改成新镜头序列。`init:project --style` 的 2.3 入口继续保留。
+Agent 按原文选择镜头，逐场显式填写精确 `shot` 与 layer 槽位；模板不会强制每篇文章使用全部镜头。指定模板与 `style` 必须匹配，未支持画幅或镜头会报错。仍说“视频模板：retro-zine”时按历史风格选择理解，不自动改成新镜头序列。原六套图文动效风格的 `init:project --style` 旧 2.3 入口继续保留。
 
 2.4 的 dock、demote 和逐项入场全部进入 beats；实测音频提案保留动作范围、阶段顺序与阅读窗口。渲染记录绑定所选模板、配方、风格、代码与解析计划，派生证据存于 `<video.mp4>.production/production-lock.json` 和 `resolved-shot-plan.json`，更改输入或实现后须重新渲染。QA 覆盖每个动作中途与结束，不以自动通过代替完整播放复核。迁移只输出新文件和报告，不继承审核状态；2.1/2.2 继续保留原路径，转为语义镜头需人工编排。
 
 公开示例：[资料笔记](../examples/video-templates/knowledge-notes/README.md)、[演示产品更新](../examples/video-templates/product-update/README.md)，以及 [单镜 fixture](../examples/shot-recipes)。两份原始文档均为自有演示材料，不代表第三方产品事实。阶段完成情况、实际验证与剩余缺口见[实施记录](video-template-refactor-status.md)。
 
-当前运行时：40 个场景配方、9 个宿主动作、5 个换章配方；筛选清单接入 48/48。
+### 能力与输入边界
 
-场景配方包括原筛选清单34个上游方法适配、3个新增上游方法适配和3个原生配方。P2 新增了资料卡堆、列表压弹、中枢翻面、滚动刹停、真实曲线、粒子柱图、成员网格、环形注释、循环节点、前后对照、文档书写、代码揭示和字形描画。具体适配变体见[台账](../shots/shortlist-coverage.json)。`npm run list:shots -- --auxiliary` 查询辅助动作，`--transitions` 查询换章配方，均不计成独立正文镜头。
+当前运行时注册 52 个场景配方、9 个宿主动作与5个换章配方；注册总数包含历史兼容配方，不代表每套风格都能选择全部镜头。六套图文动效风格各有43个横屏、4个竖屏场景；三套主风格按内置范围编排。以 `list:shots`、[能力清单](../src/renderer/capability-manifest.ts)和[固定流程](primary-style-production.md)为准。
 
-P2 支持六套当前风格的 16:9 横屏，保持 experimental。数据类需要真实记录和单位；前后对照需要两份有来源、同尺寸同视角素材；代码需要原文；字形描画需要输入 SVG 几何。辅助效果在场景 `shot.effects` 中绑定指定宿主与目标，使用显式 `highlight` 阶段；换章在 `transitionIn` 中声明并避开字幕。不能仅凭一句需求让 renderer 编造这些输入。网页仍在三个独立页面选风格、勾选场景、导出制作指令。
-
-原先接入的27份配方已重做动效和视觉：21个上游场景与4个宿主动作使用 `1.2.0`，两个换章配方保持 `1.0.0`，3个原生场景保留。风格提供配色与推荐字体，项目可独立选择全片字体；各镜头分别采用纸面、深色柔光、灰白空间、浅色矩阵或仪表等构图与材质；网页样片与实际生产共用 renderer。旧分镜的 `1.0.0`、`1.1.0` 按精确版本继续使用原渲染器，`--shots` 新建项目取当前版本。桌面每次只自动播放一张最充分可见的卡片；手机、省流量和减少动态效果模式保留静态封面，详情可切换矩阵线框与卡堆胶带。范围见[视觉实施矩阵](shot-visual-redesign.md)，实测见[复核记录](../examples/shot-recipes/visual-review/README.md)。
-
-## 全片字体选择
-
-视频风格与字体独立选择，一次选择一个字体家族。风格页提供五套字体的真实字形与六套风格 × 五套字体的横屏组合样片。墨白杂志推荐思源宋体、手绘便签推荐霞鹜文楷，其余风格推荐思源黑体；手动选字体后切换风格保留该选择，“使用当前风格推荐字体”恢复跟随推荐。字体与其他公开选择跨页保存，并进入 Agent 制作指令。
-
-```bash
-npm run validate:fonts
-npm run preview:fonts
-npm run init:project -- --slug font-demo --style scatterbrain --font source-han-sans-sc --shots paper-title,concept-matrix
-```
-
-`--font` 支持 `source-han-sans-sc`、`source-han-serif-sc`、`lxgw-wenkai`、`smiley-sans`、`xiaolai`；新建项目省略时选择当前风格推荐字体。初始化写入独立的 `font: {id, version}`，实际字体文件加载完成后才挂载镜头并测量文字；缺失、损坏、未知字体或版本不匹配会报错。字体与许可进入生产／审核指纹，换字体后需要重新渲染和复核。字号、字重、字幕颜色及安全区仍按原规则；素材截图中的原有文字保持原貌。
-
-风格卡片与镜头库原样片保留其原始字体；风格页的字体组合样片才展示当前风格与所选字体的实际效果。组合样片是横屏静音示例，点击封面后才加载视频；竖屏、真实旁白和长文排版需在实际项目中检查。字体卡片使用仅含固定示例文字的小型字体文件，进入视野或选中时才加载；实际视频制作仍使用完整字体。`preview:fonts` 输出在被忽略的 `library/font-previews/`，普通静态构建对缺失或过期组合样片显示明确状态。
-
-字体采用 SIL OFL 1.1，保留独立的版权及许可文件，不随项目改成 MIT；来源与文件说明见 [项目字体](../fonts/README.md)。字体文件约 88.8 MiB，无需安装到操作系统，也不使用远程字体 CDN。
-
-## 六套视频风格
-
-六套风格通过标题构图、中文字体、节点形状、流程布局和入场方式形成不同的画面语言。Style Pack 提供配色、默认字体与基础动效，显式选择的全片字体覆盖默认字体，基础语义 renderer 根据风格组织画面；文字、数字、连接和素材仍由分镜提供。
-
-六套风格均支持横屏 `landscape`（1920×1080）和竖屏 `portrait`（1080×1920）。六套风格的 16:9 横屏均有 40 个可用场景配方；竖屏组合支持 `type-and-filter`、`ai-stream-response`、`unit-dot-regroup` 和 `semantic-default`，这一基础配方覆盖观点、对照、顺序、关联、变化、数据和素材七种语义画面，可在同一视频中重复使用。风格支持某种画幅不代表所有专用配方都已适配，实际选择以页面和 catalog 的兼容清单为准。
-
-展示名称已更新，命令行 ID 保持不变：墨白杂志仍使用 `retro-zine`，瑞士蓝使用 `archive-grid`，手绘便签使用 `scatterbrain`。已有分镜更换风格或采用更新后的实现时，需要重新校验布局并渲染。
-
-| 风格（`--style` ID） | 适合的文档 | 构图与动效 | 状态 |
-| --- | --- | --- | --- |
-| [墨白杂志 / Editorial Ink](../styles/retro-zine/preview.md) · `retro-zine` | 观点文章、知识解释、故事 | 中性白底、中文宋体、杂志分栏与朱红印章；横向揭示 | stable |
-| [暗场信号 / Signal](../styles/signal/preview.md) · `signal` | 核心观点、转折、重点说明 | 石墨暗场、淡紫焦点与中央构图；克制缩放 | experimental |
-| [手绘便签 / Sketch Notes](../styles/scatterbrain/preview.md) · `scatterbrain` | 学习笔记、方法拆解、灵感整理 | 白色点阵、黄色便签、中文楷体与蓝色批注；错落贴入 | stable |
-| [瑞士蓝 / Swiss Blue](../styles/archive-grid/preview.md) · `archive-grid` | 报告、分析、结构化方法论 | 克莱因蓝、直角色块与强字号对比；网格裁切揭示 | experimental |
-| [工程蓝图 / Blueprint](../styles/signal-noir/preview.md) · `signal-noir` | 系统、机制、技术流程 | 石墨蓝灰网格、等宽标注与琥珀路由；模块按连接展开 | experimental |
-| [产品演示 / Product Frame](../styles/studio-frame/preview.md) · `studio-frame` | 产品说明、教程、工作流 | 冷灰工作台、窗口层次与绿色状态；说明和来源素材分区 | experimental |
-
-以下截图和视频均由 Remotion 根据[同一份 2.3 语义分镜](../examples/template-families/storyboard.semantic.json)重新渲染：每套 7 个镜头、50.8 秒，均为无旁白、无配乐的静音审片预览。截图取自第一个“开篇”镜头；视频包含开场、对比、网络、顺序、变化、媒体和收尾。媒体镜头使用[仓库内演示插画](../examples/template-families/assets/product-workflow.svg)，来源见[素材清单](../examples/template-families/asset-manifest.semantic.json)。
-
-| 墨白杂志 · Editorial Ink | 暗场信号 · Signal | 手绘便签 · Sketch Notes |
-| --- | --- | --- |
-| ![Editorial Ink 开篇](../examples/template-families/previews/retro-zine-semantic-opening.png) | ![Signal 开篇](../examples/template-families/previews/signal-semantic-opening.png) | ![Sketch Notes 开篇](../examples/template-families/previews/scatterbrain-semantic-opening.png) |
-| [观看静音视频](../examples/template-families/previews/retro-zine-semantic.mp4) | [观看静音视频](../examples/template-families/previews/signal-semantic.mp4) | [观看静音视频](../examples/template-families/previews/scatterbrain-semantic.mp4) |
-
-| 瑞士蓝 · Swiss Blue | 工程蓝图 · Blueprint | 产品演示 · Product Frame |
-| --- | --- | --- |
-| ![Swiss Blue 开篇](../examples/template-families/previews/archive-grid-semantic-opening.png) | ![Blueprint 开篇](../examples/template-families/previews/signal-noir-semantic-opening.png) | ![Product Frame 开篇](../examples/template-families/previews/studio-frame-semantic-opening.png) |
-| [观看静音视频](../examples/template-families/previews/archive-grid-semantic.mp4) | [观看静音视频](../examples/template-families/previews/signal-noir-semantic.mp4) | [观看静音视频](../examples/template-families/previews/studio-frame-semantic.mp4) |
-
-同一顺序图解的六种布局，按行从左到右为墨白杂志、瑞士蓝、手绘便签、暗场信号、工程蓝图、产品演示：
-
-![六套风格的实际流程布局](../designs/style-language-redesign/sequence-comparison.png)
-
-新项目内置思源黑体、思源宋体、霞鹜文楷、得意黑和小赖字体，使用固定版本的本地字体文件；字体来源、许可和 SHA-256 见 [字体清单](../fonts/font-index.json)。未指定 `font` 的历史分镜继续使用原有系统字体栈，不同系统的字形可能略有差异。画布以白色、冷灰或石墨色为主，黄色用于便签等内容形状；字幕直接显示在画布上，按深浅背景使用独立文字颜色。
-
-六套风格已检查同内容的横竖屏代表帧与公开静音样片，具体范围及证据见[风格实施记录](../designs/style-language-redesign/README.md)。`experimental` 表示仍需更多文档与完整播放复核。静音样片供选型和审片参考，项目内有声讲解视频需要匹配旁白与交付检查。旧 `retro-windows` 已标记为 deprecated，仅保留对已有 Storyboard 2.1 项目的兼容。
+数据镜头需要真实记录、单位与来源；前后对照需要两份有来源、同尺寸同视角素材；代码镜头需要原文；字形描画需要输入 SVG 几何。辅助动作由 `shot.effects` 绑定声明宿主与目标，换章由 `transitionIn` 声明并避开字幕，均不加入 `--shots`。输入、阶段及来源见[配方目录](../shots/README.md)，历史验证见[文档导航](README.md#历史实施与回归记录)。
 
 ## 进阶：选择素材、风格与命令行
 
@@ -405,7 +408,7 @@ npm run prepare:script-handoff -- projects/my-video --mode review
 
 上面两条是不同模式的示例，**一次只运行一条**，而且应在没有 MP4 生产记录的新项目中进行。命令检查 `script.md` 与每个 `scene.narration` 的文字对应关系，写入 `output/script-handoff/`，状态为 `script-ready`。录音回来后复用同一项目，用下面的 `external` 路线完成视频；命令会拒绝与已交讲稿不同的版本。画面先行且音频要回到 FrameLoom 时，旧底片文件会保留；若 `timelinePolicy=picture-locked` 而确实要按录音修改分镜，Agent 应先明确选择新版本，再在有声制作命令中加 `--retime-from-master`。
 
-风格与镜头配方组合采用 Storyboard 2.4；旧的仅风格初始化保留 2.3：每屏先确定是对照、顺序、关联、前后变化、数据还是来源素材，再由风格模板决定外观；字段及约束见 [Storyboard 契约](storyboard-schema.md)。[语义画面示例](../examples/semantic-visuals) 可用 `npm run preview:semantic -- --output .tmp/semantic-gallery` 在全部已安装模板上生成完成态画廊。仓库仍保留 [文章讲解](../examples/article-video)、[数据讲解](../examples/data-explainer)和[同分镜模板对比](../examples/template-families)等旧版示例。
+风格与镜头配方组合采用 Storyboard 2.4；原六套旧的仅风格初始化保留 2.3：每屏先确定是对照、顺序、关联、前后变化、数据还是来源素材，再由风格模板决定外观；字段及约束见 [Storyboard 契约](storyboard-schema.md)。[语义画面示例](../examples/semantic-visuals) 可用 `npm run preview:semantic -- --output .tmp/semantic-gallery` 在全部已安装模板上生成完成态画廊。仓库仍保留 [文章讲解](../examples/article-video)、[数据讲解](../examples/data-explainer)和[同分镜模板对比](../examples/template-families)等旧版示例。
 
 完成分镜后可先运行 `npm run preview:shot -- <storyboard.json> <scene-id> <new-output.mp4>`，检查实际镜头的短片、入场中途、完成态和切镜前画面，再渲染全片。命令不会覆盖现有输出，也不接受草稿文件直接渲染。
 
@@ -415,51 +418,13 @@ npm run prepare:script-handoff -- projects/my-video --mode review
 
 **内置 TTS**：根据 `scene.narration` 生成旁白和字幕。目前支持豆包、OpenAI、ElevenLabs、阿里百炼 Qwen3-TTS-Flash 和 MiniMax。五份[配置样例](../examples/tts-profiles)默认关闭；新项目初始化时会复制到项目的 `audio/` 目录。
 
-第一次接入时，按 [TTS 配置指南](tts-setup.md)操作：每家都有凭据入口、完整启用 JSON、环境变量和参数示例。可直接跳到[豆包](tts-setup.md#豆包)、[OpenAI](tts-setup.md#openai)、[ElevenLabs](tts-setup.md#elevenlabs)、[阿里百炼](tts-setup.md#阿里百炼)或 [MiniMax](tts-setup.md#minimax)。以下步骤以已有项目 `projects/my-video` 为例，请替换成实际目录。
-
-先在所选服务的官方控制台取得凭据；**只需要配置实际使用的那一家**：
-
-| 服务 | 去哪里获取 | 本项目读取的环境变量 | 新项目中的样例文件 |
-| --- | --- | --- | --- |
-| 豆包语音 | 在[火山引擎豆包语音 API Key 控制台](https://console.volcengine.com/speech/new/setting/apikeys?projectName=default)创建或复制 API Key；按[API Key 使用说明](https://docs.volcengine.com/docs/DoubaoVoice/APIKeyUsage?lang=zh)核对鉴权方式，并从[大模型音色列表](https://www.volcengine.com/docs/6561/1257544)、[V3 接口文档](https://www.volcengine.com/docs/6561/1598757)和控制台确认已开通的音色及对应 Resource ID。 | `VOLC_TTS_API_KEY`、`VOLC_TTS_RESOURCE_ID`、`VOLC_TTS_SPEAKER` | `audio/tts-config.example.json` |
-| OpenAI | 登录 [OpenAI API Keys 页面](https://platform.openai.com/api-keys)，创建并复制 Secret key。 | `OPENAI_API_KEY` | `audio/tts-config.openai.example.json` |
-| ElevenLabs | 登录 [ElevenLabs API Keys 页面](https://elevenlabs.io/app/developers/api-keys)，创建 Key；若使用受限 Key，开启 Text to Speech 权限。 | `ELEVENLABS_API_KEY` | `audio/tts-config.elevenlabs.example.json` |
-| 阿里百炼 | 按[阿里云百炼获取 API Key 指南](https://help.aliyun.com/zh/model-studio/get-api-key/)进入 [API Key 控制台](https://bailian.console.aliyun.com/cn-beijing/model/settings/api-key)，选择**华北 2（北京）**地域并创建 Key。 | `DASHSCOPE_API_KEY` | `audio/tts-config.aliyun.example.json` |
-| MiniMax | 按 [MiniMax 同步语音合成文档](https://platform.minimaxi.com/docs/api-reference/speech-t2a-http)的鉴权说明，从开放平台账号管理的 API Keys 获取 Key，并确认语音额度及音色权限。 | `MINIMAX_API_KEY` | `audio/tts-config.minimax.example.json` |
-
-在仓库根目录，复制所选样例为该视频项目的实际配置文件。例如选择 OpenAI：
+第一次接入按 [TTS 配置指南](tts-setup.md)配置实际使用的一家服务；该指南集中维护凭据入口、启用 JSON、环境变量、多配置选择、参数和显式在线试听。API Key 只通过环境变量读取，FrameLoom 不自动加载 `.env`。
 
 ```bash
-cp -n projects/my-video/audio/tts-config.openai.example.json projects/my-video/audio/tts-config.json
+npm run list:tts-profiles -- projects/my-video
 ```
 
-如果是初始化功能加入前创建的旧项目，可从仓库样例复制，例如 `cp -n examples/tts-profiles/openai.json projects/my-video/audio/tts-config.json`；选择其他服务时将 `openai` 换成 `doubao`、`elevenlabs`、`aliyun` 或 `minimax`。`cp -n` 保留已有目标文件，已有配置请先核对再编辑，或按[多配置步骤](tts-setup.md#多个配置与切换服务)另存一份。编辑 `projects/my-video/audio/tts-config.json`，将 `"enabled": false` 改为 `"enabled": true`。`apiKeyEnv`、`resourceIdEnv` 和 `voiceTypeEnv` 填的是**环境变量名**，不要替换成真实密钥。豆包样例从 `VOLC_TTS_SPEAKER` 读取音色，并要求它与 `VOLC_TTS_RESOURCE_ID` 对应；其他四份样例已有初始模型和音色，需要时可在该文件中改 `model`、`voiceType`。旧项目中写死的 `voiceType` 仍可继续使用。
-
-在**运行 FrameLoom 命令的同一个终端**设置环境变量。macOS/Linux 用 `export`，下列命令只执行所选服务对应的行，将尖括号占位值换成自己的凭据：
-
-```bash
-export VOLC_TTS_API_KEY='<豆包 API Key>'
-export VOLC_TTS_RESOURCE_ID='<豆包音色对应的 Resource ID>'
-export VOLC_TTS_SPEAKER='<已开通的豆包音色 ID>'
-export OPENAI_API_KEY='<OpenAI Secret key>'
-export ELEVENLABS_API_KEY='<ElevenLabs API Key>'
-export DASHSCOPE_API_KEY='<北京地域的百炼 API Key>'
-export MINIMAX_API_KEY='<MiniMax API Key>'
-```
-
-Windows PowerShell 对应写法如 `$env:OPENAI_API_KEY = '<OpenAI Secret key>'`，其他服务替换变量名即可。这些变量只对当前终端会话有效；如果从 IDE、Agent 或另一个终端启动命令，也要确保那个进程能读到相同的环境变量。FrameLoom **不会自动读取 `.env` 文件**；不要把真实 Key 写入 `tts-config.json`、样例文件或提交到 Git。豆包 API Key 方式不需要另外填写 App ID 和 Access Token。旧项目如已使用 `DOUBAO_TTS_*` 环境变量，可继续按其现有 `apiKeyEnv`、`resourceIdEnv` 配置使用。阿里样例使用北京接入域名，北京 Key 不能与其他地域域名混用；改用新加坡时还需把配置文件里的 `endpoint` 主机改为 `dashscope-intl.aliyuncs.com`，并使用新加坡地域的 Key。
-
-运行 `npm run list:tts-profiles -- projects/my-video` 可查看各配置的状态和不含密钥的诊断：`ready` 表示本地参数有效且所需环境变量已设置，`needs-environment` 表示缺少变量，`disabled` 为关闭，`invalid` 为无效配置，`test-only` 仅供测试。该命令不验证在线 Key、余额或音色权限；一个坏配置不会中断其他配置的展示。仅一个 `ready` 配置时可默认选用，多个时通过 `--tts-config` 指定；真实配置缺失时不自动退回 mock。内置 TTS 只向对应服务商的官方 HTTPS 域名发送凭据，不接受自定义代理地址或跳转；需要代理时先在外部生成音频，再走外部配音路线。
-
-MiniMax 样例默认使用 `speech-2.8-hd`、中文系统音色 `male-qn-qingse` 和中国站接入地址 `https://api.minimax.cn/v1/t2a_v2`。国际站需显式改为 `https://api.minimax.io/v1/t2a_v2`，并使用对应平台的 Key。可配置语速、音量、半音值 `pitchSemitones`、情绪、语言和发音提示；参数范围与模型限制见[MiniMax 接入说明](audio-integration.md#minimax-setup)。每场少于 10000 字符，当前接入非流式 MP3/WAV。
-
-首次使用或调整音色时，可显式合成一小段试听，默认输出到项目 `audio/previews/`，不覆盖整片音频包：
-
-```bash
-npm run preview:tts -- projects/my-video --tts-config projects/my-video/audio/tts-config.json --text "你好，请确认这段配音的音色与语速。"
-```
-
-试听会请求服务商并可能产生费用；本地检查和自动测试不会证明真实账号与音色可用。试听应在审核前进行，音频目录仍参与生产指纹。常用参数包括 `speedRatio`、支持模型的 `instructions`、ElevenLabs 的 `voiceSettings`／发音词典／可选前后场上下文，以及最终旁白的 `outputSampleRate`。字段按服务校验，不支持的非默认设置会报错；完整支持范围及示例见[音频接入说明](audio-integration.md#validated-voice-controls)。
+`ready` 只表示本地参数和环境变量通过预检，不证明在线 Key、余额或音色权限。多个可用配置时先选定一个，再通过 `--tts-config` 指定；真实配置缺失时不回退 mock。显式 `preview:tts` 可能收费，不能当作生产音频包。服务参数的技术边界见[音频接入](audio-integration.md#validated-voice-controls)。
 
 ```bash
 npm run produce -- projects/my-video --mode fast --audio-mode tts --output-purpose in-project-video --tts-config projects/my-video/audio/tts-config.json
@@ -506,15 +471,23 @@ npm run qa:storyboard -- projects/my-video/storyboard.json projects/my-video/out
 - `metric-grid`：指标比较和数据摘要
 - `interaction-flow`：真实产品截图的状态切换
 
-新项目中，所有已安装 Style Pack（包括兼容保留的 `retro-windows`）都接入 Storyboard 2.3 的语义构图和逐步入场逻辑；历史 2.1/2.2 分镜继续按原版式渲染。模板只展示分镜提供的内容，不替用户确认事实来源或视频完成状态。详细内容槽位及限制见 [`references/storyboard-schema.md`](storyboard-schema.md)。
+新项目使用受控的 Storyboard 2.4 镜头路径；历史 2.1–2.3 分镜继续按原契约渲染，兼容风格仍可加载。模板只展示分镜提供的内容，不替用户确认事实来源或视频完成状态。详细内容槽位及限制见 [`references/storyboard-schema.md`](storyboard-schema.md)。
 
 视频质量契约支持场景主结论与焦点目标、节点的当前/完成状态、带来源声明的观察对象和局部放大框、显式重叠转场与结尾停留。QA 报告记录场景时间线、稳定停留帧数和焦点数量，并抽取关键动作与交接代表帧。旧 storyboard 未使用新字段时保留原有时长与转场行为；新字段与示例见 [`references/storyboard-schema.md`](storyboard-schema.md)。
 
 各模板的重叠镜头统一采用旧信息先退、新信息后入的淡入交接，Style Pack 的入场曲线用于主体动效，已看过的主体降低视觉权重。配乐仍需创作者提供来源与许可；启用后默认首尾淡入淡出，成片 QA 会提示超过两秒的片尾静音。静态背景和硬切仍可用于需要稳定阅读或明确换题的镜头。
 
+### 维护者验证
+
 维护者可以运行 `npm run test:audio-pilot`，使用临时生成的测试音频和字幕验证完整的 audio pilot 渲染与 QA 闭环；测试不会把音频文件写入仓库。
 
 维护者可以运行 `npm run test:visual-regression`，用三个历史示例检查 `retro-zine`、`retro-windows`、`scatterbrain`、四类底层场景及横屏／竖屏覆盖；六套当前模板可用上文的 `preview:templates -- --styles ...` 生成代表帧或静音短视频。输出 contact sheet 供人工复核，不使用像素快照替代完整播放。
+
+### 历史 2.3 扩展
+
+历史 Storyboard 2.3 可选用文档镜头试点 `document-conclusion-deal`：保留来源摘录，并随旁白逐条呈现三条有连接的结论；使用方式和输入约束见[分镜契约](storyboard-schema.md#opt-in-23-quality-extensions)。
+
+较长的 2.3 视频会按每页最多 48 帧生成审片接触表，`review-frames.json.pages` 可定位每页的帧号与时间范围。渲染会先在隔离目录完成媒体检查，失败后可根据 `run.json` 从 `render` 或 `qa` 阶段恢复；人工全片播放仍是交付前提。
 
 ## 工作边界
 

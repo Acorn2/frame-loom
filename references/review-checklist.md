@@ -1,5 +1,7 @@
 # Review Checklist
 
+[Documentation index (Chinese)](README.md) · [Usage guide (Chinese)](usage-guide.md)
+
 Use this checklist after the storyboard is reviewed and again after rendering. A pass in one section does not imply a pass in another.
 
 ## Storyboard review
@@ -11,7 +13,7 @@ Use this checklist after the storyboard is reviewed and again after rendering. A
 - [ ] The mapped scene visibly supports its claim, and replacing one scene does not silently change the others.
 - [ ] Claims match the source; uncertainty is visible.
 - [ ] Every scene has one clear job.
-- [ ] Each new 2.3 scene has one conclusion and a `visual.kind` that visibly explains the actual difference, order, relationship, change, sourced number or media content; the shot does more than attach an icon to text.
+- [ ] Each current 2.4 or legacy 2.3 scene has one conclusion and a `visual.kind` that visibly explains the actual difference, order, relationship, change, sourced number or media content; the shot does more than attach an icon to text.
 - [ ] `visual.representation` distinguishes diagrams from source media; each metric has a traceable `visual.source`.
 - [ ] Key scenes name one `primaryClaim` and a visible `attentionTarget`.
 - [ ] Every important meaning maps to a visible layer, relationship, beat or caption.
@@ -28,14 +30,15 @@ Use this checklist after the storyboard is reviewed and again after rendering. A
 
 ## Image source review
 
-For `document` mode, `asset-manifest.json` may be empty and the storyboard contains no image/screenshot layers. For `document-images`, review all checks below.
+For text and graphics motion styles in `document` mode, `asset-manifest.json` may be empty and scene-media images are not used. Document-only AI illustration production instead requires actual generated subjects and provenance under [illustrated production](illustrated-production.md). Palette-only references do not need to appear on screen. Apply the following provenance checks to all used assets. The visible supplied-image requirement applies to `document-images`; the generated-subject check applies to document-only AI illustration production.
 
-- [ ] At least one image/screenshot is visible in a Storyboard 2.3 `visual.kind: media` scene (or a compatible 2.2 `media` scene).
+- [ ] At least one supplied image/screenshot is visible in a compatible current 2.4 shot or legacy 2.3/2.2 media scene.
 - [ ] Every used screenshot or image resolves to a nonempty local file and is registered with the matching type in `asset-manifest.json`.
 - [ ] `visual-sources.md` connects each used visual to the creator's path or exact URL, claim and shot. For URLs, it records the final URL, capture time, viewport and visible state.
 - [ ] `asset-manifest.json` records source, actual license/permission state and intended use; unverified publication rights remain marked unverified.
 - [ ] Real product states are not replaced with invented UI.
 - [ ] No private data, credentials or unlicensed bundled assets are present.
+- [ ] Generated subjects have an inspected PNG and valid plan, guide, prompt, reference, and image fingerprints; prompts alone are not generated assets.
 
 ## Automated QA
 
@@ -94,15 +97,6 @@ facecam and subtitle overlay rectangles in mind:
 - [ ] The output version, `narration-script.md`, `shot-timing.json` and picture-lock policy are included in the handoff package.
 - [ ] The creator records full visual review with `approve:visual-handoff` before calling the picture delivery ready.
 
-## Delivery statement
-
-Report exactly what was checked and what remains provisional. Call the default
-output a **silent visual preview**. A clean silent picture master can become
-`visual-handoff-ready` after full visual review and can finish FrameLoom's
-picture handoff to an external editor. For an in-project narrated video,
-record the creator's full playback review and run `approve:delivery`; check
-`deliveryStatus=release-ready` and `qa-report.json` `releaseReady=true`.
-
 ## Project palette, when enabled
 
 - [ ] The subject product and reference roles are supported by supplied sources; citation/competitor colors did not silently replace the video palette.
@@ -113,6 +107,17 @@ record the creator's full playback review and run `approve:delivery`; check
 - [ ] Actual project preview uses adopted colors; default library samples are not presented as this project preview.
 - [ ] Palette/source changes invalidate prior production and approval.
 
-## 内容布局复核
+## Layout review
+
+For 2.4 shots, also verify the fixed primary flow or strict selected pool, exact recipe versions, production lock, event-frame coverage, and current render receipt. Brand name and enabled logo bytes must match the reviewed configuration.
 
 遵循[内容优先布局检查](content-layout.md)。检查 QA 的 `renderedLayout` 和必选帧覆盖，复核主体过小、裁切素材、连续重复与动作中段警告。截图内部文字、关键对象是否清楚须查看实际画面；完成态无生成文字碰撞不等于宣传效果合格。检查每种布局和实际相邻交接后，再完整播放。
+
+## Delivery statement
+
+Report exactly what was checked and what remains provisional. Call the default
+output a **silent visual preview**. A clean silent picture master can become
+`visual-handoff-ready` after full visual review and can finish FrameLoom's
+picture handoff to an external editor. For an in-project narrated video,
+record the creator's full playback review and run `approve:delivery`; check
+`deliveryStatus=release-ready` and `qa-report.json` `releaseReady=true`.

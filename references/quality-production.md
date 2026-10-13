@@ -36,7 +36,7 @@ npm run produce -- <project> --mode fast --audio-mode tts --output-purpose in-pr
 
 ## 手工修订字幕时间
 
-默认字幕时间来自字重估算，`audio-manifest.json` 会写明 `captionTimingSource: estimated`，不能称为逐词对齐。完整英文词、版本号和小数不再从中间切断；单个超长词会报告，请调整经审核的显示表达或讲稿，不能无限缩字。
+没有完整语音时间证据时，默认字幕时间来自字重估算，`audio-manifest.json` 会写明 `captionTimingSource: estimated`，不能称为逐词对齐。完整英文词、版本号和小数不再从中间切断；单个超长词会报告，请调整经审核的显示表达或讲稿，不能无限缩字。
 
 需要精确时间时，在项目创建 `audio/caption-cues.json`，覆盖所有有旁白镜头。`textHash` 取当前 audio manifest 对应段；以下 hash 是占位值。时间以该镜头实测语音开始为零点。
 
@@ -54,9 +54,9 @@ npm run produce -- <project> --mode fast --audio-mode tts --output-purpose in-pr
 }
 ```
 
-每条为单行短句。程序核对原稿文字和顺序（忽略显示标点及空白），拒绝过期指纹、重叠和超过实测语音的时间。重建音频包后标记为 `manual`，不会再拆分这些短 cue 的时间。当前未接入供应商逐词时间戳或自动强制对齐。
+每条为单行短句。程序核对原稿文字和顺序（忽略显示标点及空白），拒绝过期指纹、重叠和超过实测语音的时间。重建音频包后标记为 `manual`，不会再拆分这些短 cue 的时间。豆包 v3 的完整逐字证据可用于字幕；其他服务或证据不完整时明确使用估算，不声称自动强制对齐。时间来源、字节绑定与优先级见[语音生产](speech-driven-production.md)。
 
-## 三种可选语义扩展
+## 可选语义扩展
 
 只适用于 Storyboard 2.3；省略字段时保持旧行为。
 
@@ -88,7 +88,7 @@ npm run preview:shot -- <project>/storyboard.json <scene-id> <project>/output/sh
 
 显式选择视频模板后，每场使用严格 shot 槽位。`preview:shot` 与全片 QA 使用解析计划中的动作中途、停靠/降格结束、逐项完成、全镜完成和交接前点；必选事件不被长片抽样上限丢弃。当前配方先覆盖16:9。
 
-2.4 音频提案保持动作时长范围，并重排来源、停靠、标题站稳与逐项提示点；只有内容提示点会随旁白变长移动。字幕仍为句级估算/人工修订，不声称自动逐词同步。短音频导致阅读预算不足时明确报错。
+2.4 音频提案保持动作时长范围，并重排来源、停靠、标题站稳与逐项提示点；只有内容提示点会随旁白变长移动。字幕时间按有效供应商证据、人工修订或明确估算记录，不声称所有服务都提供逐词同步。短音频导致阅读预算不足时明确报错。
 
 输出的 `<video.mp4>.production/` 内保存 `production-lock.json` 与 `resolved-shot-plan.json`；render receipt 同时保存锁及计划快照，绑定视频字节。锁包含所选模板/配方清单、来源记录、Style Pack、渲染实现和实际计划哈希。失败渲染保留旧版及其记录，多个输出各自保存证据。`run.json`、QA 和批准必须匹配同一锁。只改未选配方的说明不影响锁；渲染相关代码变化保守触发重新渲染。锁和计划不是内容输入，不能手工改后继续生产。
 

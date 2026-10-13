@@ -8,6 +8,12 @@ body:
         请提供可公开的最小片段，标出场景或时间点。无需上传完整私有文档、音频或凭据。
         Share only a minimal public-safe excerpt and identify the scene or timestamp. Do not upload private documents, audio, or credentials.
   - type: input
+    id: revision
+    attributes:
+      label: 版本或提交号 / Version or commit
+      description: 在仓库根目录运行 git rev-parse --short HEAD；固定版本可填写 tag。Run git rev-parse --short HEAD from the repository root, or provide the installed tag.
+      placeholder: "commit … / tag …"
+  - type: input
     id: setup
     attributes:
       label: 风格、画幅与输出类型 / Style, orientation, and output

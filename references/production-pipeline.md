@@ -67,14 +67,14 @@ Output: `production-brief.md`, `route-card.md`, `content-gaps.md`, and an initia
 - Define the one-sentence outcome and visible targets.
 - Choose a route before following `style-selection.md`; record whether the route was creator-reviewed or selected only for an automated preview.
 - Explain that subject screenshots guide background, text, card and accent colors before style defaults. Capture exact URLs locally, distinguish subject references from citations/competitors, and follow [project colors](project-palette.md). Keep the selected style's composition and motion; only an explicit style-color choice retains default colors when subject references are available. Published style samples show default palettes, not this project's source palette.
-- Default to [document-driven shot planning](shot-planning.md): after reading the source, map claims to visible jobs and recommend compatible recipes. Initialize with the adopted pool through `--shots`. Do not fill every library category. Manual pools remain strict; explain title-only or other expression gaps before committing to a long explainer. In fast mode, present the choice briefly and continue; review mode includes it in the existing storyboard gate.
+- For primary styles, use the [fixed built-in flow](primary-style-production.md) and omit a custom `--shots` pool. For the original six, default to [document-driven shot planning](shot-planning.md): after reading the source, map claims to visible jobs and recommend compatible recipes. Initialize with the adopted pool through `--shots`. Do not fill every library category. Manual pools remain strict; explain title-only or other expression gaps before committing to a long explainer. In fast mode, present the choice briefly and continue; review mode includes it in the existing storyboard gate.
 
 Output: `content-brief.md` and a selected Style Pack.
 
 ## Stage 03 — Script and storyboard draft
 
 - Write `script.md` before timing details.
-- For new Storyboard 2.3 projects, decide the visible explanation before style: one claim per scene, then `compare`, `sequence`, `network`, `change`, sourced `metric`, `media`, or a short `statement`. Specify the actual subjects and relationships in `visual` and the layer/connection graph. A sequence of differently colored text cards does not fulfill this stage.
+- For current 2.4 projects and legacy 2.3 projects, decide the visible explanation before style: one claim per scene, then `compare`, `sequence`, `network`, `change`, sourced `metric`, `media`, or a short `statement`. Specify the actual subjects and relationships in `visual` and the layer/connection graph. A sequence of differently colored text cards does not fulfill this stage.
 - A document-only project may use document-derived diagrams. Real website footage is used only when the creator provides a URL or screenshot; a diagram must declare `representation: diagram`. Numeric scenes must record a source location in `visual.source`.
 - Replace proposed scene IDs in `shot-map.md` with the stable IDs used by the storyboard. Give each key claim one visible shot job and name the document-derived text, graphic or source-listed image that makes it understandable.
 - Map every important meaning to a visible layer, beat target or caption window.
@@ -99,7 +99,7 @@ when the fast execution policy is explicitly selected.
 
 ## Stage 05 — Selected image inputs and provenance
 
-- In `document` mode, use text and CSS graphics. `asset-manifest.json` can have an empty `assets` array; image/screenshot layers and scene-media manifest entries are rejected; palette-reference images are allowed and need not appear on screen.
+- In `document` mode, text and graphics motion styles use text and CSS graphics. AI illustration styles use the actual generated-subject workflow in [illustrated production](illustrated-production.md); register those generated assets before rendering. For text and graphics motion styles, `asset-manifest.json` can have an empty `assets` array; image/screenshot layers and scene-media manifest entries are rejected; palette-reference images are allowed and need not appear on screen.
 - In `document-images` mode, fill `visual-sources.md` with a stable visual ID, the creator's image path or exact URL, intended claim and shot, local file path, and rights/review state. Copy supplied local images into `assets/` when appropriate; do not alter originals.
 - For each creator-provided URL, open it in the browser, capture the actual visible page into `assets/`, and record the original and final URL, capture time, viewport, and visible state in `visual-sources.md`. If the page cannot be accessed or captured, mark the image route blocked and tell the creator; do not substitute a fabricated screen or silently fall back to `document` mode.
 - Register each used file in `asset-manifest.json` with source, license/permission state and intended use. Use `type: "screenshot"` for webpage captures and `type: "image"` for other images; mark unverified rights as unverified rather than inventing permission. Map the visual/asset ID to the claim and scene in `shot-map.md`.
