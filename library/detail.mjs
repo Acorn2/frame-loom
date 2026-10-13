@@ -7,20 +7,27 @@ import {isFixedStyle} from './style-policy.mjs';
 export {recipeSections, recipeOverview} from './recipe-copy.mjs';
 
 const byId = id => document.getElementById(id);
-function appendLines(parent, lines) {
+function appendLines(parent, lines, original = false) {
   let list;
   for (const line of lines) {
     const isList = /^- /u.test(line);
     const element = document.createElement(isList ? 'li' : 'p'); element.textContent = line.replace(/^- /u, '');
+    if (original) {element.dataset.original = ''; element.lang = 'zh-CN';}
     if (isList) {if (!list) {list = document.createElement('ul'); parent.append(list);} list.append(element);}
     else {list = null; parent.append(element);}
   }
 }
-function sectionBlock(parent, title, lines) {
+function sectionBlock(parent, title, lines, original = false) {
   if (!lines.length) return;
   const section = document.createElement('section'); section.className = 'detail-info-section';
   const heading = document.createElement('h3'); heading.textContent = title; section.append(heading);
-  appendLines(section, lines); parent.append(section);
+  appendLines(section, lines, original); parent.append(section);
+}
+export function styleUsageInstructions(style) {
+  return [isFixedStyle(style.id)
+    ? '此风格使用固定内置流程。选择后可直接前往制作组合，提供文档与素材。'
+    : '选择此风格后，可根据文档自动选镜头，也可手动限定兼容的镜头集合。',
+  '公开样片只用于比较风格，制作时使用你提供的文档与素材。'];
 }
 const clock = seconds => `${Math.floor((seconds || 0) / 60)}:${String(Math.floor((seconds || 0) % 60)).padStart(2, '0')}`;
 
@@ -73,10 +80,14 @@ export function createDetailView({selected, available, styleName, onSelect, onVa
     byId('detail-select').hidden = !selectable; byId('detail-select').disabled = !canSelect;
     byId('detail-select').setAttribute('aria-pressed', String(isSelected));
     byId('detail-select').textContent = !canSelect ? '当前组合不兼容' : isSelected ? (isStyle ? '✓ 已选风格' : '✓ 已选镜头') : isStyle ? '使用此风格' : '选择镜头';
-    byId('detail-selection-note').textContent = isStyle ? isFixedStyle(current.id) ? '镜头随风格固定，选择后可直接前往制作组合。' : '选择风格后，再挑选适合内容的镜头。' : locked ? '当前风格使用内置镜头流程，此处仅供查看，不加入手动集合。' : !selectable ? (current.kind === 'hosted-action' ? '辅助动作依附于宿主镜头，由 Agent 按条件编排。' : '转场用于章节交接，不单独计入镜头集合。') : !canSelect ? '此镜头不支持当前风格或画幅，可调整组合后选择。' : isSelected ? '已加入制作组合，可重复使用。' : '按内容选择，Agent 会安排镜头顺序与时长。';
+    byId('detail-selection-note').textContent = isStyle ? !canSelect ? '此风格不支持当前画幅，请先更换风格或画幅。' : isFixedStyle(current.id) ? '镜头随风格固定，选择后可直接前往制作组合。' : '选择风格后，可根据文档自动选镜头或手动限定集合。' : locked ? '当前风格使用内置镜头流程，此处仅供查看，不加入手动集合。' : !selectable ? (current.kind === 'hosted-action' ? '辅助动作依附于宿主镜头，由 Agent 按条件编排。' : '转场用于章节交接，不单独计入镜头集合。') : !canSelect ? '此镜头不支持当前风格或画幅，可调整组合后选择。' : isSelected ? '已加入制作组合，可重复使用。' : '按内容选择，Agent 会安排镜头顺序与时长。';
   }
   function show(item, style = false) {
     clearMedia(); current = item; isStyle = style;
+    const guide = byId('detail-doc');
+    if (style) {delete guide.dataset.original; guide.lang = document.documentElement.lang;}
+    else {guide.dataset.original = ''; guide.lang = 'zh-CN';}
+    dialog.querySelector('.original-notice').hidden = style;
     byId('detail-media').dataset.canvas = item.sampleCanvas ?? 'landscape';
     byId('detail-copy-status').textContent = '';
     dialog.querySelector('.detail-copy-fallback')?.remove();
@@ -132,19 +143,19 @@ export function createDetailView({selected, available, styleName, onSelect, onVa
     if (style) {
       sectionBlock(byId('detail-overview'), '适合的内容', item.bestFor ?? []);
       sectionBlock(byId('detail-overview'), '画面气质', item.mood ?? []);
-      sectionBlock(byId('detail-doc'), '使用方式', ['在风格页选择此风格，再挑选兼容的镜头。公开样片只用于比较风格，制作时使用你提供的文档与素材。']);
+      sectionBlock(byId('detail-doc'), '使用方式', styleUsageInstructions(item));
       sectionBlock(byId('detail-attribution'), 'FrameLoom Style Pack', ['来自仓库的公开风格包与相同分镜样例。']);
       byId('detail-source').textContent = `风格：${item.id}\n来源：仓库公开 Style Pack。`;
     } else {
       const overview = recipeOverview(item.recipe);
-      sectionBlock(byId('detail-overview'), '动效如何展开', overview.motion);
-      sectionBlock(byId('detail-overview'), '使用要求', overview.input.map(line => line.replace(/^优先A式；/u, '').replace(/全部图层通过 slots.*$/u, '').trim()));
-      if (item.hosts?.length) sectionBlock(byId('detail-overview'), '支持的宿主镜头', item.hosts);
+      sectionBlock(byId('detail-overview'), '动效如何展开', overview.motion, true);
+      sectionBlock(byId('detail-overview'), '使用要求', overview.input.map(line => line.replace(/^优先A式；/u, '').replace(/全部图层通过 slots.*$/u, '').trim()), true);
+      if (item.hosts?.length) sectionBlock(byId('detail-overview'), '支持的宿主镜头', item.hosts, true);
       for (const section of recipeSections(item.recipe)) sectionBlock(byId('detail-doc'), section.title || '适用场景', section.lines);
       const source = item.provenance ?? {};
-      sectionBlock(byId('detail-attribution'), source.repository ? '方法参考 · Video Shotcraft' : 'FrameLoom 原生配方', [source.recipe ?? '本项目公开语义渲染能力']);
+      sectionBlock(byId('detail-attribution'), source.repository ? '方法参考 · Video Shotcraft' : 'FrameLoom 原生配方', [source.recipe ?? '本项目公开语义渲染能力'], Boolean(source.recipe));
       if (source.repository && /^https:\/\//u.test(source.repository)) {const link = document.createElement('a'); link.href = source.repository; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = '查看参考项目 ↗'; byId('detail-attribution').append(link);}
-      if (source.upstreamLicense) sectionBlock(byId('detail-attribution'), '许可记录', [`参考项目：${source.upstreamLicense}；本项目实现：${source.implementationLicense ?? '以仓库许可为准'}。`]);
+      if (source.upstreamLicense) sectionBlock(byId('detail-attribution'), '许可记录', [`参考项目：${source.upstreamLicense}；本项目实现：${source.implementationLicense ?? '以仓库许可为准'}。`], true);
       sectionBlock(byId('detail-attribution'), '使用边界', ['方法参考与独立实现不代表已取得上游媒体授权。示例只使用本项目公开素材。']);
       byId('detail-source').textContent = recipeDisplayText(JSON.stringify(source, (key, value) => /version/iu.test(key) ? undefined : value, 2));
     }

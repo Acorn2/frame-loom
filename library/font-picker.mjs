@@ -10,7 +10,7 @@ export function createFontPicker(container, catalog, onChange) {
     const name = document.createElement('strong'); name.textContent = font.name;
     const tag = document.createElement('span'); tag.className = 'font-category'; tag.textContent = font.category;
     header.append(name, tag);
-    const sample = document.createElement('span'); sample.className = 'font-sample'; sample.textContent = catalog.fontSampleText; sample.hidden = true;
+    const sample = document.createElement('span'); sample.className = 'font-sample'; sample.lang = 'zh-CN'; sample.textContent = catalog.fontSampleText; sample.hidden = true;
     const status = document.createElement('span'); status.className = 'font-loading'; status.textContent = '字体示例即将显示';
     const description = document.createElement('span'); description.className = 'font-description'; description.textContent = font.description;
     body.append(header, sample, status, description); card.append(input, body); container.append(card);

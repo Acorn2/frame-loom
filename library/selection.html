@@ -18,9 +18,9 @@
     <span class="header-note">看效果 · 选组合 · 本地制作</span>
   </header>
   <main id="main" data-screen-label="制作组合">
-    <section class="page-heading"><div><p class="eyebrow">03 / MAKE YOUR VIDEO</p><h1>把选择变成视频</h1><p class="page-description">选成品、选配音，再把文档与素材交给 Agent。有主体截图时，默认优先参考截图配色，保留所选风格的构图与动效。</p></div><div class="canvas-label"><label for="canvas">制作画幅</label><select id="canvas"><option value="landscape">16:9 横屏</option><option value="portrait">9:16 竖屏</option></select></div></section>
+    <section class="page-heading"><div><p class="eyebrow">03 / MAKE YOUR VIDEO</p><h1>把选择变成视频</h1><p class="page-description">设置成品与配音，复制指令后把文档交给本地 Agent。</p></div><div class="canvas-label"><label for="canvas">制作画幅</label><select id="canvas"><option value="landscape">16:9 横屏</option><option value="portrait">9:16 竖屏</option></select></div></section>
     <div class="selection-layout">
-      <aside class="combination-card"><p class="meta-label">我的制作组合</p><div class="combination-style"><img id="selected-style-poster" alt="当前风格原始字体样片" width="960" height="540"><div><strong id="current-style"></strong><p id="current-font" class="section-note"></p><a href="index.html" class="text-button">更换风格 ↗</a></div></div><p id="auto-shots-note" class="inline-note">镜头由 Agent 读取文档后推荐。无需预先挑选，复制指令并附上文档即可。</p><div id="manual-shots" hidden><div class="selected-heading"><h2>手动镜头集合 <span id="selected-count">0 个</span></h2><button id="clear" class="text-button">清空</button></div><div id="selected-list" class="selected-list"></div><a href="shots.html" class="button secondary wide">继续挑选镜头 <span aria-hidden="true">→</span></a><p class="section-note">Agent 只在此集合内编排，可重复使用，也无需全部出场。</p></div></aside>
+      <aside class="combination-card"><p class="meta-label">我的制作组合</p><div class="combination-style"><figure class="combination-reference"><img id="selected-style-poster" alt="当前风格原始字体样片" width="960" height="540"><figcaption>风格参考 · 原始字体</figcaption></figure><div class="combination-title"><strong id="current-style"></strong><p id="current-style-en" lang="en"></p></div><dl class="combination-facts"><div><dt>全片字体</dt><dd id="current-font"></dd></div><div><dt>制作画幅</dt><dd id="current-canvas"></dd></div></dl><a href="index.html#font-section" class="combination-preview-link">查看字体组合样片 <span aria-hidden="true">→</span></a></div><p id="auto-shots-note" class="section-note">镜头由 Agent 读取文档后推荐。无需预先挑选，复制指令并附上文档即可。</p><a href="index.html" class="combination-change text-button"><span aria-hidden="true">←</span> 更换风格</a><div id="manual-shots" hidden><div class="selected-heading"><h2>手动镜头集合 <span id="selected-count">0 个</span></h2><button id="clear" class="text-button">清空</button></div><div id="selected-list" class="selected-list"></div><a href="shots.html" class="button secondary wide">继续挑选镜头 <span aria-hidden="true">→</span></a><p class="section-note">Agent 只在此集合内编排，可重复使用，也无需全部出场。</p></div></aside>
       <section class="export-main" aria-label="视频制作向导">
         <!-- Approved flow: the Agent recommends from the document; manual pools remain strict. -->
         <div id="shot-selection-section" class="form-card wizard-card">
@@ -32,22 +32,12 @@
           <p id="shot-selection-warning" class="inline-note" role="status" hidden></p>
         </div>
         <div class="form-card wizard-card">
-          <div class="wizard-heading"><span class="step-number" aria-hidden="true">2</span><div><h2>你想得到什么？</h2><p class="section-note">按最终用途选择，文件命名由 Agent 处理。</p></div></div>
+          <div class="wizard-heading"><span class="step-number" aria-hidden="true">2</span><div><h2>你想得到什么？</h2><p class="section-note">按最终用途选择成品。</p></div></div>
           <fieldset class="choice-grid"><legend class="sr-only">成品类型</legend>
             <label class="choice-card"><input type="radio" name="goal" value="narrated" checked><span><strong>带旁白的视频</strong><small>配音、画面与字幕一起制作，得到可播放的待审视频。</small></span></label>
             <label class="choice-card"><input type="radio" name="goal" value="master"><span><strong>仅画面，供后期剪辑</strong><small>保留标题与图解，无配音、旁白字幕和审片标记，方便自行剪辑。</small></span></label>
           </fieldset>
           <p id="master-note" class="inline-note" hidden>会同时提供讲稿与逐镜时间表，你可以在剪辑软件中继续配音和加字幕。</p>
-        </div>
-        <div id="brand-section" class="form-card brand-settings" hidden>
-          <h2>品牌标识</h2>
-          <p class="brand-description">固定显示在画面右上角，视频与封面同步。</p>
-          <div class="brand-name-field">
-            <label class="brand-name-label" for="brand-name">品牌名或账号名 <span>选填</span></label>
-            <input id="brand-name" type="text" maxlength="40" placeholder="例如：Hresh赫什" autocomplete="off" aria-describedby="brand-name-note brand-logo-note">
-            <p id="brand-name-note" class="brand-field-note">留空沿用已有设置，默认显示 Your Brand。</p>
-          </div>
-          <p id="brand-logo-note" class="brand-logo-note">Logo 可在制作时交给 Agent 配置。</p>
         </div>
         <div id="voice-section" class="form-card wizard-card">
           <div class="wizard-heading"><span class="step-number" aria-hidden="true">3</span><div><h2>旁白从哪里来？</h2><p class="section-note">自动配音，或使用你已经录好的声音。</p></div></div>
@@ -62,15 +52,26 @@
           </div>
           <p id="external-note" class="inline-note" hidden>粘贴指令时附上旁白文件。Agent 会检查音频、字幕与画面的时间对应关系。</p>
         </div>
+        <details id="brand-section" class="form-card advanced-settings brand-settings" hidden>
+          <summary><span>品牌标识 <small>选填</small></span><span id="brand-summary" class="setting-value">沿用已有设置</span></summary>
+          <div class="brand-content"><p class="brand-description">固定显示在画面右上角，视频与封面同步。</p>
+            <div class="brand-name-field">
+              <label class="brand-name-label" for="brand-name">品牌名或账号名</label>
+              <input id="brand-name" type="text" maxlength="40" placeholder="例如：Hresh赫什" autocomplete="off" aria-describedby="brand-name-note brand-logo-note">
+              <p id="brand-name-note" class="brand-field-note">留空沿用已有设置，默认显示 Your Brand。</p>
+            </div>
+            <p id="brand-logo-note" class="brand-logo-note">Logo 可在制作时交给 Agent 配置。</p>
+          </div>
+        </details>
         <details class="form-card advanced-settings"><summary>画面配色</summary><div class="tts-section"><label class="tts-select-label" for="color-mode">配色来源</label><select id="color-mode" aria-describedby="color-note"><option value="auto">自动判断（推荐）</option><option value="style">使用风格配色</option><option value="source">跟随产品素材</option></select><p id="color-note" class="section-note">有主体产品截图或准确网址时，默认优先参考截图的背景、文字、卡片与强调色，不仅替换按钮颜色。风格保留构图与动效；选择“使用风格配色”才明确保留默认色。无参考或只有引用、竞品截图时沿用默认色。真实截图保持原貌，实际预览在本地制作时生成；素材配色目前支持横屏。</p></div></details>
         <details class="form-card advanced-settings"><summary>制作前的确认</summary><label class="review-choice"><input id="review-first" type="checkbox"><span><strong>先确认讲稿和分镜，再制作</strong><small>勾选后，Agent 会先展示内容与镜头安排，等待你确认。默认直接制作，出片后复核。</small></span></label><p class="section-note">静音审片用于检查制作过程中的画面；“仅画面”则是交给后期剪辑的产物。</p></details>
         <div class="export-card handoff-card">
           <div class="wizard-heading"><span id="handoff-step" class="step-number" aria-hidden="true">4</span><div><h2>交给 Agent 开始制作</h2><p id="production-summary" class="section-note" aria-live="polite"></p></div></div>
-          <ol class="handoff-steps"><li><span>复制下方制作指令</span></li><li><span>粘贴到使用 FrameLoom 的 Agent，附上文档；需要时一起附图片或旁白</span></li><li><span>按选择完成制作，查看待审产物与检查结果</span></li></ol>
+          <p class="handoff-guide">复制到使用 FrameLoom 的 Agent，并附上文档；需要时一起附图片或旁白。制作后查看待审产物与检查结果。</p>
           <p id="handoff-shot-summary" class="inline-note" role="status"></p>
           <p id="export-error" class="error" role="status"></p>
           <button id="copy-prompt" class="button wide" disabled><span id="copy-prompt-label">复制制作指令</span> <span aria-hidden="true">→</span></button>
-          <details id="prompt-details" class="prompt-details"><summary>查看完整制作指令</summary><textarea id="prompt" readonly aria-label="Agent 制作指令" rows="12"></textarea></details>
+          <details id="prompt-details" class="prompt-details"><summary>查看将复制的指令</summary><textarea id="prompt" readonly aria-label="Agent 制作指令" rows="12"></textarea></details>
           <p class="section-note">网页保存你的公开选项，制作在本地 Agent 中完成。文档、音频和密钥在本地处理。</p>
         </div>
       </section>

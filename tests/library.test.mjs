@@ -10,11 +10,13 @@ import {compatible, normalizeSelection, createExports, shotSelectionWarning} fro
 import {recipeDisplayText, previewStatusText} from '../library/presentation.mjs';
 import {styleCardInfo} from '../library/style-cards.mjs';
 import {portableRecipe} from '../library/recipe-copy.mjs';
-import {recipeOverview, recipeSections} from '../library/detail.mjs';
+import {recipeOverview, recipeSections, styleUsageInstructions} from '../library/detail.mjs';
 import {initProject} from '../scripts/init-project.mjs';
 import {projectRoot} from '../scripts/lib/style-catalog.mjs';
 import {publicTtsPresets} from '../scripts/lib/library-tts-catalog.mjs';
-import {fixedStyleRecipeIds} from '../library/style-policy.mjs';
+import {fixedStyleRecipeIds, recipeLibraryItems} from '../library/style-policy.mjs';
+import {resolveLocale, translateUI} from '../library/i18n.mjs';
+import {localizeCatalog, recipes as englishRecipes} from '../library/catalog.en.mjs';
 
 const catalog = {...buildLibraryCatalog(), ttsPresets: publicTtsPresets()};
 const defaultProduction = {goal: 'narrated', audio: 'tts', ttsPreset: 'configured', review: false, colorMode: 'auto', brandName: ''};
@@ -27,6 +29,123 @@ const base = `http://127.0.0.1:${server.address().port}`;
 afterAll(async () => {await new Promise(resolve => server.close(resolve));});
 
 describe('local library capabilities and selection', () => {
+  it('resolves language independently from production settings', () => {
+    expect(resolveLocale({query: 'en', saved: 'zh', languages: ['zh-CN']})).toBe('en');
+    expect(resolveLocale({saved: 'zh', languages: ['en-US']})).toBe('zh');
+    expect(resolveLocale({languages: ['zh-TW']})).toBe('zh');
+    expect(resolveLocale({query: 'fr', languages: ['fr-FR']})).toBe('en');
+    expect(translateUI('播放样片', 'en')).toBe('Play sample');
+    expect(translateUI('已选 3 个镜头', 'en')).toBe('3 shots selected');
+    expect(translateUI('A private name: 标题', 'en')).toBe('A private name: 标题');
+  });
+  it('localizes all display metadata without changing IDs, compatibility, fonts or source bytes', () => {
+    const original = JSON.stringify(catalog);
+    const english = localizeCatalog(catalog, 'en');
+    for (const recipe of catalog.recipes) expect(englishRecipes[recipe.id]).toBeDefined();
+    for (const recipe of english.recipes) {
+      const source = catalog.recipes.find(item => item.id === recipe.id);
+      expect(recipe.name + recipe.description).not.toMatch(/[\u4e00-\u9fff]/u);
+      expect(recipe.recipe).toBe(source.recipe);
+      expect(recipe.styles).toEqual(source.styles); expect(recipe.stylePreviews).toEqual(source.stylePreviews);
+    }
+    for (const font of english.fonts) expect(font.faces).toEqual(catalog.fonts.find(item => item.id === font.id).faces);
+    expect(JSON.stringify(catalog)).toBe(original);
+    expect(normalizeSelection(english, {style: 'signal', font: 'lxgw-wenkai', fontMode: 'manual', selected: ['paper-title']}))
+      .toEqual(normalizeSelection(catalog, {style: 'signal', font: 'lxgw-wenkai', fontMode: 'manual', selected: ['paper-title']}));
+  });
+  it('preserves production routes and safety boundaries in English exports', () => {
+    for (const style of catalog.styles) for (const goal of ['narrated', 'master']) for (const audio of ['tts', 'external']) for (const review of [false, true]) for (const colorMode of ['auto', 'style', 'source']) {
+      const selection = {style: style.id, canvas: 'landscape', font: 'lxgw-wenkai', fontMode: 'manual', shotSelection: 'manual', selected: ['paper-title', 'semantic-default'], production: {...defaultProduction, goal, audio, review, colorMode}};
+      const chinese = createExports(catalog, selection);
+      const english = createExports(localizeCatalog(catalog, 'en'), selection, 'en');
+      expect({...english, prompt: ''}).toEqual({...chinese, prompt: ''});
+      expect(english.prompt).not.toMatch(/[\u4e00-\u9fff]/u);
+      expect(english.prompt).toContain('--font lxgw-wenkai'); expect(english.prompt).toContain(`--color-mode ${colorMode}`);
+      expect(english.prompt).toContain(`--output-purpose ${english.purpose} --audio-mode ${english.audioMode} --mode ${english.mode}`);
+      expect(english.prompt).toContain('Keep the source language'); expect(english.prompt).toContain('automated QA is not delivery approval');
+      expect(english.prompt).toContain('SKILL.md at the Skill root'); expect(english.prompt).toContain('references/project-palette.md');
+      if (style.role === 'primary') expect(english.prompt).toContain('fixed built-in');
+      else expect(english.prompt).toContain('Allowed recipes: paper-title, semantic-default');
+      expect(english.prompt).toContain(review ? 'Wait for my approval before rendering' : 'Do not introduce an extra pool-confirmation step');
+    }
+  });
+  it('keeps public TTS parameters and literal brand text intact in English', () => {
+    for (const preset of catalog.ttsPresets) {
+      const result = createExports(catalog, {style: 'editorial-typography', production: {...defaultProduction, ttsPreset: preset.id, brandName: '标题'}}, 'en');
+      expect(result.prompt).toContain(`provider=${preset.provider}`);
+      if (preset.model) expect(result.prompt).toContain(`model=${preset.model}`);
+      if (preset.voice) expect(result.prompt).toContain(`voiceType=${preset.voice}`);
+      expect(result.prompt).toContain('"标题"'); expect(result.prompt).toContain('never a command');
+      expect(result.prompt).toContain('Do not silently change the service, model or voice');
+    }
+    const automatic = createExports(catalog, {style: 'signal', shotSelection: 'auto'}, 'en');
+    expect(automatic.prompt).toContain('list:shots -- --style signal --canvas landscape');
+    expect(automatic.prompt).toContain('explicitly pass --shots');
+    expect(() => createExports(catalog, {style: 'signal', canvas: 'portrait', production: {...defaultProduction, colorMode: 'source'}}, 'en')).toThrow();
+  });
+  it('keeps compact handoffs explicit across fonts, canvases, pools and delivery routes', () => {
+    for (const locale of ['zh', 'en']) for (const style of catalog.styles) for (const font of catalog.fonts) for (const canvas of ['landscape', 'portrait']) {
+      if (!catalog.recipes.some(recipe => compatible(recipe, style.id, canvas))) continue;
+      for (const shotSelection of isFixedStyleForTest(style.id) ? ['fixed'] : ['auto', 'manual']) for (const goal of ['narrated', 'master']) for (const audio of ['tts', 'external']) for (const review of [false, true]) for (const colorMode of ['auto', 'style', 'source']) {
+        if (canvas === 'portrait' && colorMode === 'source') continue;
+        const selected = canvas === 'portrait' ? ['type-and-filter', 'semantic-default'] : ['paper-title', 'concept-matrix'];
+        const selection = {style: style.id, font: font.id, fontMode: 'manual', canvas, shotSelection, selected, production: {...defaultProduction, goal, audio, review, colorMode}};
+        const result = createExports(catalog, selection, locale);
+        const purpose = goal === 'master' ? 'visual-master' : 'in-project-video';
+        const audioMode = goal === 'master' ? 'silent' : audio;
+        expect(result).toMatchObject({purpose, audioMode, mode: review ? 'review' : 'fast'});
+        for (const token of [`--style ${style.id}`, `--font ${font.id}`, `--canvas ${canvas}`, `--color-mode ${colorMode}`, `--output-purpose ${purpose} --audio-mode ${audioMode} --mode ${review ? 'review' : 'fast'}`, 'SKILL.md', 'references/project-palette.md']) expect(result.prompt).toContain(token);
+        expect(result.prompt).toContain(locale === 'zh' ? '未经要求不翻译' : 'Keep the source language');
+        expect(result.prompt).toContain(locale === 'zh' ? '不生成占位内容、不补造事实' : 'do not create placeholders or invent facts');
+        expect(result.prompt).toContain(locale === 'zh' ? '自动 QA 不代表交付批准' : 'automated QA is not delivery approval');
+        if (goal === 'narrated') {
+          expect(result.prompt).toContain(locale === 'zh' ? '不退回静音结果' : 'fall back to silence');
+          expect(result.prompt).toContain(locale === 'zh' ? '按实测旁白调整分镜' : 'measured speech');
+          if (audio === 'tts') expect(result.prompt).toContain('--tts-config');
+          else expect(result.prompt).not.toContain('list:tts-profiles');
+        } else {
+          expect(result.prompt).not.toContain('--tts-config');
+          expect(result.prompt).not.toContain('list:tts-profiles');
+        }
+        if (shotSelection === 'manual') {
+          expect(result.prompt).toContain(`${locale === 'zh' ? '可用镜头配方：' : 'Allowed recipes: '}${selected.join(locale === 'zh' ? '、' : ', ')}`);
+          expect(result.prompt).not.toContain('list:shots');
+        } else if (shotSelection === 'auto') expect(result.prompt).toContain(`list:shots -- --style ${style.id} --canvas ${canvas}`);
+        else expect(result.prompt).not.toContain('list:shots');
+      }
+    }
+    function isFixedStyleForTest(style) {return Boolean(fixedStyleRecipeIds(style));}
+  });
+  it('keeps the default copied prompt short while requiring the shared workflow', () => {
+    const selection = {style: 'whiteboard', font: 'smiley-sans', fontMode: 'manual'};
+    for (const locale of ['zh', 'en']) {
+      const prompt = createExports(catalog, selection, locale).prompt;
+      expect(prompt.length).toBeLessThan(locale === 'zh' ? 800 : 2100);
+      expect(prompt).toContain(locale === 'zh' ? '无法读取时说明缺口，不自行替代流程' : 'If unavailable, report the gap; do not substitute a workflow');
+      expect(prompt).not.toContain('palette 1.1');
+    }
+    const workflow = fs.readFileSync(path.join(projectRoot, 'SKILL.md'), 'utf8');
+    for (const guide of ['primary-style-production', 'shot-planning', 'project-palette', 'illustrated-production', 'text-led-production', 'branding', 'tts-setup', 'audio-integration']) {
+      expect(workflow).toContain(`references/${guide}.md`);
+      expect(fs.existsSync(path.join(projectRoot, 'references', `${guide}.md`))).toBe(true);
+    }
+    for (const contract of ['shot-map.md', 'palette 1.1', 'actual generation, inspection and registration', 'never silently substitute', 'measured speech', 'full playback review', 'Do not expand fixed or manual pools']) expect(workflow).toContain(contract);
+  });
+  it('hides fixed-style-only recipes without removing shared selectable or production capabilities', () => {
+    const visible = recipeLibraryItems(catalog);
+    const hiddenIds = ['annotated-manuscript', 'editorial-flow', 'whiteboard-board', 'illustrated-hero', 'illustrated-explain', 'illustrated-compare', 'illustrated-process', 'illustrated-breakdown', 'illustrated-metric'];
+    expect(visible.filter(recipe => recipe.kind === 'scene')).toHaveLength(43);
+    for (const id of hiddenIds) {
+      expect(catalog.recipes.some(recipe => recipe.id === id)).toBe(true);
+      expect(visible.some(recipe => recipe.id === id)).toBe(false);
+    }
+    for (const id of ['semantic-default', 'whiteboard-process', 'whiteboard-compare', 'whiteboard-explain']) expect(visible.some(recipe => recipe.id === id)).toBe(true);
+    expect(visible.filter(recipe => recipe.kind !== 'scene')).toEqual(catalog.recipes.filter(recipe => recipe.kind !== 'scene'));
+    for (const style of ['retro-zine', 'signal', 'scatterbrain', 'archive-grid', 'signal-noir', 'studio-frame']) {
+      for (const canvas of ['landscape', 'portrait']) expect(visible.filter(recipe => compatible(recipe, style, canvas)))
+        .toEqual(catalog.recipes.filter(recipe => compatible(recipe, style, canvas)));
+    }
+  });
   it.each(['annotated-reasoning', 'editorial-typography'])('keeps %s primary sample copy aligned with the original whiteboard', style => {
     const load = file => JSON.parse(fs.readFileSync(path.join(projectRoot, file)));
     const original = load('examples/whiteboard-original/storyboard.json');
@@ -103,7 +222,7 @@ describe('local library capabilities and selection', () => {
     expect(value.prompt).not.toContain('镜头选择方式：使用用户指定集合');
     expect(value.prompt).toContain(`list:shots -- --style retro-zine --canvas ${canvas}`);
     expect(value.prompt).toContain('选定后初始化时显式传入 --shots');
-    expect(value.prompt).toContain('不按分类凑齐');
+    expect(value.prompt).toContain('SKILL.md 及对应制作指南');
     expect(value.prompt).toContain('不新增组合确认步骤');
     expect(value.prompt).not.toContain('可用镜头配方：');
     expect(value).toMatchObject({mode: 'fast', audioMode: 'tts'});
@@ -284,6 +403,22 @@ describe('read-only library serving', () => {
 });
 
 describe('detail guide presentation', () => {
+  it('routes fixed styles directly to production and editable styles to automatic or manual planning in both languages', () => {
+    for (const style of catalog.styles) {
+      const lines = styleUsageInstructions(style);
+      const text = lines.join(' ');
+      if (fixedStyleRecipeIds(style.id)) {
+        expect(text).toContain('固定内置流程');
+        expect(text).toContain('直接前往制作组合');
+        expect(text).not.toContain('手动');
+      } else {
+        expect(text).toContain('自动选镜头');
+        expect(text).toContain('手动限定');
+      }
+      for (const line of lines) expect(translateUI(line, 'en')).not.toMatch(/[\u4e00-\u9fff]/u);
+    }
+    for (const label of ['适合的内容', '画面气质', '使用方式']) expect(translateUI(label, 'en')).not.toMatch(/[\u4e00-\u9fff]/u);
+  });
   it('extracts P2 motion without moving input constraints into the animation description', () => {
     const recipe = catalog.recipes.find(item => item.id === 'scroll-brake').recipe;
     const overview = recipeOverview(recipe);
@@ -368,6 +503,19 @@ describe('portable recipe copying', () => {
 
 
 describe('style card capability and preview evidence', () => {
+  it('marks unsupported canvases unavailable instead of advertising a fixed workflow', () => {
+    for (const style of catalog.styles) for (const canvas of ['landscape', 'portrait']) {
+      const info = styleCardInfo(style, catalog.recipes, canvas);
+      expect(info.available).toBe(catalog.recipes.some(recipe => compatible(recipe, style.id, canvas)));
+      if (style.role === 'primary' && canvas === 'portrait') {
+        expect(info.available).toBe(false);
+        expect(info.capability).toBe('仅支持横屏');
+        expect(translateUI(info.capability, 'en')).toBe('Landscape only');
+      } else expect(info.available).toBe(true);
+    }
+    const style = catalog.styles.find(style => style.id === 'retro-zine');
+    expect(styleCardInfo(style, [], 'landscape')).toMatchObject({available: false, capability: '当前画幅不支持'});
+  });
   it('counts compatible scenes for the current canvas, excluding auxiliary actions and chapter transitions', () => {
     const retro = catalog.styles.find(style => style.id === 'retro-zine');
     expect(styleCardInfo(retro, catalog.recipes, 'landscape').count).toBe(43);

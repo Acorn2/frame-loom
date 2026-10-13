@@ -1,7 +1,6 @@
-/* global document, window, navigator, setTimeout, clearTimeout */
 import {compatible} from './selection.mjs';
 import {isFixedStyle} from './style-policy.mjs';
-import {releaseVideo} from './playback.mjs';
+export {createCardPreviewPlayback as createStyleCardPlayback} from './playback.mjs';
 
 const copy = {
   'annotated-reasoning': {features: '正文稳定 · 圈词旁注 · 关系累积', use: '知识讲解、观点分析、阅读笔记'},
@@ -19,53 +18,8 @@ const copy = {
 export function styleCardInfo(style, recipes, canvas) {
   const scenes = recipes.filter(recipe => compatible(recipe, style.id, canvas));
   const count = scenes.length;
-  return {...copy[style.id], count, capability: isFixedStyle(style.id) ? '风格内置镜头' : count === 1 && scenes[0].id === 'semantic-default' ? '1 个基础镜头' : `${count} 个可用镜头`, basicOnly: count === 1 && scenes[0].id === 'semantic-default'};
-}
-
-// Hover intent avoids downloading videos while the pointer travels across the grid.
-export function createStyleCardPlayback(container, reducedMotion) {
-  let active; let pending; let timer; let generation = 0;
-  const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
-  function stop() {
-    clearTimeout(timer); pending = undefined; generation++;
-    if (!active) return;
-    const video = active.querySelector('video');
-    // Removing src also cancels an in-flight download/play request.
-    releaseVideo(video);
-    active.classList.remove('playing'); active = undefined;
-  }
-  function start(button) {
-    if (!button || !finePointer.matches || navigator.connection?.saveData || reducedMotion.matches || document.hidden || document.getElementById('detail').open) return;
-    if ((active === button && !button.querySelector('video')?.paused) || pending === button) return;
-    stop(); pending = button;
-    const request = generation;
-    timer = setTimeout(() => {
-      if (pending !== button || request !== generation) return;
-      pending = undefined;
-      const video = button.querySelector('video'); if (!video) return;
-      active = button; video.src = video.dataset.src; video.load();
-      // Do not expose an empty or loading frame over the poster.
-      video.play().then(() => {
-        if (active === button && request === generation && !video.paused) button.classList.add('playing');
-        else if (active !== button) video.pause();
-      }).catch(() => {if (active === button && request === generation) stop();});
-    }, 250);
-  }
-  container.addEventListener('pointerover', event => {
-    if (event.pointerType !== 'touch') start(event.target.closest('.style-poster'));
-  });
-  container.addEventListener('pointerout', event => {
-    const button = event.target.closest('.style-poster');
-    if ((button === active || button === pending) && !button.contains(event.relatedTarget) && document.activeElement !== button) stop();
-  });
-  container.addEventListener('focusin', event => start(event.target.closest('.style-poster')));
-  container.addEventListener('focusout', event => {
-    const button = event.target.closest('.style-poster');
-    if ((button === active || button === pending) && !button.contains(event.relatedTarget)) stop();
-  });
-  document.addEventListener('visibilitychange', () => {if (document.hidden) stop();});
-  reducedMotion.addEventListener('change', stop);
-  finePointer.addEventListener('change', stop);
-  navigator.connection?.addEventListener('change', stop);
-  return {stop};
+  return {...copy[style.id], count, available: count > 0,
+    capability: !count ? style.canvas?.length === 1 && style.canvas[0] === 'landscape' ? '仅支持横屏' : '当前画幅不支持'
+      : isFixedStyle(style.id) ? '风格内置镜头' : count === 1 && scenes[0].id === 'semantic-default' ? '1 个基础镜头' : `${count} 个可用镜头`,
+    basicOnly: count === 1 && scenes[0].id === 'semantic-default'};
 }

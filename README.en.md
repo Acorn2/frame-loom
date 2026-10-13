@@ -15,7 +15,7 @@ A document-to-video Skill for Codex, Claude Code, and other coding agents
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-24%2B-339933)](package.json)
 
-[See the results](#see-the-results) · [Make your first video](#quick-start) · [Browse styles](https://acorn2.github.io/frame-loom/) · [Installation and troubleshooting](references/installation.en.md)
+[See the results](#see-the-results) · [Make your first video](#quick-start) · [Browse styles](https://acorn2.github.io/frame-loom/) · [Installation and troubleshooting](references/installation.en.md) · [More from the creator](#more-from-the-creator)
 
 </div>
 
@@ -141,6 +141,8 @@ The six text and graphics motion styles below use the same storyboard for compar
 
 Choose a style in the [online library](https://acorn2.github.io/frame-loom/), copy its production prompt, and give it to your local agent with a document. The agent recommends shots from the content by default; manual selection is available. The website displays public samples; production runs in your local project.
 
+The current library includes a Chinese / English switch in the upper-right corner. Interface copy and production instructions follow the selected language while preserving production choices. Existing samples and original recipe documents remain in Chinese and are labeled accordingly. Interface language does not change the finished video's language or font. The hosted site receives these changes when this version is published.
+
 ## Continue from preview to finished video
 
 | Desired result | Next step and output |
@@ -188,6 +190,22 @@ The runtime registers 52 scene recipes, 9 hosted actions, and 5 chapter transiti
 
 </details>
 
+## More from the creator
+
+FrameLoom is maintained by **[Hresh赫什](https://hreshhao.com/)**. I'm an independent developer building products with AI and sharing what I learn about productivity tools and finding an initial audience. Here are some of my other products (the linked introductions are in Chinese):
+
+| Product | What it helps you do |
+| --- | --- |
+| [儿童 3D 自然博物馆 / Children's 3D Nature Museum](https://hreshhao.com/products/nature-museum/) | Explore rotatable 3D models, listen to nature stories, and discuss observations with children. This is the product featured in the video case above. |
+| [收链 / LinkBox](https://hreshhao.com/products/linkbox/) | Save links through the iOS share sheet, then organize them with tags, search, and duplicate cleanup in a local link organizer. |
+| [TabNest](https://hreshhao.com/products/tabnest/) | Turn Chrome's new tab page into a workspace for tabs, bookmarks, and restorable browsing sessions. |
+| [ReadCover / 阅读掩护](https://hreshhao.com/products/readcover/) | Read local TXT / EPUB files with a Word-style interface, protection when the window loses focus, and a quick hide shortcut. |
+| [通辽宇宙知识库 / Tongliao Universe Knowledge Base](https://hreshhao.com/products/tongliao-universe/) | Explore connected records of people, countries, history, memes, and music from 小约翰可汗's videos. |
+
+[Explore the full product portfolio →](https://hreshhao.com/products/) · [Open the product workbench →](https://hreshhao.com/workbench/)
+
+The portfolio also includes 读镜 / READFRAME, 亲友记 / KinKeep, 组局记 / Better Gathering, and other projects. Visit the website for each product's introduction, current status, and access links.
+
 ## Credits and licenses
 
 - [Remotion](https://www.remotion.dev/) provides deterministic video rendering with React.
@@ -196,5 +214,3 @@ The runtime registers 52 scene recipes, 9 hosted actions, and 5 chapter transiti
 - Bundled fonts retain original copyright notices and SIL OFL 1.1 licenses; see the [font directory](fonts/README.md).
 
 FrameLoom's own code is [MIT licensed](LICENSE). Remotion has a separate [official license](https://www.remotion.dev/license). Fonts, images, music, and TTS output follow their own terms; FrameLoom's MIT license does not replace them.
-
-Maintained by **Hresh赫什**, an independent developer building products with AI. See other projects and experiments on the [personal website](https://hreshhao.com/).

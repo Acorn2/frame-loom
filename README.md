@@ -15,7 +15,7 @@ A document-to-video Skill for Codex, Claude Code, and other coding agents
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-24%2B-339933)](package.json)
 
-[看实际效果](#效果展示) · [做第一条视频](#快速开始) · [浏览风格](https://acorn2.github.io/frame-loom/) · [安装与排错](references/installation.md)
+[看实际效果](#效果展示) · [做第一条视频](#快速开始) · [浏览风格](https://acorn2.github.io/frame-loom/) · [安装与排错](references/installation.md) · [作者的其他产品](#作者的其他产品)
 
 </div>
 
@@ -141,6 +141,8 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文、编写讲稿�
 
 在[在线配方库](https://acorn2.github.io/frame-loom/)选择风格，复制制作指令，再交给本地 Agent 和你的文档。Agent 默认根据内容推荐镜头；也可手动限定。网页只展示公开样例，视频生产在本地进行。
 
+当前版本的配方库提供右上角中文／英文切换，界面与制作指令随语言切换，保留制作选择。现有样片和原始配方文档保留中文并明确标注；界面语言不改变视频成品语言或字体。在线站点需发布当前版本后获得这些更新。
+
 ## 预览满意后，继续完成视频
 
 | 想得到什么 | 下一步与输出 |
@@ -189,6 +191,22 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文、编写讲稿�
 
 </details>
 
+## 作者的其他产品
+
+FrameLoom 由 **[Hresh赫什](https://hreshhao.com/)** 维护。我是一名用 AI 把想法做成产品的独立开发者，持续实践产品、效率工具与产品冷启动。除了 FrameLoom，我也在做这些产品：
+
+| 产品 | 用来做什么 |
+| --- | --- |
+| [儿童 3D 自然博物馆](https://hreshhao.com/products/nature-museum/) | 和孩子一起旋转观察 3D 模型、听自然故事、讨论观察到的细节；也是上方视频案例的主题产品。 |
+| [收链 / LinkBox](https://hreshhao.com/products/linkbox/) | iOS 本地链接收纳工具：通过分享面板先保存，再用标签、搜索与去重慢慢整理。 |
+| [TabNest](https://hreshhao.com/products/tabnest/) | 把 Chrome 新标签页变成浏览器工作台，管理标签、书签与可恢复的工作会话。 |
+| [ReadCover / 阅读掩护](https://hreshhao.com/products/readcover/) | 支持 TXT / EPUB 的本地阅读工具，提供 Word 风格界面、失焦保护与老板键。 |
+| [通辽宇宙知识库](https://hreshhao.com/products/tongliao-universe/) | 将小约翰可汗视频中的人物、国家、历史、梗与配乐串成可回查的内容档案。 |
+
+[查看完整产品作品集 →](https://hreshhao.com/products/) · [打开产品工作台 →](https://hreshhao.com/workbench/)
+
+作品集还收录了读镜 / READFRAME、亲友记 / KinKeep、组局记等项目；各产品的介绍、当前状态与访问入口以网站为准。
+
 ## 致谢与许可
 
 - [Remotion](https://www.remotion.dev/)提供基于 React 的确定性视频渲染能力。
@@ -197,5 +215,3 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文、编写讲稿�
 - 项目字体保留原始版权与 SIL OFL 1.1 许可，见[字体目录](fonts/README.md)。
 
 FrameLoom 自有代码采用 [MIT](LICENSE)。Remotion 使用独立的[官方许可](https://www.remotion.dev/license)；字体、图片、配乐和 TTS 输出按各自来源条款使用，本项目的 MIT 不替代这些许可。
-
-由 **Hresh赫什** 维护，持续实践用 AI 把想法做成产品。其他产品与实践见[个人网站](https://hreshhao.com/)。

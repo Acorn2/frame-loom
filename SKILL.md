@@ -341,6 +341,20 @@ separately when checking an existing MP4.
 
 ## Agent Workflow
 
+### Library production handoff
+
+The library exports a compact task and explicit creator choices, not a copy of
+the production manual. Read this shared workflow before executing a handoff;
+if the Skill or required guide is unavailable, report the gap instead of
+inventing a replacement workflow. A shorter instruction does not waive any
+source, asset, timing, validation or review requirement below.
+
+- Preserve the source text, attribution and language unless translation is explicitly requested. Ask for missing documents or required assets; do not produce placeholders or invent facts. Derive the project topic and dated directory as described in the first-use workflow.
+- Follow [primary style production](references/primary-style-production.md) for fixed styles; for document-driven or manual pools, follow [shot planning](references/shot-planning.md). Record source-to-scene decisions in `shot-map.md` and perform its content checks for every route, including fixed styles. Do not expand fixed or manual pools. Automatic selection queries compatibility and explicitly initializes the adopted pool, without filling categories for variety.
+- Apply the chosen font to all generated text. Honor the selected color mode using [project colors](references/project-palette.md), including source roles, palette 1.1 evidence and representative-shot comparison when adopting source colors. Load [illustrated production](references/illustrated-production.md) for document-only AI illustration styles and [text-led production](references/text-led-production.md) for annotated-reasoning/editorial-typography; actual generation, inspection and registration remain required. Follow [branding](references/branding.md) for fixed styles; keep brand text out of generated images and use the same configuration for video and cover.
+- For TTS, read [TTS setup](references/tts-setup.md) and [audio integration](references/audio-integration.md). Use a single real `ready` profile directly; let the creator choose among multiple profiles without exposing credentials. A public preset must match an enabled local provider, model and voice; if disabled or mismatched, explain the needed configuration and obtain confirmation, never silently substitute. Pass `--tts-config` explicitly. For external narration, use supplied audio and timing without calling TTS. Retiming uses measured speech on either route; a narrated request never falls back to silence.
+- Honor `fast` / `review` and the output purpose independently: review waits for script, storyboard and timing approval; fast briefly shows the scene plan and continues without an extra pool confirmation. Complete validation, rendering and QA. A visual master has no audio, narration captions or review markers and includes the script and shot timing table. Return real paths, duration and QA results; full playback review is still required for delivery approval.
+
 Read references progressively:
 
 1. Infer the input mode from the creator's request. Use `document` by default;

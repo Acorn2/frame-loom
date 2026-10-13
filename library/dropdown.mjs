@@ -47,7 +47,11 @@ function enhance(select) {
   function sync() {
     value.textContent = options[select.selectedIndex]?.textContent ?? '';
     trigger.disabled = select.disabled;
-    items.forEach((item, index) => item.setAttribute('aria-selected', String(index === select.selectedIndex)));
+    items.forEach((item, index) => {
+      if (item.textContent !== options[index].textContent) item.textContent = options[index].textContent;
+      item.setAttribute('aria-selected', String(index === select.selectedIndex));
+      item.setAttribute('aria-disabled', String(options[index].disabled));
+    });
     if (wrapper.closest('[hidden]')) close();
   }
   function open() {
