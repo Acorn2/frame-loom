@@ -23,13 +23,13 @@ A document-to-video Skill for Codex, Claude Code, and other coding agents
 
 ## 效果展示
 
-**真实案例：把儿童自然博物馆的宣传文案和网站截图，做成一条 65 秒有声视频。** Agent 编排讲稿与镜头，使用真实模型截图、生命阶段图解和访问条件对照；生成文字统一字体，配色来自产品首页。
+**真实案例：把儿童自然博物馆宣传文稿，做成带旁白的白板视频。** 输入一份文稿，生成插画、逐行书写和四阶段图解；下方用 10 秒无声动图展示效果。
 
-![FrameLoom 真实案例：网站模型截图、生命阶段图解、观察问题与访问条件对照](examples/nature-museum-case/previews/highlights.gif)
+![FrameLoom 真实案例：开放白板、四阶段图解、自然主题插画与片尾网站入口](examples/nature-museum-case/previews/highlights.gif)
 
-[观看完整有声待审样片](examples/nature-museum-case/previews/nature-museum-narrated.mp4) · [案例与素材来源](examples/nature-museum-case/README.md) · [图解动画示例](examples/template-families/README.md) · [在线浏览风格与镜头](https://acorn2.github.io/frame-loom/)
+[观看完整案例 · 68 秒 · 含旁白](examples/nature-museum-case/previews/nature-museum-narrated.mp4) · [案例与素材来源](examples/nature-museum-case/README.md) · [图解动画示例](examples/template-families/README.md) · [在线浏览风格与镜头](https://acorn2.github.io/frame-loom/)
 
-完整样片为 19 场，带真实 TTS 旁白；动图为实际视频片段，没有声音。旋转与缩放镜头展示操作后的截图。案例经过制作与画面迭代，完整听看和素材公开使用仍待复核；使用自己的文档时，Agent 会重新编排。
+完整视频包含 7 场白板动画，使用霞鹜文楷与自然语速旁白，片尾展示 `https://naturemuseum.top/`。插画用于概念示意，不是产品界面或实际三维模型。自动 QA 已通过，完整播放与素材公开使用仍待复核。
 
 ## 适合用来做什么
 
@@ -111,7 +111,17 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文、编写讲稿�
 - **AI 插画风格**：手绘白板、批注推演、编辑式排印。纯文档制作时，Agent 调用 AI 生成人物、物件或情境插画，再编排文字、图解与动画；提供真实截图时直接使用截图，不自动生图。三套使用各自的固定内置镜头流程，详见[制作说明](#三套-ai-插画风格)。
 - **图文动效风格**：墨白杂志、暗场信号、手绘便签、瑞士蓝、工程蓝图、产品演示。以文字排版、图形、图表与界面素材构成画面，通过镜头动效逐步呈现，也可使用真实图片和截图；镜头可由 Agent 推荐或手动限定。
 
-这两类描述画面构建方式，知识讲解、产品介绍、教程或故事属于内容用途。下面六套图文动效风格使用同一份分镜，便于比较；展示图解完成态，可点击观看实际静音样片。
+这两类描述画面构建方式，知识讲解、产品介绍、教程或故事属于内容用途。
+
+三套 AI 插画风格使用同一份“好问题，从观察开始”的文案，均为18秒横屏静音样片。下面展示实际视频的完成态，点击封面或“观看样片”即可查看动画；文案、图解为主体，插画辅助表达。
+
+| 手绘白板 · Whiteboard | 批注推演 · Annotated Reasoning | 编辑式排印 · Editorial Typography |
+| --- | --- | --- |
+| [![手绘白板样片：好问题，从观察开始](examples/template-families/previews/whiteboard-original.png)](examples/template-families/previews/whiteboard-original.mp4) | [![批注推演样片：好问题，从观察开始](examples/template-families/previews/annotated-reasoning-text-led.png)](examples/template-families/previews/annotated-reasoning-text-led.mp4) | [![编辑式排印样片：好问题，从观察开始](examples/template-families/previews/editorial-typography-text-led.png)](examples/template-families/previews/editorial-typography-text-led.mp4) |
+| 逐行书写 · 同步铅笔 · 小赖字体 | 圈词旁注 · 关系累积 · 思源宋体 | 关键词重排 · 关系展开 · 思源黑体 |
+| [观看样片](examples/template-families/previews/whiteboard-original.mp4) | [观看样片](examples/template-families/previews/annotated-reasoning-text-led.mp4) | [观看样片](examples/template-families/previews/editorial-typography-text-led.mp4) |
+
+下面六套图文动效风格使用同一份分镜，便于比较；展示图解完成态，可点击观看实际静音样片。
 
 | 墨白杂志 · Editorial Ink | 暗场信号 · Signal | 手绘便签 · Sketch Notes |
 | --- | --- | --- |

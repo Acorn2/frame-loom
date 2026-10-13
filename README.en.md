@@ -23,13 +23,13 @@ A document-to-video Skill for Codex, Claude Code, and other coding agents
 
 ## See the results
 
-**Real case: promotional copy and website screenshots become a 65-second narrated video for a children's nature museum.** The agent plans the script and shots, combining actual product screenshots, life-stage diagrams, and an access comparison. Generated text uses one font family; colors come from the product homepage.
+**Real case: a children's nature museum promotional document becomes a narrated whiteboard video.** One document supplies the content for illustrations, line-by-line writing, and a four-stage diagram; the silent 10-second GIF below previews the result.
 
-![Actual FrameLoom case: product screenshots, life-stage diagrams, observation questions, and an access comparison](examples/nature-museum-case/previews/highlights.gif)
+![Actual FrameLoom case: open whiteboard, four life stages, nature illustrations, and a closing website address](examples/nature-museum-case/previews/highlights.gif)
 
-[Full narrated review candidate](examples/nature-museum-case/previews/nature-museum-narrated.mp4) · [Case and sources](examples/nature-museum-case/README.en.md) · [Diagram animation example](examples/template-families/README.md) · [Browse six styles online](https://acorn2.github.io/frame-loom/)
+[Watch the full case · 68 seconds · with narration](examples/nature-museum-case/previews/nature-museum-narrated.mp4) · [Case and sources](examples/nature-museum-case/README.en.md) · [Diagram animation example](examples/template-families/README.md) · [Browse styles and shots online](https://acorn2.github.io/frame-loom/)
 
-The full sample has 19 scenes and real TTS narration. The GIF contains actual video excerpts and is silent. Rotation and zoom show screenshots after operations. This is an iterated review candidate; full playback and public asset-use rights still need review. Its source and narration are in Chinese. The agent plans new content for your own document.
+The full video has 7 whiteboard scenes, LXGW WenKai text, natural-speed Chinese narration, and `https://naturemuseum.top/` on the closing screen. The illustrations explain concepts; they are not product screenshots or actual 3D models. Automated QA passed; full playback and public asset-use terms still need review.
 
 ## What can you make?
 
@@ -111,11 +111,17 @@ The nine video styles fall into two groups based on how their visuals are built:
 - **AI illustration styles**: Whiteboard (`whiteboard`), Annotated Reasoning (`annotated-reasoning`), and Editorial Typography (`editorial-typography`). Text and diagrams lead the explanation. Annotations bind to explicit phrases; typography repositions persistent words across declared stages. AI illustrations support the narration, occupying at most 8% of the canvas in the two new styles. For document-only production, the agent actually generates auxiliary illustrations. Supplied screenshots are used directly without automatic image generation. Each style has a fixed built-in shot workflow; see [text-led production (Chinese)](references/text-led-production.md). The old flat-explainer and paper-collage packs remain available for existing projects.
 - **Text and graphics motion styles**: Editorial Ink, Signal, Sketch Notes, Swiss Blue, Blueprint, and Product Frame. They compose typography, shapes, charts, and interface assets with shot animation, and can also use real images and screenshots. The agent can recommend shots, or you can restrict the selection manually.
 
-These groups describe visual construction; explainers, product introductions, tutorials, and stories are content uses. The six text and graphics motion styles below use the same storyboard for comparison. These frames show the completed diagrams; the links open actual silent samples.
+These groups describe visual construction; explainers, product introductions, tutorials, and stories are content uses.
 
-Color Cartoon uses large illustrations, organic stages, surrounding explanations, horizontal sequences, and smooth entrances. Pixel Explainer Notes uses compact subjects, stepped modules, vertical entries, orthogonal connections, and block reveals. Compare all three primary styles with the same copy in the [illustrated examples (Chinese)](examples/illustrated-video/README.md).
+The three AI illustration samples share the original Chinese copy “好问题，从观察开始” (“Good questions begin with observation”). Each is an 18-second landscape silent preview. These frames come from the actual videos; click a cover or “Watch sample” to see the animation. Text and diagrams lead, with illustrations supporting the explanation.
 
-All three primary public samples use the same original Chinese title, narration text, on-screen copy, and parent-and-child observation situation. Each runs for 18 seconds as a silent preview. Whiteboard uses an open board; Color Cartoon and Pixel Explainer Notes use their own generated family illustration and shot arrangement. The upstream content comparison remains a separate attributed method reference.
+| Whiteboard | Annotated Reasoning | Editorial Typography |
+| --- | --- | --- |
+| [![Whiteboard sample: good questions begin with observation](examples/template-families/previews/whiteboard-original.png)](examples/template-families/previews/whiteboard-original.mp4) | [![Annotated Reasoning sample: good questions begin with observation](examples/template-families/previews/annotated-reasoning-text-led.png)](examples/template-families/previews/annotated-reasoning-text-led.mp4) | [![Editorial Typography sample: good questions begin with observation](examples/template-families/previews/editorial-typography-text-led.png)](examples/template-families/previews/editorial-typography-text-led.mp4) |
+| Line-by-line writing · synchronized pencil · Xiaolai | Phrase annotations · cumulative relations · Source Han Serif | Persistent word rearrangement · unfolding relations · Source Han Sans |
+| [Watch sample](examples/template-families/previews/whiteboard-original.mp4) | [Watch sample](examples/template-families/previews/annotated-reasoning-text-led.mp4) | [Watch sample](examples/template-families/previews/editorial-typography-text-led.mp4) |
+
+The six text and graphics motion styles below use the same storyboard for comparison. These frames show the completed diagrams; the links open actual silent samples.
 
 | Editorial Ink | Signal | Sketch Notes |
 | --- | --- | --- |

@@ -2,12 +2,14 @@
 
 [English](README.en.md) · [返回 FrameLoom](../../README.md#效果展示)
 
-用户提供宣传文案和 [产品网站](https://naturemuseum.top/)；FrameLoom 将真实网页截图、生命阶段图解和旁白编排为一条 65 秒横屏视频。
+用户提供纯文档宣传稿与 [产品访问网址](https://naturemuseum.top/)；FrameLoom 生成独立自然主题插画，将开放白板图解和自然语速旁白编排为一条约 68 秒横屏视频。
 
-![实际成片的六段短预览，无声音](previews/highlights.gif)
+![实际成片的 10 秒无声预览：逐行书写、四阶段图解与片尾网站入口](previews/highlights.gif)
 
-[观看完整有声待审样片](previews/nature-museum-narrated.mp4) · [素材来源与署名](ASSET-NOTICE.md)
+[观看完整案例 · 68 秒 · 含旁白](previews/nature-museum-narrated.mp4) · [素材来源与署名](ASSET-NOTICE.md)
 
-成片为 1920×1080、30 fps，采用 `retro-zine` 风格和 `lxgw-wenkai` 字体。短预览取自实际视频；旋转与缩放画面是网站操作后的截图，不是连续录屏。两处界面截图放大后的小字仍偏模糊。
+成片为 1920×1080、30 fps，共 7 场，采用 `whiteboard` 固定内置开放白板流程和 `lxgw-wenkai` 字体。单支铅笔与逐行书写、贴纸擦出同步，四个生命阶段按顺序保留供对照；另有蝴蝶角度观察、剑龙骨板、蒲公英花与种子球以及亲子对话场景。
 
-这是展示草稿。自动 QA 已通过，但完整播放听看和素材公开使用条件仍待维护者复核。视频中的产品功能请以[网站](https://naturemuseum.top/)实际状态为准。
+画面中的 9 项 AI 插画用于概念示意，不展示真实产品界面或实际三维模型。旁白按绘制内容扩展，以豆包原音色、自然语速生成；字幕直接显示在画布上。片尾完整展示 `https://naturemuseum.top/`，不逐字朗读域名。视频保留用户指定的「Hresh赫什」品牌标识；这是用户制作案例，风格库公共样片继续使用占位标识。
+
+10 秒动图取自这条实际视频的 3 段片段，没有声音。自动 QA 已通过；完整播放、字幕同步与素材公开使用条件仍待维护者复核。视频中的产品功能请以[网站](https://naturemuseum.top/)实际状态为准。
