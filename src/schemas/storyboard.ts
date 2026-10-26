@@ -37,11 +37,11 @@ export const StoryboardStyleRefSchema = z.object({
 
 export const StoryboardProjectSchema = z.object({
   title: z.string().min(1),
-  width: z.number().positive(),
-  height: z.number().positive(),
-  fps: z.number().positive(),
-  durationSec: z.number().positive(),
-  durationFrames: z.number().int().positive(),
+  width: z.number().int().positive().max(4096),
+  height: z.number().int().positive().max(4096),
+  fps: z.number().min(1).max(60),
+  durationSec: z.number().positive().max(3600),
+  durationFrames: z.number().int().positive().max(216000),
   status: StoryboardStatusSchema
 }).strict();
 
@@ -122,12 +122,12 @@ export const StoryboardSceneSchema = z.object({
   visual: SceneVisualSchema.optional(),
   shot: ShotSchema.optional(),
   attentionTarget: z.string().min(1).optional(),
-  narration: z.string(),
-  durationFrames: z.number().int().positive(),
-  layers: z.array(StoryboardLayerSchema),
-  connections: z.array(StoryboardConnectionSchema),
-  beats: z.array(StoryboardBeatSchema),
-  captions: z.array(StoryboardCaptionSchema),
+  narration: z.string().max(20000).refine(text => [...text].length <= 10000, '单场旁白不能超过 10000 个 Unicode 字符。'),
+  durationFrames: z.number().int().positive().max(216000),
+  layers: z.array(StoryboardLayerSchema).max(200),
+  connections: z.array(StoryboardConnectionSchema).max(1000),
+  beats: z.array(StoryboardBeatSchema).max(1000),
+  captions: z.array(StoryboardCaptionSchema).max(2000),
   transitionIn: OverlapTransitionSchema.optional(),
   transitionOut: TransitionIdSchema.optional(),
   outro: z.object({holdFrames: z.number().int().nonnegative(), fadeFrames: z.number().int().nonnegative()}).strict().optional()
@@ -142,7 +142,7 @@ export const StoryboardSchema = z.object({
   shotRecipes: ShotSelectionSchema.optional(),
   layoutPolicy: z.literal('content-first-v1').optional(),
   project: StoryboardProjectSchema,
-  scenes: z.array(StoryboardSceneSchema).min(1)
+  scenes: z.array(StoryboardSceneSchema).min(1).max(1000)
 }).strict().superRefine((board, ctx) => {
   if (board.layoutPolicy && board.schemaVersion !== '2.4') ctx.addIssue({code: 'custom', path: ['layoutPolicy'], message: '内容优先布局仅支持 2.4。'});
   if (board.layoutPolicy) for (const scene of board.scenes) {

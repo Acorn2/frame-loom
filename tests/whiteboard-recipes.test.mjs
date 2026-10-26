@@ -6,7 +6,8 @@ import {compileStoryboardShots} from '../src/shots/compile-shot.ts';
 import {SHOT_CATALOG} from '../src/shots/catalog.ts';
 import {checkStoryboardInput, checkVisualInput, checkAssetInput} from '../scripts/lib/preflight.mjs';
 import {libraryPreviewFixtures, buildLibraryCatalog} from '../scripts/lib/library-catalog.mjs';
-import {createExports} from '../library/selection.mjs';
+import {createExports, normalizeSelection} from '../library/selection.mjs';
+import {fixedStyleRecipeIds} from '../library/style-policy.mjs';
 import {listShots} from '../scripts/list-shots.mjs';
 import {drawingProgress, roughPolyline, penPosition, pointOnPath} from '../src/shots/whiteboard/drawing.ts';
 import {whiteboardCanvas, whiteboardLayout} from '../src/shots/whiteboard/layout.ts';
@@ -64,7 +65,9 @@ describe('whiteboard source-driven contracts', () => {
     expect(listShots(['--style', 'whiteboard', '--canvas', 'portrait'], {log: () => {}})).toEqual([]);
     const catalog = buildLibraryCatalog();
     expect(createExports(catalog, {style: 'whiteboard', font: 'source-han-sans-sc', fontMode: 'manual', selected: ids}).prompt).toContain('全片字体：source-han-sans-sc');
-    expect(createExports(catalog, {style: 'whiteboard', selected: ['paper-title']}).prompt).toContain('内置镜头范围：whiteboard-board');
+    expect(normalizeSelection(catalog, {style: 'whiteboard', selected: ['paper-title']})).toMatchObject({shotSelection: 'fixed', selected: []});
+    expect(fixedStyleRecipeIds('whiteboard')).toEqual(['whiteboard-board']);
+    expect(createExports(catalog, {style: 'whiteboard', selected: ['paper-title']})).toEqual(createExports(catalog, {style: 'whiteboard'}));
   });
 });
 describe('deterministic drawing and shared geometry', () => {

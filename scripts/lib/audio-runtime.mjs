@@ -3,6 +3,7 @@ import path from 'node:path';
 import {parseCaptions} from '../../src/audio/captions.ts';
 import {AudioConfigSchema} from '../../src/schemas/audio-config.ts';
 import {AudioManifestSchema} from '../../src/schemas/audio-manifest.ts';
+import {assertAudioBudget, assertAudioFile} from './audio-limits.mjs';
 
 function mediaMime(filePath) {
   const extension = path.extname(filePath).toLowerCase();
@@ -10,6 +11,7 @@ function mediaMime(filePath) {
 }
 
 function fileDataUri(filePath, mimeResolver) {
+  assertAudioFile(filePath);
   if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile() || fs.statSync(filePath).size === 0) {
     throw new Error(`音频或字幕文件不存在或为空：${filePath}`);
   }
@@ -21,6 +23,7 @@ export function loadAudioRuntime(configPath, audioTiming) {
   const resolvedConfig = path.resolve(process.cwd(), configPath);
   const config = AudioConfigSchema.parse(JSON.parse(fs.readFileSync(resolvedConfig, 'utf8')));
   const directory = path.dirname(resolvedConfig);
+  assertAudioBudget(config, directory);
   const runtime = {sfx: []};
   if (config.voiceover?.enabled) {
     runtime.voiceoverDataUri = fileDataUri(path.resolve(directory, config.voiceover.path), mediaMime);

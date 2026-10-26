@@ -38,6 +38,23 @@ function project() {
   save(); return {dir, board, manifest, input, save};
 }
 
+function sourceRoleProject() {
+  const p = project(); p.input.palettePolicy = 'source-roles-v1';
+  const pixels = Array.from({length: 16}, () => [...Array.from({length: 16}, () => [37,99,235]), ...Array.from({length: 16}, () => [246,243,228]), ...Array.from({length: 16}, () => [26,49,30])].flat()).flat();
+  fs.writeFileSync(path.join(p.dir, 'assets/product.ppm'), Buffer.concat([Buffer.from('P6\n48 16\n255\n'), Buffer.from(pixels)]));
+  p.board.palette = {...fullPalette(), source: 'assets', referenceAssets: ['product'], evidence: {
+    accent: {assetId: 'product', region: [0,0,16,16], sampledColor: '#2563eb'},
+    lightBackground: {assetId: 'product', region: [16,0,16,16], sampledColor: '#f6f3e4'},
+    ink: {assetId: 'product', region: [32,0,16,16], sampledColor: '#1a311e'},
+    surface: {derivedFrom: 'lightBackground', reason: 'Lighten the source background for cards.'},
+    darkBackground: {derivedFrom: 'ink', reason: 'Dark green stage derived from source ink.'},
+    accentAlt: {derivedFrom: 'ink', reason: 'Use source title green as secondary accent.'},
+    muted: {derivedFrom: 'ink', reason: 'Lower-emphasis green from source ink.'},
+    captionInk: {derivedFrom: 'ink', reason: 'Distinct readable green for captions.'}
+  }};
+  p.save(); return p;
+}
+
 describe('project palette contract and rendering', () => {
   it('uses source background, body, surface and subtitle roles across every current style and shot', () => {
     for (const id of ['retro-zine', 'archive-grid', 'scatterbrain', 'signal', 'signal-noir', 'studio-frame']) {
@@ -120,43 +137,34 @@ describe('project palette contract and rendering', () => {
 });
 
 describe('palette source lifecycle', () => {
-  it('requires complete, verifiable role evidence for new projects and preserves legacy palettes', () => {
-    const p = project(); const file = path.join(p.dir, 'storyboard.json');
+  it('preserves legacy palettes but requires role evidence for new projects', () => {
+    const p = project(), file = path.join(p.dir, 'storyboard.json');
     expect(validateAssets(file)).toEqual([]);
     p.input.palettePolicy = 'source-roles-v1'; p.save();
     expect(validateAssets(file).join(' ')).toMatch(/不能只替换强调色/);
-    const pixels = Array.from({length: 16}, () => [...Array.from({length: 16}, () => [37,99,235]), ...Array.from({length: 16}, () => [246,243,228]), ...Array.from({length: 16}, () => [26,49,30])].flat()).flat();
-    fs.writeFileSync(path.join(p.dir, 'assets/product.ppm'), Buffer.concat([Buffer.from('P6\n48 16\n255\n'), Buffer.from(pixels)]));
-    p.board.palette = {...fullPalette(), source: 'assets', referenceAssets: ['product'], evidence: {
-      accent: {assetId: 'product', region: [0,0,16,16], sampledColor: '#2563eb'},
-      lightBackground: {assetId: 'product', region: [16,0,16,16], sampledColor: '#f6f3e4'},
-      ink: {assetId: 'product', region: [32,0,16,16], sampledColor: '#1a311e'},
-      surface: {derivedFrom: 'lightBackground', reason: 'Lighten the source background for cards.'},
-      darkBackground: {derivedFrom: 'ink', reason: 'Dark green stage derived from source ink.'},
-      accentAlt: {derivedFrom: 'ink', reason: 'Use source title green as secondary accent.'},
-      muted: {derivedFrom: 'ink', reason: 'Lower-emphasis green from source ink.'},
-      captionInk: {derivedFrom: 'ink', reason: 'Distinct readable green for captions.'}
-    }};
-    p.save(); expect(validateAssets(file)).toEqual([]);
+  });
+  it('binds validated source samples and justified color adjustments into production', () => {
+    const p = sourceRoleProject(), file = path.join(p.dir, 'storyboard.json');
+    expect(validateAssets(file)).toEqual([]);
     const first = resolveProductionLock(p.board, undefined, p.dir).lock;
     expect(first.palette.evidence.roles).toHaveLength(8);
     expect(first.palette.evidence.samples).toHaveLength(3);
-    const original = structuredClone(p.board.palette);
-    delete p.board.palette.evidence.surface; p.save(); expect(validateAssets(file).length).toBeGreaterThan(0);
-    p.board.palette = structuredClone(original); p.board.palette.evidence.ink.sampledColor = '#000000'; p.save();
-    expect(validateAssets(file).join(' ')).toMatch(/采样候选不匹配/);
-    p.board.palette = structuredClone(original); p.board.palette.evidence.ink.region = [47,0,16,16]; p.save();
-    expect(validateAssets(file).join(' ')).toMatch(/边界/);
-    p.board.palette = structuredClone(original); p.board.palette.evidence.lightBackground = {derivedFrom: 'accent', reason: 'Only sample a button.'}; p.save();
-    expect(validateAssets(file).join(' ')).toMatch(/必须直接采样/);
-    p.board.palette = structuredClone(original); p.board.palette.evidence.surface.derivedFrom = 'surface'; p.save();
-    expect(validateAssets(file).join(' ')).toMatch(/循环/);
-    p.board.palette = structuredClone(original); p.board.palette.evidence.ink.region = [0,0,16,16]; p.save();
-    expect(validateAssets(file).join(' ')).toMatch(/不能复用/);
-    p.board.palette = structuredClone(original); p.board.palette.colors.ink = '#203820'; p.save();
-    expect(validateAssets(file).join(' ')).toMatch(/调整原因/);
-    p.board.palette.evidence.ink.reason = 'Readable green adjustment.'; p.save(); expect(validateAssets(file)).toEqual([]);
+    p.board.palette.colors.ink = '#203820';
+    p.board.palette.evidence.ink.reason = 'Readable green adjustment.'; p.save();
+    expect(validateAssets(file)).toEqual([]);
     expect(resolveProductionLock(p.board, undefined, p.dir).lock.hash).not.toBe(first.hash);
+  });
+  it.each([
+    ['missing role', palette => {delete palette.evidence.surface;}, /storyboard\.palette/],
+    ['wrong sample', palette => {palette.evidence.ink.sampledColor = '#000000';}, /采样候选不匹配/],
+    ['out-of-bounds region', palette => {palette.evidence.ink.region = [47,0,16,16];}, /边界/],
+    ['derived core role', palette => {palette.evidence.lightBackground = {derivedFrom: 'accent', reason: 'Only sample a button.'};}, /必须直接采样/],
+    ['cyclic derivation', palette => {palette.evidence.surface.derivedFrom = 'surface';}, /循环/],
+    ['reused source region', palette => {palette.evidence.ink.region = [0,0,16,16];}, /不能复用/],
+    ['unjustified adjustment', palette => {palette.colors.ink = '#203820';}, /调整原因/]
+  ])('rejects invalid palette evidence: %s', (_name, mutate, error) => {
+    const p = sourceRoleProject(); mutate(p.board.palette); p.save();
+    expect(validateAssets(path.join(p.dir, 'storyboard.json')).join(' ')).toMatch(error);
   });
   it('permits reference-only images in a document without inventing a media scene and enforces source policy', () => {
     const p = project(); const file = path.join(p.dir, 'storyboard.json');

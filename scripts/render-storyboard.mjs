@@ -17,6 +17,7 @@ import {layoutCollector} from './lib/layout-qa.mjs';
 import {resolveBrand} from './lib/branding.mjs';
 import {renderCover} from './render-cover.mjs';
 import {renderWithSceneCache} from './lib/scene-cache.mjs';
+import {outputBoundary} from './lib/project-files.mjs';
 
 const args = process.argv.slice(2);
 let force = false;
@@ -190,8 +191,17 @@ console.log(`Rendering ${storyboard.project.durationSec}s ${inputProps.renderPro
 let lastProgressBucket = -1;
 await renderToVerifiedOutput({
   outputPath: resolvedOutput,
+  outputRoot: outputBoundary(resolvedOutput, path.dirname(resolvedInput)),
   force,
   profile: inputProps.renderProfile,
+  artifactSuffixes: [
+    ...(productionLock ? ['.production/resolved-shot-plan.json', '.production/production-lock.json'] : []),
+    ...(branding && productionLock ? ['.cover.png', '.cover.png.render.json'] : [])
+  ],
+  prepareArtifacts: async stagedVideo => {
+    if (productionLock) writeProductionLock(storyboard, productionDirectory(stagedVideo), resolvedProduction);
+    if (branding && productionLock) await renderCover(resolvedInput, stagedVideo);
+  },
   render: async (stagedVideo) => {
     if (sceneCache) {
       const cache = await renderWithSceneCache({projectPath: path.dirname(resolvedInput), inputProps, composition, serveUrl: bundleLocation, outputPath: stagedVideo, renderMedia, layout, hasAudio});
@@ -222,6 +232,4 @@ await renderToVerifiedOutput({
     if (productionLock && resolveProductionLock(storyboard, projectRoot, path.dirname(resolvedInput)).lock.hash !== productionLock.hash) throw new Error('输入或渲染实现已在渲染期间变化，未发布候选视频。');
   }
 });
-if (productionLock) writeProductionLock(storyboard, productionDirectory(resolvedOutput), resolvedProduction);
-if (branding && productionLock) renderCover(resolvedInput, resolvedOutput, undefined, {force});
 console.log(`Rendered: ${resolvedOutput}`);

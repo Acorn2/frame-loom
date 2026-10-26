@@ -12,6 +12,7 @@ import {VideoTemplateSchema} from '../../src/schemas/video-template.ts';
 import {verifyFontAssets} from '../../src/fonts/assets.ts';
 import {resolveBrand} from './branding.mjs';
 import {resolvePaletteEvidence} from './project-palette.mjs';
+import {assertProjectOutput, outputBoundary, writeProjectJson} from './project-files.mjs';
 
 const defaultRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 function stable(value) {
@@ -76,9 +77,11 @@ export function resolveProductionLock(input, root = defaultRoot, projectPath) {
 export const productionDirectory = (videoPath) => `${videoPath}.production`;
 export function writeProductionLock(storyboard, directory, resolved = resolveProductionLock(storyboard)) {
   if (!resolved) return undefined;
-  fs.mkdirSync(directory, {recursive: true});
-  fs.writeFileSync(path.join(directory, 'resolved-shot-plan.json'), `${JSON.stringify(resolved.plans, null, 2)}\n`);
-  fs.writeFileSync(path.join(directory, 'production-lock.json'), `${JSON.stringify(resolved.lock, null, 2)}\n`);
+  const root = outputBoundary(directory);
+  const planPath = path.join(directory, 'resolved-shot-plan.json'), lockPath = path.join(directory, 'production-lock.json');
+  for (const file of [planPath, lockPath]) assertProjectOutput(root, file);
+  writeProjectJson(root, planPath, resolved.plans);
+  writeProjectJson(root, lockPath, resolved.lock);
   return resolved.lock;
 }
 export function assertProductionLock(storyboard, videoPath, directory = productionDirectory(videoPath), projectPath) {

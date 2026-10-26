@@ -1,3 +1,4 @@
+import {assertProjectOutput, writeProjectFile, writeProjectJson} from './project-files.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fingerprintFiles} from './input-fingerprint.mjs';
@@ -30,6 +31,8 @@ export function buildNarrationHandoff(projectPath, storyboard) {
 
 export function writeNarrationHandoff(projectPath, storyboard, directory, force = false) {
   const handoff = buildNarrationHandoff(projectPath, storyboard);
+  assertProjectOutput(projectPath, path.join(directory, 'narration-manifest.json'));
+  assertProjectOutput(projectPath, path.join(directory, 'narration-script.md'));
   fs.mkdirSync(directory, {recursive: true});
   const manifestPath = path.join(directory, 'narration-manifest.json');
   if (fs.existsSync(manifestPath) && !force) {
@@ -39,6 +42,7 @@ export function writeNarrationHandoff(projectPath, storyboard, directory, force 
     }
   }
   const markdownPath = path.join(directory, 'narration-script.md');
+  assertProjectOutput(projectPath, markdownPath); assertProjectOutput(projectPath, manifestPath);
   const lines = [
     `# ${storyboard.project.title} · 配音讲稿`,
     '',
@@ -46,8 +50,8 @@ export function writeNarrationHandoff(projectPath, storyboard, directory, force 
     '',
     ...handoff.scenes.flatMap((scene) => [`## ${scene.id} · ${scene.title}`, '', scene.narration, ''])
   ];
-  fs.writeFileSync(markdownPath, `${lines.join('\n')}\n`);
-  fs.writeFileSync(manifestPath, `${JSON.stringify(handoff, null, 2)}\n`);
+  writeProjectFile(projectPath, markdownPath, `${lines.join('\n')}\n`);
+  writeProjectJson(projectPath, manifestPath, handoff);
   return {markdownPath, manifestPath, handoff};
 }
 

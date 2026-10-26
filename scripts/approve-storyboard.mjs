@@ -1,3 +1,4 @@
+import {writeProjectJson} from './lib/project-files.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
@@ -18,7 +19,7 @@ export function approveStoryboard(projectDirectory, reviewFilePath) {
     fingerprint: storyboardApprovalFingerprint(projectPath)
   };
   const approvalPath = path.join(projectPath, 'storyboard-approval.json');
-  fs.writeFileSync(approvalPath, `${JSON.stringify(approval, null, 2)}\n`);
+  writeProjectJson(projectPath, approvalPath, approval);
   return approvalPath;
 }
 

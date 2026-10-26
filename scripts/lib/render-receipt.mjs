@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fingerprintFiles} from './input-fingerprint.mjs';
+import {outputBoundary, writeProjectJson} from './project-files.mjs';
 
 // Record the profile before QA; approval must never change the reviewed bytes.
 export function writeRenderReceipt(videoPath, profile) {
@@ -9,7 +10,7 @@ export function writeRenderReceipt(videoPath, profile) {
     profile,
     videoFingerprint: fingerprintFiles([videoPath], path.dirname(videoPath))
   };
-  fs.writeFileSync(`${videoPath}.render.json`, `${JSON.stringify(receipt, null, 2)}\n`);
+  writeProjectJson(outputBoundary(videoPath), `${videoPath}.render.json`, receipt);
   return receipt;
 }
 

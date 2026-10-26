@@ -40,22 +40,51 @@ resume also compares fingerprints of project inputs and the rendered video;
 changed inputs require an updated `storyboard.json` when content changed, then
 a new run from `storyboard`. A render resume still respects the explicit
 output overwrite guard. Rendering and media inspection happen in a staging
-directory beside the final MP4; only a verified video and matching receipt
-are published. An explicit `--force` rerender temporarily retains the prior
-video and receipt for rollback. The next run recovers interrupted staging
-files; if another process changed the output, it stops and preserves the
-backup for inspection. `--from qa` reuses a fingerprint-matched video and
+directory beside the final MP4. The video, receipt, 2.4 production lock and
+resolved plan, plus any required cover and cover receipt, are prepared before
+publication. An explicit `--force` rerender retains the prior package for rollback
+until all files are published. A dead process's preparation-only stage can be
+cleaned on retry; an interrupted publication or failed rollback retains its
+`owner.json` journal and backups and blocks retries, including `--force`, until
+the package is inspected and recovered. See [recovery boundaries](../SECURITY.md#本地产物与资源保护).
+If outputs change while rendering, publication stops without replacing them.
+`--from qa` reuses a fingerprint-matched video and
 rebuilds the review frames and contact-sheet pages without rendering again.
 Long renders print coarse progress updates near ten-percent milestones. `init:project` creates an empty
 draft scaffold; the Agent must first turn source material into a valid draft.
 
+## Route capability check
+
+After reading the request and source, check route dependencies before choosing a style, running `init:project` or writing detailed scene/asset plans. This is an availability check, not an online audition or proof of successful production.
+
+| Requested route | Check before committing to the route |
+| --- | --- |
+| Local video rendering | Node.js 24+, installed project dependencies, FFmpeg and ffprobe; resolve missing setup using the [installation guide](installation.md). |
+| Document-only AI illustration style | A callable native image-generation tool that can deliver inspectable transparent images for local PNG registration; a prompt-writing command alone is insufficient. Keep the existing generated-subject policy. |
+| Exact webpage URL for visible imagery or palette reference | An available browser/capture tool and access to the requested page/state. Capture and register the actual local image before its dependent storyboard/asset work. Supplied local images need file access, not browser access. |
+| TTS narration | For an existing project, run `list:tts-profiles -- <project-dir>`. Before creating a new project, inspect a creator-specified existing profile with `inspectTtsProfile` from `scripts/lib/tts-profiles.mjs`; if none is supplied or available, identify the setup gap. Check the requested provider/model/voice and report only safe summaries. Once the project exists, list its profiles and pass the chosen path through `--tts-config`. `ready` is local readiness, not online permission. Do not call `preview:tts` or synthesize audio merely to test availability. Follow [TTS setup](tts-setup.md) for missing configuration. |
+| External narration | Check access to the supplied recording and measure it immediately. Inspect supplied timing/captions or identify the work needed to create the matching contract after scene mapping under [audio integration](audio-integration.md); duration alone does not establish speech matching. Use script-first handoff only when that is what the creator requested. |
+
+If the creator left the style open, select a content-appropriate route supported by available tools and state the choice. If an explicit style, screenshot source or narrated output lacks a dependency, report the specific gap before dependent initialization/planning; continue source analysis that does not depend on it. Do not silently change those choices or disable an illustration policy. Apply existing authorization to requested generation/capture/audio work; availability checking adds no routine confirmation gate. Recheck affected dependencies when the requested route changes.
+
+## Revising an existing production
+
+Use the existing project for revisions of the same video. Read `project-input.json`, the current `storyboard.json`, `script.md`, `shot-map.md` and `run.json` before editing; retain the source, scene IDs and explicit style/font/pool choices except where the requested change requires otherwise.
+
+1. Preserve the previous version's relevant inputs and delivery evidence in a new project-local `revisions/<revision-id>/` directory before replacing them: storyboard/script, affected asset/audio/config evidence, approval records, `run.json`, video, its `.render.json` receipt, any `.production/` directory and QA/review artifacts. Keep referenced asset bytes available. This snapshot is an archive, not a relocated project to resume; its recorded paths may refer to the original project.
+2. Edit `storyboard.json` as the production input and keep narration in `script.md` and the claim/scene mapping in `shot-map.md` consistent. If working in a draft or timing proposal first, inspect the diff and explicitly adopt the intended changes into `storyboard.json`. `produce` always prefers an existing `storyboard.json`; changing only `storyboard.draft.json` does not update production. Do not delete the production file to force promotion.
+3. After production-input changes, use `project.status: generated` while preparing the revision. Recheck affected assets, layout and timing; changed narration requires matching TTS or external recordings/captions. Old approval/delivery evidence is historical. In review mode, present the affected changes, obtain genuine renewed approval, set `reviewed`/`approved`, and run `approve:storyboard` before rendering. Fast mode needs no additional storyboard approval.
+4. Preview changed scenes and affected handoffs with `preview:shot`, using the chosen mode and a new clip filename. Then rerun `produce` from `storyboard` (the default) with the intended mode, output purpose and audio options explicit. Changed inputs cannot use `--from qa` to reuse an old video. Use later-stage recovery only for unchanged inputs with matching recorded fingerprints.
+5. `visual-master` automatically chooses the next versioned output unless forced. Silent previews and narrated pilots use fixed filenames; use `--force` for an authorized replacement only after preserving the previous version. `produce` has no arbitrary `--output` option. Temporary render rollback files are not a durable version archive. Follow the existing picture-lock/retiming contract when previously handed-off audio or visual masters are involved.
+6. Inspect the new run's actual artifacts, QA and affected event frames, then perform the full playback review required by the output purpose. Earlier delivery approval never approves the revised video. Report its actual path and current delivery status.
+
 ## Stage 01 — Intake and route
 
-- Put an unchanged copy of the creator's source document in `source/` and record its original path. Read `project-input.json` (or initialize a new project with `--input-mode document|document-images`). For a new production, the Agent chooses a meaningful lowercase ASCII topic slug from the source and calls `init:project -- --slug <topic-slug>`; the command adds the local creation date (`YYYYMMDD-`) and a numbered suffix on collision. Use its printed path for later steps. Keep an existing project for revisions of that production; do not reuse an old MP4 to answer a request for a fresh render. The creator does not need to supply an ID. `document` is the default and needs no image; `document-images` uses local images or exact URLs supplied by the creator. Neither requires clips or audio for a silent preview.
+- Complete the [route capability check](#route-capability-check) before initialization. After selecting the style and fixed/adopted recipe range in Stage 02, initialize with `--slug <topic-slug> --style <id> --input-mode document|document-images`; add `--shots` only for an original-six style. The command adds the local creation date (`YYYYMMDD-`) and a numbered suffix on collision. Use its printed path, copy the source unchanged into `source/` and record its original path. Keep an existing project for [revisions](#revising-an-existing-production); do not reuse an old MP4 to answer a fresh-render request. The creator does not need to supply an ID. `document` needs no creator-supplied image, but AI illustration styles require generated subjects; `document-images` uses local images or exact URLs supplied by the creator. Neither requires clips or audio for a silent preview.
 - Infer audience and platform from the source when possible; do not ask the creator to state a purpose just to begin a visual preview. Use landscape canvas when none is specified. Record a duration limit only if the creator supplied one; otherwise derive duration from the script and visible reading time in Stage 03.
 - Extract a few key claims with exact source locations; put stable `C1`, `C2`… IDs in `shot-map.md` and mark unsupported claims for review.
 - Compare a route that the document and selected images can support with any materially different narrative route in `route-card.md`. Use text, diagrams and data relationships grounded in the document; in image mode, also identify which real image supports which shot. A generic Style Pack sample is not a project-specific preview.
-- Record unsupported facts or relationships that the document cannot explain clearly against a route, claim and intended shot in `content-gaps.md`. Narrow the claim or reframe the visual. Do not require an image to complete `document` mode.
+- Record unsupported facts or relationships that the document cannot explain clearly against a route, claim and intended shot in `content-gaps.md`. Narrow the claim or reframe the visual. Do not require a creator-supplied image for `document` mode; follow the selected style's generated-subject requirements.
 - Confirm the content fits a structured explainer or product workflow.
 - Route live action, character performance, complex 3D and cinematography-first work elsewhere.
 
@@ -74,13 +103,13 @@ Output: `content-brief.md` and a selected Style Pack.
 ## Stage 03 — Script and storyboard draft
 
 - Write `script.md` before timing details.
-- For current 2.4 projects and legacy 2.3 projects, decide the visible explanation before style: one claim per scene, then `compare`, `sequence`, `network`, `change`, sourced `metric`, `media`, or a short `statement`. Specify the actual subjects and relationships in `visual` and the layer/connection graph. A sequence of differently colored text cards does not fulfill this stage.
+- For current 2.4 projects and legacy 2.3 projects, decide the visible explanation before styling it: one claim per scene, then `compare`, `sequence`, `network`, `change`, sourced `metric`, `media`, or a short `statement`. Specify the actual subjects and relationships in `visual` and the layer/connection graph. Follow the [image provenance and visual-kind rules](../SKILL.md#content-first-video-logic-for-new-projects): generated illustration subjects are diagram content, not real source evidence. A sequence of differently colored text cards does not fulfill this stage.
 - A document-only project may use document-derived diagrams. Real website footage is used only when the creator provides a URL or screenshot; a diagram must declare `representation: diagram`. Numeric scenes must record a source location in `visual.source`.
 - Replace proposed scene IDs in `shot-map.md` with the stable IDs used by the storyboard. Give each key claim one visible shot job and name the document-derived text, graphic or source-listed image that makes it understandable.
 - Map every important meaning to a visible layer, beat target or caption window.
 - During validation, check that caption windows overlap beats and that important content layers are actually reached by beats. These are warnings so a producer can review intentional static holds without blocking the contract.
 - Create `storyboard.draft.json`; never render it directly.
-- Set each scene's duration from its script segment and visible reading time, including the stable final hold; then compute the project duration from the scene timeline. The scaffold's 20 seconds is only a placeholder. For a silent 2.3 preview, estimate headline and diagram-label reading windows separately, use the larger window (units / 5 + 1 second), and adjust for diagram complexity. Keep the first subject prompt, reveal later subjects near the corresponding explanation, and trim empty time after the final action. Without measured audio, timing remains provisional. With voiceover, use the measured audio timing instead of the silent reading estimate.
+- Set each scene's duration from its script segment and visible reading time, including the stable final hold; then compute the project duration from the scene timeline. The scaffold's 20 seconds is only a placeholder. For a silent 2.4 or legacy 2.3 preview, estimate headline and diagram-label reading windows separately, use the larger window (units / 5 + 1 second), and adjust for diagram complexity and the selected recipe's writing/reveal/hold budgets. Keep the first subject prompt, reveal later subjects near the corresponding explanation, and trim empty time after the final action. Without measured audio, timing remains provisional. With voiceover, use the measured audio timing instead of the silent reading estimate.
 
 Output: `script.md` and `storyboard.draft.json`.
 
@@ -184,19 +213,24 @@ or a clean picture master, according to the selected route.
 
 Before rendering and after audio retiming, inspect whether key steps, differences and quantities have visible explanations; review repeated layouts and actions that finish far ahead of speech. Record justified holds or manual-pool limitations in `shot-map.md`. Shared preflight adds warning-only content checks to validation, run records and QA; these neither prove narrative quality nor require an extra approval. See [thresholds and semantic review](shot-planning.md).
 
-For a new 2.3 production, promote a checked draft to `storyboard.json` with
-`status: generated` (or use the reviewed file in review mode), then test one
-representative scene before the whole video. This command renders the scene
-from its position on the real timeline and saves `entry-mid`, `complete` and
-`before-cut` frames next to the clip. A successful short render does not
-replace full video QA.
+For current 2.4 and legacy 2.3 production, complete required asset generation/capture,
+inspection and registration, then promote a checked draft to `storyboard.json`
+with `project.status: generated` for fast mode. In review mode, use the
+reviewed/approved file with a current `approve:storyboard` fingerprint.
+Test a representative scene before the whole video. The command renders the scene
+from its position on the real timeline and saves `entry-mid`, `complete`,
+`before-cut` and, for 2.4, parsed shot-event frames next to the clip. Inspect the
+frames and actual clip; a successful short render does not replace full video QA.
+Use a new clip filename for each retry. The examples below use fast mode; pass
+`--mode review` to both preview and validation/render commands when review was
+selected, and reapprove changes before rendering again.
 
 ```bash
-npm run preview:shot -- projects/<video-id>/storyboard.json <scene-id> projects/<video-id>/output/shot-preview.mp4
+npm run preview:shot -- projects/<video-id>/storyboard.json <scene-id> projects/<video-id>/output/shot-preview.mp4 --mode fast
 ```
 
 ```bash
-npm run validate:storyboard -- projects/<video-id>/storyboard.json
+npm run validate:storyboard -- projects/<video-id>/storyboard.json --mode fast
 npm run validate:assets -- projects/<video-id>/storyboard.json
 npm run check:safe-area -- projects/<video-id>/storyboard.json
 npm run render:storyboard -- projects/<video-id>/storyboard.json projects/<video-id>/output/preview-silent.mp4 --mode fast --output-purpose visual-preview
@@ -223,14 +257,24 @@ npm run qa:storyboard -- projects/<video-id>/storyboard.json projects/<video-id>
 
 For audio, pass the same `--audio-config` used by rendering. Review
 `audio/audio-manifest.json`, `qa-report.json` and the contact sheet, then watch
-the whole video at normal speed. Automated success proves contracts and
+the whole video at normal speed. Inspect every page in `review-frames.json.pages`,
+each scene's complete/pre-cut states and the required 2.4 shot-event coverage.
+Automated success proves contracts and
 encoding facts, not pronunciation, voice identity, loudness or listening
 quality. `visual-preview` stays an inspection file; `visual-master` becomes
 `visual-handoff-pending` after automated QA and `visual-handoff-ready` only
 after full visual review via `approve:visual-handoff`. An in-project audio
 pilot remains `manual-review-pending` until full audio and visual review.
 
-After the creator watches the entire audio pilot, they provide a manual review
+Before playback, prepare a new review file for the current candidate:
+
+```bash
+npm run prepare:review -- projects/<video-id> projects/<video-id>/output/manual-review.json
+```
+
+The template binds `inputFingerprint` and `outputFingerprint` and leaves every check false. Keep those fingerprints unchanged during review. A new render or changed input requires a new file and another review; do not transfer old checked values. The same command prepares the appropriate checks for a visual master before `approve:visual-handoff`.
+
+After the creator watches the entire audio pilot, they complete the manual review
 JSON with a reviewer, notes, and `true` for `fullPlaybackPassed`,
 `visualHierarchyPassed`, `textReadabilityPassed`, `transitionTimingPassed`,
 `audioQualityPassed`, `captionReadabilityPassed`, and `assetRightsPassed`. Then:
@@ -239,7 +283,7 @@ JSON with a reviewer, notes, and `true` for `fullPlaybackPassed`,
 npm run approve:delivery -- projects/<video-id> projects/<video-id>/output/manual-review.json
 ```
 
-This checks the recorded input and video fingerprints, current audio stream,
+This checks that the manual review matches the recorded input and video fingerprints, current audio stream,
 and automated QA before setting `releaseReady=true` and
 `deliveryStatus=release-ready`. The mock TTS test tone cannot pass this gate.
 

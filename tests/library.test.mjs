@@ -1,6 +1,7 @@
 /* global fetch */
 import fs from 'node:fs';
 import path from 'node:path';
+import http from 'node:http';
 import {URL} from 'node:url';
 import {afterAll, describe, expect, it} from 'vitest';
 import {buildLibraryCatalog, libraryFixtures, previewFingerprint} from '../scripts/lib/library-catalog.mjs';
@@ -123,6 +124,10 @@ describe('local library capabilities and selection', () => {
       expect(prompt.length).toBeLessThan(locale === 'zh' ? 800 : 2100);
       expect(prompt).toContain(locale === 'zh' ? '无法读取时说明缺口，不自行替代流程' : 'If unavailable, report the gap; do not substitute a workflow');
       expect(prompt).not.toContain('palette 1.1');
+      const headings = locale === 'zh' ? ['【制作设置】', '【执行流程】', '【交付与复核】'] : ['[Production settings]', '[Workflow]', '[Delivery and review]'];
+      const sections = prompt.split('\n\n');
+      expect(sections).toHaveLength(4);
+      headings.forEach((heading, index) => expect(sections[index + 1].startsWith(heading)).toBe(true));
     }
     const workflow = fs.readFileSync(path.join(projectRoot, 'SKILL.md'), 'utf8');
     for (const guide of ['primary-style-production', 'shot-planning', 'project-palette', 'illustrated-production', 'text-led-production', 'branding', 'tts-setup', 'audio-integration']) {
@@ -312,6 +317,37 @@ describe('local library capabilities and selection', () => {
   });
 });
 describe('read-only library serving', () => {
+  it('rejects foreign Host headers while permitting local hostnames', async () => {
+    const requestStatus = host => new Promise((resolve, reject) => {
+      http.get(`${base}/index.html`, {headers: {Host: host}}, response => {
+        response.resume(); response.on('end', () => resolve(response.statusCode));
+      }).on('error', reject);
+    });
+    for (const host of ['untrusted.example', 'localhost.untrusted.example', '127.0.0.1.untrusted.example', 'untrusted.example:4318']) {
+      expect(await requestStatus(host), host).toBe(403);
+    }
+    for (const host of ['localhost', `localhost:${server.address().port}`, '127.0.0.1', '[::1]']) {
+      expect(await requestStatus(host), host).toBe(200);
+    }
+  });
+  it('blocks symlink escapes and hidden targets, and handles broken links without stopping the server', async () => {
+    const outside = path.join(directory, 'outside'); fs.mkdirSync(outside);
+    fs.writeFileSync(path.join(outside, 'canary.txt'), 'private test canary');
+    fs.mkdirSync(path.join(output, '.private'));
+    fs.writeFileSync(path.join(output, '.private/secret.txt'), 'hidden test canary');
+    fs.symlinkSync(path.join(outside, 'canary.txt'), path.join(output, 'external.txt'));
+    fs.symlinkSync(outside, path.join(output, 'external-dir'), 'junction');
+    fs.symlinkSync(path.join(output, '.private'), path.join(output, 'hidden-alias'), 'junction');
+    fs.symlinkSync(path.join(directory, 'missing.txt'), path.join(output, 'broken.txt'));
+    for (const name of ['external.txt', 'external-dir/canary.txt', 'hidden-alias/secret.txt']) {
+      const response = await fetch(`${base}/${name}`);
+      expect(response.status, name).toBe(403);
+      expect(await response.text()).not.toContain('canary');
+    }
+    expect((await fetch(`${base}/broken.txt`)).status).toBe(404);
+    expect((await fetch(`${base}/%00.txt`)).status).toBe(400);
+    expect((await fetch(`${base}/index.html`)).status).toBe(200);
+  });
   it('serves separate style, shot and export pages with relative navigation', async () => {
     const pages = [
       ['index.html', 'styles', 'id="styles"', ['id="cards"', 'id="prompt"']],
@@ -521,7 +557,7 @@ describe('style card capability and preview evidence', () => {
     expect(styleCardInfo(retro, catalog.recipes, 'landscape').count).toBe(43);
     expect(styleCardInfo(retro, catalog.recipes, 'portrait').count).toBe(4);
     expect(styleCardInfo(retro, catalog.recipes, 'portrait').basicOnly).toBe(false);
-    for (const style of catalog.styles.filter(style => style.id !== 'retro-zine')) expect(styleCardInfo(style, catalog.recipes, 'landscape').capability).toBe(style.role === 'primary' ? '风格内置镜头' : '43 个可用镜头');
+    for (const style of catalog.styles.filter(style => style.id !== 'retro-zine')) expect(styleCardInfo(style, catalog.recipes, 'landscape').capability).toBe(style.role === 'primary' ? '镜头自动编排' : '43 个可用镜头');
   });
   it('publishes readable covers from the same video and color roles from the actual style tokens', async () => {
     const published = await (await fetch(`${base}/catalog.json`)).json();

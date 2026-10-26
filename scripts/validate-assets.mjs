@@ -92,6 +92,7 @@ export function validateAssets(storyboardPath, manifestPath) {
         continue;
       }
       const stat = fs.statSync(normalized);
+      if (stat.size > 64 * 1024 * 1024) issues.push(`单个素材超过 64 MiB，请压缩或拆分：${asset.path}`);
       if (!stat.isFile() || stat.size === 0) issues.push(`manifest asset 不存在或为空：${asset.path}`);
     } catch {
       issues.push(`manifest asset 不存在或为空：${asset.path}`);

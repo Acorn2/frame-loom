@@ -260,6 +260,8 @@ npm run init:project -- --slug my-explainer --style retro-zine --shots paper-tit
 
 原始文章不能直接传给 `produce`；它需要已经编排的项目。`storyboard.draft.json` 也不能直接传给渲染命令。若只有**编排完成且有效**的草稿，`produce --mode fast` 可以生成 `storyboard.json` 后继续；已有 `storyboard.json` 时则以它为输入，不会自动采用后来修改的草稿。
 
+修改已有视频时，按[已有项目修订流程](production-pipeline.md#revising-an-existing-production)先保留上一版，再把改动采用到 `storyboard.json`，同步讲稿、映射与音频。内容变化后从 `storyboard` 阶段重新生产；`--from qa` 只适合输入未变的恢复，不能用旧视频验证新内容。review 模式重新批准，交付状态依据新视频的 QA 与完整播放复核。
+
 ### 校验并制作视频
 
 把变量值换成初始化命令打印的实际项目路径，再在同一个终端执行：
@@ -390,9 +392,11 @@ npm run produce -- projects/my-video --mode fast --audio-mode silent --output-pu
 npm run produce -- projects/my-video --mode review --audio-mode silent --output-purpose visual-master
 ```
 
-产物是独立版本的 `output/visual-master-vNNN.mp4`，同名 `-review/handoff/` 下有逐镜 `narration-script.md`、`shot-timing.json` 和 `visual-handoff.json`。底片无音轨、无逐句旁白字幕和 `SILENT PREVIEW` 标记；画面标题和必要图解文字保留。自动 QA 后状态为 `visual-handoff-pending`。创作者完整查看、确认预留区域与文字可读后，填写 `reviewer`、`notes`，并将 `fullPlaybackPassed`、`visualHierarchyPassed`、`textReadabilityPassed`、`overlaySafeAreaPassed`、`assetRightsPassed` 设为 `true`，再运行：
+产物是独立版本的 `output/visual-master-vNNN.mp4`，同名 `-review/handoff/` 下有逐镜 `narration-script.md`、`shot-timing.json` 和 `visual-handoff.json`。底片无音轨、无逐句旁白字幕和 `SILENT PREVIEW` 标记；画面标题和必要图解文字保留。自动 QA 后状态为 `visual-handoff-pending`。创作者完整查看、确认预留区域与文字可读后，填写 `reviewer`、`notes`，并将 `fullPlaybackPassed`、`visualHierarchyPassed`、`textReadabilityPassed`、`overlaySafeAreaPassed`、`assetRightsPassed` 设为 `true`，再运行批准命令。开始审片前先用下面的 `prepare:review` 生成新文件，保留其输入与视频指纹；重新渲染后旧记录失效：
 
 ```bash
+npm run prepare:review -- projects/my-video projects/my-video/output/visual-review.json
+# 完整审片并填写该文件后
 npm run approve:visual-handoff -- projects/my-video projects/my-video/output/visual-review.json
 ```
 
@@ -438,7 +442,13 @@ npm run produce -- projects/my-video --mode fast --audio-mode external --output-
 
 人工审过分镜的项目先运行 `approve:storyboard`，再将上述命令中的 `--mode fast` 改为 `--mode review`。两条音频路线都会输出 `output/pilot-audio.mp4`。`run.status=completed` 仅表示本次命令结束；有声输出在人工复核前是 `manual-review-pending`。
 
-创作者完整播放音频视频，检查声音与画面对齐、字幕可读性和素材权限后，将人工复核结果写入 `output/manual-review.json`，例如：
+先为当前候选生成一份新的审片记录：
+
+```bash
+npm run prepare:review -- projects/my-video projects/my-video/output/manual-review.json
+```
+
+模板包含当前 `inputFingerprint`、`outputFingerprint`，所有检查初始为 `false`。创作者完整播放音频视频、检查声音与画面对齐、字幕可读性和素材权限后，保留模板指纹，填写其余字段，例如下面这些审核字段（不是完整文件）：
 
 ```json
 {
@@ -454,7 +464,7 @@ npm run produce -- projects/my-video --mode fast --audio-mode external --output-
 }
 ```
 
-确认记录真实、各项均通过后运行 `npm run approve:delivery -- projects/my-video projects/my-video/output/manual-review.json`。有声候选文件已保留声音和字幕并移除审片标记，文件名暂沿用 `pilot-audio.mp4`。命令会再次核对音频流、自动 QA、渲染记录以及输入和视频指纹，然后标记 `deliveryStatus=release-ready`；静音 MP4 和用于测试的 mock TTS 不能通过。音频路线不绑定内置 TTS 服务；外部音频也可通过下列独立命令先测量时间轴和响度，再渲染：
+重新渲染或修改输入后必须重新生成记录并审片，不能只把旧记录的指纹替换为新值。确认记录真实、各项均通过后运行 `npm run approve:delivery -- projects/my-video projects/my-video/output/manual-review.json`。有声候选文件已保留声音和字幕并移除审片标记，文件名暂沿用 `pilot-audio.mp4`。命令会再次核对音频流、自动 QA、渲染记录以及输入和视频指纹，然后标记 `deliveryStatus=release-ready`；静音 MP4 和用于测试的 mock TTS 不能通过。音频路线不绑定内置 TTS 服务；外部音频也可通过下列独立命令先测量时间轴和响度，再渲染：
 
 ```bash
 npm run inspect:audio -- projects/my-video/storyboard.json projects/my-video/audio/audio-config.json

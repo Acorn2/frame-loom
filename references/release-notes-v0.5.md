@@ -38,5 +38,6 @@ npm run inspect:output -- .tmp/quick-start/preview-silent.mp4 examples/creator-p
 - 确认该提交的 CI 与 Pages 部署成功；在线 catalog 应与发布源码一致：九套可选风格、52个注册场景（实际选择受风格与固定流程约束）和五家 TTS 预设，再检查实际样片与复制指令。
 - 在实际 Claude Code 中验证插件加载和 `/frame-loom:frame-loom` 调用；目录与 manifest 的静态检查不能替代此步骤。
 - 确认公开素材与许可，以及支持系统的真实验证范围。Windows 未完成安装与渲染验收时，保留指南中的说明。
+- 当前 `examples/nature-museum-case/ASSET-NOTICE.md` 仍记录旁白公开使用条件和完整播放待确认；发布前补齐实际确认，或将未确认的案例媒体及其展示入口从发布候选中排除。自动 QA 和代码修复不能关闭这项待办。
 
 GitHub Release 网页中的链接应按实际发布 tag 指向仓库文件，并检查它们可访问。以上操作需要维护者在授权范围内执行；本草稿不自动提交、打 tag、推送或发布。

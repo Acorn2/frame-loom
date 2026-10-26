@@ -79,6 +79,7 @@ main {max-width: 1440px; margin: auto; padding: 0 1.25rem; min-height: 70vh;}
 .library-note>p {max-width: 80ch; padding: .25rem 0 .75rem; line-height: 1.8;}
 .note-label {font-weight: 600; color: var(--ink); flex-shrink: 0;}
 .styles {display: grid; grid-template-columns: 1fr; gap: 1.5rem; padding-bottom: 2rem;}
+#font-preview-media {scroll-margin-top: 9rem;}
 .font-section {padding: 1.75rem 0 2rem; border-top: 1px solid var(--line); scroll-margin-top: 8rem;}
 .font-section-heading {display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;}
 .font-section-heading h2 {font-size: 1.35rem;}
@@ -113,7 +114,6 @@ main {max-width: 1440px; margin: auto; padding: 0 1.25rem; min-height: 70vh;}
 .style-play-label {position: absolute; left: .85rem; bottom: .85rem; display: inline-flex; gap: .4rem; align-items: center; padding: .45rem .65rem; border: 1px solid #dce2ea; background: #fffffff2; border-radius: .4rem; color: var(--ink); font-size: .6875rem; box-shadow: 0 2px 10px #20273308;}
 .style-play-label span {font-size: .6rem;}
 .style-heading {display: flex; align-items: center; flex-wrap: wrap; gap: .5rem;}
-.style-selected {display: inline-flex; align-items: center; gap: .25rem; padding: .15rem .4rem; border-radius: .3rem; background: var(--accent-soft); color: var(--accent); font-size: .6875rem; font-weight: 600; white-space: nowrap;}
 .style-body {padding: 1rem 1.15rem;}
 .style-title-row {display: flex; align-items: center; justify-content: space-between; gap: .7rem;}
 .style-name {font-size: 1.125rem; font-weight: 650; letter-spacing: -.025em; line-height: 1.4;}
@@ -422,8 +422,19 @@ body[data-page="selection"] .export-main {display: grid; gap: 1rem; align-conten
 .handoff-card .error:empty {display: none;}
 .handoff-card .error {margin-bottom: .75rem;}
 .prompt-details {margin-top: .75rem; font-size: .8125rem;}
-.prompt-details textarea {margin-bottom: .75rem; font-size: .8125rem;}
+.prompt-details textarea {margin: .75rem 0; font-size: .8125rem; max-height: 36rem;}
+.font-reference-note {color: var(--muted); font-size: .75rem; margin-top: .5rem; line-height: 1.7;}
+.handoff-steps {display: grid; gap: 1rem; padding: 0 0 1rem 1.25rem; margin: 0; border-bottom: 1px solid var(--line); font-size: .8125rem;}
+.handoff-steps li {padding-left: .25rem; min-width: 0;}
+.handoff-steps li::marker {color: var(--accent); font-family: var(--mono);}
+.handoff-steps strong, .handoff-steps span {display: block;}
+.handoff-steps span {color: var(--muted); font-size: .75rem; margin-top: .25rem;}
+.handoff-install {font-size: .75rem; color: var(--muted); margin: .85rem 0;}
+.handoff-install a {display: inline-flex; align-items: center; gap: .25rem; min-height: 2.75rem; margin-left: .5rem; color: var(--accent);}
+.copy-status {color: var(--ink); font-size: .8125rem; margin-top: .75rem;}
+.copy-status:empty {display: none;}
 @media (min-width: 640px) {
+  .handoff-steps {grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 2rem;}
   .choice-grid {grid-template-columns: repeat(2, minmax(0, 1fr));}
   .tts-summary:has(div) {grid-template-columns: repeat(3, minmax(0, 1fr));}
 }

@@ -31,16 +31,17 @@ export function collectManifestAssetFiles(projectPath) {
   }
 }
 
-export function fingerprintFiles(files, basePath) {
+export function fingerprintFiles(files, basePath, snapshots = new Map()) {
   const hash = createHash('sha256');
   for (const filePath of [...new Set(files)].sort()) {
     hash.update(path.relative(basePath, filePath));
     hash.update('\0');
-    const exists = fs.existsSync(filePath);
-    if (exists && !fs.statSync(filePath).isFile()) {
+    const source = snapshots.get(filePath) ?? filePath;
+    const exists = fs.existsSync(source);
+    if (exists && !fs.statSync(source).isFile()) {
       throw new Error(`指纹输入必须是普通文件：${filePath}`);
     }
-    hash.update(exists ? fs.readFileSync(filePath) : '<missing>');
+    hash.update(exists ? fs.readFileSync(source) : '<missing>');
     hash.update('\0');
   }
   return hash.digest('hex');

@@ -18,10 +18,40 @@ const fixture = (style, id = 'storyboard') => path.resolve(`examples/illustrated
 const read = file => JSON.parse(fs.readFileSync(file));
 fs.mkdirSync('.tmp/illustrated-tests', {recursive: true});
 const directories = [];
-const copy = () => {const dir = fs.mkdtempSync(path.resolve('.tmp/illustrated-tests/case-')); directories.push(dir); fs.cpSync(path.dirname(fixture('flat-explainer')), dir, {recursive: true}); return dir;};
+const copy = (source = path.dirname(fixture('flat-explainer'))) => {const dir = fs.mkdtempSync(path.resolve('.tmp/illustrated-tests/case-')); directories.push(dir); fs.cpSync(source, dir, {recursive: true}); return dir;};
 const save = (dir, name, value) => fs.writeFileSync(path.join(dir, name), JSON.stringify(value));
 afterAll(() => {for (const dir of directories) fs.rmSync(dir, {recursive: true});});
 describe('illustrated production', () => {
+  it('requires a generated subject on screen, not just an empty or unused registration', () => {
+    const dir = copy(path.resolve('examples/text-led-video/annotated-reasoning'));
+    const file = path.join(dir, 'storyboard.json'), board = read(file);
+    save(dir, 'project-input.json', {schemaVersion: '1.0', inputMode: 'document', illustrationPolicy: 'generated-subjects-v1'});
+    save(dir, 'asset-manifest.json', {schemaVersion: '1.0', assets: []});
+    save(dir, 'illustration-plan.json', {schemaVersion: '1.0', style: board.style, assets: [
+      {id: 'family', path: 'assets/family.png', subject: 'Test subject', purpose: 'Validation fixture', sourceClaim: 'source.md'}
+    ]});
+    prepareIllustrations(dir);
+    registerIllustration(dir, 'family', path.join(dir, 'assets/family.png'), 'test fixture');
+    expect(validateAssets(file)).toEqual([]);
+    board.scenes[0].shot.elements.illustration.opacity = 0; save(dir, 'storyboard.json', board);
+    expect(validateAssets(file).join(' ')).toMatch(/至少.*生成插画.*画面/);
+    board.scenes[0].shot.elements.illustration.opacity = 1;
+    for (const scene of board.scenes) {
+      const removed = new Set(scene.layers.filter(layer => layer.type === 'object').map(layer => layer.id));
+      scene.layers = scene.layers.filter(layer => !removed.has(layer.id));
+      scene.beats = scene.beats.filter(beat => !removed.has(beat.target));
+      for (const [slot, ids] of Object.entries(scene.shot.slots)) scene.shot.slots[slot] = ids.filter(id => !removed.has(id));
+      for (const id of removed) delete scene.shot.elements[id];
+    }
+    save(dir, 'storyboard.json', board);
+    expect(checkStoryboardInput(board, {storyboardPath: file, styleRoot: path.resolve('styles'), executionMode: 'fast'}).filter(issue => issue.severity === 'error')).toEqual([]);
+    expect(validateAssets(file).join(' ')).toMatch(/至少.*生成插画.*画面/);
+    save(dir, 'asset-manifest.json', {schemaVersion: '1.0', assets: []});
+    expect(validateAssets(file).join(' ')).toMatch(/至少.*生成插画.*画面/);
+    const input = read(path.join(dir, 'project-input.json')); delete input.illustrationPolicy;
+    save(dir, 'project-input.json', input);
+    expect(validateAssets(file)).toEqual([]);
+  });
   it.each(['flat-explainer', 'paper-collage'])('%s keeps maximum slot counts inside the canvas with readable text and disjoint nodes', style => {
     for (const [id, counts] of [['illustrated-hero', [1]], ['illustrated-compare', [2]], ['illustrated-process', [2, 3, 4]], ['illustrated-explain', [2, 3]], ['illustrated-breakdown', [2, 3, 4]], ['illustrated-metric', [1, 2, 3]]]) {
       for (const count of counts) {

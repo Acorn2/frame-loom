@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="light">
-  <title>制作组合 · FrameLoom</title>
+  <title>制作设置 · FrameLoom</title>
   <link rel="icon" href="brand/favicon.ico" sizes="16x16 32x32 48x48">
   <link rel="icon" href="brand/favicon.svg" type="image/svg+xml" sizes="any">
   <link rel="apple-touch-icon" href="brand/apple-touch-icon.png" sizes="180x180">
@@ -14,13 +14,13 @@
   <a class="skip" href="#main">跳到主要内容</a>
   <header class="masthead">
     <a class="brand" href="index.html" aria-label="FrameLoom 视频风格"><img class="brand-mark" src="brand/logo.svg" width="40" height="40" alt=""><span>FrameLoom<small>AI 文档转视频</small></span></a>
-    <nav class="page-nav" aria-label="配方库导航"><a href="index.html"><span class="nav-step">01</span>视频风格</a><a href="shots.html"><span class="nav-step">02</span>镜头配方</a><a href="selection.html" aria-current="page"><span class="nav-step">03</span>制作组合<span id="nav-count" class="nav-count">0</span></a></nav>
+    <nav class="page-nav" aria-label="配方库导航"><a href="index.html"><span class="nav-step">01</span>视频风格</a><a href="shots.html"><span class="nav-step">02</span>镜头配方</a><a href="selection.html" aria-current="page"><span class="nav-step">03</span>制作设置<span id="nav-count" class="nav-count">0</span></a></nav>
     <span class="header-note">看效果 · 选组合 · 本地制作</span>
   </header>
-  <main id="main" data-screen-label="制作组合">
+  <main id="main" data-screen-label="制作设置">
     <section class="page-heading"><div><p class="eyebrow">03 / MAKE YOUR VIDEO</p><h1>把选择变成视频</h1><p class="page-description">设置成品与配音，复制指令后把文档交给本地 Agent。</p></div><div class="canvas-label"><label for="canvas">制作画幅</label><select id="canvas"><option value="landscape">16:9 横屏</option><option value="portrait">9:16 竖屏</option></select></div></section>
     <div class="selection-layout">
-      <aside class="combination-card"><p class="meta-label">我的制作组合</p><div class="combination-style"><figure class="combination-reference"><img id="selected-style-poster" alt="当前风格原始字体样片" width="960" height="540"><figcaption>风格参考 · 原始字体</figcaption></figure><div class="combination-title"><strong id="current-style"></strong><p id="current-style-en" lang="en"></p></div><dl class="combination-facts"><div><dt>全片字体</dt><dd id="current-font"></dd></div><div><dt>制作画幅</dt><dd id="current-canvas"></dd></div></dl><a href="index.html#font-section" class="combination-preview-link">查看字体组合样片 <span aria-hidden="true">→</span></a></div><p id="auto-shots-note" class="section-note">镜头由 Agent 读取文档后推荐。无需预先挑选，复制指令并附上文档即可。</p><a href="index.html" class="combination-change text-button"><span aria-hidden="true">←</span> 更换风格</a><div id="manual-shots" hidden><div class="selected-heading"><h2>手动镜头集合 <span id="selected-count">0 个</span></h2><button id="clear" class="text-button">清空</button></div><div id="selected-list" class="selected-list"></div><a href="shots.html" class="button secondary wide">继续挑选镜头 <span aria-hidden="true">→</span></a><p class="section-note">Agent 只在此集合内编排，可重复使用，也无需全部出场。</p></div></aside>
+      <aside class="combination-card"><p class="meta-label">我的制作组合</p><div class="combination-style"><figure class="combination-reference"><img id="selected-style-poster" alt="当前风格原始字体样片" width="960" height="540"><figcaption>风格参考 · 原始字体</figcaption></figure><div class="combination-title"><strong id="current-style"></strong><p id="current-style-en" lang="en"></p></div><dl class="combination-facts"><div><dt>全片字体</dt><dd id="current-font"></dd></div><div><dt>制作画幅</dt><dd id="current-canvas"></dd></div></dl><a href="index.html#font-preview-media" class="combination-preview-link"><span id="combination-preview-label">查看字体组合样片</span> <span aria-hidden="true">→</span></a><p class="font-reference-note">参考图保留样片字体；实际制作使用你选择的全片字体。</p></div><p id="auto-shots-note" class="section-note">镜头由 Agent 读取文档后推荐。无需预先挑选，复制指令并附上文档即可。</p><a href="index.html" class="combination-change text-button"><span aria-hidden="true">←</span> 更换风格</a><div id="manual-shots" hidden><div class="selected-heading"><h2>手动镜头集合 <span id="selected-count">0 个</span></h2><button id="clear" class="text-button">清空</button></div><div id="selected-list" class="selected-list"></div><a href="shots.html" class="button secondary wide">继续挑选镜头 <span aria-hidden="true">→</span></a><p class="section-note">Agent 只在此集合内编排，可重复使用，也无需全部出场。</p></div></aside>
       <section class="export-main" aria-label="视频制作向导">
         <!-- Approved flow: the Agent recommends from the document; manual pools remain strict. -->
         <div id="shot-selection-section" class="form-card wizard-card">
@@ -48,7 +48,7 @@
           <div id="tts-section" class="tts-section">
             <label class="tts-select-label" for="tts-preset">配音配置</label><select id="tts-preset" aria-describedby="tts-note"><option value="configured">沿用本地已配置的 TTS</option></select>
             <div id="tts-summary" class="tts-summary" aria-live="polite"></div>
-            <p id="tts-note" class="section-note">这里展示项目内置预设。Agent 会在本地核对是否已启用；已有多个配置时会列出音色供你选择。</p>
+            <p id="tts-note" class="section-note">本地待检查：网页无法确认配置是否已启用或服务是否可用。Agent 会先核对；有多个配置时列出音色供你选择。</p>
           </div>
           <p id="external-note" class="inline-note" hidden>粘贴指令时附上旁白文件。Agent 会检查音频、字幕与画面的时间对应关系。</p>
         </div>
@@ -67,12 +67,19 @@
         <details class="form-card advanced-settings"><summary>制作前的确认</summary><label class="review-choice"><input id="review-first" type="checkbox"><span><strong>先确认讲稿和分镜，再制作</strong><small>勾选后，Agent 会先展示内容与镜头安排，等待你确认。默认直接制作，出片后复核。</small></span></label><p class="section-note">静音审片用于检查制作过程中的画面；“仅画面”则是交给后期剪辑的产物。</p></details>
         <div class="export-card handoff-card">
           <div class="wizard-heading"><span id="handoff-step" class="step-number" aria-hidden="true">4</span><div><h2>交给 Agent 开始制作</h2><p id="production-summary" class="section-note" aria-live="polite"></p></div></div>
-          <p class="handoff-guide">复制到使用 FrameLoom 的 Agent，并附上文档；需要时一起附图片或旁白。制作后查看待审产物与检查结果。</p>
+          <p class="handoff-guide">在已安装 FrameLoom 的 Codex 或其他 Coding Agent 中继续。</p>
+          <ol class="handoff-steps" aria-label="制作交接步骤">
+            <li><strong>复制指令</strong><span>已包含下方完整设置</span></li>
+            <li><strong>粘贴并附上文档</strong><span id="handoff-materials">有参考图片时一起附上</span></li>
+            <li><strong>查看制作结果</strong><span id="handoff-result">播放待审视频，检查内容与声音</span></li>
+          </ol>
+          <p class="handoff-install">首次使用？<a id="installation-guide" href="https://github.com/Acorn2/frame-loom/blob/main/references/installation.md" target="_blank" rel="noopener noreferrer">查看安装指南 <span aria-hidden="true">↗</span></a></p>
           <p id="handoff-shot-summary" class="inline-note" role="status"></p>
           <p id="export-error" class="error" role="status"></p>
           <button id="copy-prompt" class="button wide" disabled><span id="copy-prompt-label">复制制作指令</span> <span aria-hidden="true">→</span></button>
-          <details id="prompt-details" class="prompt-details"><summary>查看将复制的指令</summary><textarea id="prompt" readonly aria-label="Agent 制作指令" rows="12"></textarea></details>
-          <p class="section-note">网页保存你的公开选项，制作在本地 Agent 中完成。文档、音频和密钥在本地处理。</p>
+          <p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
+          <details id="prompt-details" class="prompt-details"><summary>查看完整制作指令</summary><p id="prompt-note" class="section-note">复制按钮会复制以下全部内容，供 Agent 执行；无需手动填写命令参数。</p><textarea id="prompt" readonly aria-label="Agent 制作指令" aria-describedby="prompt-note" rows="16"></textarea></details>
+          <p class="section-note">本网页仅保存制作选项，不接收文档、音频或密钥。制作由本地 Agent 发起；使用云端 Agent、配音或生图服务时，相关内容会发送给对应服务。</p>
         </div>
       </section>
     </div>

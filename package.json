@@ -36,6 +36,7 @@
     "init:project": "node --import tsx/esm scripts/init-project.mjs",
     "validate:storyboard": "node --import tsx/esm scripts/validate-storyboard.mjs",
     "produce": "node --import tsx/esm scripts/produce.mjs",
+    "prepare:review": "node --import tsx/esm scripts/prepare-review.mjs",
     "approve:delivery": "node --import tsx/esm scripts/approve-delivery.mjs",
     "approve:visual-handoff": "node --import tsx/esm scripts/approve-visual-handoff.mjs",
     "approve:storyboard": "node --import tsx/esm scripts/approve-storyboard.mjs",
@@ -70,7 +71,10 @@
     "react-dom": "18.3.1",
     "remotion": "4.0.522",
     "roughjs": "4.6.6",
-    "zod": "4.5.4"
+    "zod": "4.6.6"
+  },
+  "overrides": {
+    "zod": "$zod"
   },
   "devDependencies": {
     "@types/node": "22.15.21",
@@ -79,6 +83,6 @@
     "eslint": "9.39.4",
     "tsx": "4.22.4",
     "typescript": "5.9.3",
-    "vitest": "4.1.11"
+    "vitest": "4.1.12"
   }
 }

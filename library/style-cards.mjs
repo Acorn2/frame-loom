@@ -20,6 +20,6 @@ export function styleCardInfo(style, recipes, canvas) {
   const count = scenes.length;
   return {...copy[style.id], count, available: count > 0,
     capability: !count ? style.canvas?.length === 1 && style.canvas[0] === 'landscape' ? '仅支持横屏' : '当前画幅不支持'
-      : isFixedStyle(style.id) ? '风格内置镜头' : count === 1 && scenes[0].id === 'semantic-default' ? '1 个基础镜头' : `${count} 个可用镜头`,
+      : isFixedStyle(style.id) ? '镜头自动编排' : count === 1 && scenes[0].id === 'semantic-default' ? '1 个基础镜头' : `${count} 个可用镜头`,
     basicOnly: count === 1 && scenes[0].id === 'semantic-default'};
 }

@@ -27,6 +27,7 @@ Use this checklist after the storyboard is reviewed and again after rendering. A
 - [ ] `script.md` contains the exact `scene.narration` for every scene ID before a script or visual handoff.
 - [ ] Planned facecam and subtitle overlays are recorded in `visual-handoff.json` before `review` approval.
 - [ ] In `review` mode, the creator's storyboard review is recorded with `approve:storyboard`; later script, timing or overlay changes require renewed approval.
+- [ ] For a revision, intended changes are adopted into the production `storyboard.json`, with matching script/mapping/audio inputs; the previous version is preserved under the [revision workflow](production-pipeline.md#revising-an-existing-production), and old approval/QA is not presented as evidence for the new version.
 
 ## Image source review
 
@@ -55,7 +56,7 @@ npm run qa:storyboard -- <storyboard.json> <preview.mp4> [output-dir]
 - [ ] Resolution, fps and duration match the storyboard.
 - [ ] Silent preview or visual master contains exactly one H.264 video stream and no audio stream.
 - [ ] A video of at least 20 seconds produces at least six review frames.
-- [ ] For a 2.3 long video, every scene has a completed-state and pre-cut frame; `review-frames.json.pages` covers every numbered frame, with at most 48 frames per contact-sheet page.
+- [ ] For current 2.4 and legacy 2.3 videos, inspect every contact-sheet page in `review-frames.json.pages` and each scene's completed-state/pre-cut frames; 2.4 also requires parsed shot-event coverage. Contact-sheet pages contain at most 48 frames each.
 - [ ] `qa-report.json` records automated checks and leaves manual review pending.
 
 ## Audio QA when enabled

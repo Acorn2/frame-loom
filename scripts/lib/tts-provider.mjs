@@ -1,3 +1,4 @@
+import {readBoundedResponse} from './bounded-response.mjs';
 import fs from 'node:fs';
 import {Buffer} from 'node:buffer';
 import {spawnSync} from 'node:child_process';
@@ -97,7 +98,7 @@ async function readBinaryAudio(response, provider) {
   if (!contentType.startsWith('audio/') && !contentType.startsWith('application/octet-stream')) {
     throw new Error(`${provider} TTS 未返回音频（content-type: ${contentType || 'missing'}）。`);
   }
-  const audio = Buffer.from(await response.arrayBuffer());
+  const audio = await readBoundedResponse(response);
   if (audio.length === 0) throw new Error(`${provider} TTS 返回空音频。`);
   return {audio};
 }
@@ -142,7 +143,7 @@ async function requestMiniMax(text, config) {
   });
   if (!response.ok) throw new Error(`MiniMax TTS 请求失败（HTTP ${response.status}）。`);
   let result;
-  try { result = await response.json(); } catch { throw new Error('MiniMax TTS 返回不是可解析 JSON。'); }
+  try { result = JSON.parse((await readBoundedResponse(response)).toString('utf8')); } catch { throw new Error('MiniMax TTS 返回不是可解析 JSON。'); }
   const code = result?.base_resp?.status_code;
   if (!Number.isInteger(code)) throw new Error('MiniMax TTS 返回缺少有效业务状态码。');
   if (code !== 0) throw new Error(`MiniMax TTS 合成失败（code: ${code}）。请检查凭据、额度、音色和模型权限。`);
@@ -194,7 +195,7 @@ async function requestAliyun(text, config) {
   });
   if (!response.ok) throw new Error(`阿里百炼 TTS 请求失败（HTTP ${response.status}）。`);
   let result;
-  try { result = await response.json(); } catch { throw new Error('阿里百炼 TTS 返回不是可解析 JSON。'); }
+  try { result = JSON.parse((await readBoundedResponse(response)).toString('utf8')); } catch { throw new Error('阿里百炼 TTS 返回不是可解析 JSON。'); }
   const audioUrl = result?.output?.audio?.url;
   if (result?.code || !audioUrl) throw new Error(`阿里百炼 TTS 未返回音频地址${result?.code ? `（${result.code}）` : ''}。`);
   const parsedUrl = new URL(audioUrl);
@@ -267,7 +268,7 @@ async function requestDoubao(text, config) {
     throw new Error(`豆包 TTS 请求失败（HTTP ${response.status}）。请检查鉴权、资源 ID 和服务权限。`);
   }
   const contentType = response.headers.get('content-type') ?? '';
-  const responseBuffer = Buffer.from(await response.arrayBuffer());
+  const responseBuffer = await readBoundedResponse(response);
   if (contentType.includes('audio/')) return {audio: responseBuffer};
   if (config.apiVersion === 'v3') {
     const chunks = [];
@@ -306,9 +307,12 @@ async function requestDoubao(text, config) {
 
 export async function synthesizeSpeech({text, config, outputPath}) {
   if (!text?.trim()) throw new Error('TTS 文本不能为空。');
+  if ([...text].length > 10000) throw new Error('单场旁白超过 10000 字符，请拆分镜头。');
   if (config.provider === 'mock') {
     if (config.format !== 'wav') throw new Error('mock provider 目前只支持 wav。');
-    fs.writeFileSync(outputPath, createWav(estimateMockDuration(text, config.speedRatio), config.sampleRate));
+    const duration = estimateMockDuration(text, config.speedRatio ?? 1), sampleRate = config.sampleRate ?? 24000;
+    if (!Number.isFinite(duration) || duration > 600 || !Number.isInteger(sampleRate) || sampleRate < 8000 || sampleRate > 96000) throw new Error('mock 音频超出资源限制。');
+    fs.writeFileSync(outputPath, createWav(duration, sampleRate));
     return {durationHintSec: estimateMockDuration(text, config.speedRatio)};
   }
   config = TtsConfigSchema.parse(config);
@@ -323,7 +327,8 @@ export async function synthesizeSpeech({text, config, outputPath}) {
 }
 
 export function probeAudioDuration(filePath) {
-  const result = spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'default=noprint_wrappers=1:nokey=1', filePath], {encoding: 'utf8'});
+  const result = spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'default=noprint_wrappers=1:nokey=1', filePath], {encoding: 'utf8', timeout: 10000, killSignal: 'SIGKILL'});
+  if (result.error?.code === 'ETIMEDOUT') throw new Error('音频探测超时，已终止进程。');
   if (result.error?.code === 'ENOENT') throw new Error('找不到 ffprobe。请安装 FFmpeg，并确保 ffprobe 在 PATH 中。');
   if (result.status !== 0) throw new Error(`ffprobe 无法读取音频：${filePath}`);
   const durationSec = Number(result.stdout.trim());
@@ -341,7 +346,8 @@ export function combineAudioSegments(segments, outputPath, durationSec, sampleRa
     filters.push(`[${index}:a]adelay=${delayMs}|${delayMs},apad,atrim=duration=${durationSec.toFixed(3)}[a${index}]`);
   }
   args.push('-filter_complex', `${filters.join(';')};${segments.map((_, index) => `[a${index}]`).join('')}amix=inputs=${segments.length}:duration=longest:dropout_transition=0:normalize=0,atrim=duration=${durationSec.toFixed(3)}`, '-ac', '1', '-ar', String(sampleRate), outputPath);
-  const result = spawnSync('ffmpeg', args, {encoding: 'utf8'});
+  const result = spawnSync('ffmpeg', args, {encoding: 'utf8', timeout: 120000, killSignal: 'SIGKILL'});
+  if (result.error?.code === 'ETIMEDOUT') throw new Error('旁白合成超时，已终止进程。');
   if (result.error?.code === 'ENOENT') throw new Error('找不到 ffmpeg。请安装 FFmpeg，并确保 ffmpeg 在 PATH 中。');
   if (result.status !== 0) throw new Error(`ffmpeg 合并旁白失败：${result.stderr.trim()}`);
 }

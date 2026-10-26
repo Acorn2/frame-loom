@@ -6,6 +6,7 @@ import {parseCaptions} from '../src/audio/captions.ts';
 import {analyzeAudioTiming} from '../src/audio/timing.ts';
 import {AudioConfigSchema} from '../src/schemas/audio-config.ts';
 import {StoryboardSchema} from '../src/schemas/storyboard.ts';
+import {AUDIO_LIMITS, assertAudioBudget, assertAudioFile, assertAudioDuration} from './lib/audio-limits.mjs';
 
 function readJson(schema, filePath, label) {
   const parsed = schema.safeParse(JSON.parse(fs.readFileSync(filePath, 'utf8')));
@@ -16,13 +17,16 @@ function readJson(schema, filePath, label) {
 }
 
 function probeDuration(filePath) {
+  assertAudioFile(filePath);
   if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile() || fs.statSync(filePath).size === 0) {
     throw new Error(`音频文件不存在或为空：${filePath}`);
   }
-  const result = spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'json', filePath], {encoding: 'utf8'});
+  const result = spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'json', filePath], {encoding: 'utf8', timeout: AUDIO_LIMITS.probeMs, killSignal: 'SIGKILL'});
+  if (result.error?.code === 'ETIMEDOUT') throw new Error('外部音频探测超时，已终止进程。');
   if (result.error?.code === 'ENOENT') throw new Error('找不到 ffprobe。请安装 FFmpeg，并确保 ffprobe 在 PATH 中。');
   if (result.status !== 0) throw new Error(`ffprobe 无法读取音频：${filePath}\n${result.stderr.trim()}`);
   const durationSec = Number(JSON.parse(result.stdout).format?.duration);
+  assertAudioDuration(durationSec);
   if (!Number.isFinite(durationSec) || durationSec <= 0) throw new Error(`无法获得有效音频时长：${filePath}`);
   return durationSec;
 }
@@ -38,7 +42,8 @@ function probeLoudness(filePath) {
     '-f',
     'null',
     '-'
-  ], {encoding: 'utf8'});
+  ], {encoding: 'utf8', timeout: AUDIO_LIMITS.loudnessMs, killSignal: 'SIGKILL'});
+  if (result.error?.code === 'ETIMEDOUT') throw new Error('外部音频响度测量超时，已终止进程。');
   if (result.error?.code === 'ENOENT') throw new Error('找不到 ffmpeg。请安装 FFmpeg，并确保 ffmpeg 在 PATH 中。');
   if (result.status !== 0) throw new Error(`ffmpeg 无法测量音频响度：${filePath}\n${result.stderr.trim()}`);
   const start = result.stderr.lastIndexOf('{');
@@ -62,6 +67,7 @@ export function inspectAudio(storyboardPath, audioConfigPath) {
   const storyboard = readJson(StoryboardSchema, resolvedStoryboard, 'storyboard.json');
   const config = readJson(AudioConfigSchema, resolvedConfig, 'audio-config.json');
   const configDirectory = path.dirname(resolvedConfig);
+  assertAudioBudget(config, configDirectory);
   const tracks = [];
   const addTrack = (kind, id, item) => {
     if (!item?.enabled) return;

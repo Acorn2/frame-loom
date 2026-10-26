@@ -57,15 +57,15 @@ function renderStyles() {
     const active = style.id === state.style;
     const colors = style.displayColors ?? [];
     return `${index === 0 || style.role !== catalog.styles[index - 1].role ? `<div class="style-group" style="grid-column:1/-1"><h2>${style.role === 'primary' ? 'AI 插画风格' : '图文动效风格'}</h2><p class="section-note">${style.role === 'primary' ? '文字与图解为主，AI 插画辅助建立情境；也可使用真实截图。' : '通过文字、图形、图表与界面动效逐步讲解；也可使用真实图片。'}</p></div>` : ''}<article class="style-card ${active ? 'active' : ''}" aria-labelledby="style-title-${escape(style.id)}">
-      <div class="style-preview"><button class="style-poster" data-style-preview="${escape(style.id)}" aria-label="预览风格 ${escape(style.subtitle)} ${escape(style.name)}">
+      <div class="style-preview"><button class="style-poster" data-style-preview="${escape(style.id)}" aria-label="预览风格 ${escape(style.subtitle)}${style.name !== style.subtitle ? ` ${escape(style.name)}` : ''}">
         <img src="${escape(style.poster)}" alt="${escape(style.subtitle)} 真实样片标题帧" width="960" height="540" loading="lazy">
         ${style.video ? `<video data-src="${escape(style.video)}" muted loop playsinline preload="none" aria-hidden="true"></video>` : ''}
         <span class="style-play-label"><span aria-hidden="true">▶</span> 播放样片</span></button></div>
-      <div class="style-body"><div class="style-title-row"><div><div class="style-heading"><h2 id="style-title-${escape(style.id)}" class="style-name">${escape(style.subtitle)}</h2>${active ? '<span class="style-selected"><span aria-hidden="true">✓</span> 已选</span>' : ''}</div><p class="style-subtitle" lang="en">${escape(style.name)}</p></div>
+      <div class="style-body"><div class="style-title-row"><div><div class="style-heading"><h2 id="style-title-${escape(style.id)}" class="style-name">${escape(style.subtitle)}</h2></div>${style.name !== style.subtitle ? `<p class="style-subtitle" lang="en">${escape(style.name)}</p>` : ''}</div>
         <div class="style-swatch" role="img" aria-label="${escape(colors.map(c => `${c.role} ${c.color}`).join('，'))}">${colors.map(c => `<span style="background:${escape(c.color)}" title="${escape(c.role)}：${escape(c.color)}"></span>`).join('')}</div></div>
       <p class="style-features">${escape(info.features ?? style.description)}</p><p class="style-use"><span>适合</span>${escape(info.use ?? '文档讲解')}</p>
       <div class="style-foot"><p class="style-capability ${info.basicOnly || !info.available ? 'basic-only' : ''}" title="当前${state.canvas === 'landscape' ? '横屏' : '竖屏'}兼容场景，不含辅助动作与转场。${info.basicOnly ? '当前仅支持基础图解与收尾。' : ''}"><span aria-hidden="true">${info.basicOnly || !info.available ? '○' : '◉'}</span> ${escape(info.capability)}</p>
-        <button class="style-pick" data-style="${escape(style.id)}" ${info.available ? '' : 'disabled'} aria-pressed="${active}" aria-label="${active ? '已选风格' : '选择风格'} ${escape(style.subtitle)} ${escape(style.name)}">${!info.available ? '当前画幅不支持' : active ? '已选用 ✓' : '使用此风格'}</button></div></div></article>`;
+        <button class="style-pick" data-style="${escape(style.id)}" ${info.available ? '' : 'disabled'} aria-pressed="${active}" aria-label="${active ? '已选风格' : '选择风格'} ${escape(style.subtitle)}${style.name !== style.subtitle ? ` ${escape(style.name)}` : ''}">${!info.available ? '当前画幅不支持' : active ? '已选用 ✓' : '使用此风格'}</button></div></div></article>`;
   }).join('');
 }
 function renderCategories() {
@@ -155,6 +155,10 @@ function renderExports() {
   $('handoff-shot-summary').textContent = fixed ? '当前：使用风格内置流程。附上文档即可制作，镜头范围随风格固定。' : state.shotSelection === 'auto'
     ? '当前：根据文档推荐镜头组合。无需预选配方，Agent 读取文档后推荐并编排。'
     : `当前：仅使用已选的 ${state.selected.length} 个配方。可重复或只用其中一部分，不会自动添加其他配方。`;
+  $('copy-status').textContent = '';
+  $('installation-guide').href = `https://github.com/Acorn2/frame-loom/blob/main/references/installation${getLocale() === 'en' ? '.en' : ''}.md`;
+  $('handoff-materials').textContent = goal !== 'master' && audio === 'external' ? '同时附上旁白音频与时间信息' : '有参考图片时一起附上';
+  $('handoff-result').textContent = review ? '先确认讲稿和分镜，再制作' : goal === 'master' ? '检查画面底片、讲稿与逐镜时间表' : '播放待审视频，检查内容与声音';
   $('copy-prompt-label').textContent = fixed ? '复制制作指令' : state.shotSelection === 'auto' ? '复制自动编排指令' : '复制指定镜头指令';
   for (const input of document.querySelectorAll('input[name="goal"]')) input.checked = input.value === goal;
   for (const input of document.querySelectorAll('input[name="audio"]')) input.checked = input.value === audio;
@@ -178,6 +182,7 @@ function renderExports() {
   $('production-summary').replaceChildren();
   const summary = [goal === 'master' ? '仅画面 · 后期剪辑' : '带旁白的视频'];
   if (goal !== 'master') summary.push(audio === 'external' ? '已有旁白' : preset?.name ?? '本地 TTS 配置');
+  if (goal !== 'master' && audio === 'tts') summary.push('TTS 本地待检查');
   summary.push({auto: '自动配色', style: '风格配色', source: '产品素材配色'}[colorMode], review ? '先确认讲稿与分镜' : '直接制作，出片后复核');
   for (const value of summary) {const item = document.createElement('span'); item.textContent = value; $('production-summary').append(item);}
   try {
@@ -226,7 +231,8 @@ function renderSelection(save = true) {
     }
   }
   if ($('selected-count')) $('selected-count').textContent = `${state.selected.length} 个`;
-  $('nav-count').textContent = isFixedStyle(state.style) ? '内置' : state.shotSelection === 'auto' ? '自动' : state.selected.length;
+  $('nav-count').hidden = state.shotSelection !== 'manual';
+  $('nav-count').textContent = state.selected.length;
   if (document.body.dataset.page === 'selection') document.querySelector('.page-heading .eyebrow').textContent = `${isFixedStyle(state.style) ? '02' : '03'} / MAKE YOUR VIDEO`;
   for (const link of document.querySelectorAll('.page-nav a')) {
     if (link.getAttribute('href')?.startsWith('shots.html')) link.hidden = isFixedStyle(state.style);
@@ -235,7 +241,8 @@ function renderSelection(save = true) {
   if ($('bar-count')) $('bar-count').textContent = document.body.dataset.page === 'styles' ? `已选风格：${style.subtitle}` : isFixedStyle(state.style) ? '风格内置镜头 · 可直接制作' : state.shotSelection === 'auto' ? '根据文档自动选镜头' : state.selected.length ? `已选 ${state.selected.length} 个镜头` : '尚未选择手动镜头';
   if ($('bar-style')) $('bar-style').textContent = `${style.subtitle} · ${font.name} · ${state.canvas === 'landscape' ? '16:9 横屏' : '9:16 竖屏'}`;
   if ($('current-style')) $('current-style').textContent = style.subtitle;
-  if ($('current-style-en')) $('current-style-en').textContent = style.name;
+  if ($('current-style-en')) { $('current-style-en').textContent = style.name; $('current-style-en').hidden = style.name === style.subtitle; }
+  if ($('combination-preview-label')) $('combination-preview-label').textContent = `${getLocale() === 'en' ? 'Preview ' : '预览 '}${style.subtitle} × ${font.name}`;
   if ($('selected-style-poster')) $('selected-style-poster').src = style.poster;
   if ($('selected-list')) $('selected-list').innerHTML = state.selected.length ? state.selected.map(id => {
     const item = catalog.recipes.find(item => item.id === id);
@@ -289,8 +296,8 @@ function showDetail(item, isStyle = false) {
 }
 async function copy(id) {
   const area = $(id);
-  try {await navigator.clipboard.writeText(area.value); $('copy-prompt-label').textContent = '已复制 · 去 Agent 粘贴'; toast('制作指令已复制。粘贴到 Agent，并附上文档即可开始。');}
-  catch {$('prompt-details').open = true; area.focus(); area.select(); toast('浏览器未允许复制，已展开并选中文本，请手动复制。');}
+  try {await navigator.clipboard.writeText(area.value); $('copy-prompt-label').textContent = '已复制 · 去 Agent 粘贴'; $('copy-status').textContent = '复制成功。请粘贴到 Agent 对话，并附上文档与所需素材。';}
+  catch {$('copy-prompt-label').textContent = '重新尝试复制'; $('prompt-details').open = true; area.focus(); area.select(); $('copy-status').textContent = '浏览器未允许复制，已展开并选中文本，请手动复制。';}
 }
 async function start() {
   const response = await fetch('catalog.json');
@@ -381,6 +388,10 @@ async function start() {
   });
   $('clear')?.addEventListener('click', () => {state.selected = []; renderCards(); renderSelection();});
   $('copy-prompt')?.addEventListener('click', () => copy('prompt'));
+  // Restore font deep links after the async catalog has filled the style grid.
+  if (['#font-section', '#font-preview-media'].includes(window.location.hash)) {
+    window.requestAnimationFrame(() => $(window.location.hash.slice(1))?.scrollIntoView({block: 'start'}));
+  }
   document.addEventListener('fullscreenchange', () => {if (!document.fullscreenElement) shotPlayback?.stop();});
   document.addEventListener('keydown', event => {if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k' && !$('detail').open) {event.preventDefault(); if (!$('search')) {window.location.href = `${document.querySelector('.page-nav a[href^="shots.html"]').getAttribute('href')}#search`; return;} $('search').focus();}});
 }

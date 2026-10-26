@@ -118,7 +118,7 @@
           "default": 30000,
           "type": "integer",
           "exclusiveMinimum": 0,
-          "maximum": 9007199254740991
+          "maximum": 300000
         },
         "outputSampleRate": {
           "default": 24000,
@@ -367,7 +367,7 @@
           "default": 30000,
           "type": "integer",
           "exclusiveMinimum": 0,
-          "maximum": 9007199254740991
+          "maximum": 300000
         },
         "outputSampleRate": {
           "default": 24000,
@@ -532,7 +532,7 @@
           "default": 30000,
           "type": "integer",
           "exclusiveMinimum": 0,
-          "maximum": 9007199254740991
+          "maximum": 300000
         },
         "outputSampleRate": {
           "default": 24000,
@@ -739,7 +739,7 @@
           "default": 30000,
           "type": "integer",
           "exclusiveMinimum": 0,
-          "maximum": 9007199254740991
+          "maximum": 300000
         },
         "outputSampleRate": {
           "default": 24000,
@@ -952,7 +952,7 @@
           "default": 30000,
           "type": "integer",
           "exclusiveMinimum": 0,
-          "maximum": 9007199254740991
+          "maximum": 300000
         },
         "outputSampleRate": {
           "default": 24000,
@@ -1093,8 +1093,8 @@
         "sampleRate": {
           "default": 24000,
           "type": "integer",
-          "exclusiveMinimum": 0,
-          "maximum": 9007199254740991
+          "minimum": 8000,
+          "maximum": 96000
         },
         "speedRatio": {
           "default": 1,
@@ -1120,7 +1120,7 @@
           "default": 30000,
           "type": "integer",
           "exclusiveMinimum": 0,
-          "maximum": 9007199254740991
+          "maximum": 300000
         },
         "outputSampleRate": {
           "default": 24000,

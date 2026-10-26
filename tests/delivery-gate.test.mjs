@@ -4,6 +4,7 @@ import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {afterEach, describe, expect, it} from 'vitest';
 import {approveDelivery, checkDeliveryEligibility} from '../scripts/approve-delivery.mjs';
+import {prepareReview} from '../scripts/prepare-review.mjs';
 import {fingerprintFiles, fingerprintProjectInputs} from '../scripts/lib/input-fingerprint.mjs';
 import {synthesizeSpeech} from '../scripts/lib/tts-provider.mjs';
 import {inspectAudio} from '../scripts/inspect-audio.mjs';
@@ -79,6 +80,7 @@ describe('delivery gate', () => {
     });
     writeJson(path.join(project, 'run.json'), {
       status: 'completed',
+      outputPurpose: 'in-project-video',
       deliveryStatus: 'manual-review-pending',
       stages: {qa: 'completed'},
       audioModeResolved: 'external',
@@ -87,6 +89,13 @@ describe('delivery gate', () => {
       outputFingerprint: fingerprintFiles([videoPath], project)
     });
 
+    expect(() => approveDelivery(project, reviewPath)).toThrow(/Fingerprint/);
+    const templatePath = path.join(project, 'output', 'bound-review.json');
+    prepareReview(project, templatePath);
+    const reviewed = JSON.parse(fs.readFileSync(templatePath));
+    expect(reviewed.fullPlaybackPassed).toBe(false);
+    expect(() => prepareReview(project, templatePath)).toThrow();
+    writeJson(reviewPath, {...passingReview, inputFingerprint: reviewed.inputFingerprint, outputFingerprint: reviewed.outputFingerprint});
     approveDelivery(project, reviewPath);
     expect(JSON.parse(fs.readFileSync(path.join(project, 'run.json'), 'utf8')).deliveryStatus).toBe('release-ready');
     expect(JSON.parse(fs.readFileSync(qaPath, 'utf8')).releaseReady).toBe(true);
@@ -100,6 +109,7 @@ describe('delivery gate', () => {
     run.audioModeResolved = 'tts';
     run.inputFingerprint = fingerprintProjectInputs(project, styleRoot);
     writeJson(path.join(project, 'run.json'), run);
+    writeJson(reviewPath, {...passingReview, inputFingerprint: run.inputFingerprint, outputFingerprint: run.outputFingerprint});
     expect(() => approveDelivery(project, reviewPath)).toThrow(/mock TTS 仅用于测试/);
 
     runQa({

@@ -10,6 +10,7 @@ import {CHAPTER_TRANSITIONS} from '../../src/shots/shortlist/chapter-transitions
 import {loadStyleIndex, projectRoot} from './style-catalog.mjs';
 import {FONT_CATALOG, recommendedFont} from '../../src/fonts/catalog.ts';
 import {readFontPreviews} from './font-previews.mjs';
+import {previewRuntimeFiles} from './preview-inputs.mjs';
 
 // Approved direction: a local catalog with actual renderer samples and selection exports.
 // Catalogs own capabilities; this file only joins presentation labels and public evidence.
@@ -76,7 +77,7 @@ export function previewFingerprint() {
     ...[...new Set(libraryPreviewFixtures().filter(item => item.recipeId.startsWith('illustrated-') || item.recipeId === 'whiteboard-board').map(item => path.dirname(path.join(projectRoot, item.source))))].flatMap(directory => [path.join(directory, 'asset-manifest.json'), ...illustrationFiles(directory)]),
     ...['annotated-reasoning', 'editorial-typography'].flatMap(id => ['asset-manifest.json', 'project-input.json', 'source.md', 'source-imagegen-requests.json'].map(file => path.join(projectRoot, 'examples/text-led-video', id, file))),
     path.join(projectRoot, 'scripts/lib/library-assets.mjs'), path.join(projectRoot, 'scripts/render-library-previews.mjs'), path.join(projectRoot, 'scripts/lib/library-catalog.mjs'), path.join(projectRoot, 'package-lock.json')];
-  for (const input of inputs) {hash.update(path.relative(projectRoot, input)); hash.update(fs.readFileSync(input));}
+  for (const input of [...new Set([...inputs, ...previewRuntimeFiles(projectRoot)])].sort()) {hash.update(path.relative(projectRoot, input)); hash.update(fs.readFileSync(input));}
   return hash.digest('hex');
 }
 function readPreviewManifest() {

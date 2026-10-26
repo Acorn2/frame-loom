@@ -3,6 +3,7 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {projectRoot, loadStyleIndex} from './style-catalog.mjs';
 import {FONT_CATALOG} from '../../src/fonts/catalog.ts';
+import {previewRuntimeFiles} from './preview-inputs.mjs';
 
 export const fontPreviewRoot = path.join(projectRoot, 'library/font-previews');
 export const fontPreviewFixture = 'examples/font-selection/storyboard.json';
@@ -15,6 +16,7 @@ export function fontPreviewFingerprint() {
   }
   const hash = createHash('sha256');
   for (const file of [...files(path.join(projectRoot, 'src')), ...files(path.join(projectRoot, 'styles')),
+    ...previewRuntimeFiles(projectRoot),
     ...['fonts/font-index.json', fontPreviewFixture, 'scripts/preview-fonts.mjs', 'scripts/lib/font-previews.mjs', 'package-lock.json'].map(name => path.join(projectRoot, name))].sort()) {
     hash.update(path.relative(projectRoot, file)); hash.update(fs.readFileSync(file));
   }

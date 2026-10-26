@@ -1,3 +1,4 @@
+import {writeProjectJson} from './lib/project-files.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
@@ -14,7 +15,7 @@ export function prepareScriptHandoff(projectDirectory, executionMode = 'fast') {
     const draftPath = path.join(projectPath, 'storyboard.draft.json');
     const draft = StoryboardSchema.parse(JSON.parse(fs.readFileSync(draftPath, 'utf8')));
     const promoted = draft.project.status === 'draft' ? {...draft, project: {...draft.project, status: 'generated'}} : draft;
-    fs.writeFileSync(storyboardPath, `${JSON.stringify(promoted, null, 2)}\n`);
+    writeProjectJson(projectPath, storyboardPath, promoted, {overwrite: false});
   }
   const storyboard = StoryboardSchema.parse(JSON.parse(fs.readFileSync(storyboardPath, 'utf8')));
   if (executionMode === 'review') assertStoryboardApproval(projectPath);
@@ -44,7 +45,7 @@ export function prepareScriptHandoff(projectDirectory, executionMode = 'fast') {
     artifacts: {storyboard: 'storyboard.json', narrationScript: path.relative(projectPath, result.markdownPath), narrationManifest: path.relative(projectPath, result.manifestPath)},
     warnings: issues.filter((issue) => issue.severity === 'warning').map((issue) => `${issue.path}: ${issue.message}`), errors: []
   };
-  fs.writeFileSync(runPath, `${JSON.stringify(run, null, 2)}\n`);
+  writeProjectJson(projectPath, runPath, run);
   return result;
 }
 

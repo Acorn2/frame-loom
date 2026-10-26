@@ -168,9 +168,9 @@ describe('video production purposes', () => {
   });
 
   it('requires clean output QA and a complete visual review before handoff', () => {
-    const run = {status: 'completed', deliveryStatus: 'visual-handoff-pending', outputPurpose: 'visual-master', stages: {qa: 'completed'}};
+    const run = {inputFingerprint: 'a'.repeat(64), outputFingerprint: 'b'.repeat(64), status: 'completed', deliveryStatus: 'visual-handoff-pending', outputPurpose: 'visual-master', stages: {qa: 'completed'}};
     const qa = {automatedPassed: true, mode: 'visual-master', checks: {output: {passed: true, audioStreams: 0}, visualMasterProfile: {passed: true}}};
-    const review = {reviewer: 'creator', notes: 'Watched the full picture.', fullPlaybackPassed: true, visualHierarchyPassed: true, textReadabilityPassed: true, overlaySafeAreaPassed: true, assetRightsPassed: true};
+    const review = {inputFingerprint: run.inputFingerprint, outputFingerprint: run.outputFingerprint, reviewer: 'creator', notes: 'Watched the full picture.', fullPlaybackPassed: true, visualHierarchyPassed: true, textReadabilityPassed: true, overlaySafeAreaPassed: true, assetRightsPassed: true};
     expect(checkVisualHandoffEligibility(run, qa, review)).toEqual([]);
     expect(checkVisualHandoffEligibility(run, qa, {...review, overlaySafeAreaPassed: false}).join(' ')).toContain('overlaySafeAreaPassed');
     expect(checkVisualHandoffEligibility(run, {...qa, checks: {...qa.checks, output: {passed: true, audioStreams: 1}}}, review).join(' ')).toContain('无音轨');

@@ -1,3 +1,5 @@
+import {writeProjectJson, assertProjectOutput} from './lib/project-files.mjs';
+import {reviewFingerprintIssues, VIDEO_REVIEW_CHECKS} from './lib/manual-review.mjs';
 import fs from 'node:fs';
 import {assertProductionLock} from './lib/production-lock.mjs';
 import path from 'node:path';
@@ -7,26 +9,14 @@ import {inspectOutput} from './inspect-output.mjs';
 import {AudioConfigSchema} from '../src/schemas/audio-config.ts';
 import {inspectCleanNarratedRender} from './lib/render-receipt.mjs';
 
-const REQUIRED_REVIEW_CHECKS = [
-  'fullPlaybackPassed',
-  'visualHierarchyPassed',
-  'textReadabilityPassed',
-  'transitionTimingPassed',
-  'audioQualityPassed',
-  'captionReadabilityPassed',
-  'assetRightsPassed'
-];
+const REQUIRED_REVIEW_CHECKS = VIDEO_REVIEW_CHECKS;
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
-function writeJson(filePath, value) {
-  fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`);
-}
-
 export function checkDeliveryEligibility(run, qa, review) {
-  const issues = [];
+  const issues = reviewFingerprintIssues(run, review);
   if (run.status !== 'completed' || run.stages?.qa !== 'completed') issues.push('生产流程和自动 QA 必须先完成。');
   if (!['tts', 'external'].includes(run.audioModeResolved)) issues.push('静音预览不能作为可交付视频。');
   if (run.outputPurpose && run.outputPurpose !== 'in-project-video') issues.push('只有项目内有声视频可以通过有声交付审核。');
@@ -49,6 +39,7 @@ export function approveDelivery(projectDirectory, reviewFilePath) {
   const videoPath = path.resolve(projectPath, run.artifacts?.video ?? '');
   const qaPath = path.resolve(projectPath, run.artifacts?.qaReport ?? '');
   if (!run.artifacts?.video || !run.artifacts?.qaReport) throw new Error('run.json 缺少视频或 QA 报告路径。');
+  assertProjectOutput(projectPath, runPath); assertProjectOutput(projectPath, qaPath);
   const qa = readJson(qaPath);
   const review = readJson(path.resolve(reviewFilePath));
   const issues = checkDeliveryEligibility(run, qa, review);
@@ -75,6 +66,7 @@ export function approveDelivery(projectDirectory, reviewFilePath) {
   const reviewedAt = new Date().toISOString();
   qa.manualReview = {
     ...Object.fromEntries(REQUIRED_REVIEW_CHECKS.map((check) => [check, true])),
+    inputFingerprint: review.inputFingerprint, outputFingerprint: review.outputFingerprint,
     reviewer: review.reviewer.trim(),
     notes: review.notes.trim(),
     reviewedAt,
@@ -83,11 +75,11 @@ export function approveDelivery(projectDirectory, reviewFilePath) {
   qa.releaseReady = true;
   qa.approvedInputFingerprint = currentInputs;
   qa.approvedOutputFingerprint = run.outputFingerprint;
-  writeJson(qaPath, qa);
+  writeProjectJson(projectPath, qaPath, qa);
   run.deliveryStatus = 'release-ready';
   run.deliveryReviewedAt = reviewedAt;
   run.artifacts.deliverableVideo = run.artifacts.video;
-  writeJson(runPath, run);
+  writeProjectJson(projectPath, runPath, run);
   return {videoPath, qaPath, reviewedAt};
 }
 

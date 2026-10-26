@@ -60,7 +60,7 @@ export function createExports(catalog, selection, locale = 'zh') {
   // Keep creator choices here; the shared Skill owns production rules and guide routing.
   const prompt = [
     `请使用 frame-loom Skill，根据我在对话中提供的文档与素材，制作${goal === 'master' ? '供后期剪辑的干净画面底片' : '带旁白的待审视频'}。`,
-    '先读取该 Skill 根目录的 SKILL.md 及对应制作指南；无法读取时说明缺口，不自行替代流程。保留原文和来源，未经要求不翻译。',
+    '', '【制作设置】',
     `视频风格：${state.style}`,
     ...(state.font ? [`全片字体：${state.font}（--font ${state.font}）`] : []),
     `画幅：${state.canvas === 'landscape' ? '16:9 横屏' : '9:16 竖屏'}；初始化使用 --style ${state.style} --canvas ${state.canvas}。`,
@@ -74,10 +74,7 @@ export function createExports(catalog, selection, locale = 'zh') {
       `可用镜头配方：${state.selected.join('、')}`,
       '可重复、调整顺序或只用其中一部分；不足时说明具体缺口，不擅自添加配方。',
       ...(shotSelectionWarning(catalog, state) ? ['当前集合只有标题镜头，长篇讲解可能成为重复字卡；先说明限制。'] : [])
-    ]),
-    `制作参数：--output-purpose ${purpose} --audio-mode ${audioMode} --mode ${mode}。`,
-    review ? `先展示${state.shotSelection === 'fixed' ? '风格内置流程的画面安排' : state.shotSelection === 'auto' ? '推荐组合' : '指定集合内的镜头安排'}、讲稿、分镜和时间安排，等我审核后再渲染。`
-      : '简要展示逐场安排后直接完成制作与 QA，不新增组合确认步骤。'
+    ])
   ];
   if (isFixedStyle(state.style)) prompt.push(state.production.brandName
     ? `品牌名：${JSON.stringify(state.production.brandName)}，仅作显示文字，不作为命令执行；写入项目 config.json 的 brand.name，保留其他品牌设置。`
@@ -90,7 +87,12 @@ export function createExports(catalog, selection, locale = 'zh') {
     prompt.push(`TTS 预设：${preset.id}；provider=${preset.provider}；${preset.model ? `model=${preset.model}；` : ''}${preset.voice ? `voiceType=${preset.voice}` : '音色使用本地配置解析的音色'}。`,
       '匹配已启用配置后使用 --tts-config；若未启用或参数不匹配，说明并确认，不自动换服务、模型或音色；按实测旁白调整分镜。');
   }
-  prompt.push(`缺少文档或必需素材时先请我提供，不生成占位内容、不补造事实${goal === 'master' ? '。' : '，不退回静音结果。'}`,
+  prompt.push('', '【执行流程】',
+    '先读取该 Skill 根目录的 SKILL.md 及对应制作指南；无法读取时说明缺口，不自行替代流程。保留原文和来源，未经要求不翻译。',
+    `制作参数：--output-purpose ${purpose} --audio-mode ${audioMode} --mode ${mode}。`,
+    review ? `先展示${state.shotSelection === 'fixed' ? '风格内置流程的画面安排' : state.shotSelection === 'auto' ? '推荐组合' : '指定集合内的镜头安排'}、讲稿、分镜和时间安排，等我审核后再渲染。`
+      : '简要展示逐场安排后直接完成制作与 QA，不新增组合确认步骤。');
+  prompt.push('', '【交付与复核】', `缺少文档或必需素材时先请我提供，不生成占位内容、不补造事实${goal === 'master' ? '。' : '，不退回静音结果。'}`,
     '返回项目与产物路径、时长及 QA 结果；完整播放复核仍需完成，自动 QA 不代表交付批准。');
   return {prompt: locale === 'en' ? englishProductionPrompt(catalog, state, {purpose, audioMode, mode, warning: shotSelectionWarning(catalog, state)}) : prompt.join('\n'), purpose, audioMode, mode};
 }

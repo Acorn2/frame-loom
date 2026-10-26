@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import {acquireProjectLock, assertProjectOutput, assertNoPendingAudioPublication, publishAudioFiles, writeProjectJson} from './lib/project-files.mjs';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {AudioManifestSchema} from '../src/schemas/audio-manifest.ts';
@@ -18,11 +19,6 @@ import {hashValue} from './lib/production-lock.mjs';
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-}
-
-function writeJson(filePath, value) {
-  fs.mkdirSync(path.dirname(filePath), {recursive: true});
-  fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`);
 }
 
 export function withSceneContext(config, texts, index) {
@@ -138,7 +134,14 @@ function createAudioConfig(projectPath, outputDirectory, format) {
 }
 
 export async function main(options) {
+  const projectPath = fs.realpathSync(options.projectPath);
+  const release = acquireProjectLock(projectPath, 'tts');
+  try {return await synthesizePackage({...options, projectPath});} finally {release();}
+}
+
+async function synthesizePackage(options) {
   const projectPath = options.projectPath;
+  assertNoPendingAudioPublication(projectPath);
   const storyboardPath = path.join(projectPath, 'storyboard.json');
   const defaultTtsConfigPath = path.join(projectPath, 'audio', 'tts-config.json');
   const ttsConfigPath = options.ttsConfigPath ? path.resolve(process.cwd(), options.ttsConfigPath) : defaultTtsConfigPath;
@@ -170,12 +173,19 @@ export async function main(options) {
   const captionInputFingerprint = fingerprintFiles([manualCuesPath], projectPath);
   const timeline = getSceneTimeline(storyboardResult.data);
   const configFingerprint = fingerprintTtsConfig(ttsConfigPath, projectPath);
+  const sourceFingerprint = fingerprintFiles([storyboardPath, ttsConfigPath, manualCuesPath, ...(options.speechCuesPath ? [path.resolve(options.speechCuesPath)] : [])], projectPath);
+  const assertCurrentInputs = () => {
+    if (sourceFingerprint !== fingerprintFiles([storyboardPath, ttsConfigPath, manualCuesPath, ...(options.speechCuesPath ? [path.resolve(options.speechCuesPath)] : [])], projectPath) || configFingerprint !== fingerprintTtsConfig(ttsConfigPath, projectPath)) throw new Error('讲稿、字幕或 TTS 配置在合成期间变化，未发布音频包；已完成语音保留在缓存。');
+  };
   const narratedScenes = timeline.filter(({scene}) => scene.narration.trim());
   const narratedTexts = narratedScenes.map(({scene}) => scene.narration.trim());
   const segmentNames = narratedScenes.map(({scene}) => scene.id.toLowerCase());
   if (segmentNames.includes('voiceover')) throw new Error('scene id 不能是 voiceover：它与合成后的旁白文件名冲突。');
   if (new Set(segmentNames).size !== segmentNames.length) throw new Error('有旁白的 scene id 不能仅以大小写区分：它们会在部分文件系统中生成同名音频文件。');
   const segmentPaths = narratedScenes.map(({scene}) => path.join(outputDirectory, `${scene.id}.${extension}`));
+  for (const file of [...segmentPaths, fullAudioPath, captionsPath, audioConfigPath, manifestPath]) assertProjectOutput(projectPath, file);
+  const outputFiles = [...segmentPaths, fullAudioPath, captionsPath, audioConfigPath, manifestPath];
+  const originalOutputs = fingerprintFiles(outputFiles, projectPath);
   if (options.reuse && !options.force && !options.timingOutput && !options.refreshVoice && fs.existsSync(manifestPath)) {
     const manifest = AudioManifestSchema.parse(readJson(manifestPath));
     const expected = narratedScenes;
@@ -202,6 +212,7 @@ export async function main(options) {
     const projectDurationSec = storyboardResult.data.project.durationFrames / fps;
     const segments = [];
     for (const {scene, startFrame, endFrame} of timeline) {
+      assertCurrentInputs();
       const text = scene.narration.trim();
       if (!text) continue;
       const startSec = startFrame / fps;
@@ -230,6 +241,7 @@ export async function main(options) {
     }
     if (segments.length === 0) throw new Error('storyboard 没有可用于 TTS 的 scene.narration。');
 
+    assertCurrentInputs();
     if (options.timingOutput) {
       const whiteboard = [];
       const proposed = proposeAudioTiming(storyboardResult.data, segments, speechCues, evidence => whiteboard.push(evidence));
@@ -282,16 +294,17 @@ export async function main(options) {
       captionInputFingerprint,
       notes: ['每个 scene 的旁白文本来自 scene.narration；音频 duration 来自 ffprobe 实测值。']
     });
-    for (const segment of segments) {
-      fs.renameSync(segment.absolutePath, path.resolve(projectPath, segment.path));
-    }
-    fs.renameSync(stagedFullAudioPath, fullAudioPath);
-    fs.renameSync(stagedCaptionsPath, captionsPath);
-    manifest = AudioManifestSchema.parse({...manifest, artifactFingerprint: fingerprintFiles([...segmentPaths, fullAudioPath, captionsPath], projectPath)});
-    // The two JSON files are written last so an interrupted synthesis never
-    // advertises an incomplete audio package as ready for rendering.
-    writeJson(audioConfigPath, audioConfig);
-    writeJson(manifestPath, manifest);
+    const entries = [...segments.map(segment => ({source: segment.absolutePath, target: path.resolve(projectPath, segment.path)})),
+      {source: stagedFullAudioPath, target: fullAudioPath}, {source: stagedCaptionsPath, target: captionsPath}];
+    manifest = AudioManifestSchema.parse({...manifest, artifactFingerprint: fingerprintFiles(entries.map(entry => entry.target), projectPath, new Map(entries.map(entry => [entry.target, entry.source])))});
+    const stagedConfig = path.join(stagingDirectory, 'audio-config.tts.json');
+    const stagedManifest = path.join(stagingDirectory, 'audio-manifest.json');
+    writeProjectJson(projectPath, stagedConfig, audioConfig, {overwrite: false});
+    writeProjectJson(projectPath, stagedManifest, manifest, {overwrite: false});
+    assertCurrentInputs();
+    for (const file of outputFiles) assertProjectOutput(projectPath, file);
+    if (originalOutputs !== fingerprintFiles(outputFiles, projectPath)) throw new Error('原音频产物在合成期间变化，未覆盖；请核对后重试。');
+    publishAudioFiles(projectPath, [...entries, {source: stagedConfig, target: audioConfigPath}, {source: stagedManifest, target: manifestPath}], {force: options.force});
     console.log(`VOICEOVER READY ${path.relative(projectPath, audioConfigPath)}`);
     console.log(`MANIFEST READY ${path.relative(projectPath, manifestPath)}`);
     return {audioConfigPath, manifestPath, manifest};

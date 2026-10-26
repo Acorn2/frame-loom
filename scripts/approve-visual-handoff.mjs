@@ -1,3 +1,5 @@
+import {writeProjectJson, assertProjectOutput} from './lib/project-files.mjs';
+import {reviewFingerprintIssues, VISUAL_REVIEW_CHECKS} from './lib/manual-review.mjs';
 import fs from 'node:fs';
 import {assertProductionLock} from './lib/production-lock.mjs';
 import path from 'node:path';
@@ -5,13 +7,12 @@ import {fileURLToPath, pathToFileURL} from 'node:url';
 import {fingerprintFiles, fingerprintProjectInputs} from './lib/input-fingerprint.mjs';
 import {inspectOutput} from './inspect-output.mjs';
 
-const REQUIRED = ['fullPlaybackPassed', 'visualHierarchyPassed', 'textReadabilityPassed', 'overlaySafeAreaPassed', 'assetRightsPassed'];
+const REQUIRED = VISUAL_REVIEW_CHECKS;
 
 function read(filePath) { return JSON.parse(fs.readFileSync(filePath, 'utf8')); }
-function write(filePath, value) { fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`); }
 
 export function checkVisualHandoffEligibility(run, qa, review) {
-  const issues = [];
+  const issues = reviewFingerprintIssues(run, review);
   if (run.status !== 'completed' || run.deliveryStatus !== 'visual-handoff-pending' || run.outputPurpose !== 'visual-master' || run.stages?.qa !== 'completed') {
     issues.push('只有完成自动 QA 且等待视觉审片的画面底片才能确认交接。');
   }
@@ -32,6 +33,7 @@ export function approveVisualHandoff(projectDirectory, reviewFilePath) {
   const videoPath = path.resolve(projectPath, run.artifacts.video);
   const qaPath = path.resolve(projectPath, run.artifacts.qaReport);
   const packagePath = path.resolve(projectPath, run.artifacts.visualHandoff);
+  assertProjectOutput(projectPath, runPath); assertProjectOutput(projectPath, qaPath);
   const qa = read(qaPath);
   const handoff = read(packagePath);
   const issues = checkVisualHandoffEligibility(run, qa, review);
@@ -61,11 +63,11 @@ export function approveVisualHandoff(projectDirectory, reviewFilePath) {
   qa.visualHandoffReady = true;
   qa.approvedOutputFingerprint = run.outputFingerprint;
   qa.approvedInputFingerprint = run.inputFingerprint;
-  write(qaPath, qa);
+  writeProjectJson(projectPath, qaPath, qa);
   run.deliveryStatus = 'visual-handoff-ready';
   run.deliveryReviewedAt = reviewedAt;
   run.artifacts.handoffVideo = run.artifacts.video;
-  write(runPath, run);
+  writeProjectJson(projectPath, runPath, run);
   return {videoPath, packagePath};
 }
 

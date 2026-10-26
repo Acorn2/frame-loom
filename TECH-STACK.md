@@ -22,7 +22,7 @@
 
 核心验证命令见 `AGENTS.md` 和 `package.json`。新增语义画面可运行 `npm run preview:semantic -- --output <new-directory>` 检查全部 Style Pack。
 
-本轮没有新增运行时服务或依赖。Vitest 固定为 4.1.11；语音缓存使用 Node.js 文件与 SHA-256，真实时长来自现有 ffprobe。字幕精确时间暂采用人工 cue，不内置强制对齐模型。
+没有新增运行时服务。Vitest 固定为 4.1.12；Zod 固定为 4.6.6，并通过 `overrides.zod: "$zod"` 同步 Remotion 的传递依赖，修复 GHSA-mrhx-c7xc-m3w5 的内存耗尽漏洞。Remotion 升级后需重新核对其 Zod 约束再决定是否移除覆盖。语音缓存使用 Node.js 文件与 SHA-256，真实时长来自现有 ffprobe。字幕精确时间暂采用人工 cue，不内置强制对齐模型。
 
 
 2.4继续使用现有React/Remotion/Zod/tsx；shot与video-template为仓库内JSON，不增加运行时依赖或加载任意代码。`init:project --style ... --shots ...` 通过既有tsx读取类型契约并保存用户的配方集合，`list:shots` 查询实际兼容能力，`validate:shots` 与 `test:shots` 覆盖新注册能力。生产锁使用Node.js原生SHA-256与文件快照。

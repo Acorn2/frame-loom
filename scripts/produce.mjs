@@ -1,3 +1,4 @@
+import {acquireProjectLock, writeProjectJson} from './lib/project-files.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
@@ -79,8 +80,8 @@ function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
-function writeJson(filePath, value) {
-  fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`);
+function writeJson(filePath, value, root = path.dirname(filePath)) {
+  writeProjectJson(root, filePath, value);
 }
 
 function createRunState(projectPath, executionMode, from, previousRun) {
@@ -280,6 +281,11 @@ function completeAutomatedStatus(storyboardPath, storyboard, executionMode) {
 }
 
 export function runProduction(options) {
+  const release = acquireProjectLock(options.projectPath, 'production');
+  try {return runProductionLocked(options);} finally {release();}
+}
+
+function runProductionLocked(options) {
   const executionMode = options.executionMode ?? 'review';
   const from = options.from ?? 'storyboard';
   const projectPath = path.resolve(options.projectPath);
@@ -550,7 +556,7 @@ export function runProduction(options) {
         endSec: endFrame / storyboard.project.fps,
         narration: scene.narration
       }));
-      writeJson(timingPath, {schemaVersion: '1.0', fps: storyboard.project.fps, durationSec: storyboard.project.durationSec, timelinePolicy: run.visualHandoff.timelinePolicy, scenes: timing});
+      writeJson(timingPath, {schemaVersion: '1.0', fps: storyboard.project.fps, durationSec: storyboard.project.durationSec, timelinePolicy: run.visualHandoff.timelinePolicy, scenes: timing}, projectPath);
       const packagePath = path.join(handoffDir, 'visual-handoff.json');
       writeJson(packagePath, {
         schemaVersion: '1.0',
@@ -564,7 +570,7 @@ export function runProduction(options) {
         durationSec: storyboard.project.durationSec,
         ...run.visualHandoff,
         manualReviewRequired: true
-      });
+      }, projectPath);
       run.artifacts.narrationScript = path.relative(projectPath, narration.markdownPath);
       run.artifacts.shotTiming = path.relative(projectPath, timingPath);
       run.artifacts.visualHandoff = path.relative(projectPath, packagePath);

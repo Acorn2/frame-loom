@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fingerprintFiles} from './input-fingerprint.mjs';
 import {writeRenderReceipt} from './render-receipt.mjs';
+import {assertProjectOutput, outputBoundary, writeProjectJson} from './project-files.mjs';
 
 function processIsRunning(pid) {
   if (!Number.isInteger(pid) || pid < 1) return false;
@@ -13,7 +14,7 @@ function processIsRunning(pid) {
   }
 }
 
-function recoverAbandonedStages(outputPath) {
+function recoverAbandonedStages(outputPath, root) {
   const directory = path.dirname(outputPath);
   if (!fs.existsSync(directory)) return;
   const prefix = `.${path.basename(outputPath)}-render-`;
@@ -28,9 +29,15 @@ function recoverAbandonedStages(outputPath) {
     } catch {
       continue;
     }
-    if (marker.schemaVersion !== '1.0' || marker.outputPath !== outputPath || !Number.isInteger(marker.pid)) continue;
+    if (!['1.0', '2.0'].includes(marker.schemaVersion) || marker.outputPath !== outputPath || !Number.isInteger(marker.pid)) continue;
     if (processIsRunning(marker.pid)) throw new Error(`同一输出仍有渲染进程 ${marker.pid}，不能并发写入：${outputPath}`);
 
+    if (marker.schemaVersion === '2.0') {
+      if (marker.phase !== 'preparing') throw new Error(`渲染包有未完成的发布事务；核对 ${markerPath} 中的目标与备份后恢复，不能用 --force 绕过。`);
+      fs.rmSync(stage, {recursive: true, force: true});
+      continue;
+    }
+    for (const file of [outputPath, `${outputPath}.render.json`, path.join(stage, 'previous.mp4'), path.join(stage, 'previous.render.json')]) assertProjectOutput(root, file);
     const receiptPath = `${outputPath}.render.json`;
     const previousVideo = path.join(stage, 'previous.mp4');
     const previousReceipt = path.join(stage, 'previous.render.json');
@@ -65,60 +72,63 @@ function recoverAbandonedStages(outputPath) {
   }
 }
 
-export async function renderToVerifiedOutput({outputPath, force = false, profile, render, verify}) {
+export async function renderToVerifiedOutput({outputPath, outputRoot, force = false, profile, render, verify,
+  artifactSuffixes = [], prepareArtifacts, createReceipt = writeRenderReceipt}) {
   const resolvedOutput = path.resolve(outputPath);
-  const receiptPath = `${resolvedOutput}.render.json`;
-  recoverAbandonedStages(resolvedOutput);
-  if (!force && (fs.existsSync(resolvedOutput) || fs.existsSync(receiptPath))) {
-    throw new Error(`输出文件或渲染记录已存在，未覆盖：${resolvedOutput}\n确认目标后使用 --force 显式覆盖。`);
-  }
-
+  const root = outputRoot ?? outputBoundary(resolvedOutput);
+  const suffixes = ['', '.render.json', ...artifactSuffixes];
+  if (new Set(suffixes).size !== suffixes.length || artifactSuffixes.some(suffix => !suffix.startsWith('.') || suffix.includes('..') || suffix.includes('\\'))) throw new Error('渲染附属产物后缀无效。');
+  const targets = suffixes.map(suffix => `${resolvedOutput}${suffix}`);
+  for (const file of targets) assertProjectOutput(root, file);
+  recoverAbandonedStages(resolvedOutput, root);
+  if (!force && targets.some(file => fs.existsSync(file))) throw new Error(`输出文件或渲染记录已存在，未覆盖：${resolvedOutput}`);
+  const originalFingerprint = fingerprintFiles(targets, root);
   fs.mkdirSync(path.dirname(resolvedOutput), {recursive: true});
   const stagingDir = fs.mkdtempSync(path.join(path.dirname(resolvedOutput), `.${path.basename(resolvedOutput)}-render-`));
   const markerPath = path.join(stagingDir, 'owner.json');
   const stagedVideo = path.join(stagingDir, path.basename(resolvedOutput));
-  const stagedReceipt = `${stagedVideo}.render.json`;
-  const previousVideo = path.join(stagingDir, 'previous.mp4');
-  const previousReceipt = path.join(stagingDir, 'previous.render.json');
-  let promotedVideo = false;
-  let promotedReceipt = false;
-  let backedUpVideo = false;
-  let backedUpReceipt = false;
+  const records = suffixes.map((suffix, index) => ({source: `${stagedVideo}${suffix}`, target: targets[index], backup: path.join(stagingDir, `previous-${index}`), saved: false, published: false}));
   let cleanupSafe = true;
-
+  const journal = phase => writeProjectJson(root, markerPath, {schemaVersion: '2.0', pid: process.pid, outputPath: resolvedOutput, phase,
+    entries: records.map(({source, target, backup}) => ({source, target, backup}))});
   try {
-    fs.writeFileSync(markerPath, JSON.stringify({schemaVersion: '1.0', pid: process.pid, outputPath: resolvedOutput}));
+    journal('preparing');
     await render(stagedVideo);
-    verify(stagedVideo);
-    // The staged video has the final basename, so its receipt fingerprint stays
-    // valid after both files are moved into the output directory.
-    writeRenderReceipt(stagedVideo, profile);
-    fs.writeFileSync(markerPath, JSON.stringify({schemaVersion: '1.0', pid: process.pid, outputPath: resolvedOutput, readyFingerprint: fingerprintFiles([stagedVideo], stagingDir)}));
-    if (!force && (fs.existsSync(resolvedOutput) || fs.existsSync(receiptPath))) {
-      throw new Error(`输出文件或渲染记录在渲染期间出现，未覆盖：${resolvedOutput}`);
+    await verify(stagedVideo);
+    await createReceipt(stagedVideo, profile);
+    // Sidecars and cover extraction must succeed before replacing any old file.
+    await prepareArtifacts?.(stagedVideo);
+    for (const record of records) {
+      assertProjectOutput(root, record.source); assertProjectOutput(root, record.target);
+      if (!fs.existsSync(record.source) || fs.statSync(record.source).size === 0) throw new Error(`缺少暂存产物：${record.source}`);
     }
-    if (fs.existsSync(resolvedOutput)) {
-      fs.renameSync(resolvedOutput, previousVideo);
-      backedUpVideo = true;
+    if (originalFingerprint !== fingerprintFiles(targets, root)) throw new Error('输出文件在渲染期间变化，未覆盖。');
+    journal('publishing');
+    for (const record of records) {
+      assertProjectOutput(root, record.target);
+      fs.mkdirSync(path.dirname(record.target), {recursive: true});
+      if (fs.existsSync(record.target)) {
+        if (!force) throw new Error('输出文件在发布期间出现，未覆盖。');
+        fs.renameSync(record.target, record.backup); record.saved = true;
+      }
+      fs.linkSync(record.source, record.target); record.published = true;
     }
-    if (fs.existsSync(receiptPath)) {
-      fs.renameSync(receiptPath, previousReceipt);
-      backedUpReceipt = true;
-    }
-    fs.renameSync(stagedVideo, resolvedOutput);
-    promotedVideo = true;
-    fs.renameSync(stagedReceipt, receiptPath);
-    promotedReceipt = true;
-    return {videoPath: resolvedOutput, receiptPath};
+    return {videoPath: resolvedOutput, receiptPath: `${resolvedOutput}.render.json`};
   } catch (error) {
     try {
-      if (promotedReceipt) fs.renameSync(receiptPath, stagedReceipt);
-      if (promotedVideo) fs.renameSync(resolvedOutput, stagedVideo);
-      if (backedUpVideo) fs.renameSync(previousVideo, resolvedOutput);
-      if (backedUpReceipt) fs.renameSync(previousReceipt, receiptPath);
+      for (const record of [...records].reverse()) {
+        if (!record.published && !record.saved) continue;
+        assertProjectOutput(root, record.target);
+        if (record.published) {
+          const current = fs.lstatSync(record.target), staged = fs.statSync(record.source);
+          if (current.dev !== staged.dev || current.ino !== staged.ino) throw new Error('产物已被其他进程替换，保留备份。');
+          fs.unlinkSync(record.target);
+        }
+        if (record.saved) {fs.linkSync(record.backup, record.target); fs.unlinkSync(record.backup);}
+      }
     } catch (rollbackError) {
       cleanupSafe = false;
-      throw new AggregateError([error, rollbackError], `渲染发布失败，回退文件保留于 ${stagingDir}`);
+      throw new AggregateError([error, rollbackError], `渲染发布失败，事务与回退文件保留于 ${stagingDir}`);
     }
     throw error;
   } finally {

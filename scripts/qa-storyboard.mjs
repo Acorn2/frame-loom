@@ -1,3 +1,4 @@
+import {writeProjectJson} from './lib/project-files.mjs';
 import fs from 'node:fs';
 import {inspectLayoutReceipt} from './lib/layout-qa.mjs';
 import {assertProductionLock} from './lib/production-lock.mjs';
@@ -60,7 +61,7 @@ function invalidatePriorDelivery(storyboardPath, reportPath, report) {
   delete run.artifacts.deliverableVideo;
   delete run.artifacts.handoffVideo;
   run.updatedAt = new Date().toISOString();
-  fs.writeFileSync(runPath, `${JSON.stringify(run, null, 2)}\n`);
+  writeProjectJson(projectPath, runPath, run);
 }
 
 export function runQa(options) {
@@ -315,7 +316,7 @@ export function runQa(options) {
     },
     errors
   };
-  fs.writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`);
+  writeProjectJson(path.dirname(reportPath), reportPath, report);
   invalidatePriorDelivery(resolvedStoryboard, reportPath, report);
   console.log(`QA ${automatedPassed ? 'AUTOMATED PASS' : 'FAILED'} ${reportPath}`);
   console.log('MANUAL REVIEW REQUIRED before releaseReady can be true.');

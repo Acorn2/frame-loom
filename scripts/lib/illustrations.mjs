@@ -93,9 +93,21 @@ export function registerIllustration(directory, id, sourceFile, reviewer) {
 }
 export function generatedAssetIssues(directory, storyboard, manifest, input) {
   const generated = manifest.assets.filter(asset => asset.generation), issues = [];
+  if (input?.inputMode === 'document' && input.illustrationPolicy === 'generated-subjects-v1') {
+    const subjects = new Set(generated.filter(asset => asset.type === 'image' && asset.usage === 'scene-media').map(asset => path.resolve(directory, asset.path)));
+    const used = storyboard.scenes.some(scene => {
+      if (storyboard.schemaVersion === '2.2' && scene.purpose !== 'media') return false;
+      const slots = scene.shot ? Object.values(scene.shot.slots).flat() : null;
+      const placements = scene.shot?.elements ? [scene.shot.elements, ...(scene.shot.id === 'editorial-flow' ? scene.shot.stages.map(stage => stage.placements) : [])] : null;
+      return scene.layers.some(layer => layer.type === 'object' && layer.asset && subjects.has(path.resolve(directory, layer.asset))
+        && (!slots || slots.includes(layer.id))
+        && (!placements || placements.some(items => items[layer.id] && (items[layer.id].opacity ?? 1) > 0)));
+    });
+    if (!used) issues.push('generated-subjects-v1：至少需要一个已登记的生成插画主体被分镜画面引用；空清单、仅准备提示词或未使用素材不能完成插画生产。');
+  }
   if (!generated.length) return issues;
   let context;
-  try {context = illustrationContext(directory);} catch (error) {return [`插画来源：${error.message}`];}
+  try {context = illustrationContext(directory);} catch (error) {return [...issues, `插画来源：${error.message}`];}
   if (storyboard.style.id !== context.plan.style.id || storyboard.style.version !== context.plan.style.version) issues.push('生成素材与分镜风格不匹配，请重新生成或明确改用来源素材路线。');
   for (const asset of generated) {
     const prompt = context.prompts.find(item => item.id === asset.generation.planId), generation = asset.generation;

@@ -57,6 +57,8 @@ When the creator asks to compare styles, present up to three candidates with:
 
 ## 4. Select the pack
 
+Before committing to a pack or initializing a project, complete the [route capability check](production-pipeline.md#route-capability-check). Include native image generation in document-only AI illustration feasibility; check screenshot tools only for requested URLs and audio dependencies only for the chosen audio route. A missing dependency informs an automatic choice, but cannot silently change an explicit creator choice.
+
 Honor a creator's explicit Style Pack choice if it supports the requested
 canvas and content. For a first visual-preview request without a style choice,
 the Agent selects one feasible pack and records its reason in

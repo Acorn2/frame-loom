@@ -6,14 +6,28 @@ import {buildLibrary} from './build-library.mjs';
 
 const contentTypes = {'.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.ico': 'image/vnd.microsoft.icon', '.png': 'image/png', '.webp': 'image/webp', '.mp4': 'video/mp4', '.woff2': 'font/woff2', '.ttf': 'font/ttf', '.txt': 'text/plain; charset=utf-8'};
 export function createLibraryServer(root) {
+  root = fs.realpathSync(path.resolve(root));
+  const publicPath = file => {
+    const relative = path.relative(root, file);
+    return relative !== '' && !path.isAbsolute(relative) && !relative.split(path.sep).some(part => part.startsWith('.'));
+  };
   return http.createServer((request, response) => {
+    // A loopback listener alone does not prevent DNS rebinding from a foreign origin.
+    if (!/^(?:localhost|127\.0\.0\.1|\[::1\])(?::[0-9]{1,5})?$/iu.test(request.headers.host ?? '')) {response.writeHead(403); response.end(); return;}
     if (!['GET', 'HEAD'].includes(request.method)) {response.writeHead(405); response.end(); return;}
     let pathname;
     try {pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);} catch {response.writeHead(400); response.end(); return;}
+    if (!request.url.startsWith('/') || request.url.startsWith('//') || pathname.includes('\0')) {response.writeHead(400); response.end(); return;}
     const file = path.resolve(root, `.${pathname.endsWith('/') ? `${pathname}index.html` : pathname}`);
-    if (!file.startsWith(`${root}${path.sep}`) || pathname.split('/').some(part => part.startsWith('.'))) {response.writeHead(403); response.end(); return;}
-    if (!fs.existsSync(file) || !fs.statSync(file).isFile() || !contentTypes[path.extname(file)]) {response.writeHead(404); response.end(); return;}
-    const size = fs.statSync(file).size;
+    if (!publicPath(file) || pathname.split('/').some(part => part.startsWith('.'))) {response.writeHead(403); response.end(); return;}
+    let realFile, stat;
+    try {
+      realFile = fs.realpathSync(file);
+      if (!publicPath(realFile)) {response.writeHead(403); response.end(); return;}
+      stat = fs.statSync(realFile);
+    } catch {response.writeHead(404); response.end(); return;}
+    if (!stat.isFile() || !contentTypes[path.extname(file)]) {response.writeHead(404); response.end(); return;}
+    const size = stat.size;
     const headers = {'Content-Type': contentTypes[path.extname(file)], 'Cache-Control': 'no-cache', 'Accept-Ranges': 'bytes', 'X-Content-Type-Options': 'nosniff'};
     let start = 0; let end = size - 1; let status = 200;
     if (request.headers.range) {
@@ -27,7 +41,7 @@ export function createLibraryServer(root) {
     headers['Content-Length'] = Math.max(0, end - start + 1);
     response.writeHead(status, headers);
     if (request.method === 'HEAD' || !size) {response.end(); return;}
-    fs.createReadStream(file, {start, end}).on('error', () => response.destroy()).pipe(response);
+    fs.createReadStream(realFile, {start, end, flags: fs.constants.O_RDONLY | (fs.constants.O_NOFOLLOW ?? 0)}).on('error', () => response.destroy()).pipe(response);
   });
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
