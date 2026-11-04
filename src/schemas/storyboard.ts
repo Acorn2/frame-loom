@@ -42,7 +42,8 @@ export const StoryboardProjectSchema = z.object({
   fps: z.number().min(1).max(60),
   durationSec: z.number().positive().max(3600),
   durationFrames: z.number().int().positive().max(216000),
-  status: StoryboardStatusSchema
+  status: StoryboardStatusSchema,
+  language: z.enum(['zh', 'en']).optional()
 }).strict();
 
 export const StoryboardLayerSchema = z.object({
