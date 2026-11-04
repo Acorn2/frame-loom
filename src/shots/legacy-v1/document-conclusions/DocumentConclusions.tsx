@@ -3,10 +3,12 @@ import {useCurrentFrame, useVideoConfig} from 'remotion';
 import {ShotShell, type ShotRenderProps} from '../ShotShell';
 import type {ShotPlan} from '../../compile-shot';
 import {actionProgress} from '../frame-state';
+import {useUiText} from '../../../i18n/ui-language';
 
 // Method reference: Shotcraft doc-park-left-pill-deal. Independent implementation;
 // provenance.json records the source and omitted scroll/caption/pill effects.
 export function DocumentConclusions(props: ShotRenderProps & {plan: ShotPlan}) {
+  const ui = useUiText();
   const {scene, tokens, plan} = props;
   const frame = useCurrentFrame();
   const scale = useVideoConfig().width / 1920;
@@ -18,9 +20,9 @@ export function DocumentConclusions(props: ShotRenderProps & {plan: ShotPlan}) {
   const sourceIn = actionProgress(plan, source.id, ['enter', 'reveal'], frame);
   return <ShotShell {...props}>
     <div style={{position: 'absolute', left: `${24 * (1 - park)}%`, top: '2%', width: `${54 - 18 * park}%`, height: '94%', padding: `${26 * scale}px ${30 * scale}px`, boxSizing: 'border-box', background: tokens.paper, border: tokens.surfaceBorder, boxShadow: tokens.surfaceShadow, opacity: sourceIn, transform: `translateY(${(1 - sourceIn) * tokens.motion.enterOffset * scale}px)`}}>
-      <div style={{fontSize: 17 * scale, color: tokens.accentAlt, borderBottom: `2px solid ${tokens.grid}`, paddingBottom: 12 * scale}}>原文摘录 / {source.label}</div>
+      <div style={{fontSize: 17 * scale, color: tokens.accentAlt, borderBottom: `2px solid ${tokens.grid}`, paddingBottom: 12 * scale}}>{ui.excerptPrefix}{source.label}</div>
       <div style={{fontFamily: tokens.displayFont, fontSize: 29 * scale, fontWeight: 700, lineHeight: 1.38, marginTop: 22 * scale, overflowWrap: 'anywhere'}}>{source.text}</div>
-      <div style={{position: 'absolute', bottom: 20 * scale, left: 30 * scale, right: 30 * scale, borderTop: `2px solid ${tokens.grid}`, paddingTop: 10 * scale, fontSize: 17 * scale, color: tokens.muted}}>来源：{scene.visual?.source}</div>
+      <div style={{position: 'absolute', bottom: 20 * scale, left: 30 * scale, right: 30 * scale, borderTop: `2px solid ${tokens.grid}`, paddingTop: 10 * scale, fontSize: 17 * scale, color: tokens.muted}}>{ui.sourcePrefix}{scene.visual?.source}</div>
     </div>
     {items.map((item, index) => {
       const reveal = actionProgress(plan, item.id, ['enter', 'reveal'], frame, 'back');

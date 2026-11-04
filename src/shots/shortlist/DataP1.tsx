@@ -4,6 +4,7 @@ import {ShotShell, type ShotRenderProps} from '../ShotShell';
 import type {ShotPlan} from '../compile-shot';
 import {beatProgress, curves} from '../motion';
 import {actionProgress} from '../frame-state';
+import {useUiText} from '../../i18n/ui-language';
 export function odometerPosition(progress: number, digit: number, index: number, count: number) {
   const stop = .4 + .4 * index / Math.max(1, count - 1);
   if (progress >= stop + .2) return 20 + digit;
@@ -13,6 +14,7 @@ export function odometerPosition(progress: number, digit: number, index: number,
   return 12 + (8 + digit) * (1 - (1 - p) ** 3);
 }
 export function DataP1(props: ShotRenderProps & {plan: ShotPlan}) {
+  const ui = useUiText();
   const {scene, tokens, plan, appearance} = props; const frame = useCurrentFrame(); const scale = useVideoConfig().width / 1920;
   const shot = scene.shot;
   if (shot?.id !== 'timeline-travel' && shot?.id !== 'odometer-roll') throw new Error('data contract required');
@@ -31,7 +33,7 @@ export function DataP1(props: ShotRenderProps & {plan: ShotPlan}) {
           </div>;
         })}
       </div>
-      <div style={{position: 'absolute', bottom: 0, fontSize: 22 * scale, color: appearance?.stageMuted ?? tokens.muted}}>日期按顺序等距排列，不表示时间跨度 · {scene.visual?.source}</div>
+      <div style={{position: 'absolute', bottom: 0, fontSize: 22 * scale, color: appearance?.stageMuted ?? tokens.muted}}>{ui.timelineNote(scene.visual?.source ?? '')}</div>
     </div></ShotShell>;
   }
   const layer = scene.layers.find((layer) => layer.id === shot.slots.metric)!;
@@ -51,6 +53,6 @@ export function DataP1(props: ShotRenderProps & {plan: ShotPlan}) {
       return <div key={i} style={{height: 210 * scale, width: 126 * scale, position: 'relative', overflow: 'hidden', borderRadius: 18 * scale, background: tokens.ink, boxShadow: 'inset 0 2px 4px #ffffff18, 0 8px 20px #00000066'}}><div style={{transform: `translateY(${-pos * 210 * scale}px)`, filter: `blur(${speed * 2 * scale}px)`}}>{Array.from({length: 30}, (_, n) => <div key={n} style={{height: 210 * scale, display: 'grid', placeItems: 'center'}}>{n % 10}</div>)}</div>{speed > .02 ? <div aria-hidden style={{position: 'absolute', inset: 0, opacity: speed * .12, filter: `blur(${speed * 6 * scale}px)`, transform: `translateY(${speed * 24 * scale}px)`, display: 'grid', placeItems: 'center'}}>{Math.round(pos) % 10}</div> : null}</div>;
     })}<span style={{fontSize: 42 * scale, marginLeft: 24 * scale}}>{scene.visual?.unit}</span></div>
     <div style={{fontSize: 26 * scale, color: appearance?.stageMuted ?? tokens.muted}}>{layer.text}</div>
-    <div style={{fontSize: 22 * scale, color: appearance?.stageMuted ?? tokens.muted}}>来源：{scene.visual?.source}</div>
+    <div style={{fontSize: 22 * scale, color: appearance?.stageMuted ?? tokens.muted}}>{ui.sourcePrefix}{scene.visual?.source}</div>
   </div></ShotShell>;
 }
