@@ -18,6 +18,7 @@ import {fittedSemanticFont, languageBackground, languageEntrance, semanticHeadin
 
 import {sceneRegions, networkRects} from '../../layout/scene-layout';
 import {ReadableText} from '../../layout/ReadableText';
+import {useUiText} from '../../i18n/ui-language';
 
 interface Props {
   scene: StoryboardScene;
@@ -274,6 +275,7 @@ function NetworkVisual({scene, tokens, frame, scale, width = 0, height = 0}: {sc
 }
 
 function ChangeVisual({scene, tokens, frame, scale}: {scene: StoryboardScene; tokens: StyleTokens; frame: number; scale: number}) {
+  const ui = useUiText();
   const before = scene.layers.find((layer) => layer.id === scene.visual?.beforeId);
   const after = scene.layers.find((layer) => layer.id === scene.visual?.afterId);
   const change = after ? beatProgress(scene, after.id, frame, ['enter', 'reveal']) : 0;
@@ -284,23 +286,24 @@ function ChangeVisual({scene, tokens, frame, scale}: {scene: StoryboardScene; to
       <div style={{width: 210 * scale, height: 210 * scale, borderRadius: 28 * scale, border: `${5 * scale}px solid ${tokens.accent}`, background: change < 0.5 ? tokens.paper : tokens.accent, display: 'grid', placeItems: 'center', transform: `scale(${1 + 0.06 * Math.sin(change * Math.PI)})`}}><ConceptGlyph glyph={before.glyph ?? 'document'} color={change < 0.5 ? tokens.accent : (tokens.onAccent ?? contrastInk(tokens.accent))} size={120 * scale} /></div>
       <strong style={{fontSize: 44 * scale, textAlign: 'center'}}>{current.label}</strong>
       <span style={{fontSize: 27 * scale, textAlign: 'center', maxWidth: '85%', color: tokens.muted}}>{current.text}</span>
-      <span style={{fontSize: 20 * scale, color: tokens.accentAlt}}>{change < 0.5 ? '之前' : '之后'}</span>
+      <span style={{fontSize: 20 * scale, color: tokens.accentAlt}}>{change < 0.5 ? ui.before : ui.after}</span>
     </div>;
   }
   return <div style={{height: '100%', display: 'grid', gridTemplateColumns: '1fr 160px 1fr', alignItems: 'center', gap: 16 * scale}}>
     <div style={{height: '94%', position: 'relative', borderTop: `${7 * scale}px solid ${tokens.grid}`, opacity: 1 - change * 0.45}}>
-      <span style={{position: 'absolute', top: 14 * scale, left: 12 * scale, fontSize: 25 * scale, fontWeight: 700, color: tokens.muted}}>之前</span>
+      <span style={{position: 'absolute', top: 14 * scale, left: 12 * scale, fontSize: 25 * scale, fontWeight: 700, color: tokens.muted}}>{ui.before}</span>
       {before ? <DiagramNode layer={before} scene={scene} tokens={tokens} frame={frame} scale={scale} active={false} /> : null}
     </div>
     <svg width={120 * scale} height={48 * scale} viewBox="0 0 120 48" aria-hidden="true"><path d="M0 24h108m-15-15 15 15-15 15" fill="none" stroke={tokens.accentAlt} strokeWidth="5" pathLength="1" strokeDasharray="1" strokeDashoffset={1 - change} /></svg>
     <div style={{height: '94%', position: 'relative', borderTop: `${7 * scale}px solid ${tokens.accent}`}}>
-      <span style={{position: 'absolute', top: 14 * scale, left: 12 * scale, fontSize: 25 * scale, fontWeight: 700, color: tokens.accentAlt, opacity: change}}>之后</span>
+      <span style={{position: 'absolute', top: 14 * scale, left: 12 * scale, fontSize: 25 * scale, fontWeight: 700, color: tokens.accentAlt, opacity: change}}>{ui.after}</span>
       {after ? <DiagramNode layer={after} scene={scene} tokens={tokens} frame={frame} scale={scale} active /> : null}
     </div>
   </div>;
 }
 
 function MetricVisual({scene, tokens, frame, scale}: {scene: StoryboardScene; tokens: StyleTokens; frame: number; scale: number}) {
+  const ui = useUiText();
   const metrics = scene.layers.filter((layer) => layer.type === 'metric');
   const values = metrics.map((layer) => typeof layer.value === 'number' ? Math.max(0, layer.value) : 0);
   const max = Math.max(1, ...values);
@@ -311,11 +314,11 @@ function MetricVisual({scene, tokens, frame, scale}: {scene: StoryboardScene; to
     const value = typeof layer.value === 'number' ? layer.value : 0;
     return <div style={{height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 60 * scale, borderTop: `${5 * scale}px solid ${tokens.grid}`}}>
       <strong style={{fontFamily: tokens.displayFont, fontSize: 230 * scale, lineHeight: 1, color: tokens.accentAlt}}>{(value * progress).toFixed(String(value).split('.')[1]?.length ?? 0)}</strong>
-      <div style={{height: '52%', borderLeft: `${6 * scale}px solid ${tokens.accent}`, paddingLeft: 36 * scale, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 18 * scale}}><span style={{fontSize: 67 * scale, fontWeight: 800}}>{scene.visual?.unit ?? ''}</span><span style={{fontSize: 41 * scale}}>{layer.label}</span><span style={{fontSize: 19 * scale, color: tokens.muted, maxWidth: 740 * scale, overflowWrap: 'anywhere'}}>来源：{scene.visual?.source}</span></div>
+      <div style={{height: '52%', borderLeft: `${6 * scale}px solid ${tokens.accent}`, paddingLeft: 36 * scale, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 18 * scale}}><span style={{fontSize: 67 * scale, fontWeight: 800}}>{scene.visual?.unit ?? ''}</span><span style={{fontSize: 41 * scale}}>{layer.label}</span><span style={{fontSize: 19 * scale, color: tokens.muted, maxWidth: 740 * scale, overflowWrap: 'anywhere'}}>{ui.sourcePrefix}{scene.visual?.source}</span></div>
     </div>;
   }
   return <div style={{height: '100%', display: 'grid', gridTemplateColumns: `repeat(${metrics.length}, minmax(0, 1fr))`, alignItems: 'end', gap: 28 * scale, borderBottom: `${4 * scale}px solid ${tokens.ink}`, padding: `20px ${20 * scale}px 0`, boxSizing: 'border-box', position: 'relative'}}>
-    <span style={{position: 'absolute', right: 0, top: 0, maxWidth: '46%', textAlign: 'right', fontSize: 18 * scale, color: tokens.muted, overflowWrap: 'anywhere'}}>来源：{scene.visual?.source}</span>
+    <span style={{position: 'absolute', right: 0, top: 0, maxWidth: '46%', textAlign: 'right', fontSize: 18 * scale, color: tokens.muted, overflowWrap: 'anywhere'}}>{ui.sourcePrefix}{scene.visual?.source}</span>
     {metrics.map((layer) => {
       const progress = beatProgress(scene, layer.id, frame, ['enter', 'reveal', 'count']);
       const value = typeof layer.value === 'number' ? layer.value : 0;
@@ -344,6 +347,7 @@ function MediaVisual({scene, tokens, frame, scale, width, height}: {scene: Story
 }
 
 export function SemanticScene({scene, tokens, appearance, showSceneCaptions, externalCaptions, overlapOutFrames, chapterTransitionOut}: Props) {
+  const ui = useUiText();
   const frame = useCurrentFrame();
   const {width, height, fps} = useVideoConfig();
   const visual = scene.visual;
@@ -377,11 +381,11 @@ export function SemanticScene({scene, tokens, appearance, showSceneCaptions, ext
           : visual.kind === 'change' ? <ChangeVisual scene={scene} tokens={stageTokens} frame={frame} scale={scale} />
             : visual.kind === 'metric' ? <MetricVisual scene={scene} tokens={stageTokens} frame={frame} scale={scale} />
               : <MediaVisual scene={scene} tokens={tokens} frame={frame} scale={scale} width={bodyWidth} height={bodyHeight} />;
-  const kindLabel = {statement: '观点', compare: '对照', sequence: '顺序', network: '关联', change: '变化', metric: '数据', media: '素材'}[visual.kind];
+  const kindLabel = ui.kindLabels[visual.kind];
   return <AbsoluteFill style={{background: appearance?.background ?? tokens.background, color: appearance?.stageInk ?? tokens.ink, fontFamily: tokens.bodyFont, overflow: 'hidden', ...background(tokens, scale), ...transitionStyle(scene, frame, overlapOutFrames, chapterTransitionOut)}}>
     <div style={{position: 'absolute', left: tokens.safeArea.left, top: tokens.safeArea.top, width: contentWidth, height: contentHeight}}>
       {visual.kind !== 'statement' ? <>
-        {!regions ? <div style={{position: 'absolute', left: 0, top: 0, right: 0, display: 'flex', justifyContent: 'space-between', borderBottom: family === 'signal' ? undefined : `${2 * scale}px solid ${family === 'swiss' ? tokens.accent : tokens.grid}`, paddingBottom: 14 * scale, color: appearance?.stageMuted ?? tokens.muted, fontSize: 23 * scale, fontFamily: tokens.font ? tokens.bodyFont : family === 'blueprint' ? 'monospace' : tokens.bodyFont, letterSpacing: 2 * scale}}><span>{kindLabel}</span><span>{visual.representation === 'diagram' ? '示意图' : '来源素材'}</span></div> : null}
+        {!regions ? <div style={{position: 'absolute', left: 0, top: 0, right: 0, display: 'flex', justifyContent: 'space-between', borderBottom: family === 'signal' ? undefined : `${2 * scale}px solid ${family === 'swiss' ? tokens.accent : tokens.grid}`, paddingBottom: 14 * scale, color: appearance?.stageMuted ?? tokens.muted, fontSize: 23 * scale, fontFamily: tokens.font ? tokens.bodyFont : family === 'blueprint' ? 'monospace' : tokens.bodyFont, letterSpacing: 2 * scale}}><span>{kindLabel}</span><span>{visual.representation === 'diagram' ? ui.diagramBadge : ui.sourceMediaBadge}</span></div> : null}
         <h1 data-layout-title style={{...entranceStyle(headingProgress, tokens, scale), position: 'absolute', left: regions?.title.x ?? 0, top: regions?.title.y ?? contentHeight * (productMedia ? .13 : .085), margin: 0, width: titleWidth, height: regions?.title.height, fontFamily: tokens.displayFont, fontSize: titleSize, fontWeight: family === 'editorial' || family === 'notes' ? 700 : 800, lineHeight: 1.12, overflowWrap: 'anywhere', textWrap: 'balance', textAlign: family === 'signal' && !regions ? 'center' : 'left', rotate: !regions && family === 'notes' ? '-.7deg' : undefined}}>{tokens.layoutPolicy ? <ReadableText text={scene.title} /> : scene.title}</h1>
         <div data-layout-body style={{position: 'absolute', left: bodyLeft, width: bodyWidth, top: bodyTop, height: bodyHeight}}>{body}</div>
         <div data-layout-claim style={{...entranceStyle(claimProgress, tokens, scale), position: 'absolute', left: regions?.claim.x ?? 0, ...(regions ? {top: regions.claim.y, width: regions.claim.width, height: regions.claim.height, boxSizing: 'border-box' as const} : {right: 0, bottom: 0}), borderTop: family === 'signal' ? undefined : `1px solid ${tokens.grid}`, paddingTop: 14 * scale, fontSize: 27 * scale, lineHeight: 1.25, textAlign: family === 'signal' ? 'center' : 'left', color: appearance?.stageMuted ?? tokens.muted}}>{scene.primaryClaim}</div>

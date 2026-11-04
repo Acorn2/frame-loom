@@ -2,6 +2,7 @@ import React from 'react';
 import type {StoryboardScene} from '../../schemas/storyboard';
 import type {StyleTokens} from '../../styles/style-loader';
 import {entranceProgress} from '../../timeline/motion-progress';
+import {useUiText} from '../../i18n/ui-language';
 
 // Inspired by video-shotcraft's doc-park-left-pill-deal recipe. The source stays
 // visible while three document-supported conclusions arrive in narration order.
@@ -20,6 +21,7 @@ export function DocumentConclusionDeal({scene, tokens, frame, scale}: {
   frame: number;
   scale: number;
 }) {
+  const ui = useUiText();
   const source = scene.layers.find((layer) => layer.id === scene.visual?.anchorId);
   if (!source) return null;
   const conclusions = scene.layers.filter((layer) => layer.id !== source.id && (layer.type === 'node' || layer.type === 'card'));
@@ -33,9 +35,9 @@ export function DocumentConclusionDeal({scene, tokens, frame, scale}: {
       background: tokens.paper, border: tokens.surfaceBorder, boxShadow: tokens.surfaceShadow,
       opacity: clamp(sourceEntrance), transform: `translateY(${(1 - sourceEntrance) * 28 * scale}px)`
     }}>
-      <div style={{fontSize: 17 * scale, letterSpacing: 2 * scale, color: tokens.accentAlt, borderBottom: `2px solid ${tokens.grid}`, paddingBottom: 10 * scale}}>原文摘录 / {source.label}</div>
+      <div style={{fontSize: 17 * scale, letterSpacing: 2 * scale, color: tokens.accentAlt, borderBottom: `2px solid ${tokens.grid}`, paddingBottom: 10 * scale}}>{ui.excerptPrefix}{source.label}</div>
       <div style={{fontFamily: tokens.displayFont, fontSize: 29 * scale, lineHeight: 1.38, fontWeight: 700, marginTop: 24 * scale, overflowWrap: 'anywhere'}}>{source.text}</div>
-      <div style={{position: 'absolute', left: 31 * scale, right: 31 * scale, bottom: 19 * scale, borderTop: `2px solid ${tokens.grid}`, paddingTop: 10 * scale, fontSize: 17 * scale, color: tokens.muted}}>来源：{scene.visual?.source}</div>
+      <div style={{position: 'absolute', left: 31 * scale, right: 31 * scale, bottom: 19 * scale, borderTop: `2px solid ${tokens.grid}`, paddingTop: 10 * scale, fontSize: 17 * scale, color: tokens.muted}}>{ui.sourcePrefix}{scene.visual?.source}</div>
     </div>
     {conclusions.map((conclusion, index) => {
       const reveal = progressFor(scene, conclusion.id, 'enter', frame, tokens);

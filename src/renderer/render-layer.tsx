@@ -4,6 +4,7 @@ import type {StoryboardBeat, StoryboardLayer, StoryboardScene} from '../schemas/
 import {getBeatProgress} from '../motion/beat-progress';
 import type {StyleTokens} from '../styles/style-loader';
 import {getNodeState} from './node-state';
+import {useUiText} from '../i18n/ui-language';
 
 interface RenderLayerProps {
   layer: StoryboardLayer;
@@ -72,6 +73,7 @@ function layerStyle(layer: StoryboardLayer, tokens: StyleTokens): React.CSSPrope
 }
 
 export function RenderLayer({layer, scene, tokens}: RenderLayerProps) {
+  const ui = useUiText();
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const beats = layerBeats(scene, layer);
@@ -183,7 +185,7 @@ export function RenderLayer({layer, scene, tokens}: RenderLayerProps) {
       <div style={{...sharedStyle, background: tokens.paper, border: tokens.surfaceBorder, boxShadow: tokens.surfaceShadow, overflow: 'hidden'}}>
         {layer.assetDataUri ? <Img src={layer.assetDataUri} style={{width: '100%', height: '100%', objectFit: layer.fit ?? 'contain'}} /> : null}
         <div style={{position: 'absolute', left: 12, bottom: 12, padding: '7px 11px', background: tokens.ink, color: tokens.paper, fontSize: 18}}>
-          {layer.label ?? '示意对象'}
+          {layer.label ?? ui.diagramObjectFallback}
         </div>
       </div>
     );

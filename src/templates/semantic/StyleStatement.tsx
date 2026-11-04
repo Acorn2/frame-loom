@@ -4,12 +4,14 @@ import type {StyleTokens} from '../../styles/style-loader';
 import {entranceProgress} from '../../timeline/motion-progress';
 import {fittedSemanticFont, languageEntrance, statementTitleLayout, styleLanguage} from './style-language';
 import {ReadableText} from '../../layout/ReadableText';
+import {useUiText} from '../../i18n/ui-language';
 
 interface Props {
   scene: StoryboardScene; tokens: StyleTokens; frame: number; scale: number;
   width: number; height: number; portrait: boolean; titleProgress: number;
 }
 export function StyleStatement({scene, tokens, frame, scale, width, height, portrait, titleProgress}: Props) {
+  const ui = useUiText();
   const family = styleLanguage(tokens.id)!;
   const labels = scene.layers.filter(layer => layer.type === 'label');
   const slot = statementTitleLayout(tokens.id, width, height, portrait, scale);
@@ -18,7 +20,7 @@ export function StyleStatement({scene, tokens, frame, scale, width, height, port
     const beat = scene.beats.find(item => item.target === id && ['enter', 'reveal'].includes(item.action));
     return beat ? entranceProgress({frame, start: beat.start, duration: beat.duration, tokens}) : 1;
   };
-  const meta = scene.purpose === 'closing' ? '结语' : scene.purpose === 'claim' ? '观点' : '开篇';
+  const meta = scene.purpose === 'closing' ? ui.statementMeta.closing : scene.purpose === 'claim' ? ui.statementMeta.claim : ui.statementMeta.opening;
   const title: React.CSSProperties = {position: 'absolute', left: slot.left, top: slot.top, width: slot.width, margin: 0, fontFamily: tokens.displayFont, fontSize: size, fontWeight: family === 'editorial' || family === 'notes' ? 700 : 800, lineHeight: 1.12, overflowWrap: 'anywhere', textWrap: 'balance', textAlign: family === 'signal' ? 'center' : 'left', ...languageEntrance(titleProgress, tokens, scale)};
   const metaStyle: React.CSSProperties = {position: 'absolute', left: width * .02, top: height * .025, right: width * .02, fontSize: 25 * scale, color: tokens.muted, fontFamily: tokens.bodyFont, letterSpacing: 3 * scale};
   const footerLabels = (style: React.CSSProperties = {}) => <div style={{position: 'absolute', left: width * .02, right: width * .02, bottom: height * .17, display: 'flex', flexWrap: 'wrap', gap: 26 * scale, ...style}}>{labels.map((layer, index) => <span key={layer.id} style={{fontSize: 31 * scale, ...languageEntrance(progress(layer.id), tokens, scale, index)}}>{layer.label ?? layer.text}</span>)}</div>;
@@ -72,7 +74,7 @@ export function StyleStatement({scene, tokens, frame, scale, width, height, port
     <div style={metaStyle}>{meta}</div>
     <h1 style={title}>{tokens.layoutPolicy ? <ReadableText text={scene.title} /> : scene.title}</h1>
     {labels.length ? <div style={{position: 'absolute', left: portrait ? width * .02 : width * .43, top: portrait ? height * .46 : height * .18, width: portrait ? width * .96 : width * .55, height: portrait ? height * .34 : height * .58, border: tokens.surfaceBorder, borderRadius: 18 * scale, background: tokens.paper, boxShadow: tokens.surfaceShadow, overflow: 'hidden', ...languageEntrance(titleProgress, tokens, scale)}}>
-      <div style={{height: '19%', display: 'flex', alignItems: 'center', padding: `0 ${24 * scale}px`, borderBottom: `1px solid ${tokens.grid}`, color: tokens.muted, fontSize: 26 * scale}}>图解</div>
+      <div style={{height: '19%', display: 'flex', alignItems: 'center', padding: `0 ${24 * scale}px`, borderBottom: `1px solid ${tokens.grid}`, color: tokens.muted, fontSize: 26 * scale}}>{ui.diagramPanel}</div>
       <div style={{height: '81%', display: 'grid', gridTemplateRows: `repeat(${labels.length}, 1fr)`}}>{labels.map((layer, index) => <div key={layer.id} style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: `0 ${30 * scale}px`, background: index === 1 ? tokens.accent : tokens.paper, color: tokens.palette ? index === 1 ? tokens.onAccent : tokens.paperInk : '#23302b', borderBottom: `1px solid ${tokens.grid}`, fontSize: 35 * scale, fontWeight: 600, ...languageEntrance(progress(layer.id), tokens, scale, index)}}><span>{layer.label ?? layer.text}</span><span style={{font: `${24 * scale}px ${tokens.font ? tokens.bodyFont : "monospace"}`}}>{String(index + 1).padStart(2, '0')}</span></div>)}</div>
     </div> : <div aria-hidden style={{position: 'absolute', left: portrait ? width * .12 : width * .47, right: width * .04, top: height * .26, height: height * .35, border: `2px solid ${tokens.grid}`, borderRadius: 18 * scale, background: tokens.paper}} />}
   </div>;

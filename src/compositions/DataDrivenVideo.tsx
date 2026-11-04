@@ -12,6 +12,7 @@ import type {CaptionCue} from '../audio/captions';
 import {getMusicVolumeAtFrame, type MusicDucking} from '../audio/ducking';
 import {getSceneTimeline} from '../timeline/scene-timeline';
 import {LayoutDiagnostics} from '../layout/LayoutDiagnostics';
+import {UiLanguageProvider} from '../i18n/ui-language';
 import {BrandOverlay} from '../branding/BrandOverlay';
 import {DEMO_BRAND, hasBrandStyle, type BrandRuntime} from '../branding/config';
 
@@ -68,6 +69,7 @@ export function DataDrivenVideo({storyboard, styleTokens, audioRuntime, renderPr
 
   if (!fontReady) return null;
   return (
+    <UiLanguageProvider value={storyboard.project.language ?? 'zh'}>
     <AbsoluteFill data-font-id={storyboard.font?.id} style={{backgroundColor: tokens.background, fontFamily: storyboard.font ? tokens.bodyFont : undefined}}>
       {audioRuntime?.voiceoverDataUri ? <Audio src={audioRuntime.voiceoverDataUri} volume={audioRuntime.voiceoverVolume ?? 1} /> : null}
       {audioRuntime?.musicDataUri ? (
@@ -115,6 +117,7 @@ export function DataDrivenVideo({storyboard, styleTokens, audioRuntime, renderPr
       {brand ? <AbsoluteFill style={{transform: scale < 1 ? `scale(${scale})` : undefined, transformOrigin: 'top left'}}><BrandOverlay brand={brand} tokens={tokens}/></AbsoluteFill> : null}
       {storyboard.layoutPolicy && renderProfile?.layoutCheckFrames ? <LayoutDiagnostics board={storyboard} tokens={tokens} frames={renderProfile.layoutCheckFrames} captions={!cleanMaster && Boolean(audioRuntime?.captions?.length)} /> : null}
     </AbsoluteFill>
+    </UiLanguageProvider>
   );
 }
 
