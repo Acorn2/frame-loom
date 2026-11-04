@@ -567,7 +567,7 @@
           "exclusiveMinimum": 0,
           "maximum": 4096
         },
-        "height": {
+        "height": {,
           "type": "integer",
           "exclusiveMinimum": 0,
           "maximum": 4096
@@ -596,7 +596,14 @@
             "reviewed",
             "approved"
           ]
-        }
+        },
+      "language": {
+        "type": "string",
+        "enum": [
+          "zh",
+          "en"
+        ]
+      }
       },
       "required": [
         "title",
