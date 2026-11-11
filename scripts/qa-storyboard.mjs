@@ -275,6 +275,7 @@ export function runQa(options) {
           passed: review.frames.length >= (storyboard.project.durationSec >= 20 ? 6 : 1)
             && missingRequired.length === 0 && review.pages.length === Math.ceil(review.frames.length / 48),
           count: review.frames.length,
+          storage: review.storage,
           missingRequired,
           contactSheet: review.contactSheet,
           contactSheets: review.contactSheets,

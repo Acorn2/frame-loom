@@ -173,6 +173,8 @@ For further adjustments, ask the agent to arrange captions and shots using [meas
 
 **Are documents uploaded to the library website?** The website does not receive documents. Rendering is local; your chosen agent or TTS service may receive source content or narration according to its configuration and terms.
 
+**Why is a project larger than its video?** It also keeps assets, audio, review images, caches and revision records. New review packages use full-resolution JPEGs and share repeated frames; revisions use compact archives. Run `npm run inspect:storage -- projects/<id> --duplicates` for a read-only size and duplicate report. Existing directories are not automatically cleaned; see [storage management (Chinese)](references/artifact-storage.md).
+
 **What if setup fails or the result needs improvement?** Start with [troubleshooting](references/installation.en.md#troubleshooting). Then submit a [setup or runtime issue](https://github.com/Acorn2/frame-loom/issues/new?template=setup-problem.yml) or [video feedback](https://github.com/Acorn2/frame-loom/issues/new?template=video-feedback.yml).
 
 ## Guides and contributions

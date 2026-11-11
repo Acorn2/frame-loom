@@ -172,6 +172,8 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文、编写讲稿�
 
 **文档会上传到配方库网站吗？** 网站不接收文档。渲染在本机进行；你选择的 Agent 或 TTS 服务可能接收文档内容或旁白，按其配置与服务条款使用。
 
+**项目目录为什么比视频大？** 项目还保留素材、音频、审片图、缓存和修订记录。新审片包使用原分辨率 JPEG 并共享重复帧；修订使用紧凑归档。运行 `npm run inspect:storage -- projects/<id> --duplicates` 可只读查看体积与重复文件；旧目录不会自动清理。详见[空间管理](references/artifact-storage.md)。
+
 **遇到错误或效果不满意怎么办？** 先看[安装与排错](references/installation.md#常见安装问题)。仍有问题时提交[安装或运行问题](https://github.com/Acorn2/frame-loom/issues/new?template=setup-problem.yml)或[视频效果反馈](https://github.com/Acorn2/frame-loom/issues/new?template=video-feedback.yml)。
 
 ## 深入使用与参与开发

@@ -14,6 +14,7 @@ import {assertStoryboardApproval} from './lib/storyboard-approval.mjs';
 import {assertNarrationMatchesHandoff, buildNarrationHandoff, writeNarrationHandoff} from './lib/narration-handoff.mjs';
 import {getSceneTimeline} from '../src/timeline/scene-timeline.ts';
 import {selectTtsProfile} from './lib/tts-profiles.mjs';
+import {inspectProjectStorage} from './lib/project-storage.mjs';
 
 const STAGE_NAMES = ['storyboard', 'validation', 'assets', 'safeArea', 'render', 'qa'];
 const AUTOMATED_STATUSES = new Set(['generated', 'validated', 'reviewed', 'approved']);
@@ -580,6 +581,9 @@ function runProductionLocked(options) {
       run.deliveryStatus = run.outputPurpose === 'in-project-video' ? 'manual-review-pending' : 'preview-only';
     }
     run.currentStage = 'done';
+    const {totalBytes, fileCount, byDirectory, warningBytes, warnings} = inspectProjectStorage(projectPath);
+    run.storage = {totalBytes, fileCount, byDirectory, warningBytes, warnings};
+    addWarnings(run, run.storage.warnings.map(message => ({path: 'storage', message})));
     persistRun(projectPath, run);
     return run;
   } catch (error) {
@@ -598,6 +602,8 @@ if (invokedPath === import.meta.url) {
   try {
     const run = runProduction(parseArgs(process.argv.slice(2)));
     console.log(`PRODUCE ${run.status.toUpperCase()} ${path.join(run.projectPath, 'run.json')}`);
+    if (run.storage) console.log(`PROJECT STORAGE ${(run.storage.totalBytes / 1024 / 1024).toFixed(2)} MiB`);
+    for (const warning of run.storage?.warnings ?? []) console.log(`WARNING ${warning}`);
     if (run.warnings.length > 0) console.log(`WARNINGS ${run.warnings.length}`);
     if (run.errors.length > 0) {
       for (const error of run.errors) console.error(`ERROR ${error}`);

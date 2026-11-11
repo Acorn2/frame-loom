@@ -26,6 +26,7 @@
 | 配置一家 TTS 服务、检查或试听 | [TTS 配置指南](tts-setup.md) |
 | 根据语音证据安排字幕、白板和分场缓存 | [语音同步与增量渲染](speech-driven-production.md) |
 | 设置品牌名、Logo 和同源封面 | [品牌配置](branding.md) |
+| 控制审片图片体积、归档修订或检查空间 | [产物与空间管理](artifact-storage.md) |
 | 检查布局、节奏和交付条件 | [内容布局](content-layout.md) · [质量生产](quality-production.md) · [审片清单](review-checklist.md) |
 
 ## Agent 与开发者参考

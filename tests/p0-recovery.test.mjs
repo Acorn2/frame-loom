@@ -129,7 +129,9 @@ describe('P0 render and review recovery', () => {
     };
     makeVideo(15, videoPath);
     const review = extractReviewFrames(videoPath, storyboardPath, reviewDir);
-    expect(review.contactSheets).toEqual(['contact-sheet.png', 'contact-sheet-2.png']);
+    expect(review.contactSheets).toHaveLength(2);
+    expect(review.contactSheets[0]).toMatch(/^contact-sheet-[a-f0-9]{64}\.jpg$/);
+    expect(review.contactSheets[1]).toMatch(/^contact-sheet-2-[a-f0-9]{64}\.jpg$/);
     expect(review.frames.length).toBeGreaterThan(70);
     expect(review.pages.map(({firstFrame, lastFrame}) => [firstFrame, lastFrame])).toEqual([[1, 48], [49, review.frames.length]]);
     const savedManifest = fs.readFileSync(path.join(reviewDir, 'review-frames.json'), 'utf8');
@@ -143,6 +145,6 @@ describe('P0 render and review recovery', () => {
     makeVideo(1, videoPath);
     expect(() => extractReviewFrames(videoPath, storyboardPath, reviewDir)).toThrow();
     expect(fs.readFileSync(path.join(reviewDir, 'review-frames.json'), 'utf8')).toBe(savedManifest);
-    expect(fs.existsSync(path.join(reviewDir, 'contact-sheet-2.png'))).toBe(true);
+    expect(fs.existsSync(path.join(reviewDir, review.contactSheets[1]))).toBe(true);
   }, 60000);
 });

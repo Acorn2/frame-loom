@@ -81,6 +81,8 @@ P2 继续使用现有 React / Remotion / Zod；SVG 滤镜与确定性闭式粒�
 
 ## 语音时间与增量渲染
 
+产物空间管理复用 Node.js 原生文件操作、流式 SHA-256 与 FFmpeg JPEG 4:4:4；不增加依赖。审片索引记录实际帧号、共享图片、媒体摘要和字节预算；修订快照按当前 run 选择产物，避免复制历史输出和可重建逐帧图。见[空间管理](references/artifact-storage.md)。
+
 复用 Zod、Node crypto、ffprobe / FFmpeg 与 Remotion 4.0.522 的 frameRange / WAV 输出，不新增依赖。豆包 v3 可保留 sentence.words 的秒级时间戳；是否请求时间戳继续由用户的 requestBody 设置决定。分场缓存保存 H.264 静音画面，整片音频只编码一次 AAC。契约与限制见 [生产说明](references/speech-driven-production.md)。
 
 ## 品牌标识

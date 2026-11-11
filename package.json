@@ -47,6 +47,8 @@
     "render:cover": "node --import tsx/esm scripts/render-cover.mjs",
     "render:storyboard": "node --import tsx/esm scripts/render-storyboard.mjs",
     "inspect:output": "node scripts/inspect-output.mjs",
+    "inspect:storage": "node scripts/inspect-storage.mjs",
+    "archive:revision": "node scripts/archive-revision.mjs",
     "inspect:audio": "node --import tsx/esm scripts/inspect-audio.mjs",
     "test:audio-pilot": "node --import tsx/esm scripts/test-audio-pilot.mjs",
     "test:visual-regression": "node --import tsx/esm scripts/test-visual-regression.mjs",

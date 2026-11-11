@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {pathToFileURL} from 'node:url';
+import {createHash} from 'node:crypto';
+import {assertProjectOutput, outputBoundary} from './lib/project-files.mjs';
 import {compileStoryboardShots} from '../src/shots/compile-shot.ts';
 import {getSceneTimeline} from '../src/timeline/scene-timeline.ts';
 
@@ -81,56 +83,118 @@ export function selectReviewFrames(storyboard) {
   return sampled.sort((a, b) => a.timeSec - b.timeSec);
 }
 
-export function extractReviewFrames(videoPath, storyboardPath, outputDir) {
+export const REVIEW_MEDIA_LIMIT_BYTES = 128 * 1024 * 1024;
+const mediaHash = file => createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+const managedMediaName = name => /^(frame-\d+|contact-sheet(?:-\d+)?)-[a-f0-9]{64}\.jpg$/.test(name);
+
+export function extractReviewFrames(videoPath, storyboardPath, outputDir, {maxBytes = REVIEW_MEDIA_LIMIT_BYTES} = {}) {
+  if (!Number.isSafeInteger(maxBytes) || maxBytes <= 0 || maxBytes > REVIEW_MEDIA_LIMIT_BYTES) throw new Error('审片图片预算必须为正整数字节，且不超过 128 MiB。');
   const resolvedVideo = path.resolve(videoPath);
   const resolvedStoryboard = path.resolve(storyboardPath);
   if (!fs.existsSync(resolvedVideo)) throw new Error(`视频不存在：${resolvedVideo}`);
   const storyboard = JSON.parse(fs.readFileSync(resolvedStoryboard, 'utf8'));
   const frames = selectReviewFrames(storyboard);
   const resolvedOutput = path.resolve(outputDir ?? path.join(path.dirname(resolvedVideo), 'review-frames'));
+  const boundary = outputBoundary(path.join(resolvedOutput, 'review-frames.json'), path.dirname(resolvedStoryboard));
+  const target = name => assertProjectOutput(boundary, path.join(resolvedOutput, name));
+  const manifestPath = target('review-frames.json');
+  const previous = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, 'utf8')) : {};
   fs.mkdirSync(resolvedOutput, {recursive: true});
   const stagingDir = fs.mkdtempSync(path.join(resolvedOutput, '.review-frames-'));
 
   const manifest = [];
   const contactSheets = [];
   const pages = [];
-  const contactSheet = path.join(resolvedOutput, 'contact-sheet.png');
+  const publishedNew = [];
+  let indexPublished = false;
+  let contactSheet;
+  const media = [];
+  let totalBytes = 0;
+  const registerMedia = name => {
+    const file = path.join(stagingDir, name);
+    const bytes = fs.statSync(file).size;
+    totalBytes += bytes;
+    if (totalBytes > maxBytes) throw new Error(`审片图片超过 ${Math.round(maxBytes / 1024 / 1024)} MiB 预算；未替换旧证据。请拆分项目或检查异常画面，不得丢弃必选检查点。`);
+    const sha256 = mediaHash(file);
+    const publishedName = `${path.parse(name).name}-${sha256}.jpg`;
+    fs.renameSync(file, path.join(stagingDir, publishedName));
+    media.push({file: publishedName, bytes, sha256});
+    return publishedName;
+  };
   try {
+    const frameFiles = new Map();
     frames.forEach((frame, index) => {
-      const fileName = `frame-${String(index + 1).padStart(2, '0')}.png`;
-      const stagedFramePath = path.join(stagingDir, fileName);
-      run('ffmpeg', ['-v', 'error', '-y', '-ss', frame.timeSec.toFixed(3), '-i', resolvedVideo, '-frames:v', '1', '-q:v', '2', stagedFramePath]);
-      if (!fs.existsSync(stagedFramePath)) throw new Error(`无法从视频抽取 ${frame.label}：${frame.timeSec.toFixed(3)} 秒`);
-      manifest.push({...frame, file: fileName});
+      const frameNumber = Math.max(0, Math.min(storyboard.project.durationFrames - 1, Math.round(frame.timeSec * storyboard.project.fps)));
+      const timeSec = frameNumber / storyboard.project.fps;
+      let fileName = frameFiles.get(frameNumber);
+      if (!frameFiles.has(frameNumber)) {
+        fileName = `frame-${String(frameNumber).padStart(6, '0')}.jpg`;
+        const stagedFramePath = path.join(stagingDir, fileName);
+        run('ffmpeg', ['-v', 'error', '-y', '-ss', timeSec.toFixed(6), '-i', resolvedVideo, '-frames:v', '1', '-q:v', '2', '-pix_fmt', 'yuvj444p', stagedFramePath]);
+        if (!fs.existsSync(stagedFramePath)) throw new Error(`无法从视频抽取 ${frame.label}：${timeSec.toFixed(3)} 秒`);
+        fileName = registerMedia(fileName);
+        frameFiles.set(frameNumber, fileName);
+      }
+      // Temporary hard links preserve label order in contact sheets without
+      // storing the same video frame twice. Every checkpoint keeps its label.
+      fs.linkSync(path.join(stagingDir, fileName), path.join(stagingDir, `tile-${String(index + 1).padStart(4, '0')}.jpg`));
+      manifest.push({...frame, requestedTimeSec: frame.timeSec, timeSec, frameNumber, file: fileName});
     });
 
     for (let offset = 0; offset < frames.length; offset += 48) {
       const count = Math.min(48, frames.length - offset);
       const columns = Math.min(3, count);
       const rows = Math.ceil(count / columns);
-      const sheetName = offset === 0 ? 'contact-sheet.png' : `contact-sheet-${offset / 48 + 1}.png`;
+      const sheetName = offset === 0 ? 'contact-sheet.jpg' : `contact-sheet-${offset / 48 + 1}.jpg`;
       const sheet = path.join(stagingDir, sheetName);
-      contactSheets.push(sheetName);
-      pages.push({file: sheetName, firstFrame: offset + 1, lastFrame: offset + count, startSec: frames[offset].timeSec, endSec: frames[offset + count - 1].timeSec});
       run('ffmpeg', [
         '-v', 'error', '-y', '-framerate', '1', '-start_number', String(offset + 1),
-        '-i', path.join(stagingDir, 'frame-%02d.png'),
+        '-i', path.join(stagingDir, 'tile-%04d.jpg'),
         '-vf', `scale=480:-2,tile=${columns}x${rows}:nb_frames=${count}:padding=16:margin=16:color=#111111`,
-        '-frames:v', '1', sheet
+        '-frames:v', '1', '-q:v', '2', '-pix_fmt', 'yuvj444p', sheet
       ]);
       if (!fs.existsSync(sheet) || fs.statSync(sheet).size === 0) throw new Error(`无法生成审片分页：${sheetName}`);
+      const publishedSheet = registerMedia(sheetName);
+      contactSheets.push(publishedSheet);
+      pages.push({file: publishedSheet, firstFrame: offset + 1, lastFrame: offset + count, startSec: manifest[offset].timeSec, endSec: manifest[offset + count - 1].timeSec});
     }
     const manifestName = 'review-frames.json';
-    fs.writeFileSync(path.join(stagingDir, manifestName), `${JSON.stringify({video: resolvedVideo, storyboard: resolvedStoryboard, frames: manifest, contactSheet: 'contact-sheet.png', contactSheets, pages}, null, 2)}\n`);
-    for (const name of [...manifest.map((item) => item.file), ...contactSheets, manifestName]) {
-      fs.renameSync(path.join(stagingDir, name), path.join(resolvedOutput, name));
+    const storage = {format: 'jpeg', fullResolution: true, uniqueFrameCount: frameFiles.size, totalBytes, limitBytes: maxBytes};
+    contactSheet = path.join(resolvedOutput, contactSheets[0]);
+    fs.writeFileSync(path.join(stagingDir, manifestName), `${JSON.stringify({schemaVersion: '1.1', video: resolvedVideo, storyboard: resolvedStoryboard, frames: manifest, contactSheet: contactSheets[0], contactSheets, pages, storage, media}, null, 2)}\n`);
+    for (const item of media) {
+      const file = target(item.file);
+      if (fs.existsSync(file) && mediaHash(file) !== item.sha256) throw new Error(`审片媒体与名称摘要不一致，未覆盖：${file}`);
+    }
+    target(manifestName);
+    for (const item of media) {
+      const file = target(item.file);
+      if (fs.existsSync(file)) continue;
+      fs.renameSync(path.join(stagingDir, item.file), file);
+      publishedNew.push(item);
+    }
+    fs.renameSync(path.join(stagingDir, manifestName), target(manifestName));
+    indexPublished = true;
+    // Only remove obsolete files generated by this format, after successful
+    // publication and a byte check. Legacy PNGs and user files remain untouched.
+    const currentNames = new Set(media.map(item => item.file));
+    for (const item of previous.schemaVersion === '1.1' && Array.isArray(previous.media) ? previous.media : []) {
+      if (typeof item.file !== 'string' || !managedMediaName(item.file) || currentNames.has(item.file)) continue;
+      const file = target(item.file);
+      if (fs.existsSync(file) && mediaHash(file) === item.sha256) fs.unlinkSync(file);
     }
   } finally {
+    if (!indexPublished) {
+      for (const item of publishedNew) {
+        const file = target(item.file);
+        if (fs.existsSync(file) && mediaHash(file) === item.sha256) fs.unlinkSync(file);
+      }
+    }
     fs.rmSync(stagingDir, {recursive: true, force: true});
   }
   console.log(`REVIEW FRAMES ${resolvedOutput} (${manifest.length} frames)`);
   console.log(`CONTACT SHEET ${contactSheet}`);
-  return {outputDir: resolvedOutput, frames: manifest, contactSheet, contactSheets, pages};
+  return {outputDir: resolvedOutput, frames: manifest, contactSheet, contactSheets, pages, storage: {format: 'jpeg', uniqueFrameCount: media.length - pages.length, totalBytes, limitBytes: maxBytes}};
 }
 
 const invokedPath = process.argv[1] ? pathToFileURL(path.resolve(process.argv[1])).href : null;

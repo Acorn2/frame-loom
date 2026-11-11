@@ -57,6 +57,7 @@ npm run qa:storyboard -- <storyboard.json> <preview.mp4> [output-dir]
 - [ ] Silent preview or visual master contains exactly one H.264 video stream and no audio stream.
 - [ ] A video of at least 20 seconds produces at least six review frames.
 - [ ] For current 2.4 and legacy 2.3 videos, inspect every contact-sheet page in `review-frames.json.pages` and each scene's completed-state/pre-cut frames; 2.4 also requires parsed shot-event coverage. Contact-sheet pages contain at most 48 frames each.
+- [ ] Read image paths from the manifest; multiple labels may share one full-resolution JPEG. Inspect the original video or separately extracted PNG for pixel detail. Check reported storage and use a [compact revision archive](artifact-storage.md) before replacement; do not copy all historical review frames.
 - [ ] `qa-report.json` records automated checks and leaves manual review pending.
 
 ## Audio QA when enabled
