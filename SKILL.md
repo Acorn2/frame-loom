@@ -79,13 +79,16 @@ Keep source URLs and provenance in project documents when needed for research, a
 ## Current v0.5 Contract
 
 ```text
-source document -> Agent-authored storyboard.draft.json
+source document -> new 2.4: scene-plan.json -> exported script.md + scene-review.md
+  -> Agent-authored storyboard.draft.json (legacy projects keep their current authoring route)
   -> fast: promote to generated | review: creator-approved storyboard.json and fingerprint
   -> validate storyboard + assets + safe area
   -> optionally hand off script without rendering, synthesize TTS or load external audio
   -> bundle Remotion
   -> render H.264 visual preview, clean visual master or audio pilot
-  -> inspect metadata + extract review evidence
+  -> inspect metadata + extract review evidence + local playback review
+  -> timecoded changes: revise -> shot preview -> creator confirmation -> full render + QA
+  -> hand off review preview | complete playback review and approve visual master/narrated video
 ```
 
 The current runtime supports:

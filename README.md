@@ -6,20 +6,22 @@
 
 <h1>FrameLoom</h1>
 
-**给 Agent 一篇文档，做成带图解和动画的视频**
+**从文档到讲稿、分镜、审片与视频交付**
 
-A document-to-video Skill for Codex, Claude Code, and other coding agents
+A local video production workflow for Codex, Claude Code, and other coding agents
 
 [![配方库](https://img.shields.io/badge/Library-live%20previews-2855d9)](https://acorn2.github.io/frame-loom/)
 [![CI](https://github.com/Acorn2/frame-loom/actions/workflows/ci.yml/badge.svg)](https://github.com/Acorn2/frame-loom/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-24%2B-339933)](package.json)
 
-[看实际效果](#效果展示) · [做第一条视频](#快速开始) · [浏览风格](https://acorn2.github.io/frame-loom/) · [安装与排错](references/installation.md) · [作者的其他产品](#作者的其他产品)
+[看实际效果](#效果展示) · [制作工作流](#制作工作流) · [做第一条视频](#快速开始) · [浏览风格](https://acorn2.github.io/frame-loom/) · [安装与排错](references/installation.md) · [作者的其他产品](#作者的其他产品)
 
 </div>
 
-**FrameLoom** 让 Coding Agent 把文章、讲稿或产品说明编排成视频：Agent 理解内容、写讲稿和分镜，Remotion 在本机渲染图解与动画。你可以先看静音预览，继续导出供剪辑软件使用的干净画面，或接入配音制作有声视频。
+**FrameLoom 是由 Coding Agent 执行的本地视频生产工作流。** 你提供文章、讲稿或产品材料，Agent 编排逐场计划、讲稿和分镜，按需接入配音，再交给你播放审片。你可以按时间码提出修改，先确认修改镜头，再生成新版整片，最终交付静音预览、干净画面底片或有声视频。
+
+你通过 **Skill** 安装和调用这套工作流，Remotion 按分镜在本机渲染图解与动画。项目保留创作计划、素材来源、审阅反馈和交付记录，方便下一次会话继续制作，也支持按固定系列配置制作多期。
 
 ## 效果展示
 
@@ -40,6 +42,29 @@ A document-to-video Skill for Codex, Claude Code, and other coding agents
 | 报告、带来源的数据 | 要点摘要、对照分析、流程与数据图解 |
 
 适合已经在使用 Codex、Claude Code 等 Coding Agent、希望把文字材料做成讲解视频的创作者。当前为 **v0.5 公开测试阶段**；以文字、图解和真实素材为主，不承诺真人表演、剧情片或复杂 3D 镜头。
+
+## 制作工作流
+
+```mermaid
+flowchart LR
+    A[文档与素材] --> B[逐场计划、讲稿与分镜]
+    B --> C[渲染与自动 QA]
+    C --> D[播放审片]
+    D -->|提出修改| E[修改镜头预览]
+    E -->|确认后重生成整片| C
+    D -->|完整复核通过| F[交付]
+```
+
+Agent 负责编排、调用工具和整理检查结果；你负责审阅内容、提出修改和确认交付。`fast` 模式写好分镜后继续制作，`review` 模式先交你审核讲稿和分镜；两种模式都保留实际审片与交付复核。
+
+| 制作中的需要 | 怎么配合 |
+| --- | --- |
+| 先审提纲或讲稿 | 可以先停在文档阶段。新建 2.4 项目从逐场计划导出讲稿与审阅表，按场景核对来源、旁白和画面意图。[内容编排与审阅](references/usage-guide.md#逐场计划讲稿与审阅表) |
+| 换个会话接着做 | 告诉 Agent 项目目录，让它先查询制作状态，找到当前文件、待办事项和下一步负责人。[接手已有项目](references/usage-guide.md#接手已有项目) |
+| 边看边改 | 在本机播放器暂停并记录问题，保留时间码、场景和视频版本。Agent 先给你修改镜头预览，并说明后续时码与字幕变化；你确认后再生成整片。[审片与返工](references/usage-guide.md#边看边提意见按镜头复核新版) |
+| 连续制作多期 | 从系列配置复用角色素材、风格、字体、品牌、画法和固定结尾。每期保留自己的来源与配置快照，更新系列只影响之后新建的期数。[系列制作](references/usage-guide.md#基于系列新建一期) |
+
+这些制作和审片步骤在本地项目中进行。在线配方库用于看样片、选风格和复制制作指令；Agent 根据材料编排内容，你在审片时检查事实、发音和画面效果。
 
 ## 快速开始
 
@@ -85,12 +110,12 @@ npm run inspect:output -- .tmp/quick-start/preview-silent.mp4 examples/creator-p
 请使用 frame-loom Skill，读取 examples/creator-production-pilot/source/source.md，
 用墨白杂志风格（retro-zine）制作 16:9 横屏静音预览。
 使用 fast 模式，根据文档推荐镜头并直接继续制作。
-完成后告诉我视频的实际路径、时长和检查结果，并打开视频供我观看。
+完成后给我可打开的本机审片链接，说明视频实际路径、时长、检查结果和下一步。
 ```
 
-Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文、编写讲稿与分镜，完成渲染与 QA。**成功结果是该项目中的 `output/preview-silent.mp4`，以及实际时长和检查结果。** 视频带审片标记且没有声音；新文档的内容与时长由实际编排决定。
+Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文，编写逐场计划并导出讲稿与审阅表，再编排分镜、渲染和执行 QA。**预览阶段的结果是项目中的 `output/preview-silent.mp4`，以及可打开的本机审片链接、实际时长和检查结果。** 视频带审片标记且没有声音；新文档的内容与时长由实际编排决定。
 
-你不需要手写 JSON、创建项目目录或逐个选择镜头。观看后可直接告诉 Agent 哪一幕需要修改，沿用同一个项目继续调整。
+你不需要手写 JSON、创建项目目录或逐个选择镜头。在审片页暂停并记下问题，或直接告诉 Agent 哪一幕需要修改，即可沿用同一个项目继续调整。收到修改镜头预览后，先确认局部改动，再继续生成整片。
 
 ### 3. 换成自己的材料
 
@@ -99,7 +124,7 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文、编写讲稿�
 ```text
 请使用 frame-loom Skill，把 <文档路径> 做成横屏静音预览。
 根据内容推荐风格和镜头，使用 fast 模式直接继续制作。
-完成后告诉我视频路径、时长和检查结果。
+完成后给我本机审片链接，说明视频路径、时长、检查结果和下一步。
 ```
 
 有产品截图时一并附上，或提供准确网址让 Agent 截图。主体产品截图默认用于参考全片配色，风格负责构图与动效；也可以明确说“使用风格默认配色”。需要先审稿时，改为“使用 review 模式，先给我审核讲稿和分镜，我确认后再渲染”。
@@ -141,7 +166,7 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文、编写讲稿�
 
 在[在线配方库](https://acorn2.github.io/frame-loom/)选择风格，复制制作指令，再交给本地 Agent 和你的文档。Agent 默认根据内容推荐镜头；也可手动限定。网页只展示公开样例，视频生产在本地进行。
 
-当前版本的配方库提供右上角中文／英文切换，界面与制作指令随语言切换，保留制作选择。现有样片和原始配方文档保留中文并明确标注；界面语言不改变视频成品语言或字体。在线站点需发布当前版本后获得这些更新。
+当前版本的配方库提供右上角中文／英文切换，界面与制作指令随语言切换，保留制作选择。现有样片和原始配方文档保留中文并明确标注；界面语言独立于成片内容和字体。英文系统标签另行设置，见下方[常见问题](#常见问题)。在线站点需发布当前版本后获得这些更新。
 
 ## 预览满意后，继续完成视频
 
@@ -162,9 +187,9 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文、编写讲稿�
 
 需要进一步调整时，可以让 Agent 按[实测语音时间](references/speech-driven-production.md)安排字幕与镜头。三套 AI 插画风格还支持右上角品牌名或本地 Logo，视频与同源封面共用配置，详见[品牌设置](references/branding.md)。
 
-制作连续系列时，可以从同一份系列配置新建多期。每期保留开工时的角色素材、来源、字体、品牌、画法与固定结尾，交付用途逐期选择。[系列制作步骤](references/usage-guide.md#基于系列新建一期)
-
 ## 常见问题
+
+**来源和图解说明能显示英文吗？** 可以让 Agent 把 `project.language` 设为 `en`；省略或设为 `zh` 时保留中文系统标签。它独立于配方库界面语言，不翻译讲稿、正文或字幕，也不改变字体和配音语种。[成片系统标签语言](references/usage-guide.md#成片系统标签语言)
 
 **需要会写代码或分镜 JSON 吗？** 不需要手写。你需要安装本地工具、能使用 Coding Agent，并检查它生成的内容；CLI 和 JSON 是 Agent 的工作入口。
 

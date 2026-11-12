@@ -6,20 +6,22 @@
 
 <h1>FrameLoom</h1>
 
-**Give your agent a document. Turn it into a video with diagrams and animation.**
+**From source documents to scripts, storyboards, review, and video delivery**
 
-A document-to-video Skill for Codex, Claude Code, and other coding agents
+A local video production workflow for Codex, Claude Code, and other coding agents
 
 [![Library](https://img.shields.io/badge/Library-live%20previews-2855d9)](https://acorn2.github.io/frame-loom/)
 [![CI](https://github.com/Acorn2/frame-loom/actions/workflows/ci.yml/badge.svg)](https://github.com/Acorn2/frame-loom/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-24%2B-339933)](package.json)
 
-[See the results](#see-the-results) · [Make your first video](#quick-start) · [Browse styles](https://acorn2.github.io/frame-loom/) · [Installation and troubleshooting](references/installation.en.md) · [More from the creator](#more-from-the-creator)
+[See the results](#see-the-results) · [Production workflow](#production-workflow) · [Make your first video](#quick-start) · [Browse styles](https://acorn2.github.io/frame-loom/) · [Installation and troubleshooting](references/installation.en.md) · [More from the creator](#more-from-the-creator)
 
 </div>
 
-**FrameLoom** lets a coding agent turn articles, scripts, and product documents into videos. The agent interprets your content and writes a script and storyboard; Remotion renders diagrams and animation on your computer. Start with a silent preview, then export clean visuals for an external editor or add voiceover to make a narrated video.
+**FrameLoom is a local video production workflow run by a coding agent.** Supply an article, script, or product material. The agent prepares a scene plan, script, and storyboard, adds voiceover when requested, and gives you a video to review. Leave feedback at a timecode, confirm revised shot previews, then generate the updated full video. Deliver a silent preview, clean visuals for an external editor, or a narrated video.
+
+You install and invoke the workflow through a **Skill**. Remotion renders diagrams and animation locally from the storyboard. Each project keeps its creative plan, asset sources, review feedback, and delivery records so you can continue in another chat. A shared series profile supports recurring episodes.
 
 ## See the results
 
@@ -40,6 +42,29 @@ The full video has 7 whiteboard scenes, LXGW WenKai text, natural-speed Chinese 
 | Reports and sourced data | Summaries, comparisons, processes, and data diagrams |
 
 For creators who already use Codex, Claude Code, or another coding agent and want to turn written material into explainers. **v0.5 is a public beta.** The supported visuals focus on text, diagrams, and real assets; live action, narrative films, and complex 3D scenes are outside the current scope.
+
+## Production workflow
+
+```mermaid
+flowchart LR
+    A[Documents and assets] --> B[Scene plan, script, storyboard]
+    B --> C[Rendering and automated QA]
+    C --> D[Playback review]
+    D -->|Request changes| E[Revised shot preview]
+    E -->|Confirm, then regenerate full video| C
+    D -->|Complete playback review passes| F[Delivery]
+```
+
+The agent plans content, runs tools, and reports check results. You review the content, request changes, and approve delivery. In `fast` mode the agent proceeds after writing the storyboard; in `review` mode it waits for your script and storyboard approval. Both modes retain playback review and delivery checks.
+
+| What you need | How to work together |
+| --- | --- |
+| Review an outline or script first | Stop at the document stage. New 2.4 projects export a script and scene review sheet from the scene plan, with sources, narration, and visual intent side by side. [Planning and review (Chinese)](references/usage-guide.md#逐场计划讲稿与审阅表) |
+| Continue in another chat | Give the agent the project directory and ask it to check the production status first. It identifies the current file, pending work, and who acts next. [Resume a project (Chinese)](references/usage-guide.md#接手已有项目) |
+| Leave feedback while watching | Pause in the local player and record an issue against its timecode, scene, and video version. Review the revised shot and downstream timing or caption changes before authorizing the full render. [Review and revisions (Chinese)](references/usage-guide.md#边看边提意见按镜头复核新版) |
+| Produce a recurring series | Reuse character assets, style, font, brand, drawing guide, and a fixed ending. Each episode retains its own sources and configuration snapshot; profile updates affect future episodes. [Series production (Chinese)](references/usage-guide.md#基于系列新建一期) |
+
+Production and review take place in the local project. Use the online library to watch samples, choose a style, and copy instructions. The agent interprets your material; you check facts, pronunciation, and visual results during review.
 
 ## Quick start
 
@@ -85,12 +110,12 @@ You do not need your own source file yet. Paste this into the **agent chat**:
 Use the frame-loom Skill to read examples/creator-production-pilot/source/source.md.
 Make a 16:9 silent preview in Editorial Ink style (retro-zine).
 Use fast mode, recommend shots from the document, and continue production directly.
-Report the actual video path, duration, and check results, then open it for me to watch.
+Give me a working local review-player link, the actual video path, duration, check results, and next action.
 ```
 
-The agent creates a `projects/YYYYMMDD-topic/` project, preserves the source, writes the script and storyboard, renders, and runs QA. **The successful result is that project's `output/preview-silent.mp4`, with its actual duration and check results.** It has a review marker and no audio; the new video's content and duration depend on the agent's plan.
+The agent creates a `projects/YYYYMMDD-topic/` project, preserves the source, writes a scene plan, exports the script and review sheet, then prepares the storyboard, renders, and runs QA. **The preview result is that project's `output/preview-silent.mp4`, a working local review-player link, and its actual duration and check results.** The video has a review marker and no audio; its content and duration depend on the agent's plan.
 
-You do not need to write JSON, create project directories, or select every shot. After watching, tell the agent which scene to change and continue in the same project.
+You do not need to write JSON, create project directories, or select every shot. Pause and record an issue in the player, or tell the agent which scene to change. Continue in the same project, review the revised shot, then confirm before generating the updated full video.
 
 ### 3. Use your own material
 
@@ -99,7 +124,7 @@ Replace the placeholder with a path to an existing Markdown or plain-text docume
 ```text
 Use the frame-loom Skill to turn <document path> into a landscape silent preview.
 Recommend a style and shots from the content, use fast mode, and continue production.
-Report the video path, duration, and check results.
+Give me a local review-player link, the video path, duration, check results, and next action.
 ```
 
 Attach product screenshots if available, or provide an exact URL for the agent to capture. Subject-product screenshots guide the colors by default, while the style controls composition and motion. Ask to “use the style's default colors” if you prefer. To review before rendering, request “review mode: show the script and storyboard, then wait for my approval.”
@@ -141,7 +166,7 @@ The six text and graphics motion styles below use the same storyboard for compar
 
 Choose a style in the [online library](https://acorn2.github.io/frame-loom/), copy its production prompt, and give it to your local agent with a document. The agent recommends shots from the content by default; manual selection is available. The website displays public samples; production runs in your local project.
 
-The current library includes a Chinese / English switch in the upper-right corner. Interface copy and production instructions follow the selected language while preserving production choices. Existing samples and original recipe documents remain in Chinese and are labeled accordingly. Interface language does not change the finished video's language or font. The hosted site receives these changes when this version is published.
+The current library includes a Chinese / English switch in the upper-right corner. Interface copy and production instructions follow the selected language while preserving production choices. Existing samples and original recipe documents remain in Chinese and are labeled accordingly. Interface language is independent of video content and font. English system labels have their own setting; see [common questions](#common-questions). The hosted site receives these changes when this version is published.
 
 ## Continue from preview to finished video
 
@@ -163,9 +188,9 @@ See the [usage guide (Chinese)](references/usage-guide.md) for configuration, ex
 
 For further adjustments, ask the agent to arrange captions and shots using [measured speech timing (Chinese)](references/speech-driven-production.md). The three AI illustration styles also support a top-right brand name or local logo, shared by the video and its cover; see [brand settings (Chinese)](references/branding.md).
 
-For a recurring series, initialize each episode from the same series profile and choose its output purpose. Each episode retains its own character art, provenance, font, brand, drawing guide and closing narration. [Example series profile](examples/whiteboard-original/series.json)
-
 ## Common questions
+
+**Can source labels and diagram notes appear in English?** Ask the agent to set `project.language` to `en`. Omit it or use `zh` for Chinese system labels. This setting is independent of the library interface language; it does not translate scripts, body text, or captions, or change fonts and TTS language. See [rendered UI language](references/storyboard-schema.md#rendered-ui-language).
 
 **Do I need to write code or storyboard JSON?** No manual authoring is required. You need to install local tools, use a coding agent, and check its output. The CLI and JSON are the agent's working interface.
 

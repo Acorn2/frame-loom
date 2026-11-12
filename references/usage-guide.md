@@ -6,14 +6,15 @@
 
 首次安装与排错见[安装指南](installation.md)，自带样片和文档试跑见[项目首页](../README.md#快速开始)。本文保留制作路线、手动 CLI、字体与音频配置，以及审核交付的详细步骤；所有命令从仓库根目录运行。
 
-FrameLoom 是一个以 Codex 为主要入口、兼容 Claude Code、Kimi Code、OpenCode 等 Coding Agent 的结构化视频生产 Skill。Agent 负责从文档提炼内容并编写分镜，Remotion 负责校验、渲染和 QA。
+FrameLoom 是一个以 Codex 为主要入口、兼容 Claude Code、Kimi Code、OpenCode 等 Coding Agent 的本地视频生产工作流，通过 Skill 调用。Agent 从文档编排逐场计划、讲稿和分镜，调用工具完成校验、Remotion 渲染与 QA，并把审阅文件或本机审片入口交给创作者。
 
-当前为 **v0.5 公开测试阶段**，已跑通“文档 → 分镜 → 渲染 → QA”的本地闭环。`fast` / `review` 控制分镜审核；交付用途可选审片预览、供外部剪辑的干净画面底片或项目内有声视频。音频可来自内置 TTS 或用户提供的录音。
+当前为 **v0.5 公开测试阶段**，支持内容审阅、跨会话续作、时码反馈、修改镜头确认和新版整片交付，也支持按系列配置制作多期。`fast` / `review` 控制分镜审核；交付用途可选审片预览、供外部剪辑的干净画面底片或项目内有声视频。音频可来自内置 TTS 或用户提供的录音。
 
 从**已有文档**（文章、讲稿或产品说明）开始即可。首次体验默认使用纯文档、横屏和静音预览；有本地图片或指定网页截图时可选择“文档＋图片”。主张提炼、画面路线和内容缺口由 Agent 判断，仍需创作者审阅；CLI 不会自动理解一篇文章。
 
 ```text
-source document + video style + built-in or selected shot recipes → claims and shot planning → Storyboard 2.4 → validation → preview / visual master / narrated video → QA report
+文档与素材 → 逐场计划、讲稿与分镜 → 校验、渲染与 QA → 创作者播放审片 → 交付
+审片提出修改 → 修改镜头预览 → 创作者确认 → 新版整片与 QA → 再次审片
 ```
 
 **静音 MP4 有两种不同用途。**`preview-silent.mp4` 是带审片标记的画面预览；纯文档静音预览不会为了填充时间自动增加底部旁白字幕。`visual-master-vNNN.mp4` 是无音轨、无旁白字幕和审片标记的干净画面底片，可供创作者在剪辑软件里配音、叠加出镜画面和字幕。底片经完整视觉检查后可以完成 FrameLoom 的**画面交付**；外部剪辑完成的视频由外部流程验收。若要在 FrameLoom 内完成有声讲解视频，则必须接入匹配的旁白，完成音频与画面 QA，再完整播放人工复核。
