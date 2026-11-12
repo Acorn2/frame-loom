@@ -158,7 +158,7 @@ function renderExports() {
   $('copy-status').textContent = '';
   $('installation-guide').href = `https://github.com/Acorn2/frame-loom/blob/main/references/installation${getLocale() === 'en' ? '.en' : ''}.md`;
   $('handoff-materials').textContent = goal !== 'master' && audio === 'external' ? '同时附上旁白音频与时间信息' : '有参考图片时一起附上';
-  $('handoff-result').textContent = review ? '先确认讲稿和分镜，再制作' : goal === 'master' ? '检查画面底片、讲稿与逐镜时间表' : '播放待审视频，检查内容与声音';
+  $('handoff-result').textContent = review ? '打开审稿入口，确认内容与画面安排' : goal === 'master' ? '打开审片入口，检查底片和后期预留' : '打开审片入口，检查内容与声音';
   $('copy-prompt-label').textContent = fixed ? '复制制作指令' : state.shotSelection === 'auto' ? '复制自动编排指令' : '复制指定镜头指令';
   for (const input of document.querySelectorAll('input[name="goal"]')) input.checked = input.value === goal;
   for (const input of document.querySelectorAll('input[name="audio"]')) input.checked = input.value === audio;
@@ -296,7 +296,7 @@ function showDetail(item, isStyle = false) {
 }
 async function copy(id) {
   const area = $(id);
-  try {await navigator.clipboard.writeText(area.value); $('copy-prompt-label').textContent = '已复制 · 去 Agent 粘贴'; $('copy-status').textContent = '复制成功。请粘贴到 Agent 对话，并附上文档与所需素材。';}
+  try {await navigator.clipboard.writeText(area.value); $('copy-prompt-label').textContent = '已复制 · 去 Agent 粘贴'; $('copy-status').textContent = '复制成功。粘贴到 Agent 并附上文档，Agent 会给你可打开的审稿或审片入口。';}
   catch {$('copy-prompt-label').textContent = '重新尝试复制'; $('prompt-details').open = true; area.focus(); area.select(); $('copy-status').textContent = '浏览器未允许复制，已展开并选中文本，请手动复制。';}
 }
 async function start() {

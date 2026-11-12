@@ -19,6 +19,37 @@ clips, TTS or external audio for a silent preview.
 
 **Screenshot colors take priority over style defaults when the screenshots represent the subject.** Refer to their backgrounds, text, card surfaces and accents; preserve the selected style's composition, decoration and motion. Choosing a style alone does not disable source colors. Explain this behavior to the creator, distinguish citation/competitor images, and follow [project colors](references/project-palette.md). Only an explicit style-color choice retains the default palette when subject references are available.
 
+## Resume an existing project
+
+On takeover, run `npm run workflow:status -- <project-dir>` with only the project directory. Report the current stage, named file and next owner. A checking or testing request is read-only for real productions. Exercise changes in an isolated fixture.
+
+When the current assignment ends at a document (for example, an outline, script draft or shot plan), record the user's actual goal and the chosen project-relative file at intake:
+`npm run workflow:checkpoint -- <project-dir> prepare <document> "<goal>"`.
+After checking that document, run the same command with `review` to hand its exact bytes to the creator. Use `prepare` again when taking a revision. A review checkpoint does not approve a document or authorize the next production stage. When an authorized production or script handoff starts, its run takes over from the checkpoint it saw. Projects without checkpoints continue to use their existing storyboard and run evidence.
+
+When starting an episode of an existing series, use `init:project -- --slug <episode> --series <series.json> --output-purpose <episode-purpose>`. Use the episode's copied role assets and sources, locked font/style/brand and drawing guide. Write episode-specific scenes before the seeded closing in `scene-plan.json`. Render with the episode's local files and chosen audio route. Update the series profile for later episodes. See the [series workflow](references/usage-guide.md#基于系列新建一期).
+
+For timecoded feedback, run `npm run review:player -- <project>` and share its loopback link. Use `workflow:status` and `review-feedback.json` to resume the current issue by scene ID. Archive the current candidate before edits. Update the scene plan if adopted, storyboard, and affected audio/captions. Run `npm run review:preview -- <project> <feedback-id> [replacement-scene-id]` and give the creator the clip and timing changes. The player lists old/new scene and subtitle times and groups frame QA by scene and rule. Wait for the creator to accept each latest clip in the player. If they request changes, submit another clip. Only after confirmation, use the same production route to generate and QA the full candidate. Full playback and delivery approval are separate steps. Historical feedback without a baseline snapshot uses `review:revision`.
+
+## Author a scene plan
+
+New 2.4 projects start with a versioned `scene-plan.json`. Write the source, narration, visual kind and intent, and viewer takeaway **there first**. Use `npm run export:scene-plan -- <project-dir>` after edits. Share its `scene-review.md` for editorial review when requested. `script.md` is the derived scene-by-scene narration. For each stable scene ID in order, carry the plan fields into the 2.4 storyboard and author the shot, layers, actions and timing that make the intent visible. Validate the storyboard before production. See [field mapping and revision example](references/usage-guide.md#逐场计划讲稿与审阅表). Legacy projects keep their existing authoring route.
+
+## Give the creator an entry and a next action
+
+Lead each creator handoff with the current result, a directly openable review link and one concrete next action. Use absolute Markdown file links for local documents and media. Keep the project directory, duration and material QA findings after this primary entry so the creator can resume later.
+
+| Current handoff | Primary entry | Creator's next action |
+| --- | --- | --- |
+| Script and scene review requested | Link the current exported `scene-review.md` and the narration in `script.md`; legacy projects use their existing readable script | Check the narration and visual intent, then reply with approval or scene-specific edits |
+| Video or visual master ready | Start `review:player`, verify its actual `/session` and share the working loopback URL | Watch the candidate and pause to mark an issue, or give timecoded feedback in this conversation |
+| Revised shot ready | Share the player URL and the actual latest clip, with a concise account of downstream timecode and subtitle changes | Play the revision and confirm or request changes; after confirming in the player, return to this conversation and say to continue |
+| Revised full video ready | Share the player URL for the current full candidate | Watch the full revision before deciding delivery approval |
+
+The Agent runs project status, export, preview and production commands, maintains the scene plan and derived documents, and supplies these entries. Follow the selected fast/review mode when deciding when to hand off. Continue Agent-owned authorized steps until the next creator decision or a concrete blocker.
+
+For feedback provided in the conversation, bind the creator's original note to the checked candidate before editing. Use the running review player's `/session` and `/feedback` API from `scripts/review-player.mjs`, with the same version, timecode and feedback identity contract as its page. Then follow the existing archived-revision and `review:preview` flow. Give the creator a revised shot first and obtain its confirmation before producing the full candidate. Local approval and full-delivery review retain their existing evidence requirements.
+
 ## Use This Skill For
 
 - Knowledge explainers
@@ -260,8 +291,7 @@ content purpose, input-mode code, template ID, TTS setup or audio file:
    every later path, then copy the source into `source/source.md` without rewriting it.
    Record the original path and style rationale in `production-brief.md`,
    document the route choice, and tell the creator the project path after it
-   exists. Fill `route-card.md`, `content-gaps.md`, `shot-map.md`, `script.md` and
-   `storyboard.draft.json` from the actual document. Match claims to source
+   exists. Fill `route-card.md`, `content-gaps.md` and `shot-map.md` from the actual document. For projects using a scene plan, export its script and review table first, then build `storyboard.draft.json` by scene ID. On the legacy route, author the script and storyboard directly. Match claims to source
    locations and visible scene jobs. For each 2.4 scene, select its explicit
    shot and slots from the pool, then make the difference,
    order, connection or state change visible in the chosen visual kind.
@@ -392,7 +422,7 @@ source, asset, timing, validation or review requirement below.
 - Follow [primary style production](references/primary-style-production.md) for fixed styles; for document-driven or manual pools, follow [shot planning](references/shot-planning.md). Record source-to-scene decisions in `shot-map.md` and perform its content checks for every route, including fixed styles. Do not expand fixed or manual pools. Automatic selection queries compatibility and explicitly initializes the adopted pool, without filling categories for variety.
 - Apply the chosen font to all generated text. Honor the selected color mode using [project colors](references/project-palette.md), including source roles, palette 1.1 evidence and representative-shot comparison when adopting source colors. Load [illustrated production](references/illustrated-production.md) for document-only AI illustration styles and [text-led production](references/text-led-production.md) for annotated-reasoning/editorial-typography; actual generation, inspection and registration remain required. Follow [branding](references/branding.md) for fixed styles; keep brand text out of generated images and use the same configuration for video and cover.
 - For TTS, read [TTS setup](references/tts-setup.md) and [audio integration](references/audio-integration.md). Use a single real `ready` profile directly; let the creator choose among multiple profiles without exposing credentials. A public preset must match an enabled local provider, model and voice; if disabled or mismatched, explain the needed configuration and obtain confirmation, never silently substitute. Pass `--tts-config` explicitly. For external narration, use supplied audio and timing without calling TTS. Retiming uses measured speech on either route; a narrated request never falls back to silence.
-- Honor `fast` / `review` and the output purpose independently: review waits for script, storyboard and timing approval; fast briefly shows the scene plan and continues without an extra pool confirmation. Complete validation, rendering and QA. A visual master has no audio, narration captions or review markers and includes the script and shot timing table. Return real paths, duration and QA results; full playback review is still required for delivery approval.
+- Honor `fast` / `review` and the output purpose independently: review waits for script, storyboard and timing approval; fast briefly shows the scene plan and continues without an extra pool confirmation. Complete validation, rendering and QA. A visual master has no audio, narration captions or review markers and includes the script and shot timing table. Follow the creator handoff table above using verified review entries and real project/output paths, duration and QA results; full playback review is still required for delivery approval.
 
 Read references progressively:
 

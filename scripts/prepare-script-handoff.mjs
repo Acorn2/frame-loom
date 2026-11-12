@@ -1,3 +1,4 @@
+import {readCheckpoint} from './workflow-checkpoint.mjs';
 import {writeProjectJson} from './lib/project-files.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -10,6 +11,7 @@ import {writeNarrationHandoff} from './lib/narration-handoff.mjs';
 export function prepareScriptHandoff(projectDirectory, executionMode = 'fast') {
   if (!['fast', 'review'].includes(executionMode)) throw new Error('--mode 只能是 fast 或 review。');
   const projectPath = path.resolve(projectDirectory);
+  const checkpoint = readCheckpoint(projectPath);
   const storyboardPath = path.join(projectPath, 'storyboard.json');
   if (!fs.existsSync(storyboardPath) && executionMode === 'fast') {
     const draftPath = path.join(projectPath, 'storyboard.draft.json');
@@ -45,6 +47,7 @@ export function prepareScriptHandoff(projectDirectory, executionMode = 'fast') {
     artifacts: {storyboard: 'storyboard.json', narrationScript: path.relative(projectPath, result.markdownPath), narrationManifest: path.relative(projectPath, result.manifestPath)},
     warnings: issues.filter((issue) => issue.severity === 'warning').map((issue) => `${issue.path}: ${issue.message}`), errors: []
   };
+  if (checkpoint) run.workflowCheckpointId = checkpoint.id;
   writeProjectJson(projectPath, runPath, run);
   return result;
 }

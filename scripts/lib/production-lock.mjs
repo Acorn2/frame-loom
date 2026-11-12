@@ -52,7 +52,10 @@ export function resolveProductionLock(input, root = defaultRoot, projectPath) {
     template = {...storyboard.videoTemplate, manifestHash: fileHash(file)};
   }
   const rendererScripts = ['scripts/render-storyboard.mjs', 'scripts/lib/branding.mjs', 'scripts/lib/scene-cache.mjs', 'scripts/lib/audio-runtime.mjs', 'scripts/lib/output-purpose.mjs', 'scripts/lib/verified-render-output.mjs', 'scripts/lib/render-receipt.mjs', 'scripts/lib/layout-qa.mjs'];
-  const runtime = [...files(path.join(root, 'src')), ...rendererScripts.map((name) => path.join(root, name)), path.join(root, 'package-lock.json'), path.join(root, 'tsconfig.json')].sort().map((file) => [path.relative(root, file), fileHash(file)]);
+  // Keep the historical renderer key in receipts. The CLI confirmation gate does
+  // not render pixels; hash the underlying renderer bytes under the original key.
+  const runtime = [...files(path.join(root, 'src')), ...rendererScripts.map((name) => path.join(root, name)), path.join(root, 'package-lock.json'), path.join(root, 'tsconfig.json')].sort().map((file) => [path.relative(root, file),
+    fileHash(file === path.join(root, 'scripts/render-storyboard.mjs') ? path.join(root, 'scripts/render-storyboard-runtime.mjs') : file)]);
   const style = {...storyboard.style, contentHash: hashValue(['style.json', 'motion.json'].map((name) => fileHash(path.join(root, 'styles', storyboard.style.id, name))))};
   const font = storyboard.font ? verifyFontAssets(storyboard.font, root) : undefined;
   const palette = resolvePaletteEvidence(storyboard.palette, projectPath);

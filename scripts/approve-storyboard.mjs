@@ -1,3 +1,4 @@
+import {assertScenePlan} from './lib/scene-plan.mjs';
 import {writeProjectJson} from './lib/project-files.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -8,6 +9,7 @@ import {storyboardApprovalFingerprint} from './lib/storyboard-approval.mjs';
 export function approveStoryboard(projectDirectory, reviewFilePath) {
   const projectPath = path.resolve(projectDirectory);
   const storyboard = StoryboardSchema.parse(JSON.parse(fs.readFileSync(path.join(projectPath, 'storyboard.json'), 'utf8')));
+  assertScenePlan(projectPath, storyboard);
   if (!['reviewed', 'approved'].includes(storyboard.project.status)) throw new Error('review 模式的 storyboard.status 必须是 reviewed 或 approved。');
   const review = JSON.parse(fs.readFileSync(path.resolve(reviewFilePath), 'utf8'));
   if (typeof review?.reviewer !== 'string' || !review.reviewer.trim() || typeof review?.notes !== 'string' || !review.notes.trim()) throw new Error('审核记录需要 reviewer 和 notes。');

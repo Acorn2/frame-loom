@@ -32,11 +32,12 @@ export function englishProductionPrompt(catalog, state, {purpose, audioMode, mod
       'Match an enabled configuration and use --tts-config. If disabled or mismatched, explain and obtain confirmation. Do not silently change the service, model or voice. Adjust the storyboard to measured speech.');
   }
   lines.push('', '[Workflow]',
-    'First read SKILL.md at the Skill root and the relevant production guides. If unavailable, report the gap; do not substitute a workflow. Keep the source language and attribution unless I request translation.',
+    'Read SKILL.md at the Skill root and relevant guides first. If unavailable, report the gap and pause. Keep the source language and attribution unless I request translation.',
     `Production parameters: --output-purpose ${purpose} --audio-mode ${audioMode} --mode ${mode}.`,
     review ? `First show ${fixed ? 'the built-in visual plan' : automatic ? 'the recommended pool' : 'the scene plan within the specified pool'}, the script, storyboard and timing. Wait for my approval before rendering.`
       : 'Briefly show the scene plan, then complete production and QA. Do not introduce an extra pool-confirmation step.');
   lines.push('', '[Delivery and review]', `Ask for missing documents or required assets; do not create placeholders or invent facts${goal === 'master' ? '.' : ', or fall back to silence.'}`,
-    'Return project and output paths, duration and QA results. Full playback review is still required; automated QA is not delivery approval.');
+    'At each handoff, provide a clickable script or video review link and one next action.',
+    'For revisions, show the shot preview and wait for my confirmation before producing the full video.');
   return lines.join('\n');
 }

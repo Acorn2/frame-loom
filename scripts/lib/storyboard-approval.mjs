@@ -1,3 +1,4 @@
+import {scenePlanEvidence} from './scene-plan.mjs';
 import fs from 'node:fs';
 import {illustrationFiles} from './illustrations.mjs';
 import {createHash} from 'node:crypto';
@@ -17,6 +18,7 @@ function collectFiles(directory) {
 
 export function storyboardApprovalFingerprint(projectPath) {
   const files = ['storyboard.json', 'script.md', 'asset-manifest.json'].map((name) => path.join(projectPath, name));
+  files.push(...scenePlanEvidence(projectPath));
   files.push(...collectFiles(path.join(projectPath, 'assets')));
   files.push(...collectManifestAssetFiles(projectPath));
   files.push(...illustrationFiles(projectPath));

@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FrameLoom Scene Plan",
+  "type": "object",
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "frame-loom/scene-plan"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "scenes": {
+      "maxItems": 1000,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+          },
+          "title": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "source": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "statement",
+              "compare",
+              "sequence",
+              "network",
+              "change",
+              "metric",
+              "media"
+            ]
+          },
+          "visualIntent": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "takeaway": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "narration": {
+            "type": "string",
+            "maxLength": 20000
+          },
+          "estimatedSeconds": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "\\S"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "source",
+          "kind",
+          "visualIntent",
+          "takeaway",
+          "narration"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "format",
+    "schemaVersion",
+    "scenes"
+  ],
+  "additionalProperties": false
+}

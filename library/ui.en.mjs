@@ -1,5 +1,11 @@
 // Chinese UI copy is the source dictionary. Translate exact labels, never arbitrary content.
 export const ui = {
+  '打开 Agent 给你的入口': 'Open the link from your Agent',
+  '打开审稿入口，确认内容与画面安排': 'Open the script review and check the content and visual plan',
+  '打开审片入口，检查底片和后期预留': 'Open the video review and check the master and editing space',
+  '打开审片入口，检查内容与声音': 'Open the video review and check the content and sound',
+  '需要修改时，在审片页暂停并记问题，或在 Agent 对话中说“00:09 这里讲得太快”。先看修改镜头，在页内确认后回到 Agent 对话说“继续制作”。': 'To request changes, pause and mark an issue in the review player, or tell your Agent "00:09 goes too fast." Review the revised shot first, confirm in the player, then tell your Agent to continue with the full video.',
+  '复制成功。粘贴到 Agent 并附上文档，Agent 会给你可打开的审稿或审片入口。': 'Copied. Paste into your Agent and attach the document. Your Agent will provide a link to review the script or video.',
   '重新尝试复制': 'Retry copying',
   '制作设置': 'Production setup',
   '制作设置 · FrameLoom': 'Production setup · FrameLoom',

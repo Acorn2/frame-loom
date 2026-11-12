@@ -1,8 +1,9 @@
+import {scenePlanEvidence} from './scene-plan.mjs';
 import {createHash} from 'node:crypto';
 import fs from 'node:fs';
 import {illustrationFiles} from './illustrations.mjs';
 import path from 'node:path';
-import {resolveProductionLock} from './production-lock.mjs';
+import {hashValue, resolveProductionLock} from './production-lock.mjs';
 import {fontAssetFiles} from '../../src/fonts/assets.ts';
 import {TtsConfigSchema, TTS_SYNTHESIS_REVISION} from '../../src/schemas/tts-config.ts';
 import {ttsEnvironmentSettings} from './tts-profiles.mjs';
@@ -70,6 +71,7 @@ export function fingerprintProjectInputs(projectPath, styleRoot, audioConfigPath
     'storyboard.draft.json', 'storyboard.json', 'asset-manifest.json', 'visual-handoff.json'
   ];
   const files = inputNames.map((name) => path.join(projectPath, name));
+  files.push(...scenePlanEvidence(projectPath));
   for (const directory of includeAudio ? ['source', 'assets', 'audio'] : ['source', 'assets']) {
     files.push(...collectFiles(path.join(projectPath, directory)));
   }
@@ -110,9 +112,15 @@ export function fingerprintProjectInputs(projectPath, styleRoot, audioConfigPath
       // The regular storyboard validator reports malformed JSON.
     }
   }
-  let fingerprint = fingerprintFiles(files, projectPath);
-  if (fs.existsSync(selectedPath)) {
-    const selected = JSON.parse(fs.readFileSync(selectedPath, 'utf8'));
+  const selected = fs.existsSync(selectedPath) ? JSON.parse(fs.readFileSync(selectedPath, 'utf8')) : null;
+  // Fast production promotes generated → validated and serializes schema keys
+  // without changing the picture. Preview consent follows canonical content.
+  // Other production and approval fingerprints retain their original byte contract.
+  if (options.normalizeReviewStatus && selected?.project.status === 'generated') selected.project.status = 'validated';
+  let fingerprint = options.normalizeReviewStatus && selected
+    ? createHash('sha256').update(fingerprintFiles(files.filter(f => f !== selectedPath), projectPath)).update(hashValue(selected)).digest('hex')
+    : fingerprintFiles(files, projectPath);
+  if (selected) {
     if (selected.schemaVersion === '2.4') fingerprint = createHash('sha256').update(fingerprint).update(resolveProductionLock(selected, path.dirname(styleRoot), projectPath)?.lock.hash ?? '').digest('hex');
   }
   return includeAudio && ttsConfigPath && fs.existsSync(configuredTts)

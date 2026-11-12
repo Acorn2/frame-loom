@@ -1,3 +1,7 @@
+import {readEpisode} from './lib/series.mjs';
+import {readCheckpoint} from './workflow-checkpoint.mjs';
+import {confirmBeforeRender, closeProducedPreviews} from './lib/preview-gate.mjs';
+import {versionOf} from './lib/review-feedback.mjs';
 import {acquireProjectLock, writeProjectJson} from './lib/project-files.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -295,9 +299,26 @@ function runProductionLocked(options) {
     throw new Error(`项目目录不存在：${projectPath}`);
   }
 
+  const episode = readEpisode(projectPath);
+  if (episode && !options.outputPurpose) options.outputPurpose = episode.outputPurpose;
+  if (episode && options.outputPurpose !== 'in-project-video' && !['auto', 'silent'].includes(options.audioMode)) {
+    throw new Error('本次画面交付用途需要静音模式。');
+  }
   const previousRun = readPreviousRun(projectPath);
+  if (previousRun?.status === 'completed' && previousRun.confirmedPreviewIds?.length) {
+    closeProducedPreviews(projectPath, previousRun.confirmedPreviewIds, versionOf(previousRun));
+  }
+  const approved = confirmBeforeRender(projectPath);
+  if (approved.length) {
+    const mode = options.outputPurpose && options.outputPurpose !== 'in-project-video' ? 'silent' : resolveAudioMode(options);
+    const audio = mode === 'tts' ? path.join(projectPath,'audio/audio-config.tts.json') : mode === 'external' ? resolveAudioConfig(options)?.path : null;
+    confirmBeforeRender(projectPath,{purpose:resolveOutputPurpose(options.outputPurpose,mode),audio,tts:mode === 'tts' ? resolveTtsConfig(options) : null});
+  }
   assertResumePreconditions({...options, executionMode, from, projectPath}, previousRun);
   const run = createRunState(projectPath, executionMode, from, previousRun);
+  const checkpoint = readCheckpoint(projectPath);
+  if (approved.length) run.confirmedPreviewIds = approved;
+  if (checkpoint) run.workflowCheckpointId = checkpoint.id;
   run.audioConfigPath = options.audioConfigPath ? path.resolve(options.audioConfigPath) : null;
   run.ttsConfigPath = options.ttsConfigPath ? path.resolve(options.ttsConfigPath) : null;
   run.audioMode = options.audioMode;
@@ -441,7 +462,7 @@ function runProductionLocked(options) {
           ];
           ttsArgs.push('--tts-config', selectedTts.path);
           ttsArgs.push('--reuse');
-          if (options.force) ttsArgs.push('--force');
+          if (options.force && !approved.length) ttsArgs.push('--force');
           runCommand(ttsArgs);
         } else if (!fs.existsSync(generatedAudioConfigPath)) {
           throw new Error(`无法从 ${from} 恢复：缺少 TTS 音频配置 ${generatedAudioConfigPath}，请从 render 阶段重跑。`);
@@ -469,6 +490,7 @@ function runProductionLocked(options) {
       const config = AudioConfigSchema.parse(readJson(audio.path));
       if (!config.voiceover?.enabled) throw new Error('项目内讲解视频需要已启用的旁白；只有配乐或音效不构成讲解成片。');
     }
+    if (approved.length) confirmBeforeRender(projectPath,{purpose:run.outputPurpose,audio:audio?.path,tts:run.ttsConfigPath});
     const outputName = run.outputPurpose === 'visual-master' ? path.basename(nextMasterOutput(projectPath, options.force))
       : run.outputPurpose === 'in-project-video' ? 'pilot-audio.mp4' : 'preview-silent.mp4';
     const previousOutput = previousRun?.artifacts?.video;
@@ -496,7 +518,7 @@ function runProductionLocked(options) {
       setStage(run, 'render', 'running');
       persistRun(projectPath, run);
       const renderArgs = [
-        'scripts/render-storyboard.mjs',
+        'scripts/render-storyboard-runtime.mjs',
         storyboardPath,
         outputPath,
         '--mode',
@@ -584,7 +606,9 @@ function runProductionLocked(options) {
     const {totalBytes, fileCount, byDirectory, warningBytes, warnings} = inspectProjectStorage(projectPath);
     run.storage = {totalBytes, fileCount, byDirectory, warningBytes, warnings};
     addWarnings(run, run.storage.warnings.map(message => ({path: 'storage', message})));
+    if (approved.length) confirmBeforeRender(projectPath);
     persistRun(projectPath, run);
+    closeProducedPreviews(projectPath,approved,versionOf(run));
     return run;
   } catch (error) {
     run.status = 'failed';

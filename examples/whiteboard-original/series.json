@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0",
+  "id": "observation-club",
+  "version": "1",
+  "style": {
+    "id": "whiteboard",
+    "version": "1.0.0"
+  },
+  "font": {
+    "id": "xiaolai",
+    "version": "3.126"
+  },
+  "brand": {
+    "name": "观察小组"
+  },
+  "drawingGuide": "用开放白板逐笔写出观察步骤，把亲子人物和说明文字分开放。",
+  "fixedEnding": "一起观察，也一起提问，把好奇变成自己的发现。",
+  "characters": [
+    {
+      "id": "curious-family",
+      "path": "assets/curious-family.png",
+      "source": "AI-generated illustration; imagegen; illustration-plan.json#curious-family; source claim: source.md: 亲子一起观察，也一起提问，把好奇变成自己的发现",
+      "license": "AI-generated output; use subject to image provider terms; not a factual photograph or official interface",
+      "intendedUse": "原创白板样片中的共同观察情境；虚构亲子人物，不代表产品使用效果",
+      "sourceFile": "asset-manifest.json"
+    }
+  ]
+}

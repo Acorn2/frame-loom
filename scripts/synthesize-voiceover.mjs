@@ -1,3 +1,4 @@
+import {assertScenePlan} from './lib/scene-plan.mjs';
 import fs from 'node:fs';
 import {acquireProjectLock, assertProjectOutput, assertNoPendingAudioPublication, publishAudioFiles, writeProjectJson} from './lib/project-files.mjs';
 import path from 'node:path';
@@ -152,6 +153,7 @@ async function synthesizePackage(options) {
   if (!storyboardResult.success) {
     throw new Error(`storyboard.json 无效：${storyboardResult.error.issues.map((item) => `${item.path.join('.')}: ${item.message}`).join('; ')}`);
   }
+  assertScenePlan(projectPath, storyboardResult.data);
   const ttsResult = TtsConfigSchema.safeParse(readJson(ttsConfigPath));
   if (!ttsResult.success) {
     throw new Error(`tts-config.json 无效：${ttsResult.error.issues.map((item) => `${item.path.join('.')}: ${item.message}`).join('; ')}`);
@@ -175,6 +177,7 @@ async function synthesizePackage(options) {
   const configFingerprint = fingerprintTtsConfig(ttsConfigPath, projectPath);
   const sourceFingerprint = fingerprintFiles([storyboardPath, ttsConfigPath, manualCuesPath, ...(options.speechCuesPath ? [path.resolve(options.speechCuesPath)] : [])], projectPath);
   const assertCurrentInputs = () => {
+    assertScenePlan(projectPath, storyboardResult.data);
     if (sourceFingerprint !== fingerprintFiles([storyboardPath, ttsConfigPath, manualCuesPath, ...(options.speechCuesPath ? [path.resolve(options.speechCuesPath)] : [])], projectPath) || configFingerprint !== fingerprintTtsConfig(ttsConfigPath, projectPath)) throw new Error('讲稿、字幕或 TTS 配置在合成期间变化，未发布音频包；已完成语音保留在缓存。');
   };
   const narratedScenes = timeline.filter(({scene}) => scene.narration.trim());

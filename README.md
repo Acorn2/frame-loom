@@ -162,6 +162,8 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文、编写讲稿�
 
 需要进一步调整时，可以让 Agent 按[实测语音时间](references/speech-driven-production.md)安排字幕与镜头。三套 AI 插画风格还支持右上角品牌名或本地 Logo，视频与同源封面共用配置，详见[品牌设置](references/branding.md)。
 
+制作连续系列时，可以从同一份系列配置新建多期。每期保留开工时的角色素材、来源、字体、品牌、画法与固定结尾，交付用途逐期选择。[系列制作步骤](references/usage-guide.md#基于系列新建一期)
+
 ## 常见问题
 
 **需要会写代码或分镜 JSON 吗？** 不需要手写。你需要安装本地工具、能使用 Coding Agent，并检查它生成的内容；CLI 和 JSON 是 Agent 的工作入口。

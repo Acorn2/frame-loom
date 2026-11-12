@@ -163,6 +163,8 @@ See the [usage guide (Chinese)](references/usage-guide.md) for configuration, ex
 
 For further adjustments, ask the agent to arrange captions and shots using [measured speech timing (Chinese)](references/speech-driven-production.md). The three AI illustration styles also support a top-right brand name or local logo, shared by the video and its cover; see [brand settings (Chinese)](references/branding.md).
 
+For a recurring series, initialize each episode from the same series profile and choose its output purpose. Each episode retains its own character art, provenance, font, brand, drawing guide and closing narration. [Example series profile](examples/whiteboard-original/series.json)
+
 ## Common questions
 
 **Do I need to write code or storyboard JSON?** No manual authoring is required. You need to install local tools, use a coding agent, and check its output. The CLI and JSON are the agent's working interface.

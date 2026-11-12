@@ -1,3 +1,6 @@
+import {loadSeries, endingScene, writeEpisode} from './lib/series.mjs';
+import {OUTPUT_PURPOSES} from './lib/output-purpose.mjs';
+import {emptyScenePlan, writeScenePlanDocuments} from './lib/scene-plan.mjs';
 import {SHOT_CATALOG} from '../src/shots/catalog.ts';
 import {VIDEO_TEMPLATES} from '../src/video-templates/resolve-template.ts';
 import fs from 'node:fs';
@@ -15,7 +18,7 @@ import {BrandConfigSchema} from '../src/branding/config.ts';
 import {resolveBrand} from './lib/branding.mjs';
 
 const VIDEO_ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const PROJECT_OPTIONS = new Set(['--slug', '--style', '--font', '--shots', '--canvas', '--input-mode', '--color-mode', '--projects-dir', '--video-template', '--brand-name']);
+const PROJECT_OPTIONS = new Set(['--slug', '--style', '--font', '--shots', '--canvas', '--input-mode', '--color-mode', '--projects-dir', '--video-template', '--brand-name', '--series', '--output-purpose']);
 
 function positionalArgs(args) {
   const positional = [];
@@ -51,33 +54,42 @@ export function initProject(args = process.argv.slice(2), {now = new Date()} = {
   const slug = getOption(args, '--slug');
   const positional = positionalArgs(args);
   if ((slug && positional.length > 0) || (!slug && positional.length !== 1)) {
-    throw new Error('Usage: npm run init:project -- --slug <topic-slug> [--style <id>] [--font <id>] [--brand-name <name>] [--shots <id,id,...>] [--video-template <preset-id>] [--canvas landscape|portrait] [--input-mode document|document-images] [--color-mode auto|style|source] [--projects-dir <path>]\n也可传入一个显式 video-id 以兼容已有流程。');
+    throw new Error('Usage: npm run init:project -- --slug <topic-slug> [--series <series.json> --output-purpose <用途>] [--style <id>] [--font <id>] [--brand-name <name>] [--shots <id,id,...>] [--video-template <preset-id>] [--canvas landscape|portrait] [--input-mode document|document-images] [--color-mode auto|style|source] [--projects-dir <path>]\n也可传入一个显式 video-id 以兼容已有流程。');
   }
   const suppliedId = slug ?? positional[0];
   if (!suppliedId || !VIDEO_ID_PATTERN.test(suppliedId) || (slug && /^\d{8}-/.test(slug))) {
     throw new Error('topic-slug / video-id 只能包含小写字母、数字和连字符；--slug 不要包含日期前缀。');
   }
 
+  const seriesFile = getOption(args, '--series');
+  const bundle = seriesFile ? loadSeries(seriesFile) : null;
+  const series = bundle?.lock.series;
+  const purpose = getOption(args, '--output-purpose');
+  if (series && !OUTPUT_PURPOSES.includes(purpose)) throw new Error('请用 --output-purpose 单独选择本期用途：' + OUTPUT_PURPOSES.join(' / '));
+  if (purpose && !series) throw new Error('--output-purpose 在系列初始化或 produce 时指定。');
   const templateId = getOption(args, '--video-template');
   const videoTemplate = templateId ? resolveVideoTemplate({id: templateId, version: VIDEO_TEMPLATES.find(item => item.id === templateId)?.version}) : undefined;
   const shotIds = getOption(args, '--shots');
-  const styleId = getOption(args, '--style') ?? videoTemplate?.defaultStyle.id ?? 'retro-zine';
+  const styleId = getOption(args, '--style') ?? series?.style.id ?? videoTemplate?.defaultStyle.id ?? 'retro-zine';
   const fixedRecipes = fixedStyleRecipeIds(styleId);
   const brandName = getOption(args, '--brand-name');
   if (brandName && !fixedRecipes) throw new Error('--brand-name 仅支持三套主风格。');
-  const inheritedBrand = brandName ? resolveBrand(styleId).evidence.config : undefined;
+  const inheritedBrand = brandName && !series ? resolveBrand(styleId).evidence.config : undefined;
   const brandOverride = inheritedBrand ? BrandConfigSchema.parse({schemaVersion: '1.0', brand: {...inheritedBrand, name: brandName, ...(inheritedBrand.logo ? {logo: {...inheritedBrand.logo, path: path.resolve(projectRoot, inheritedBrand.logo.path)}} : {})}}) : undefined;
   if (fixedRecipes && shotIds && JSON.stringify([...new Set(shotIds.split(',').map(id => id.trim()))].sort()) !== JSON.stringify([...fixedRecipes].sort())) throw new Error('此风格使用固定内置镜头，不支持手动限定 --shots；请只指定 --style。');
   const recipeIds = fixedRecipes ?? (shotIds ? shotIds.split(',').map(id => id.trim()) : undefined);
   const shotRecipes = recipeIds ? ShotSelectionSchema.parse(recipeIds.map(id => ({id, version: SHOT_CATALOG.find(item => item.id === id)?.version}))) : undefined;
-  const fontId = getOption(args, '--font');
+  const fontId = getOption(args, '--font') ?? series?.font.id;
   const fontEntry = fontId ? FONT_CATALOG.find(item => item.id === fontId) : undefined;
   if (fontId && !fontEntry) throw new Error(`未知字体：${fontId}`);
   const font = fontEntry ? {id: fontEntry.id, version: fontEntry.version} : recommendedFont(styleId);
   verifyFontAssets(font);
+  if (series && (font.id !== series.font.id || font.version !== series.font.version || styleId !== series.style.id ||
+      (brandName && brandName !== series.brand.name))) throw new Error('所选字体、品牌或画法与系列版本不符。');
   if (videoTemplate && styleId !== videoTemplate.defaultStyle.id) throw new Error('视频模板只允许默认风格。');
   const canvas = getOption(args, '--canvas') ?? 'landscape';
-  const inputMode = getOption(args, '--input-mode') ?? 'document';
+  const inputMode = getOption(args, '--input-mode') ?? (series?.characters.length ? 'document-images' : 'document');
+  if (series?.characters.length && inputMode === 'document') throw new Error('系列角色是已有素材，请采用 document-images。');
   const colorMode = getOption(args, '--color-mode') ?? 'auto';
   if (!['auto', 'style', 'source'].includes(colorMode)) throw new Error('--color-mode 只能是 auto、style 或 source。');
   if (colorMode === 'source' && (canvas !== 'landscape' || !(shotRecipes || videoTemplate))) throw new Error('素材配色需要横屏及 --shots 或 --video-template，以启用 2.4。');
@@ -93,6 +105,7 @@ export function initProject(args = process.argv.slice(2), {now = new Date()} = {
   if (!style) {
     throw new Error(`未知 Style Pack：${styleId}`);
   }
+  if (series && style.version !== series.style.version) throw new Error('当前风格版本与系列画法不符。');
   if (!style.canvas.includes(canvas)) {
     throw new Error(`Style Pack "${styleId}" 不支持 ${canvas}。`);
   }
@@ -110,6 +123,27 @@ export function initProject(args = process.argv.slice(2), {now = new Date()} = {
     throw new Error(`目标项目已存在，未覆盖：${target}`);
   }
 
+  const settings = {videoId, canvas, styleId, style, font, colorMode, inputMode, brandOverride, shotRecipes, videoTemplate, dimensions, bundle, purpose};
+  if (bundle) {
+    fs.mkdirSync(projectsDir, {recursive: true});
+    const staging = fs.realpathSync(fs.mkdtempSync(path.join(projectsDir, '.series-episode-')));
+    try {
+      populateProject(staging, settings);
+      resolveBrand(styleId, {projectPath: staging});
+      fs.renameSync(staging, target);
+    } finally {
+      if (fs.existsSync(staging)) fs.rmSync(staging, {recursive: true});
+    }
+  } else {
+    populateProject(target, settings);
+  }
+  if (videoTemplate || shotRecipes || bundle) console.log('先填写 scene-plan.json，再运行 export:scene-plan 生成讲稿和逐场审阅表。');
+  console.log(`PROJECT INITIALIZED ${target}`);
+  console.log(`Next: add a source document${inputMode === 'document-images' ? ' and list local images or user-provided URLs in visual-sources.md' : ''}, compare routes and gaps, map claims to shots, then use SKILL.md to complete the script and storyboard before running produce.`);
+  return target;
+}
+
+function populateProject(target, {videoId, canvas, styleId, style, font, colorMode, inputMode, brandOverride, shotRecipes, videoTemplate, dimensions, bundle, purpose}) {
   fs.mkdirSync(path.join(target, 'source'), {recursive: true});
   fs.mkdirSync(path.join(target, 'assets'), {recursive: true});
   fs.mkdirSync(path.join(target, 'audio'), {recursive: true});
@@ -118,7 +152,7 @@ export function initProject(args = process.argv.slice(2), {now = new Date()} = {
   write(path.join(target, 'source/source.md'), `# ${videoId}\n\n在这里放入原始 Markdown、事实和来源。不要把未经核实的推断写成事实。\n`);
   write(path.join(target, 'project-input.json'), `${JSON.stringify({schemaVersion: '1.0', inputMode, colorMode, palettePolicy: 'source-roles-v1', ...(inputMode === 'document' && ILLUSTRATION_STYLES.includes(styleId) ? {illustrationPolicy: 'generated-subjects-v1'} : {})}, null, 2)}\n`);
   write(path.join(target, 'visual-sources.md'), '# Visual Sources\n\nRecord local image paths or exact creator-provided URLs, original/final URL, capture time, viewport and visible state.\n\n## Project colors\n\n- Color mode: ' + colorMode + '\n- Palette policy: source-roles-v1; new palettes use schemaVersion 1.1\n- Subject product and source role: [palette-reference / scene-media / both]\n- Sample background, title/body text, surface and accent separately; one button sample is insufficient.\n- For every color role, record asset ID, original-pixel region, sampled color, adopted color and any derivation reason in storyboard.palette.evidence. Background, ink and accent require direct samples.\n- Missing screenshot roles: [derive from sampled roles with reasons; never silently replace them with style/neutral defaults]\n- Adopted palette or fallback reason: [write final colors to storyboard.palette; do not infer a brand from a citation or competitor]\n- Representative-shot review: [compare canvas, titles/body, cards, diagram labels and captions to source screenshots; record readable adjustments and full-playback status]\n');
-  write(path.join(target, 'production-brief.md'), `# Production Brief\n\n- Video ID: ${videoId} (internal; do not ask the creator to provide it)\n- Audience: [infer from source, or mark unspecified]\n- Platform / use: [record only when supplied or supported by source; do not block a first preview]\n- Viewer takeaway: [derive one sentence from supported source claims]\n- Canvas: ${canvas}\n- Style candidate: ${styleId}\n- Font: ${font.id} (one family for all generated text)\n- Duration constraint: [optional user limit; otherwise derive from script, reading time and scene holds]\n- Output purpose: [visual-preview / visual-master / in-project-video / script handoff]\n- Audio route: [silent / selected TTS profile / external voiceover]\n- Input mode: ${inputMode}\n\n## Source boundary\n\nRecord the original document path and which claims need verification. Keep an unchanged copy under source/. ${inputMode === 'document' ? (ILLUSTRATION_STYLES.includes(styleId) ? 'Generate and inspect at least one subject image, register it, and use it in a visible storyboard slot; generated-subjects-v1 is required for this route.' : 'This mode uses document-derived text and graphics; no images are required.') : 'This mode uses the document plus local images or screenshots captured from user-provided URLs. Record every visual source before rendering.'}\n\n## Review gates\n\n- [ ] Source and key claims checked against the document\n- [ ] Document route and content gaps checked\n${inputMode === 'document-images' ? '- [ ] Image sources, capture details and intended shots checked\n' : ''}- [ ] Style Pack selected after route\n- [ ] Storyboard approved by creator (review mode only)\n- [ ] Selected output watched in full after automated QA\n`);
+  write(path.join(target, 'production-brief.md'), `# Production Brief\n\n- Video ID: ${videoId} (internal; do not ask the creator to provide it)\n- Audience: [infer from source, or mark unspecified]\n- Platform / use: [record only when supplied or supported by source; do not block a first preview]\n- Viewer takeaway: [derive one sentence from supported source claims]\n- Canvas: ${canvas}\n- Style candidate: ${styleId}\n- Font: ${font.id} (one family for all generated text)\n- Duration constraint: [optional user limit; otherwise derive from script, reading time and scene holds]\n- Output purpose: ${purpose ?? '[visual-preview / visual-master / in-project-video / script handoff]'}\n- Audio route: [silent / selected TTS profile / external voiceover]\n- Input mode: ${inputMode}\n\n## Source boundary\n\nRecord the original document path and which claims need verification. Keep an unchanged copy under source/. ${inputMode === 'document' ? (ILLUSTRATION_STYLES.includes(styleId) ? 'Generate and inspect at least one subject image, register it, and use it in a visible storyboard slot; generated-subjects-v1 is required for this route.' : 'This mode uses document-derived text and graphics; no images are required.') : 'This mode uses the document plus local images or screenshots captured from user-provided URLs. Record every visual source before rendering.'}\n\n## Review gates\n\n- [ ] Source and key claims checked against the document\n- [ ] Document route and content gaps checked\n${inputMode === 'document-images' ? '- [ ] Image sources, capture details and intended shots checked\n' : ''}- [ ] Style Pack selected after route\n- [ ] Storyboard approved by creator (review mode only)\n- [ ] Selected output watched in full after automated QA\n`);
   if (inputMode === 'document-images') {
     fs.appendFileSync(path.join(target, 'visual-sources.md'), '\n## Display media\n\nList images supplied by the user or webpage URLs the user asked Codex to capture. For each URL, use a browser to save a real screenshot into assets/ before rendering; record the final URL, capture time, viewport and visible state. A URL is not itself a renderable asset. Do not invent a screenshot or claim unverified publication rights.\n\n| Visual ID | Kind: local image / URL screenshot | Original path or URL | Final URL | Local assets/ path | Capture time / viewport / state | Claim and shot | Rights / review state |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n');
   }
@@ -128,7 +162,14 @@ export function initProject(args = process.argv.slice(2), {now = new Date()} = {
   if (videoTemplate || shotRecipes) write(path.join(target, 'shot-map.md'), `# Claim → Shot Map (2.4)\n\n${shotRecipes ? `Selected recipe pool: ${shotRecipes.map((shot) => `${shot.id}@${shot.version}`).join(', ')}. Choose per scene from this pool; do not force all recipes into the document or silently add a fallback.\n\n` : ''}| Scene | Source location / excerpt | Claim | Visual kind | Shot ID / exact version | Why this shot | Assets | Beat cues | Fallback reason |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n`);
   if (shotRecipes) fs.appendFileSync(path.join(target, 'production-brief.md'), `\n## Selected shot recipes\n\n- Style: ${style.id}@${style.version}\n- Recipe pool: ${shotRecipes.map((shot) => `${shot.id}@${shot.version}`).join(', ')}\n- Preset: ${videoTemplate?.id ?? 'custom style + recipe selection'}\n\nThe pool limits available recipes; the Agent selects, repeats and orders shots according to the source. Ask for a selection change if no chosen recipe fits.\n`);
   write(path.join(target, 'content-brief.md'), '# Content Brief\n\n## Narrative order\n\n## Claims and evidence\n\nKeep detailed source-to-shot links in shot-map.md.\n\n## Visual targets and exclusions\n');
-  write(path.join(target, 'script.md'), '# Script\n\n> Give each scene its final ID and use the exact scene.narration text. Timing is provisional until narration is measured or the picture is locked.\n\n## opening\n\n[Replace with the exact opening narration.]\n');
+  if (videoTemplate || shotRecipes || bundle) {
+    const plan = emptyScenePlan();
+    if (bundle) plan.scenes.push(endingScene(bundle.lock.series));
+    write(path.join(target, 'scene-plan.json'), JSON.stringify(plan, null, 2) + '\n');
+    writeScenePlanDocuments(target, plan);
+  } else {
+    write(path.join(target, 'script.md'), '# Script\n\n> Give each scene its final ID and use the exact scene.narration text. Timing is provisional until narration is measured or the picture is locked.\n\n## opening\n\n[Replace with the exact opening narration.]\n');
+  }
   write(path.join(target, 'visual-handoff.json'), `${JSON.stringify({schemaVersion: '1.0', facecamRightFraction: 0, subtitleBottomFraction: 0, timelinePolicy: 'picture-locked'}, null, 2)}\n`);
   if (inputMode === 'document' && ILLUSTRATION_STYLES.includes(styleId)) {
     write(path.join(target, 'illustration-plan.json'), `${JSON.stringify({schemaVersion: '1.0', style: {id: style.id, version: style.version}, assets: []}, null, 2)}\n`);
@@ -191,9 +232,11 @@ export function initProject(args = process.argv.slice(2), {now = new Date()} = {
     }]
   }, null, 2)}\n`);
 
-  console.log(`PROJECT INITIALIZED ${target}`);
-  console.log(`Next: add a source document${inputMode === 'document-images' ? ' and list local images or user-provided URLs in visual-sources.md' : ''}, compare routes and gaps, map claims to shots, then use SKILL.md to complete the script and storyboard before running produce.`);
-  return target;
+  if (bundle) {
+    writeEpisode(target, bundle, purpose);
+    const {series} = bundle.lock;
+    fs.appendFileSync(path.join(target, 'production-brief.md'), `\n## 系列制作约定\n\n${series.id} · ${series.version}\n\n${series.drawingGuide}\n\n角色及来源见 asset-manifest.json。将本期内容放在逐场计划的固定结尾前。\n`);
+  }
 }
 
 const invokedPath = process.argv[1] ? pathToFileURL(path.resolve(process.argv[1])).href : null;

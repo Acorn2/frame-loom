@@ -1,3 +1,4 @@
+import {basisFile, clipFile, readFeedback, versionOf} from './lib/review-ledger.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
@@ -72,6 +73,12 @@ export function archiveRevision(projectDirectory, revisionId, {include = []} = {
     }
     if (run.sourceVisualMaster?.video) addVideo(run.sourceVisualMaster.video);
     if (run.sourceVisualMaster?.handoff) addPath(path.dirname(run.sourceVisualMaster.handoff));
+    for (const issue of readFeedback(root)) {
+      if (!issue.basisHash || (issue.version !== versionOf(run) && issue.producedVersion !== versionOf(run))) continue;
+      add(path.relative(root, basisFile(root, issue.version)));
+      const clip = issue.previews?.at(-1);
+      if (clip) add(path.relative(root, clipFile(root, clip.id)));
+    }
     // Preserve review records and timing notes kept next to the current video.
     if (fs.existsSync(path.join(root, 'output'))) {
       for (const name of fs.readdirSync(path.join(root, 'output'))) {

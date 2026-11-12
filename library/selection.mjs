@@ -88,11 +88,12 @@ export function createExports(catalog, selection, locale = 'zh') {
       '匹配已启用配置后使用 --tts-config；若未启用或参数不匹配，说明并确认，不自动换服务、模型或音色；按实测旁白调整分镜。');
   }
   prompt.push('', '【执行流程】',
-    '先读取该 Skill 根目录的 SKILL.md 及对应制作指南；无法读取时说明缺口，不自行替代流程。保留原文和来源，未经要求不翻译。',
+    '先读 Skill 根目录的 SKILL.md 及相关指南；无法读取时说明并暂停。保留原文与来源，未经要求不翻译。',
     `制作参数：--output-purpose ${purpose} --audio-mode ${audioMode} --mode ${mode}。`,
     review ? `先展示${state.shotSelection === 'fixed' ? '风格内置流程的画面安排' : state.shotSelection === 'auto' ? '推荐组合' : '指定集合内的镜头安排'}、讲稿、分镜和时间安排，等我审核后再渲染。`
       : '简要展示逐场安排后直接完成制作与 QA，不新增组合确认步骤。');
   prompt.push('', '【交付与复核】', `缺少文档或必需素材时先请我提供，不生成占位内容、不补造事实${goal === 'master' ? '。' : '，不退回静音结果。'}`,
-    '返回项目与产物路径、时长及 QA 结果；完整播放复核仍需完成，自动 QA 不代表交付批准。');
+    '交接时给我可直接打开的审稿或审片入口，并说明下一步。',
+    '修改时先给镜头预览，等我确认后再生成整片。');
   return {prompt: locale === 'en' ? englishProductionPrompt(catalog, state, {purpose, audioMode, mode, warning: shotSelectionWarning(catalog, state)}) : prompt.join('\n'), purpose, audioMode, mode};
 }

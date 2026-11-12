@@ -63,21 +63,32 @@ describe('local library capabilities and selection', () => {
       expect(english.prompt).not.toMatch(/[\u4e00-\u9fff]/u);
       expect(english.prompt).toContain('--font lxgw-wenkai'); expect(english.prompt).toContain(`--color-mode ${colorMode}`);
       expect(english.prompt).toContain(`--output-purpose ${english.purpose} --audio-mode ${english.audioMode} --mode ${english.mode}`);
-      expect(english.prompt).toContain('Keep the source language'); expect(english.prompt).toContain('automated QA is not delivery approval');
+      expect(english.prompt).toContain('Keep the source language');
       expect(english.prompt).toContain('SKILL.md at the Skill root'); expect(english.prompt).toContain('references/project-palette.md');
       if (style.role === 'primary') expect(english.prompt).toContain('fixed built-in');
       else expect(english.prompt).toContain('Allowed recipes: paper-title, semantic-default');
       expect(english.prompt).toContain(review ? 'Wait for my approval before rendering' : 'Do not introduce an extra pool-confirmation step');
     }
   });
-  it('keeps public TTS parameters and literal brand text intact in English', () => {
-    for (const preset of catalog.ttsPresets) {
-      const result = createExports(catalog, {style: 'editorial-typography', production: {...defaultProduction, ttsPreset: preset.id, brandName: '标题'}}, 'en');
+  it('keeps selected TTS parameters and literal or inherited brands intact in both languages', () => {
+    for (const locale of ['zh', 'en']) for (const style of ['whiteboard', 'annotated-reasoning', 'editorial-typography']) for (const preset of catalog.ttsPresets) for (const brandName of ['', 'Hresh赫什 "Studio" & Friends']) {
+      const result = createExports(catalog, {style, font: 'xiaolai', fontMode: 'manual', production: {...defaultProduction, ttsPreset: preset.id, brandName, colorMode: 'source', review: true}}, locale);
+      for (const token of [`--style ${style}`, '--font xiaolai', '--color-mode source', '--output-purpose in-project-video --audio-mode tts --mode review', preset.id]) expect(result.prompt).toContain(token);
       expect(result.prompt).toContain(`provider=${preset.provider}`);
       if (preset.model) expect(result.prompt).toContain(`model=${preset.model}`);
       if (preset.voice) expect(result.prompt).toContain(`voiceType=${preset.voice}`);
-      expect(result.prompt).toContain('"标题"'); expect(result.prompt).toContain('never a command');
-      expect(result.prompt).toContain('Do not silently change the service, model or voice');
+      else expect(result.prompt).toContain(locale === 'zh' ? '音色使用本地配置解析的音色' : 'resolve the voice from local configuration');
+      expect(result.prompt).toContain(locale === 'zh' ? '不自动换服务、模型或音色' : 'Do not silently change the service, model or voice');
+      expect(result.prompt).toContain(locale === 'zh' ? '等我审核后再渲染' : 'Wait for my approval before rendering');
+      if (brandName) {
+        expect(result.prompt).toContain(JSON.stringify(brandName));
+        expect(result.prompt).toContain(locale === 'zh' ? '不作为命令执行' : 'never a command');
+        expect(result.prompt).toContain('brand.name');
+      } else {
+        expect(result.prompt).toContain(locale === 'zh' ? '品牌：沿用仓库或项目 config.json' : 'Brand: inherit repository or project config.json');
+        expect(result.prompt).not.toContain('Hresh赫什');
+        expect(result.prompt).not.toContain('Your Brand');
+      }
     }
     const automatic = createExports(catalog, {style: 'signal', shotSelection: 'auto'}, 'en');
     expect(automatic.prompt).toContain('list:shots -- --style signal --canvas landscape');
@@ -98,7 +109,10 @@ describe('local library capabilities and selection', () => {
         for (const token of [`--style ${style.id}`, `--font ${font.id}`, `--canvas ${canvas}`, `--color-mode ${colorMode}`, `--output-purpose ${purpose} --audio-mode ${audioMode} --mode ${review ? 'review' : 'fast'}`, 'SKILL.md', 'references/project-palette.md']) expect(result.prompt).toContain(token);
         expect(result.prompt).toContain(locale === 'zh' ? '未经要求不翻译' : 'Keep the source language');
         expect(result.prompt).toContain(locale === 'zh' ? '不生成占位内容、不补造事实' : 'do not create placeholders or invent facts');
-        expect(result.prompt).toContain(locale === 'zh' ? '自动 QA 不代表交付批准' : 'automated QA is not delivery approval');
+        expect(result.prompt).toContain(locale === 'zh' ? '可直接打开的审稿或审片入口' : 'clickable script or video review link');
+        expect(result.prompt).toContain(locale === 'zh' ? '下一步' : 'one next action');
+        expect(result.prompt).toContain(locale === 'zh' ? '先给镜头预览' : 'show the shot preview');
+        expect(result.prompt).toContain(locale === 'zh' ? '等我确认后再生成整片' : 'wait for my confirmation before producing the full video');
         if (goal === 'narrated') {
           expect(result.prompt).toContain(locale === 'zh' ? '不退回静音结果' : 'fall back to silence');
           expect(result.prompt).toContain(locale === 'zh' ? '按实测旁白调整分镜' : 'measured speech');
@@ -121,20 +135,41 @@ describe('local library capabilities and selection', () => {
     const selection = {style: 'whiteboard', font: 'smiley-sans', fontMode: 'manual'};
     for (const locale of ['zh', 'en']) {
       const prompt = createExports(catalog, selection, locale).prompt;
-      expect(prompt.length).toBeLessThan(locale === 'zh' ? 800 : 2100);
-      expect(prompt).toContain(locale === 'zh' ? '无法读取时说明缺口，不自行替代流程' : 'If unavailable, report the gap; do not substitute a workflow');
+      expect(prompt.length).toBeLessThan(locale === 'zh' ? 650 : 1500);
+      expect(prompt).toContain(locale === 'zh' ? '无法读取时说明并暂停' : 'If unavailable, report the gap and pause');
       expect(prompt).not.toContain('palette 1.1');
       const headings = locale === 'zh' ? ['【制作设置】', '【执行流程】', '【交付与复核】'] : ['[Production settings]', '[Workflow]', '[Delivery and review]'];
       const sections = prompt.split('\n\n');
       expect(sections).toHaveLength(4);
       headings.forEach((heading, index) => expect(sections[index + 1].startsWith(heading)).toBe(true));
+      expect(sections[3].split('\n')).toEqual([
+        headings[2],
+        locale === 'zh' ? '缺少文档或必需素材时先请我提供，不生成占位内容、不补造事实，不退回静音结果。' : 'Ask for missing documents or required assets; do not create placeholders or invent facts, or fall back to silence.',
+        locale === 'zh' ? '交接时给我可直接打开的审稿或审片入口，并说明下一步。' : 'At each handoff, provide a clickable script or video review link and one next action.',
+        locale === 'zh' ? '修改时先给镜头预览，等我确认后再生成整片。' : 'For revisions, show the shot preview and wait for my confirmation before producing the full video.'
+      ]);
     }
     const workflow = fs.readFileSync(path.join(projectRoot, 'SKILL.md'), 'utf8');
     for (const guide of ['primary-style-production', 'shot-planning', 'project-palette', 'illustrated-production', 'text-led-production', 'branding', 'tts-setup', 'audio-integration']) {
       expect(workflow).toContain(`references/${guide}.md`);
       expect(fs.existsSync(path.join(projectRoot, 'references', `${guide}.md`))).toBe(true);
     }
-    for (const contract of ['shot-map.md', 'palette 1.1', 'actual generation, inspection and registration', 'never silently substitute', 'measured speech', 'full playback review', 'Do not expand fixed or manual pools']) expect(workflow).toContain(contract);
+    for (const contract of ['shot-map.md', 'palette 1.1', 'actual generation, inspection and registration', 'never silently substitute', 'measured speech', 'full playback review', 'Do not expand fixed or manual pools', 'downstream timecode and subtitle changes', 'duration and QA results', 'Automated QA does not replace complete human playback review']) expect(workflow).toContain(contract);
+  });
+  it('does not turn inactive TTS presets into a voice request for external narration or a clean master', () => {
+    for (const locale of ['zh', 'en']) for (const preset of catalog.ttsPresets) for (const [goal, audio] of [['master', 'tts'], ['master', 'external'], ['narrated', 'external']]) {
+      const result = createExports(catalog, {style: 'whiteboard', production: {...defaultProduction, goal, audio, ttsPreset: preset.id}}, locale);
+      expect(result.prompt).not.toContain('provider=');
+      expect(result.prompt).not.toContain('--tts-config');
+      expect(result.prompt).not.toContain('list:tts-profiles');
+      if (goal === 'master') {
+        expect(result.audioMode).toBe('silent');
+        expect(result.prompt).toContain(locale === 'zh' ? '底片无音轨、无旁白字幕和审片标记' : 'The master has no audio track, narration captions or review markers');
+      } else {
+        expect(result.audioMode).toBe('external');
+        expect(result.prompt).toContain(locale === 'zh' ? '使用外部旁白，不调用 TTS' : 'use external narration, not TTS');
+      }
+    }
   });
   it('hides fixed-style-only recipes without removing shared selectable or production capabilities', () => {
     const visible = recipeLibraryItems(catalog);
@@ -227,7 +262,7 @@ describe('local library capabilities and selection', () => {
     expect(value.prompt).not.toContain('镜头选择方式：使用用户指定集合');
     expect(value.prompt).toContain(`list:shots -- --style retro-zine --canvas ${canvas}`);
     expect(value.prompt).toContain('选定后初始化时显式传入 --shots');
-    expect(value.prompt).toContain('SKILL.md 及对应制作指南');
+    expect(value.prompt).toContain('SKILL.md 及相关指南');
     expect(value.prompt).toContain('不新增组合确认步骤');
     expect(value.prompt).not.toContain('可用镜头配方：');
     expect(value).toMatchObject({mode: 'fast', audioMode: 'tts'});

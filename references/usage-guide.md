@@ -20,6 +20,66 @@ source document + video style + built-in or selected shot recipes → claims and
 
 当前已知限制及实测时间提案、字幕修订、镜头扩展用法见[质量生产说明](quality-production.md)。发布状态与验证缺口见[发布检查记录](release-readiness.md)。
 
+## 接手已有项目
+
+接手已有制作时运行 `npm run workflow:status -- projects/<项目>`。命令只读，输出当前阶段、应打开的文件、下一步负责人和动作。文档任务还显示本次委托目标。
+
+如果本次工作先停在提纲、讲稿或分镜方案，由制作 Agent 在接单和交稿时各登记一次。文档路径可按项目选择。例如：
+
+```bash
+npm run workflow:checkpoint -- projects/<项目> prepare drafts/outline.md "先审本期提纲"
+npm run workflow:checkpoint -- projects/<项目> review drafts/outline.md "先审本期提纲"
+```
+
+第二条在文档完成并核对后执行。登记后文件变动或缺失会提示 Agent 重新核对。创作者要求继续制作后，`produce` 或 `prepare:script-handoff` 会在运行记录中关联当时的交接版本；状态查询随即按该次生产的阶段、QA 和批准证据给出下一步。没有交接记录的旧项目继续读取已有分镜和运行记录。
+
+## 逐场计划、讲稿与审阅表
+
+新建 2.4 项目时，`init:project` 会创建 `scene-plan.json`。Agent 先在其中编排每一场，再选择配方和具体动作。每场有稳定 ID，数组顺序即播放顺序。一个场景的写法如下。
+
+```json
+{
+  "id": "choices",
+  "title": "两种查找方案",
+  "source": "source/source.md 第 1 段",
+  "kind": "compare",
+  "visualIntent": "左侧展示按地点查找，右侧展示按人物查找。",
+  "takeaway": "记得什么，就从对应的入口查。",
+  "narration": "记得地点就从地图找，记得人物就从人物表找。",
+  "estimatedSeconds": 4
+}
+```
+
+1. 把场景写入初始文件的 `scenes` 数组。运行 `npm run export:scene-plan -- <项目目录>`。所得 `script.md` 是逐场讲稿，`scene-review.md` 并列展示来源、旁白、画面意图和观看要点，适合创作者直接审阅。需要先审计划时，可用已有 `workflow:checkpoint` 登记这份审阅表。
+2. Agent 按 ID 编排正式分镜。计划的 `title`、`narration` 对应分镜同名字段，`kind`、`visualIntent`、`source` 分别对应 `visual.kind`、`visual.explanation`、`visual.source`，`takeaway` 对应 `primaryClaim`。可选 `assets` 填须出镜的项目内素材路径，对应 `layer.asset`。可选 `estimatedSeconds` 是编排预估，正式时长由阅读和实测音频确定。
+3. 要把第三场改成两个方案并排，先在计划里修改这场的 `kind`、`visualIntent` 和相应观看要点，重新导出，再给同 ID 镜头安排实际可见的两个主体。修改旁白也从计划开始，导出后将该字段原样带入分镜。运行 `validate:storyboard` 时，漏场、多场、顺序或字段差异会按场景报告；镜头布局和时间仍由原有预检、实测及审片核对。
+4. 旧项目可继续使用既有讲稿和分镜。未声明正式格式的历史场景数组沿原路径处理。如需主动采用计划，先保留手写讲稿和审阅文件，建立与新项目相同的版本化计划再导出。命令会保护原有独立文稿。完整结构见[逐场计划契约](../schemas/scene-plan.schema.json)。
+
+## 基于系列新建一期
+
+系列目录放一份 `series.json`、角色图片和可选来源文件。可以从仓库的[公开系列配置](../examples/whiteboard-original/series.json)开始。角色的 `source`、`license`、`intendedUse` 记录出处、许可与用途，`sourceFile` 可以指向原始素材清单、生成记录或授权说明。文件路径相对系列配置目录。品牌 Logo 可沿用现有品牌格式，使用目录内的 PNG。品牌层的可见性沿用所选风格。
+
+```bash
+npm run init:project -- --slug observe-details --series examples/whiteboard-original/series.json --output-purpose in-project-video
+npm run init:project -- --slug compare-details --series examples/whiteboard-original/series.json --output-purpose visual-master
+```
+
+- **创建一期。** 单期用途选 `visual-preview`、`visual-master` 或 `in-project-video`。已有角色按文档加图片路线登记。风格与字体引用精确版本，惯用画法写入当期制作简报，角色位置和具体镜头由当期编排。普通风格原有的 `--shots`、画幅与预设选项继续适用。
+- **编写与核对。** 在 `scene-plan.json` 的固定结尾前加入当期内容，从 `asset-manifest.json` 选择角色文件。按通常流程导出讲稿、逐场审阅表并编排分镜。结尾可按原有段落拆镜，旁白须逐字保留一次。有声版核对最终字幕来源与片尾时码；外部录音的实际朗读在完整播放时复核。干净底片将口播留在后期交接讲稿。
+- **生产。** `produce` 默认采用 `episode.json` 中的本期用途。有声版照常提供 TTS 或外部配音；底片使用静音路线。需要另一次用途时仍可显式传 `--output-purpose`。
+- **更新角色。** 修改系列目录的素材及来源，更新 `series.json` 的 `version`，再建下一期。每期的 `series-lock.json` 固定采用的配置和文件 SHA-256，角色、Logo 和来源证据均在本期目录中。重制时使用该期原有分镜、音频、素材和原运行环境；核对发现本期副本发生变化时，恢复该期归档中的原文件。
+
+## 边看边提意见，按镜头复核新版
+
+1. Agent 在已有候选视频通过 QA 后运行 `npm run review:player -- projects/<项目>`，把终端显示的本机链接交给创作者。播放到有问题的位置，点「暂停并记问题」，描述要改什么，再点「保存反馈」。可以连续记多条或关闭后重新打开。
+2. Agent 用 `npm run workflow:status -- projects/<项目>` 接手。反馈记录保留原话、视频版本、时间码和场景 ID；换场重叠会记录两个镜头。先用 `archive:revision` 归档当前候选，按场景修订。采用逐场计划时从计划改起，重新导出并同步分镜。若改旁白，更新音频、字幕和实际镜头时长。TTS 项目先准备与新版匹配的音频包。
+3. Agent 运行 `npm run review:preview -- projects/<项目> <反馈编号>`。它沿用原版用途与声音，只渲染对应镜头区间，另存独立 MP4。场景改名或拆分时可在最后传入替代场景 ID。多条意见可在同一批编辑后分别生成预览。
+4. 创作者刷新播放器，在反馈旁播放修改镜头。展开「时码与字幕」可看到全片新旧时长、受影响场景的起止时码和每条显示字幕的新旧时间。底片会标明无显示字幕。外部字幕使用文件时码，TTS 的字幕时间来源取自配音包。
+5. 选择「继续修改镜头」并写下补充意见，或点「确认镜头，允许生成整片」。本轮反馈全部确认后，Agent 运行原用途的 `produce` 生成新版并执行 QA。预览后再次编辑制作输入，需要重新预览和确认；`--force` 只控制输出覆盖。新版候选仍按原交付用途完整复核。
+6. 在「逐帧 QA」中按场景和规则展开一组，点帧号可跳回当前候选视频的原始帧。同一帧的多条证据分别保留；没有帧号的检查只展示报告内容。
+
+播放器只在本机运行，Ctrl+C 可停止。重启命令会显示新地址。升级前登记的历史反馈沿用 `review:revision` 复核已生成的新版。
+
 ## 选择风格、镜头配方、模式和交付目标
 
 用户只需给出材料和想得到的结果，**不需要知道项目 ID、填写 JSON 或运行 CLI**。先决定交付什么，再决定是否要在渲染前审核分镜；输入是纯文档还是文档＋图片，不影响下面的选择。
@@ -360,7 +420,7 @@ npm run init:project -- --slug product-walkthrough --style studio-frame --canvas
 
 ### 3. Agent 负责的项目文件
 
-首次使用按开头的自然语言示例即可，不必执行这里的命令。若手动初始化，请将原文完整复制到 `source/source.md`，同时记录原始路径。Agent 应填写 `route-card.md`、`content-gaps.md`、`shot-map.md`、`script.md` 和 `storyboard.draft.json`，核对关键主张的原文位置与镜头工作。图片模式还需填写 `visual-sources.md`，把真实图片登记到 `asset-manifest.json` 并放入对应的 `media` 镜头。**初始化草稿的 20 秒和占位文字不能直接拿来出片。**
+首次使用按开头的自然语言示例即可，不必执行这里的命令。若手动初始化，请将原文完整复制到 `source/source.md`，同时记录原始路径。Agent 填写 `route-card.md`、`content-gaps.md` 和 `shot-map.md`，核对原文与镜头工作。新 2.4 项目从逐场计划导出讲稿和审阅表，随后按 ID 编排 `storyboard.draft.json`；旧项目可沿用手写讲稿。图片模式还需填写 `visual-sources.md`，把真实图片登记到 `asset-manifest.json` 并放入对应的 `media` 镜头。**初始化草稿的 20 秒和占位文字不能直接拿来出片。**
 
 ### 4. 生成与检查预览
 

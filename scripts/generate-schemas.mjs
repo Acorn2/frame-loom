@@ -1,3 +1,5 @@
+import {SeriesSchema} from './lib/series.mjs';
+import {ScenePlanSchema} from './lib/scene-plan.mjs';
 import {AuxiliaryManifestSchema} from '../src/shots/auxiliary-catalog.ts';
 import {ChapterManifestSchema} from '../src/shots/shortlist/chapter-transitions.tsx';
 import fs from 'node:fs';
@@ -19,6 +21,8 @@ import {TtsConfigSchema, ttsConfigJsonSchema} from '../src/schemas/tts-config.ts
 import {BrandConfigSchema} from '../src/branding/config.ts';
 
 const schemas = [
+  ['series.schema.json', 'FrameLoom Series', SeriesSchema],
+  ['scene-plan.schema.json', 'FrameLoom Scene Plan', ScenePlanSchema],
   ['brand-config.schema.json', 'FrameLoom Brand Config', BrandConfigSchema],
   ['speech-cues.schema.json', 'FrameLoom Speech Cue Groups', SpeechCuesSchema],
   ['illustration-plan.schema.json', 'FrameLoom Illustration Plan', IllustrationPlanSchema],

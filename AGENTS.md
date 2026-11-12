@@ -56,7 +56,11 @@ npm run inspect:output -- /tmp/frame-loom-preview.mp4 examples/article-video/sto
 - 真实产品界面、字体、音乐和图片必须有来源说明；v0.1 示例只使用 CSS 和文本。
 - 系统层不得依赖某一个示例的文案、素材或产品事实。
 
+新初始化的 2.4 项目从版本化 `scene-plan.json` 创作旁白与画面意图，`export:scene-plan` 导出讲稿和逐场审阅表；正式分镜按稳定场景 ID 与顺序核对。旧项目中的非正式计划不自动采用。
+
 Storyboard 2.4 显式启用 shot，所有场景含精确版本和严格 layer 槽位；2.1–2.3保留原路径。新模板仅声明验证过的风格/画幅，未知能力不能静默回退。2.4 的生产锁和解析事件与render receipt、QA、run及批准绑定；派生计划不是可编辑输入。
+
+系列项目从 `init:project --series` 新建。单期交付用途记录在 `episode.json`，系列版本和角色来源固定在当期 `series-lock.json` 及本地副本。返工和复现读取当期记录，更新系列只影响之后新建的期数。
 
 三套主风格使用固定内置镜头流程（见 `references/primary-style-production.md`），用户只选风格，不选择镜头集合；初始化自动填入受控范围。原六套选择入口保留视频风格 + 镜头配方集合（`--style` + `--shots`）；预设视频模板是可选快捷入口。`shotRecipes` 约束逐场选择，不能自动添加未选配方；同一配方可重复使用。初始化只创建待编排文件，系统重构任务不自动转换成用户视频生产任务。
 

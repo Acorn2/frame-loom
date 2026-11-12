@@ -53,6 +53,8 @@
 
 以下文档保留原始数量、版本与验证结果，用于追溯；新项目请使用上面的当前指南。
 
+- [四项工作流端到端验收](workflow-e2e-20261112.md)，含新会话交接、时码反馈、局部确认及整片重生成。
+
 - [模板重构](video-template-refactor-status.md)、[动效重做](shot-motion-redesign.md)、[视觉改造](shot-visual-redesign.md)、[P2 接入](p2-recipe-implementation.md)。
 - [风格组合复核](style-shot-compatibility.md)、[横竖屏镜头扩展](shot-expansion-20261009.md)、[配色实施](project-palette-implementation.md)、[样片恢复](library-preview-recovery.md)。
 - [同分镜六风格样片](../examples/template-families/README.md)、[原创白板](../examples/whiteboard-original/README.md)、[当前文案动画](../examples/text-led-video/README.md)。

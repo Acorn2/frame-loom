@@ -1,3 +1,6 @@
+import path from 'node:path';
+import {checkEpisodeCaptions} from './series.mjs';
+import {checkScenePlan} from './scene-plan.mjs';
 import {chapterWindows, assertChapterCaptions} from '../../src/shots/shortlist/chapter-transitions.tsx';
 import fs from 'node:fs';
 import {validateStoryboard} from '../../src/validation/storyboard-validator.ts';
@@ -11,6 +14,7 @@ import {checkContentLayout} from './content-layout.mjs';
 
 export function checkStoryboardInput(storyboard, {storyboardPath, styleRoot, executionMode}) {
   const issues = validateStoryboard(storyboard, {storyboardPath, styleRoot, executionMode});
+  if (storyboardPath && Array.isArray(storyboard?.scenes)) issues.push(...checkScenePlan(path.dirname(storyboardPath), storyboard));
   return issues.some(item => item.severity === 'error') ? issues : [...issues, ...checkContentQuality(storyboard), ...checkContentLayout(storyboard).map(item => ({path: `layout.${item.sceneId}.${item.layerId}`, severity: item.severity, message: item.message}))];
 }
 
@@ -32,6 +36,7 @@ export function checkAudioInput(storyboardPath, audioConfigPath) {
   const captions = report.captionPath ? parseCaptions(fs.readFileSync(report.captionPath, 'utf8')) : [];
   if (chapterWindows(storyboard).length && report.tracks.some((track) => track.kind === 'voiceover') && !captions.length) throw new Error('有声换章需要字幕时间轴以检查关键词窗口。');
   assertChapterCaptions(storyboard, captions);
+  if (report.tracks.some(track => track.kind === 'voiceover')) checkEpisodeCaptions(path.dirname(storyboardPath), storyboard, captions);
   const captionIssues = report.captionPath
     ? checkExternalCaptionLayout(storyboard, captions)
     : [];

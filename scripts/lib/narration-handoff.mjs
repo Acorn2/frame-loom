@@ -1,3 +1,4 @@
+import {assertScenePlan} from './scene-plan.mjs';
 import {assertProjectOutput, writeProjectFile, writeProjectJson} from './project-files.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -8,6 +9,7 @@ function normalize(text) {
 }
 
 export function buildNarrationHandoff(projectPath, storyboard) {
+  assertScenePlan(projectPath, storyboard);
   const scriptPath = path.join(projectPath, 'script.md');
   if (!fs.existsSync(scriptPath)) throw new Error('缺少 script.md，不能交付稳定讲稿。');
   const sourceText = fs.readFileSync(scriptPath, 'utf8');
@@ -29,6 +31,17 @@ export function buildNarrationHandoff(projectPath, storyboard) {
   };
 }
 
+export function formatNarrationHandoff(storyboard, handoff) {
+  const lines = [
+    `# ${storyboard.project.title} · 配音讲稿`,
+    '',
+    `版本指纹：${handoff.storyboardFingerprint}`,
+    '',
+    ...handoff.scenes.flatMap((scene) => [`## ${scene.id} · ${scene.title}`, '', scene.narration, ''])
+  ];
+  return `${lines.join('\n')}\n`;
+}
+
 export function writeNarrationHandoff(projectPath, storyboard, directory, force = false) {
   const handoff = buildNarrationHandoff(projectPath, storyboard);
   assertProjectOutput(projectPath, path.join(directory, 'narration-manifest.json'));
@@ -43,14 +56,7 @@ export function writeNarrationHandoff(projectPath, storyboard, directory, force 
   }
   const markdownPath = path.join(directory, 'narration-script.md');
   assertProjectOutput(projectPath, markdownPath); assertProjectOutput(projectPath, manifestPath);
-  const lines = [
-    `# ${storyboard.project.title} · 配音讲稿`,
-    '',
-    `版本指纹：${handoff.storyboardFingerprint}`,
-    '',
-    ...handoff.scenes.flatMap((scene) => [`## ${scene.id} · ${scene.title}`, '', scene.narration, ''])
-  ];
-  writeProjectFile(projectPath, markdownPath, `${lines.join('\n')}\n`);
+  writeProjectFile(projectPath, markdownPath, formatNarrationHandoff(storyboard, handoff));
   writeProjectJson(projectPath, manifestPath, handoff);
   return {markdownPath, manifestPath, handoff};
 }
