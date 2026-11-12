@@ -12,6 +12,7 @@ import type {CaptionCue} from '../audio/captions';
 import {getMusicVolumeAtFrame, type MusicDucking} from '../audio/ducking';
 import {getSceneTimeline} from '../timeline/scene-timeline';
 import {LayoutDiagnostics} from '../layout/LayoutDiagnostics';
+import {UiLanguageProvider} from '../i18n/ui-language';
 import {BrandOverlay} from '../branding/BrandOverlay';
 import {DEMO_BRAND, hasBrandStyle, type BrandRuntime} from '../branding/config';
 
@@ -68,53 +69,55 @@ export function DataDrivenVideo({storyboard, styleTokens, audioRuntime, renderPr
 
   if (!fontReady) return null;
   return (
-    <AbsoluteFill data-font-id={storyboard.font?.id} style={{backgroundColor: tokens.background, fontFamily: storyboard.font ? tokens.bodyFont : undefined}}>
-      {audioRuntime?.voiceoverDataUri ? <Audio src={audioRuntime.voiceoverDataUri} volume={audioRuntime.voiceoverVolume ?? 1} /> : null}
-      {audioRuntime?.musicDataUri ? (
-        <Audio
-          src={audioRuntime.musicDataUri}
-          volume={(frame) => getMusicVolumeAtFrame({
-            frame,
-            fps: storyboard.project.fps,
-            baseVolume: musicVolume,
-            voiceoverDurationSec: audioRuntime.voiceoverDurationSec,
-            ducking: audioRuntime.musicDucking,
-            videoDurationSec: storyboard.project.durationFrames / storyboard.project.fps,
-            fadeInSec: audioRuntime.musicFadeInSec,
-            fadeOutSec: audioRuntime.musicFadeOutSec
-          })}
-        />
-      ) : null}
-      {audioRuntime?.sfx?.map((item, index) => (
-        <Sequence key={`${item.startSec}-${index}`} from={Math.round(item.startSec * storyboard.project.fps)}>
-          <Audio src={item.dataUri} volume={item.volume} />
-        </Sequence>
-      ))}
-      {timeline.map(({scene, startFrame, overlapOutFrames}, index) => {
-        const outgoing = timeline[index + 1]?.scene.transitionIn?.type;
-        return (
-          <Sequence key={scene.id} from={startFrame} durationInFrames={scene.durationFrames}>
-            <ChapterPage scene={scene} outgoing={outgoing} outgoingFrames={overlapOutFrames} seamInk={tokens.accentAlt}><div data-layout-scene={scene.id} style={{position: 'absolute', width: '100%', height: '100%', transform: scale < 1 ? `scale(${scale})` : undefined, transformOrigin: 'top left'}}>
-              <RenderScene scene={scene} styleVersion={storyboard.style.version} tokens={tokens} showSceneCaptions={showSceneCaptions} externalCaptions={!cleanMaster && Boolean(audioRuntime?.captions?.length)} overlapOutFrames={overlapOutFrames} chapterTransitionOut={isChapterTransition(outgoing)} />
-            </div></ChapterPage>
+    <UiLanguageProvider value={storyboard.project.language ?? 'zh'}>
+      <AbsoluteFill data-font-id={storyboard.font?.id} style={{backgroundColor: tokens.background, fontFamily: storyboard.font ? tokens.bodyFont : undefined}}>
+        {audioRuntime?.voiceoverDataUri ? <Audio src={audioRuntime.voiceoverDataUri} volume={audioRuntime.voiceoverVolume ?? 1} /> : null}
+        {audioRuntime?.musicDataUri ? (
+          <Audio
+            src={audioRuntime.musicDataUri}
+            volume={(frame) => getMusicVolumeAtFrame({
+              frame,
+              fps: storyboard.project.fps,
+              baseVolume: musicVolume,
+              voiceoverDurationSec: audioRuntime.voiceoverDurationSec,
+              ducking: audioRuntime.musicDucking,
+              videoDurationSec: storyboard.project.durationFrames / storyboard.project.fps,
+              fadeInSec: audioRuntime.musicFadeInSec,
+              fadeOutSec: audioRuntime.musicFadeOutSec
+            })}
+          />
+        ) : null}
+        {audioRuntime?.sfx?.map((item, index) => (
+          <Sequence key={`${item.startSec}-${index}`} from={Math.round(item.startSec * storyboard.project.fps)}>
+            <Audio src={item.dataUri} volume={item.volume} />
           </Sequence>
-        );
-      })}
-      {shouldRenderReviewMarker(renderProfile) ? <div style={{
-        position: 'absolute',
-        right: 32,
-        top: 26,
-        fontFamily: tokens.bodyFont,
-        fontSize: 14,
-        color: tokens.muted,
-        letterSpacing: 1
-      }}>
-        {audioRuntime?.voiceoverDataUri || audioRuntime?.musicDataUri || audioRuntime?.sfx?.length ? 'AUDIO PILOT' : 'SILENT PREVIEW'}
-      </div> : null}
-      {!cleanMaster && audioRuntime?.captions ? <CaptionOverlay captions={audioRuntime.captions} tokens={captionTokens} /> : null}
-      {brand ? <AbsoluteFill style={{transform: scale < 1 ? `scale(${scale})` : undefined, transformOrigin: 'top left'}}><BrandOverlay brand={brand} tokens={tokens}/></AbsoluteFill> : null}
-      {storyboard.layoutPolicy && renderProfile?.layoutCheckFrames ? <LayoutDiagnostics board={storyboard} tokens={tokens} frames={renderProfile.layoutCheckFrames} captions={!cleanMaster && Boolean(audioRuntime?.captions?.length)} /> : null}
-    </AbsoluteFill>
+        ))}
+        {timeline.map(({scene, startFrame, overlapOutFrames}, index) => {
+          const outgoing = timeline[index + 1]?.scene.transitionIn?.type;
+          return (
+            <Sequence key={scene.id} from={startFrame} durationInFrames={scene.durationFrames}>
+              <ChapterPage scene={scene} outgoing={outgoing} outgoingFrames={overlapOutFrames} seamInk={tokens.accentAlt}><div data-layout-scene={scene.id} style={{position: 'absolute', width: '100%', height: '100%', transform: scale < 1 ? `scale(${scale})` : undefined, transformOrigin: 'top left'}}>
+                <RenderScene scene={scene} styleVersion={storyboard.style.version} tokens={tokens} showSceneCaptions={showSceneCaptions} externalCaptions={!cleanMaster && Boolean(audioRuntime?.captions?.length)} overlapOutFrames={overlapOutFrames} chapterTransitionOut={isChapterTransition(outgoing)} />
+              </div></ChapterPage>
+            </Sequence>
+          );
+        })}
+        {shouldRenderReviewMarker(renderProfile) ? <div style={{
+          position: 'absolute',
+          right: 32,
+          top: 26,
+          fontFamily: tokens.bodyFont,
+          fontSize: 14,
+          color: tokens.muted,
+          letterSpacing: 1
+        }}>
+          {audioRuntime?.voiceoverDataUri || audioRuntime?.musicDataUri || audioRuntime?.sfx?.length ? 'AUDIO PILOT' : 'SILENT PREVIEW'}
+        </div> : null}
+        {!cleanMaster && audioRuntime?.captions ? <CaptionOverlay captions={audioRuntime.captions} tokens={captionTokens} /> : null}
+        {brand ? <AbsoluteFill style={{transform: scale < 1 ? `scale(${scale})` : undefined, transformOrigin: 'top left'}}><BrandOverlay brand={brand} tokens={tokens}/></AbsoluteFill> : null}
+        {storyboard.layoutPolicy && renderProfile?.layoutCheckFrames ? <LayoutDiagnostics board={storyboard} tokens={tokens} frames={renderProfile.layoutCheckFrames} captions={!cleanMaster && Boolean(audioRuntime?.captions?.length)} /> : null}
+      </AbsoluteFill>
+    </UiLanguageProvider>
   );
 }
 

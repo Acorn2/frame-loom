@@ -5,6 +5,7 @@ import type {ShotPlan} from '../compile-shot';
 import {ShotShell, type ShotRenderProps} from '../ShotShell';
 import {expansionLayout, regroupPoints} from './layout';
 import {isExpansionShot} from './schema';
+import {useUiText} from '../../i18n/ui-language';
 
 const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
 export function phaseProgress(frame: number, beat: StoryboardBeat) {
@@ -17,6 +18,7 @@ export function typedQuery(text: string, frame: number, beat: StoryboardBeat) {
   return chars.slice(0, Math.floor(progress * chars.length)).join('');
 }
 export function ExpansionScene(props: ShotRenderProps & {plan: ShotPlan}) {
+  const ui = useUiText();
   const {scene, tokens, appearance} = props;
   const shot = scene.shot;
   const frame = useCurrentFrame();
@@ -99,7 +101,7 @@ export function ExpansionScene(props: ShotRenderProps & {plan: ShotPlan}) {
     const total = get(shot.slots.total), entry = progress(total.id);
     content = <>
       <div style={{fontSize: layout.labelFont, lineHeight: 1.3, color: ink, opacity: entry}}>{total.label} · {total.value} {scene.visual!.unit}
-        <div style={{fontSize: layout.textFont, color: muted, marginTop: 12}}>每个点 = 1 {scene.visual!.unit}</div></div>
+        <div style={{fontSize: layout.textFont, color: muted, marginTop: 12}}>{ui.dotEquals(scene.visual!.unit ?? '')}</div></div>
       <svg width={contentWidth} height={dotHeight} style={{position: 'absolute', top: headHeight, left: 0, overflow: 'hidden'}}>
         {shot.slots.items.map((id, index) => <text key={id} x={portrait ? 0 : contentWidth * ((index + .5) / values.length)}
           y={portrait ? dotHeight * ((index + .5) / values.length) : 45} textAnchor={portrait ? 'start' : 'middle'}

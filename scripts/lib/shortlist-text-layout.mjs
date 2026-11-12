@@ -1,9 +1,10 @@
 import {titleType, wordType} from '../../src/shots/type-scale.ts';
 import {shotContentLayout} from '../../src/shots/layout.ts';
 import {hierarchyLayout} from '../../src/shots/shortlist/relation-layout.ts';
+import {uiText} from '../../src/i18n/ui-text.ts';
 
 // These rectangles match the registered renderers, including padding and caption reserve.
-export function checkShortlistText(scene, contentWidth, contentHeight, scale, estimateTextLines) {
+export function checkShortlistText(scene, contentWidth, contentHeight, scale, estimateTextLines, language) {
   const issues = [];
   const shot = scene.shot;
   if (!shot) return issues;
@@ -62,7 +63,8 @@ export function checkShortlistText(scene, contentWidth, contentHeight, scale, es
     }
   }
   if (shot.id === 'odometer-roll' || shot.id === 'timeline-travel') {
-    const sourceText = shot.id === 'timeline-travel' ? '日期按顺序等距排列，不表示时间跨度 · ' + scene.visual.source : '来源：' + scene.visual.source;
+    const ui = uiText(language);
+    const sourceText = shot.id === 'timeline-travel' ? ui.timelineNote(scene.visual.source ?? '') : ui.sourcePrefix + (scene.visual.source ?? '');
     if (estimateTextLines(sourceText, 22 * scale, contentWidth) > 1 || /[\r\n]/.test(sourceText)) issues.push({severity: 'error', sceneId: scene.id, target: 'source', message: '数据来源说明超出单行安全区，请使用简短可追溯的位置标记。'});
   }
   return issues;

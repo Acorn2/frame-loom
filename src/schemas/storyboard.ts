@@ -1,4 +1,5 @@
 import {z} from 'zod';
+import {UI_LANGUAGES} from '../i18n/ui-text';
 import {ShotSchema, ShotSelectionSchema} from './shot-recipe';
 import {VideoTemplateRefSchema} from './video-template';
 import {FontRefSchema} from './font';
@@ -42,7 +43,8 @@ export const StoryboardProjectSchema = z.object({
   fps: z.number().min(1).max(60),
   durationSec: z.number().positive().max(3600),
   durationFrames: z.number().int().positive().max(216000),
-  status: StoryboardStatusSchema
+  status: StoryboardStatusSchema,
+  language: z.enum(UI_LANGUAGES).optional()
 }).strict();
 
 export const StoryboardLayerSchema = z.object({

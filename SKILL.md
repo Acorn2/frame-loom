@@ -35,6 +35,8 @@ For timecoded feedback, run `npm run review:player -- <project>` and share its l
 
 New 2.4 projects start with a versioned `scene-plan.json`. Write the source, narration, visual kind and intent, and viewer takeaway **there first**. Use `npm run export:scene-plan -- <project-dir>` after edits. Share its `scene-review.md` for editorial review when requested. `script.md` is the derived scene-by-scene narration. For each stable scene ID in order, carry the plan fields into the 2.4 storyboard and author the shot, layers, actions and timing that make the intent visible. Validate the storyboard before production. See [field mapping and revision example](references/usage-guide.md#逐场计划讲稿与审阅表). Legacy projects keep their existing authoring route.
 
+For English system labels, explicitly set `storyboard.project.language: "en"`; `"zh"` or omission keeps Chinese labels. This setting is independent of the library interface language, authored text, fonts and TTS language. It does not authorize translating the script or captions. Recheck localized note lengths and rendered frames before delivery. See [rendered UI language](references/storyboard-schema.md#rendered-ui-language).
+
 ## Give the creator an entry and a next action
 
 Lead each creator handoff with the current result, a directly openable review link and one concrete next action. Use absolute Markdown file links for local documents and media. Keep the project directory, duration and material QA findings after this primary entry so the creator can resume later.

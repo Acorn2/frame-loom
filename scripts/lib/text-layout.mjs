@@ -83,7 +83,7 @@ export function checkTextLayout(storyboard, style = loadStylePack(storyboard.sty
     issues.push(...checkTextLedText(scene, estimateTextLines));
     issues.push(...checkWhiteboardText(scene, storyboard, style, estimateTextLines));
     issues.push(...checkExpansionText(scene, contentWidth / scale, contentHeight / scale, estimateTextLines));
-    issues.push(...checkShortlistText(scene, contentWidth, contentHeight, scale, estimateTextLines));
+    issues.push(...checkShortlistText(scene, contentWidth, contentHeight, scale, estimateTextLines, storyboard.project.language));
     if (scene.visual) {
       const modern = scene.shot && scene.shot.version !== '1.0.0';
       const current = scene.shot?.version === '1.2.0';

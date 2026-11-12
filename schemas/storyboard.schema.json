@@ -596,6 +596,13 @@
             "reviewed",
             "approved"
           ]
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "zh",
+            "en"
+          ]
         }
       },
       "required": [

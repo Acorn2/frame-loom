@@ -87,6 +87,12 @@ New `init:project` projects record the style's recommendation unless `--font <id
 
 Font files must match their recorded SHA-256 and original OFL license. Missing files, unknown IDs and version mismatches are errors. Font loading completes before mounting scenes that measure text; actual measured title bounds can reject a long title even when approximate preflight passes. Font selection and files enter input/approval fingerprints; 2.4 locks and render receipts record the chosen font. Changing fonts requires a new render and applicable review.
 
+## Rendered UI language
+
+All supported storyboard versions accept optional `project.language: "zh" | "en"`. Omission preserves the historical Chinese UI labels without inserting a new value into parsed storyboards. Set `"language": "en"` explicitly to render system labels such as “Source”, “Before”, “After” and data notes in English. Other values are rejected.
+
+This field does not translate titles, body text, narration, captions, units, source strings, brand inputs or embedded image lettering. It does not change the font, TTS configuration or library interface language. Existing English decorative lettering stays as authored. Layout preflight uses the same localized data-note dictionary as the renderer; longer English notes may require shorter source identifiers. Changing the field changes rendered content and requires a new render and applicable review.
+
 ## Root
 
 ```json

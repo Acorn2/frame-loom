@@ -9,6 +9,7 @@ import {BlueprintLayout, CleanEditorialLayout, ProductFrameLayout} from './Propo
 import {overlapHandoffOpacity} from '../../timeline/overlap-handoff';
 import {getAttentionOpacity} from '../../timeline/attention';
 import {entranceProgress} from '../../timeline/motion-progress';
+import {useUiText} from '../../i18n/ui-language';
 
 interface Props {
   scene: StoryboardScene;
@@ -118,6 +119,7 @@ interface LayoutProps {
 const full: React.CSSProperties = {position: 'absolute', inset: 0};
 
 function ZineLayout({scene, tokens, frame, width, height, scale, portrait, activeCaption}: LayoutProps) {
+  const ui = useUiText();
   const purpose = scene.purpose;
   const items = roleContent(scene);
   const media = scene.layers.find((layer) => layer.type === 'screenshot' || layer.type === 'object');
@@ -140,7 +142,7 @@ function ZineLayout({scene, tokens, frame, width, height, scale, portrait, activ
       const routeHeight = portrait ? height * 0.5 : height * 0.62;
       const routeTop = portrait ? height * 0.33 : height * 0.22;
       const routeLeft = portrait ? 0 : width * 0.36;
-      const routeLabel = scene.primaryClaim ?? '沿着一个入口继续回查，不必重新搜索。';
+      const routeLabel = scene.primaryClaim ?? ui.routeFallback;
       const routeLabelSize = fittedFont(routeLabel, sidebarWidth * 0.88, sidebarHeight * 0.25, 25 * scale, 16 * scale, 1.25);
       const segmentWidth = 100 / Math.max(1, items.length);
       const activeFocus = scene.beats
