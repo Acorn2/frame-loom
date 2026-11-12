@@ -1,3 +1,4 @@
+import {styleMediaSources} from './lib/style-media.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
@@ -10,7 +11,7 @@ const folder = path.join(projectRoot, 'library/style-covers');
 fs.mkdirSync(folder, {recursive: true});
 const covers = [];
 for (const style of loadStyleIndex().styles.filter(item => item.status !== 'deprecated')) {
-  const source = `examples/template-families/previews/${style.id}-${style.id === 'whiteboard' ? 'original' : ['annotated-reasoning', 'editorial-typography'].includes(style.id) ? 'text-led' : style.role === 'primary' ? 'illustrated' : 'semantic'}.mp4`;
+  const source = styleMediaSources(style).videoSource;
   const file = path.join(projectRoot, source);
   const cover = path.join(folder, `${style.id}.png`);
   const board = ['annotated-reasoning', 'editorial-typography'].includes(style.id) ? JSON.parse(fs.readFileSync(path.join(projectRoot, 'examples/text-led-video', style.id, 'storyboard.json'))) : style.id === 'whiteboard' ? JSON.parse(fs.readFileSync(path.join(projectRoot, 'examples/whiteboard-original/storyboard.json'))) : null;

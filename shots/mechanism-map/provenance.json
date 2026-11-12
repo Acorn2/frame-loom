@@ -1,0 +1,24 @@
+{
+  "id": "mechanism-map",
+  "mode": "method-reference",
+  "source": "https://github.com/hugohe3/ppt-master",
+  "revision": "01fe549371b98f44be22cd337bbc911013452f09",
+  "implementation": "src/shots/directions/DirectionScene.tsx",
+  "implementationLicense": "MIT",
+  "notice": "Original FrameLoom implementation adapted from user-approved design studies; no upstream code or media copied.",
+  "references": [
+    "skills/ppt-master/references/visual-styles/blueprint.md",
+    "skills/ppt-master/references/video-design.md"
+  ],
+  "upstreamLicense": "MIT",
+  "retained": [
+    "内容决定构图",
+    "稳定语义锚点",
+    "真实产物与显式动作"
+  ],
+  "omitted": [
+    "示例产品文案",
+    "上游素材与字体",
+    "动态代码执行"
+  ]
+}

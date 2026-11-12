@@ -1,0 +1,5 @@
+previews/*-review/
+previews/*.render.json
+*/production-lock.json
+*/production-lock.history/
+*/.locks/

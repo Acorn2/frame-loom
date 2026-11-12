@@ -1,0 +1,73 @@
+{
+  "id": "mechanism-map",
+  "version": "1.2.0",
+  "status": "experimental",
+  "registered": true,
+  "visualKinds": [
+    "statement",
+    "sequence",
+    "network",
+    "change",
+    "compare"
+  ],
+  "purpose": "机制图解",
+  "inputModes": [
+    "document-only"
+  ],
+  "requiredAssets": [],
+  "styles": [
+    "signal-noir"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "slots": {
+    "items": {
+      "min": 2,
+      "max": 40,
+      "labelMax": 160
+    }
+  },
+  "timing": {
+    "actions": {
+      "reveal": {
+        "minSec": 0.2,
+        "maxSec": 8
+      },
+      "draw": {
+        "minSec": 0.2,
+        "maxSec": 8
+      },
+      "highlight": {
+        "minSec": 0.2,
+        "maxSec": 8
+      }
+    },
+    "readingSec": 1.2,
+    "titleHoldSec": 0.6,
+    "sourceHoldSec": 0.6,
+    "itemHoldSec": 0.12
+  },
+  "motion": {
+    "recipeOwned": [
+      "explicit-content-geometry",
+      "source-bound-relations",
+      "bounded-stages"
+    ],
+    "styleOwned": [
+      "palette",
+      "font-family"
+    ],
+    "continuousDrift": false
+  },
+  "qa": [
+    "action-mid",
+    "action-complete",
+    "complete",
+    "before-handoff"
+  ],
+  "sound": {
+    "enabled": false,
+    "events": []
+  }
+}

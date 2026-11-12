@@ -14,6 +14,8 @@
 
 ## 制作与交付
 
+- [编辑讲解、机制图解与产品实演](direction-recipes.md)：正式配方、来源与图表、真实截图取景、兼容边界与用途样片。
+
 | 你要做什么 | 文档 |
 | --- | --- |
 | 选静音预览、画面底片、TTS 或外部配音路线 | [使用指南](usage-guide.md) |
@@ -58,6 +60,7 @@
 
 以下文档保留原始数量、版本与验证结果，用于追溯；新项目请使用上面的当前指南。
 
+- [墨白杂志正式配方接入](editorial-integration-20261112.md)：编辑讲解、正式样片与旧项目兼容验证。
 - [四项工作流端到端验收](workflow-e2e-20261112.md)，含新会话交接、时码反馈、局部确认及整片重生成。
 
 - [模板重构](video-template-refactor-status.md)、[动效重做](shot-motion-redesign.md)、[视觉改造](shot-visual-redesign.md)、[P2 接入](p2-recipe-implementation.md)。

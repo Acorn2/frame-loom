@@ -99,7 +99,11 @@ export function LayoutDiagnostics({board, tokens, frames, captions}: {board: Sto
               clipped: raw.width - painted.width > 3 || raw.height - painted.height > 3});
           }
         }
-        const images = Array.from(root.querySelectorAll<HTMLImageElement>('img')).filter(image => visible(image, root)).map(image => ({rect: rect(image.getBoundingClientRect()), source: {width: image.naturalWidth, height: image.naturalHeight}, fit: getComputedStyle(image).objectFit, focused: Boolean(item.scene.visual?.mediaFocus)}));
+        const images = Array.from(root.querySelectorAll<HTMLImageElement>('img')).filter(image => visible(image, root)).map(image => {
+          const viewport = image.closest<HTMLElement>('[data-layout-media][data-layout-focused]');
+          return {rect: viewport ? rect(viewport.getBoundingClientRect()) : rect(image.getBoundingClientRect()), source: {width: image.naturalWidth, height: image.naturalHeight},
+            fit: viewport ? viewport.dataset.layoutFocused === 'true' ? 'cover' : 'contain' : getComputedStyle(image).objectFit, focused: Boolean(item.scene.visual?.mediaFocus) || viewport?.dataset.layoutFocused === 'true'};
+        });
         const nodes = Array.from(root.querySelectorAll<HTMLElement>('[data-layout-node]')).filter(node => visible(node, root)).map(node => rect(node.getBoundingClientRect()));
         return analyzeMeasurement({sceneId: item.scene.id, frame, stable, content, texts, images, nodes, brand: brand ? brandRegion(board.project.width) : undefined});
       });

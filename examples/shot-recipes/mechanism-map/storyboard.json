@@ -1,0 +1,1819 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "signal-noir",
+    "version": "1.0.0"
+  },
+  "font": {
+    "id": "source-han-sans-sc",
+    "version": "2.005"
+  },
+  "layoutPolicy": "content-first-v1",
+  "shotRecipes": [
+    {
+      "id": "mechanism-map",
+      "version": "1.2.0"
+    }
+  ],
+  "palette": {
+    "schemaVersion": "1.1",
+    "source": "custom",
+    "referenceAssets": [],
+    "colors": {
+      "accent": "#f0bd6e",
+      "accentAlt": "#8bd0df",
+      "lightBackground": "#f5f7fa",
+      "darkBackground": "#151a1f",
+      "surface": "#ffffff",
+      "ink": "#eff4f6",
+      "muted": "#9baab4",
+      "captionInk": "#ffffff"
+    }
+  },
+  "project": {
+    "title": "机制图解：从反馈到新版本",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 40.0,
+    "durationFrames": 1200,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "opening",
+      "template": "statement",
+      "purpose": "process",
+      "title": "先改这一镜\n再更新整片",
+      "narration": "先改这一镜，再更新整片",
+      "durationFrames": 180,
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "先改这一镜\n再更新整片"
+        },
+        {
+          "id": "kicker",
+          "type": "node",
+          "label": "MECHANISM / FRAMELOOM"
+        },
+        {
+          "id": "lead",
+          "type": "node",
+          "label": "从一条反馈，到一个新版本"
+        },
+        {
+          "id": "steps",
+          "type": "node",
+          "label": "定位 → 局部预览 → 确认 → 更新"
+        },
+        {
+          "id": "plane0",
+          "type": "node",
+          "label": "反馈"
+        },
+        {
+          "id": "plane1",
+          "type": "node",
+          "label": "场景记录"
+        },
+        {
+          "id": "plane2",
+          "type": "node",
+          "label": "候选版本"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "title-reveal",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "kicker-reveal",
+          "target": "kicker",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "lead-reveal",
+          "target": "lead",
+          "action": "reveal",
+          "start": 10,
+          "duration": 18
+        },
+        {
+          "id": "steps-reveal",
+          "target": "steps",
+          "action": "reveal",
+          "start": 15,
+          "duration": 18
+        },
+        {
+          "id": "plane0-reveal",
+          "target": "plane0",
+          "action": "reveal",
+          "start": 30,
+          "duration": 18
+        },
+        {
+          "id": "plane1-reveal",
+          "target": "plane1",
+          "action": "reveal",
+          "start": 48,
+          "duration": 18
+        },
+        {
+          "id": "plane2-reveal",
+          "target": "plane2",
+          "action": "reveal",
+          "start": 66,
+          "duration": 18
+        }
+      ],
+      "captions": [],
+      "visual": {
+        "kind": "statement",
+        "representation": "diagram",
+        "source": "source.md",
+        "explanation": "依据公开原文编排的流程；时间码和编号为明确标注的示意"
+      },
+      "shot": {
+        "id": "mechanism-map",
+        "version": "1.2.0",
+        "composition": "layers",
+        "slots": {
+          "items": [
+            "title",
+            "kicker",
+            "lead",
+            "steps",
+            "plane0",
+            "plane1",
+            "plane2"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 120,
+            "y": 300,
+            "width": 840,
+            "height": 285,
+            "fontSize": 100,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left",
+            "emphasis": "再更新整片"
+          },
+          "kicker": {
+            "kind": "text",
+            "x": 120,
+            "y": 96,
+            "width": 1000,
+            "height": 32,
+            "fontSize": 21,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "lead": {
+            "kind": "text",
+            "x": 120,
+            "y": 218,
+            "width": 820,
+            "height": 48,
+            "fontSize": 28,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "steps": {
+            "kind": "text",
+            "x": 120,
+            "y": 672,
+            "width": 850,
+            "height": 50,
+            "fontSize": 30,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accentAlt",
+            "align": "left"
+          },
+          "plane0": {
+            "kind": "plane",
+            "x": 1080,
+            "y": 255,
+            "width": 670,
+            "height": 205,
+            "fontSize": 26,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accent",
+            "align": "left"
+          },
+          "plane1": {
+            "kind": "plane",
+            "x": 1080,
+            "y": 405,
+            "width": 670,
+            "height": 205,
+            "fontSize": 26,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accentAlt",
+            "align": "left"
+          },
+          "plane2": {
+            "kind": "plane",
+            "x": 1080,
+            "y": 555,
+            "width": 670,
+            "height": 205,
+            "fontSize": 26,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          }
+        },
+        "routes": {}
+      },
+      "primaryClaim": "先改这一镜，再更新整片"
+    },
+    {
+      "id": "route",
+      "template": "graph-explainer",
+      "purpose": "process",
+      "title": "一次返工，沿着这条路径",
+      "narration": "一次返工，沿着这条路径",
+      "durationFrames": 270,
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "一次返工，沿着这条路径"
+        },
+        {
+          "id": "kicker",
+          "type": "node",
+          "label": "MECHANISM / FRAMELOOM"
+        },
+        {
+          "id": "n0",
+          "type": "node",
+          "label": "CANDIDATE"
+        },
+        {
+          "id": "note0",
+          "type": "node",
+          "label": "审片视频",
+          "text": "看见问题"
+        },
+        {
+          "id": "n1",
+          "type": "node",
+          "label": "00:12"
+        },
+        {
+          "id": "note1",
+          "type": "node",
+          "label": "时间码反馈",
+          "text": "留下原始意见"
+        },
+        {
+          "id": "n2",
+          "type": "node",
+          "label": "scene-02"
+        },
+        {
+          "id": "note2",
+          "type": "node",
+          "label": "场景记录",
+          "text": "绑定场景 ID"
+        },
+        {
+          "id": "n3",
+          "type": "node",
+          "label": "S02 / REVISE"
+        },
+        {
+          "id": "note3",
+          "type": "node",
+          "label": "镜头预览",
+          "text": "先检查修改"
+        },
+        {
+          "id": "n4",
+          "type": "node",
+          "label": "NEXT VERSION"
+        },
+        {
+          "id": "note4",
+          "type": "node",
+          "label": "新版整片",
+          "text": "确认后生成"
+        },
+        {
+          "id": "return-note",
+          "type": "node",
+          "label": "需要再改？回到这一镜"
+        }
+      ],
+      "connections": [
+        {
+          "id": "path1",
+          "from": "n0",
+          "to": "n1"
+        },
+        {
+          "id": "path2",
+          "from": "n1",
+          "to": "n2"
+        },
+        {
+          "id": "path3",
+          "from": "n2",
+          "to": "n3"
+        },
+        {
+          "id": "path4",
+          "from": "n3",
+          "to": "n4"
+        },
+        {
+          "id": "return",
+          "from": "n3",
+          "to": "n2"
+        }
+      ],
+      "beats": [
+        {
+          "id": "title-reveal",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "kicker-reveal",
+          "target": "kicker",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "n0-reveal",
+          "target": "n0",
+          "action": "reveal",
+          "start": 20,
+          "duration": 18
+        },
+        {
+          "id": "note0-reveal",
+          "target": "note0",
+          "action": "reveal",
+          "start": 20,
+          "duration": 18
+        },
+        {
+          "id": "n1-reveal",
+          "target": "n1",
+          "action": "reveal",
+          "start": 33,
+          "duration": 18
+        },
+        {
+          "id": "note1-reveal",
+          "target": "note1",
+          "action": "reveal",
+          "start": 33,
+          "duration": 18
+        },
+        {
+          "id": "path1-draw",
+          "target": "path1",
+          "action": "draw",
+          "start": 93,
+          "duration": 24
+        },
+        {
+          "id": "n2-reveal",
+          "target": "n2",
+          "action": "reveal",
+          "start": 46,
+          "duration": 18
+        },
+        {
+          "id": "note2-reveal",
+          "target": "note2",
+          "action": "reveal",
+          "start": 46,
+          "duration": 18
+        },
+        {
+          "id": "path2-draw",
+          "target": "path2",
+          "action": "draw",
+          "start": 111,
+          "duration": 24
+        },
+        {
+          "id": "n3-reveal",
+          "target": "n3",
+          "action": "reveal",
+          "start": 59,
+          "duration": 18
+        },
+        {
+          "id": "note3-reveal",
+          "target": "note3",
+          "action": "reveal",
+          "start": 59,
+          "duration": 18
+        },
+        {
+          "id": "path3-draw",
+          "target": "path3",
+          "action": "draw",
+          "start": 129,
+          "duration": 24
+        },
+        {
+          "id": "n4-reveal",
+          "target": "n4",
+          "action": "reveal",
+          "start": 72,
+          "duration": 18
+        },
+        {
+          "id": "note4-reveal",
+          "target": "note4",
+          "action": "reveal",
+          "start": 72,
+          "duration": 18
+        },
+        {
+          "id": "path4-draw",
+          "target": "path4",
+          "action": "draw",
+          "start": 147,
+          "duration": 24
+        },
+        {
+          "id": "return-note-reveal",
+          "target": "return-note",
+          "action": "reveal",
+          "start": 140,
+          "duration": 18
+        },
+        {
+          "id": "return-draw",
+          "target": "return",
+          "action": "draw",
+          "start": 160,
+          "duration": 24
+        }
+      ],
+      "captions": [],
+      "visual": {
+        "kind": "sequence",
+        "representation": "diagram",
+        "source": "source.md",
+        "explanation": "依据公开原文编排的流程；时间码和编号为明确标注的示意"
+      },
+      "shot": {
+        "id": "mechanism-map",
+        "version": "1.2.0",
+        "composition": "route",
+        "slots": {
+          "items": [
+            "title",
+            "kicker",
+            "n0",
+            "note0",
+            "n1",
+            "note1",
+            "n2",
+            "note2",
+            "n3",
+            "note3",
+            "n4",
+            "note4",
+            "return-note"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 120,
+            "y": 172,
+            "width": 1650,
+            "height": 110,
+            "fontSize": 62,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          },
+          "kicker": {
+            "kind": "text",
+            "x": 120,
+            "y": 96,
+            "width": 1000,
+            "height": 32,
+            "fontSize": 21,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "n0": {
+            "kind": "film",
+            "x": 128,
+            "y": 475,
+            "width": 230,
+            "height": 145,
+            "fontSize": 24,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accentAlt",
+            "align": "left"
+          },
+          "note0": {
+            "kind": "text",
+            "x": 128,
+            "y": 665,
+            "width": 245,
+            "height": 100,
+            "fontSize": 30,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          },
+          "n1": {
+            "kind": "panel",
+            "x": 478,
+            "y": 475,
+            "width": 230,
+            "height": 145,
+            "fontSize": 24,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accentAlt",
+            "align": "left"
+          },
+          "note1": {
+            "kind": "text",
+            "x": 478,
+            "y": 665,
+            "width": 245,
+            "height": 100,
+            "fontSize": 30,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          },
+          "n2": {
+            "kind": "panel",
+            "x": 828,
+            "y": 475,
+            "width": 230,
+            "height": 145,
+            "fontSize": 24,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accentAlt",
+            "align": "left"
+          },
+          "note2": {
+            "kind": "text",
+            "x": 828,
+            "y": 665,
+            "width": 245,
+            "height": 100,
+            "fontSize": 30,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          },
+          "n3": {
+            "kind": "film",
+            "x": 1178,
+            "y": 475,
+            "width": 230,
+            "height": 145,
+            "fontSize": 24,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accent",
+            "align": "left"
+          },
+          "note3": {
+            "kind": "text",
+            "x": 1178,
+            "y": 665,
+            "width": 245,
+            "height": 100,
+            "fontSize": 30,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          },
+          "n4": {
+            "kind": "film",
+            "x": 1528,
+            "y": 475,
+            "width": 230,
+            "height": 145,
+            "fontSize": 22,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accentAlt",
+            "align": "left"
+          },
+          "note4": {
+            "kind": "text",
+            "x": 1528,
+            "y": 665,
+            "width": 245,
+            "height": 100,
+            "fontSize": 30,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          },
+          "return-note": {
+            "kind": "text",
+            "x": 855,
+            "y": 298,
+            "width": 550,
+            "height": 42,
+            "fontSize": 25,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accent",
+            "align": "left"
+          }
+        },
+        "routes": {
+          "path1": {
+            "fromSide": "right",
+            "toSide": "left",
+            "via": [],
+            "arrow": true,
+            "color": "accentAlt"
+          },
+          "path2": {
+            "fromSide": "right",
+            "toSide": "left",
+            "via": [],
+            "arrow": true,
+            "color": "accentAlt"
+          },
+          "path3": {
+            "fromSide": "right",
+            "toSide": "left",
+            "via": [],
+            "arrow": true,
+            "color": "accentAlt"
+          },
+          "path4": {
+            "fromSide": "right",
+            "toSide": "left",
+            "via": [],
+            "arrow": true,
+            "color": "accentAlt"
+          },
+          "return": {
+            "fromSide": "top",
+            "toSide": "top",
+            "via": [
+              [
+                1293,
+                355
+              ],
+              [
+                943,
+                355
+              ]
+            ],
+            "arrow": true,
+            "color": "accent"
+          }
+        }
+      },
+      "primaryClaim": "一次返工，沿着这条路径"
+    },
+    {
+      "id": "anchor",
+      "template": "statement",
+      "purpose": "process",
+      "title": "时间码定位，场景 ID 接住修改",
+      "narration": "时间码定位，场景 ID 接住修改",
+      "durationFrames": 270,
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "时间码定位，场景 ID 接住修改"
+        },
+        {
+          "id": "kicker",
+          "type": "node",
+          "label": "MECHANISM / FRAMELOOM"
+        },
+        {
+          "id": "sub",
+          "type": "node",
+          "label": "时长可以变化，修改仍对应同一个场景"
+        },
+        {
+          "id": "feedback",
+          "type": "node",
+          "label": "示意 00:12 · 把这一句解释拆开"
+        },
+        {
+          "id": "bar0",
+          "type": "node",
+          "label": "S01",
+          "text": "00:00—00:08"
+        },
+        {
+          "id": "bar1",
+          "type": "node",
+          "label": "S02",
+          "text": "00:08—00:18"
+        },
+        {
+          "id": "bar2",
+          "type": "node",
+          "label": "S03",
+          "text": "00:18—00:26"
+        },
+        {
+          "id": "record",
+          "type": "node",
+          "label": "scene-02",
+          "text": "讲稿 · 画面 · 反馈"
+        },
+        {
+          "id": "next",
+          "type": "node",
+          "label": "先生成修改镜头",
+          "text": "并说明后续时码与字幕变化"
+        }
+      ],
+      "connections": [
+        {
+          "id": "bind",
+          "from": "bar1",
+          "to": "record"
+        },
+        {
+          "id": "preview",
+          "from": "record",
+          "to": "next"
+        }
+      ],
+      "beats": [
+        {
+          "id": "title-reveal",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "kicker-reveal",
+          "target": "kicker",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "sub-reveal",
+          "target": "sub",
+          "action": "reveal",
+          "start": 10,
+          "duration": 18
+        },
+        {
+          "id": "feedback-reveal",
+          "target": "feedback",
+          "action": "reveal",
+          "start": 40,
+          "duration": 18
+        },
+        {
+          "id": "bar0-reveal",
+          "target": "bar0",
+          "action": "reveal",
+          "start": 20,
+          "duration": 18
+        },
+        {
+          "id": "bar1-reveal",
+          "target": "bar1",
+          "action": "reveal",
+          "start": 30,
+          "duration": 18
+        },
+        {
+          "id": "bar2-reveal",
+          "target": "bar2",
+          "action": "reveal",
+          "start": 40,
+          "duration": 18
+        },
+        {
+          "id": "record-reveal",
+          "target": "record",
+          "action": "reveal",
+          "start": 65,
+          "duration": 18
+        },
+        {
+          "id": "next-reveal",
+          "target": "next",
+          "action": "reveal",
+          "start": 100,
+          "duration": 18
+        },
+        {
+          "id": "bind-draw",
+          "target": "bind",
+          "action": "draw",
+          "start": 110,
+          "duration": 24
+        },
+        {
+          "id": "preview-draw",
+          "target": "preview",
+          "action": "draw",
+          "start": 142,
+          "duration": 24
+        }
+      ],
+      "captions": [],
+      "visual": {
+        "kind": "change",
+        "representation": "diagram",
+        "source": "source.md",
+        "explanation": "依据公开原文编排的流程；时间码和编号为明确标注的示意"
+      },
+      "shot": {
+        "id": "mechanism-map",
+        "version": "1.2.0",
+        "composition": "timeline",
+        "slots": {
+          "items": [
+            "title",
+            "kicker",
+            "sub",
+            "feedback",
+            "bar0",
+            "bar1",
+            "bar2",
+            "record",
+            "next"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 120,
+            "y": 172,
+            "width": 1650,
+            "height": 110,
+            "fontSize": 62,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          },
+          "kicker": {
+            "kind": "text",
+            "x": 120,
+            "y": 96,
+            "width": 1000,
+            "height": 32,
+            "fontSize": 21,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "sub": {
+            "kind": "text",
+            "x": 120,
+            "y": 285,
+            "width": 1450,
+            "height": 45,
+            "fontSize": 27,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "feedback": {
+            "kind": "text",
+            "x": 650,
+            "y": 350,
+            "width": 1050,
+            "height": 44,
+            "fontSize": 27,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accent",
+            "align": "left"
+          },
+          "bar0": {
+            "kind": "panel",
+            "x": 140,
+            "y": 440,
+            "width": 400,
+            "height": 130,
+            "fontSize": 30,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "bar1": {
+            "kind": "panel",
+            "x": 560,
+            "y": 440,
+            "width": 680,
+            "height": 130,
+            "fontSize": 30,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accent",
+            "align": "left"
+          },
+          "bar2": {
+            "kind": "panel",
+            "x": 1260,
+            "y": 440,
+            "width": 500,
+            "height": 130,
+            "fontSize": 30,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "record": {
+            "kind": "panel",
+            "x": 140,
+            "y": 690,
+            "width": 710,
+            "height": 160,
+            "fontSize": 40,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accentAlt",
+            "align": "left"
+          },
+          "next": {
+            "kind": "text",
+            "x": 1100,
+            "y": 735,
+            "width": 650,
+            "height": 105,
+            "fontSize": 30,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          }
+        },
+        "routes": {
+          "bind": {
+            "fromSide": "bottom",
+            "toSide": "top",
+            "via": [
+              [
+                900,
+                650
+              ],
+              [
+                495,
+                650
+              ]
+            ],
+            "arrow": true,
+            "color": "accent"
+          },
+          "preview": {
+            "fromSide": "right",
+            "toSide": "left",
+            "via": [],
+            "arrow": true,
+            "color": "accentAlt"
+          }
+        }
+      },
+      "primaryClaim": "时间码定位，场景 ID 接住修改"
+    },
+    {
+      "id": "confirm",
+      "template": "statement",
+      "purpose": "process",
+      "title": "先确认局部，再更新整片",
+      "narration": "先确认局部，再更新整片",
+      "durationFrames": 270,
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "先确认局部，再更新整片"
+        },
+        {
+          "id": "kicker",
+          "type": "node",
+          "label": "MECHANISM / FRAMELOOM"
+        },
+        {
+          "id": "sub",
+          "type": "node",
+          "label": "把改动范围交给创作者检查"
+        },
+        {
+          "id": "old",
+          "type": "node",
+          "label": "S02 / 原镜头"
+        },
+        {
+          "id": "new",
+          "type": "node",
+          "label": "S02 / 修改镜头"
+        },
+        {
+          "id": "gate",
+          "type": "node",
+          "label": "创作者确认"
+        },
+        {
+          "id": "result",
+          "type": "node",
+          "label": "新版整片"
+        },
+        {
+          "id": "old-note",
+          "type": "node",
+          "label": "原来的解释"
+        },
+        {
+          "id": "new-note",
+          "type": "node",
+          "label": "对应意见，修改这一镜"
+        },
+        {
+          "id": "result-note",
+          "type": "node",
+          "label": "重新生成与 QA"
+        },
+        {
+          "id": "return-note",
+          "type": "node",
+          "label": "还需调整，就继续修改局部"
+        }
+      ],
+      "connections": [
+        {
+          "id": "revise",
+          "from": "old",
+          "to": "new"
+        },
+        {
+          "id": "review",
+          "from": "new",
+          "to": "gate"
+        },
+        {
+          "id": "accept",
+          "from": "gate",
+          "to": "result"
+        },
+        {
+          "id": "again",
+          "from": "gate",
+          "to": "new"
+        }
+      ],
+      "beats": [
+        {
+          "id": "title-reveal",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "kicker-reveal",
+          "target": "kicker",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "sub-reveal",
+          "target": "sub",
+          "action": "reveal",
+          "start": 10,
+          "duration": 18
+        },
+        {
+          "id": "old-reveal",
+          "target": "old",
+          "action": "reveal",
+          "start": 22,
+          "duration": 18
+        },
+        {
+          "id": "new-reveal",
+          "target": "new",
+          "action": "reveal",
+          "start": 45,
+          "duration": 18
+        },
+        {
+          "id": "gate-reveal",
+          "target": "gate",
+          "action": "reveal",
+          "start": 75,
+          "duration": 18
+        },
+        {
+          "id": "result-reveal",
+          "target": "result",
+          "action": "reveal",
+          "start": 140,
+          "duration": 18
+        },
+        {
+          "id": "old-note-reveal",
+          "target": "old-note",
+          "action": "reveal",
+          "start": 40,
+          "duration": 18
+        },
+        {
+          "id": "new-note-reveal",
+          "target": "new-note",
+          "action": "reveal",
+          "start": 65,
+          "duration": 18
+        },
+        {
+          "id": "result-note-reveal",
+          "target": "result-note",
+          "action": "reveal",
+          "start": 160,
+          "duration": 18
+        },
+        {
+          "id": "return-note-reveal",
+          "target": "return-note",
+          "action": "reveal",
+          "start": 120,
+          "duration": 18
+        },
+        {
+          "id": "revise-draw",
+          "target": "revise",
+          "action": "draw",
+          "start": 70,
+          "duration": 24
+        },
+        {
+          "id": "review-draw",
+          "target": "review",
+          "action": "draw",
+          "start": 100,
+          "duration": 24
+        },
+        {
+          "id": "accept-draw",
+          "target": "accept",
+          "action": "draw",
+          "start": 170,
+          "duration": 24
+        },
+        {
+          "id": "again-draw",
+          "target": "again",
+          "action": "draw",
+          "start": 128,
+          "duration": 24
+        }
+      ],
+      "captions": [],
+      "visual": {
+        "kind": "change",
+        "representation": "diagram",
+        "source": "source.md",
+        "explanation": "依据公开原文编排的流程；时间码和编号为明确标注的示意"
+      },
+      "shot": {
+        "id": "mechanism-map",
+        "version": "1.2.0",
+        "composition": "gate",
+        "slots": {
+          "items": [
+            "title",
+            "kicker",
+            "sub",
+            "old",
+            "new",
+            "gate",
+            "result",
+            "old-note",
+            "new-note",
+            "result-note",
+            "return-note"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 120,
+            "y": 172,
+            "width": 1650,
+            "height": 110,
+            "fontSize": 62,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          },
+          "kicker": {
+            "kind": "text",
+            "x": 120,
+            "y": 96,
+            "width": 1000,
+            "height": 32,
+            "fontSize": 21,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "sub": {
+            "kind": "text",
+            "x": 120,
+            "y": 285,
+            "width": 1460,
+            "height": 44,
+            "fontSize": 27,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "old": {
+            "kind": "film",
+            "x": 140,
+            "y": 445,
+            "width": 350,
+            "height": 210,
+            "fontSize": 26,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accentAlt",
+            "align": "left"
+          },
+          "new": {
+            "kind": "film",
+            "x": 650,
+            "y": 445,
+            "width": 350,
+            "height": 210,
+            "fontSize": 26,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accent",
+            "align": "left"
+          },
+          "gate": {
+            "kind": "gate",
+            "x": 1100,
+            "y": 445,
+            "width": 200,
+            "height": 210,
+            "fontSize": 26,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accent",
+            "align": "left"
+          },
+          "result": {
+            "kind": "film",
+            "x": 1460,
+            "y": 445,
+            "width": 300,
+            "height": 210,
+            "fontSize": 26,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accentAlt",
+            "align": "left"
+          },
+          "old-note": {
+            "kind": "text",
+            "x": 140,
+            "y": 705,
+            "width": 400,
+            "height": 45,
+            "fontSize": 25,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "new-note": {
+            "kind": "text",
+            "x": 650,
+            "y": 705,
+            "width": 420,
+            "height": 45,
+            "fontSize": 25,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accent",
+            "align": "left"
+          },
+          "result-note": {
+            "kind": "text",
+            "x": 1460,
+            "y": 705,
+            "width": 330,
+            "height": 45,
+            "fontSize": 25,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "ink",
+            "align": "left"
+          },
+          "return-note": {
+            "kind": "text",
+            "x": 750,
+            "y": 810,
+            "width": 1000,
+            "height": 40,
+            "fontSize": 25,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accent",
+            "align": "left"
+          }
+        },
+        "routes": {
+          "revise": {
+            "fromSide": "right",
+            "toSide": "left",
+            "via": [],
+            "arrow": true,
+            "color": "accentAlt"
+          },
+          "review": {
+            "fromSide": "right",
+            "toSide": "left",
+            "via": [],
+            "arrow": true,
+            "color": "accent"
+          },
+          "accept": {
+            "fromSide": "right",
+            "toSide": "left",
+            "via": [],
+            "arrow": true,
+            "color": "accentAlt"
+          },
+          "again": {
+            "fromSide": "bottom",
+            "toSide": "bottom",
+            "via": [
+              [
+                1200,
+                785
+              ],
+              [
+                825,
+                785
+              ]
+            ],
+            "arrow": true,
+            "color": "accent"
+          }
+        }
+      },
+      "primaryClaim": "先确认局部，再更新整片"
+    },
+    {
+      "id": "summary",
+      "template": "statement",
+      "purpose": "process",
+      "title": "改动有范围\n交付有依据",
+      "narration": "改动有范围，交付有依据",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "改动有范围\n交付有依据"
+        },
+        {
+          "id": "kicker",
+          "type": "node",
+          "label": "MECHANISM / FRAMELOOM"
+        },
+        {
+          "id": "proof0",
+          "type": "node",
+          "label": "场景记录",
+          "text": "知道修改落在哪里"
+        },
+        {
+          "id": "proof1",
+          "type": "node",
+          "label": "原始反馈",
+          "text": "知道为什么修改"
+        },
+        {
+          "id": "proof2",
+          "type": "node",
+          "label": "候选版本",
+          "text": "知道正在检查哪一版"
+        },
+        {
+          "id": "mini0",
+          "type": "node",
+          "label": "视频"
+        },
+        {
+          "id": "mini1",
+          "type": "node",
+          "label": "反馈"
+        },
+        {
+          "id": "mini2",
+          "type": "node",
+          "label": "scene-02"
+        },
+        {
+          "id": "mini3",
+          "type": "node",
+          "label": "镜头预览"
+        },
+        {
+          "id": "mini4",
+          "type": "node",
+          "label": "新版整片"
+        },
+        {
+          "id": "takeaway",
+          "type": "node",
+          "label": "从整体定位问题，在局部完成修改"
+        }
+      ],
+      "connections": [
+        {
+          "id": "mini-path1",
+          "from": "mini0",
+          "to": "mini1"
+        },
+        {
+          "id": "mini-path2",
+          "from": "mini1",
+          "to": "mini2"
+        },
+        {
+          "id": "mini-path3",
+          "from": "mini2",
+          "to": "mini3"
+        },
+        {
+          "id": "mini-path4",
+          "from": "mini3",
+          "to": "mini4"
+        }
+      ],
+      "beats": [
+        {
+          "id": "title-reveal",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "kicker-reveal",
+          "target": "kicker",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "proof0-reveal",
+          "target": "proof0",
+          "action": "reveal",
+          "start": 32,
+          "duration": 18
+        },
+        {
+          "id": "proof1-reveal",
+          "target": "proof1",
+          "action": "reveal",
+          "start": 46,
+          "duration": 18
+        },
+        {
+          "id": "proof2-reveal",
+          "target": "proof2",
+          "action": "reveal",
+          "start": 60,
+          "duration": 18
+        },
+        {
+          "id": "mini0-reveal",
+          "target": "mini0",
+          "action": "reveal",
+          "start": 40,
+          "duration": 18
+        },
+        {
+          "id": "mini1-reveal",
+          "target": "mini1",
+          "action": "reveal",
+          "start": 52,
+          "duration": 18
+        },
+        {
+          "id": "mini-path1-draw",
+          "target": "mini-path1",
+          "action": "draw",
+          "start": 103,
+          "duration": 24
+        },
+        {
+          "id": "mini2-reveal",
+          "target": "mini2",
+          "action": "reveal",
+          "start": 64,
+          "duration": 18
+        },
+        {
+          "id": "mini-path2-draw",
+          "target": "mini-path2",
+          "action": "draw",
+          "start": 111,
+          "duration": 24
+        },
+        {
+          "id": "mini3-reveal",
+          "target": "mini3",
+          "action": "reveal",
+          "start": 76,
+          "duration": 18
+        },
+        {
+          "id": "mini-path3-draw",
+          "target": "mini-path3",
+          "action": "draw",
+          "start": 119,
+          "duration": 24
+        },
+        {
+          "id": "mini4-reveal",
+          "target": "mini4",
+          "action": "reveal",
+          "start": 88,
+          "duration": 18
+        },
+        {
+          "id": "mini-path4-draw",
+          "target": "mini-path4",
+          "action": "draw",
+          "start": 127,
+          "duration": 24
+        },
+        {
+          "id": "takeaway-reveal",
+          "target": "takeaway",
+          "action": "reveal",
+          "start": 130,
+          "duration": 18
+        }
+      ],
+      "captions": [],
+      "visual": {
+        "kind": "statement",
+        "representation": "diagram",
+        "source": "source.md",
+        "explanation": "依据公开原文编排的流程；时间码和编号为明确标注的示意"
+      },
+      "shot": {
+        "id": "mechanism-map",
+        "version": "1.2.0",
+        "composition": "summary",
+        "slots": {
+          "items": [
+            "title",
+            "kicker",
+            "proof0",
+            "proof1",
+            "proof2",
+            "mini0",
+            "mini1",
+            "mini2",
+            "mini3",
+            "mini4",
+            "takeaway"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 120,
+            "y": 200,
+            "width": 1080,
+            "height": 270,
+            "fontSize": 90,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left",
+            "emphasis": "交付有依据"
+          },
+          "kicker": {
+            "kind": "text",
+            "x": 120,
+            "y": 96,
+            "width": 1000,
+            "height": 32,
+            "fontSize": 21,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "proof0": {
+            "kind": "text",
+            "x": 1340,
+            "y": 270,
+            "width": 445,
+            "height": 110,
+            "fontSize": 32,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          },
+          "proof1": {
+            "kind": "text",
+            "x": 1340,
+            "y": 440,
+            "width": 445,
+            "height": 110,
+            "fontSize": 32,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          },
+          "proof2": {
+            "kind": "text",
+            "x": 1340,
+            "y": 610,
+            "width": 445,
+            "height": 110,
+            "fontSize": 32,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          },
+          "mini0": {
+            "kind": "film",
+            "x": 120,
+            "y": 620,
+            "width": 190,
+            "height": 130,
+            "fontSize": 22,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accentAlt",
+            "align": "left"
+          },
+          "mini1": {
+            "kind": "film",
+            "x": 350,
+            "y": 620,
+            "width": 190,
+            "height": 130,
+            "fontSize": 22,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accentAlt",
+            "align": "left"
+          },
+          "mini2": {
+            "kind": "film",
+            "x": 580,
+            "y": 620,
+            "width": 190,
+            "height": 130,
+            "fontSize": 22,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accentAlt",
+            "align": "left"
+          },
+          "mini3": {
+            "kind": "film",
+            "x": 810,
+            "y": 620,
+            "width": 190,
+            "height": 130,
+            "fontSize": 22,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accent",
+            "align": "left"
+          },
+          "mini4": {
+            "kind": "film",
+            "x": 1040,
+            "y": 620,
+            "width": 190,
+            "height": 130,
+            "fontSize": 22,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accentAlt",
+            "align": "left"
+          },
+          "takeaway": {
+            "kind": "text",
+            "x": 120,
+            "y": 800,
+            "width": 1130,
+            "height": 48,
+            "fontSize": 29,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accentAlt",
+            "align": "left"
+          }
+        },
+        "routes": {
+          "mini-path1": {
+            "fromSide": "right",
+            "toSide": "left",
+            "via": [],
+            "arrow": true,
+            "color": "accentAlt"
+          },
+          "mini-path2": {
+            "fromSide": "right",
+            "toSide": "left",
+            "via": [],
+            "arrow": true,
+            "color": "accentAlt"
+          },
+          "mini-path3": {
+            "fromSide": "right",
+            "toSide": "left",
+            "via": [],
+            "arrow": true,
+            "color": "accentAlt"
+          },
+          "mini-path4": {
+            "fromSide": "right",
+            "toSide": "left",
+            "via": [],
+            "arrow": true,
+            "color": "accentAlt"
+          }
+        }
+      },
+      "primaryClaim": "改动有范围，交付有依据"
+    }
+  ]
+}

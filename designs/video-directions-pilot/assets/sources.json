@@ -1,0 +1,42 @@
+{
+  "capturedAt": "2026-11-12T17:54:14.240360+08:00",
+  "source": "FrameLoom current checkout, original public library, no interface redesign",
+  "origin": "http://127.0.0.1:4319",
+  "originalUrl": "https://acorn2.github.io/frame-loom/",
+  "capture": "ego-browser viewport screenshots; original pixels retained; videos paused",
+  "rights": "FrameLoom repository assets and their existing notices; selected primary examples retain their original assets and Your Brand placeholders",
+  "selectedStyle": "editorial-typography",
+  "selectedFont": "source-han-sans-sc",
+  "files": [
+    {
+      "file": "styles-overview.png",
+      "width": 1600,
+      "height": 1000,
+      "sha256": "0b7941494b892740b9ffed4b6ea271314cad6e8aa357f62fa6bc3883be0939f6"
+    },
+    {
+      "file": "instruction.png",
+      "width": 1377,
+      "height": 963,
+      "sha256": "c87e6dc79ec77d65cfe229cd888ef30ca5dfaa06e20ce7e8ded22198de214671"
+    },
+    {
+      "file": "settings.png",
+      "width": 1377,
+      "height": 963,
+      "sha256": "cad9f7f5d0546ae396a37e10af0cc7e6c804ac6034ba33f51bcbefbe74dfe1b3"
+    },
+    {
+      "file": "styles-selected.png",
+      "width": 1377,
+      "height": 963,
+      "sha256": "a7332fc4c24d06b01ed55cf71084ad082c426fd9317f1743b6278cdce7424286"
+    },
+    {
+      "file": "fonts.png",
+      "width": 1377,
+      "height": 963,
+      "sha256": "fdfa3b0f9cc3fae42f172288604c5fe716df15c27e3da46bf283f8ea1b55f9c3"
+    }
+  ]
+}

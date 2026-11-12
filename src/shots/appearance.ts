@@ -1,3 +1,5 @@
+import {isEditorialShot} from './editorial/schema';
+import {isDirectionShot} from './directions/schema';
 import type {Shot} from '../schemas/shot-recipe';
 import type {StyleTokens} from '../styles/style-loader';
 import type {Storyboard} from '../schemas/storyboard';
@@ -55,7 +57,7 @@ function luminance(hex: string) {
   return r! * .2126 + g! * .7152 + b! * .0722;
 }
 export function recipeAppearance(shot: Shot, base: StyleTokens): RecipeAppearance | undefined {
-  if (isTextLedShot(shot) || shot.id === 'whiteboard-board' || isWhiteboardShot(shot) || isIllustratedShot(shot)) return {visual: 'diagram', dark: luminance(base.background) < .15,
+  if (isEditorialShot(shot) || isDirectionShot(shot) || isTextLedShot(shot) || shot.id === 'whiteboard-board' || isWhiteboardShot(shot) || isIllustratedShot(shot)) return {visual: 'diagram', dark: luminance(base.background) < .15,
     background: base.background, stageInk: base.ink, stageMuted: base.muted, lineInk: base.accentAlt, decoration: 'none', tokens: base};
   const native = ['semantic-default', 'compare-reveal', 'network-expand'].includes(shot.id);
   if ((native ? shot.version !== '1.0.0' : shot.version !== '1.2.0') || !(shot.id in RECIPE_VISUALS)) return undefined;

@@ -1,3 +1,4 @@
+import {scenarioItems, scenarioStyles, variantStyles, expressionTasks, recipeHasTask} from './scenarios.mjs';
 /* global document, window, localStorage, navigator, fetch, setTimeout, clearTimeout, HTMLElement, URLSearchParams, URL */
 import {startLibraryI18n, getLocale, translateUI} from './i18n.mjs';
 import {localizeCatalog} from './catalog.en.mjs';
@@ -15,6 +16,8 @@ createPlaybackCoordinator();
 const $ = (id) => document.getElementById(id);
 const escape = (value) => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
 const storageKey = 'frame-loom-library-selection-v1';
+let scenario = new URL(window.location.href).searchParams.get('scenario') ?? '';
+let expressionTask = new URL(window.location.href).searchParams.get('task') ?? 'all';
 let catalog; let state; let category = '全部镜头'; let toastTimer; let fontPicker; let searchTimer; let cardsKey;
 const categoryOrder = ['全部镜头', '白板', '图解', '插画讲解', '标题', '文字', '证据', '结构', '关系', '交互', '时间与数据', '基础', '辅助动作', '换章转场'];
 const featuredRecipes = ['blur-slide', 'paper-title', 'title-to-label', 'card-stack', 'source-converge', 'concept-matrix'];
@@ -41,7 +44,7 @@ function persist() {
   try {localStorage.setItem(storageKey, JSON.stringify(state)); return true;}
   catch {
     // Carry only public selections between pages when browser storage is blocked.
-    const query = new URLSearchParams({lang: getLocale(), style: state.style, font: state.font, fontMode: state.fontMode, canvas: state.canvas, shots: state.selected.join(','), shotSelection: state.shotSelection, ...state.production, review: String(state.production.review)});
+    const query = new URLSearchParams({...(scenario ? {scenario} : {}), ...(expressionTask !== 'all' ? {task: expressionTask} : {}), lang: getLocale(), style: state.style, font: state.font, fontMode: state.fontMode, canvas: state.canvas, shots: state.selected.join(','), shotSelection: state.shotSelection, ...state.production, review: String(state.production.review)});
     for (const link of document.querySelectorAll('a[href]')) {
       const [target, fragment] = link.getAttribute('href').split('#');
       const file = target.split('?')[0];
@@ -52,11 +55,13 @@ function persist() {
 function renderStyles() {
   if (!$('styles')) return;
   stylePlayback?.stop();
-  $('styles').innerHTML = catalog.styles.map((style, index) => {
+  const candidates = scenarioStyles(catalog.styles, scenario, state.style);
+  const expanded = $('more-style-variants')?.open || variantStyles.includes(state.style);
+  const cards = styles => styles.map((style, index) => {
     const info = styleCardInfo(style, catalog.recipes, state.canvas);
     const active = style.id === state.style;
     const colors = style.displayColors ?? [];
-    return `${index === 0 || style.role !== catalog.styles[index - 1].role ? `<div class="style-group" style="grid-column:1/-1"><h2>${style.role === 'primary' ? 'AI 插画风格' : '图文动效风格'}</h2><p class="section-note">${style.role === 'primary' ? '文字与图解为主，AI 插画辅助建立情境；也可使用真实截图。' : '通过文字、图形、图表与界面动效逐步讲解；也可使用真实图片。'}</p></div>` : ''}<article class="style-card ${active ? 'active' : ''}" aria-labelledby="style-title-${escape(style.id)}">
+    return `${index === 0 || style.role !== styles[index - 1].role ? `<div class="style-group" style="grid-column:1/-1"><h2>${style.role === 'primary' ? 'AI 插画风格' : '图文动效风格'}</h2><p class="section-note">${style.role === 'primary' ? '文字与图解为主，AI 插画辅助建立情境；也可使用真实截图。' : '通过文字、图形、图表与界面动效逐步讲解；也可使用真实图片。'}</p></div>` : ''}<article class="style-card ${active ? 'active' : ''}" aria-labelledby="style-title-${escape(style.id)}">
       <div class="style-preview"><button class="style-poster" data-style-preview="${escape(style.id)}" aria-label="预览风格 ${escape(style.subtitle)}${style.name !== style.subtitle ? ` ${escape(style.name)}` : ''}">
         <img src="${escape(style.poster)}" alt="${escape(style.subtitle)} 真实样片标题帧" width="960" height="540" loading="lazy">
         ${style.video ? `<video data-src="${escape(style.video)}" muted loop playsinline preload="none" aria-hidden="true"></video>` : ''}
@@ -67,6 +72,35 @@ function renderStyles() {
       <div class="style-foot"><p class="style-capability ${info.basicOnly || !info.available ? 'basic-only' : ''}" title="当前${state.canvas === 'landscape' ? '横屏' : '竖屏'}兼容场景，不含辅助动作与转场。${info.basicOnly ? '当前仅支持基础图解与收尾。' : ''}"><span aria-hidden="true">${info.basicOnly || !info.available ? '○' : '◉'}</span> ${escape(info.capability)}</p>
         <button class="style-pick" data-style="${escape(style.id)}" ${info.available ? '' : 'disabled'} aria-pressed="${active}" aria-label="${active ? '已选风格' : '选择风格'} ${escape(style.subtitle)}${style.name !== style.subtitle ? ` ${escape(style.name)}` : ''}">${!info.available ? '当前画幅不支持' : active ? '已选用 ✓' : '使用此风格'}</button></div></div></article>`;
   }).join('');
+  const variants = candidates.filter(style => variantStyles.includes(style.id));
+  $('styles').innerHTML = cards(candidates.filter(style => !variantStyles.includes(style.id))) + (variants.length ? `<details id="more-style-variants" class="style-variants" ${expanded ? 'open' : ''}><summary>更多外观与旧风格</summary><p class="section-note">暗场信号作为深色外观，瑞士蓝归入编辑讲解，手绘便签归入手绘讲解；保留各自 ID 和既有项目能力。</p><div class="styles">${cards(variants)}</div></details>` : '');
+}
+function renderScenarios() {
+  if (!$('scenarios')) return;
+  const items = scenarioItems(getLocale());
+  if (!items.some(item => item.id === scenario)) scenario = '';
+  $('scenarios').innerHTML = items.map(item => {
+    const sample = catalog.styles.find(style => style.id === item.sample);
+    return `<article class="scenario-card ${scenario === item.id ? 'active' : ''}"><button class="scenario-poster" data-style-preview="${item.sample}" aria-label="${escape(item.title)}"><img src="${escape(sample.poster)}" alt="${escape(item.title)}" width="960" height="540" loading="lazy"><span aria-hidden="true">▶</span></button><div class="scenario-body"><h2>${escape(item.title)}</h2><p>${escape(item.description)}</p><small>${escape(item.materials)}</small><button class="text-button" data-scenario="${item.id}" aria-pressed="${scenario === item.id}">查看推荐画法 →</button></div></article>`;
+  }).join('');
+  $('scenario-all').setAttribute('aria-pressed', String(!scenario));
+}
+function renderExpressionTasks() {
+  if (!$('expression-tasks')) return;
+  if (!expressionTasks.some(task => task.id === expressionTask)) expressionTask = 'all';
+  $('expression-tasks').innerHTML = expressionTasks.map(task => `<button class="category ${task.id === expressionTask ? 'active' : ''}" data-expression-task="${task.id}" aria-pressed="${task.id === expressionTask}">${escape(task[getLocale() === 'en' ? 'en' : 'zh'])}</button>`).join('');
+}
+function updateBrowseUrl() {
+  const url = new URL(window.location.href);
+  if (scenario) url.searchParams.set('scenario', scenario); else url.searchParams.delete('scenario');
+  if (expressionTask !== 'all') url.searchParams.set('task', expressionTask); else url.searchParams.delete('task');
+  window.history.replaceState(null, '', url);
+  for (const link of document.querySelectorAll('.page-nav a, .selection-bar a')) {
+    const target = new URL(link.href);
+    if (scenario) target.searchParams.set('scenario', scenario); else target.searchParams.delete('scenario');
+    if (expressionTask !== 'all') target.searchParams.set('task', expressionTask); else target.searchParams.delete('task');
+    link.setAttribute('href', `${target.pathname.split('/').at(-1)}${target.search}${target.hash}`);
+  }
 }
 function renderCategories() {
   if (!$('categories')) return;
@@ -114,10 +148,13 @@ function renderCards() {
   const style = catalog.styles.find(item => item.id === state.style);
   $('compatibility').textContent = `${style.name} · ${state.canvas === 'landscape' ? '16:9 横屏' : '9:16 竖屏'}：${count} 个可选场景配方。${count === 1 ? '当前只有基础语义配方支持此组合；其他镜头仍可查看参考效果。' : '可自由搭配当前风格；辅助动作与转场请在独立分类中查看。'}`;
   const items = recipes.filter(item => (category === '全部镜头' ? item.kind === 'scene' : item.category === category)
+    && recipeHasTask(item, expressionTask)
     && (!query || `${item.name} ${item.id} ${item.description} ${item.purpose ?? ''} ${item.styles.join(' ')}`.toLowerCase().includes(query))
     && (!$('compatible-only').checked || (item.kind === 'scene' ? compatible(item, state.style, state.canvas) : item.styles.includes(state.style) && item.orientations.includes(state.canvas))));
   if (category === '全部镜头') {
-    const rank = id => featuredRecipes.includes(id) ? featuredRecipes.indexOf(id) : featuredRecipes.length;
+    const direction = state.style === 'retro-zine' ? 'editorial-explainer' : state.style === 'signal-noir' ? 'mechanism-map' : state.style === 'studio-frame' ? 'product-showcase' : null;
+    const order = direction ? [direction, ...featuredRecipes] : featuredRecipes;
+    const rank = id => order.includes(id) ? order.indexOf(id) : order.length;
     items.sort((a, b) => Number(compatible(b, state.style, state.canvas)) - Number(compatible(a, state.style, state.canvas)) || rank(a.id) - rank(b.id));
   }
   const key = JSON.stringify([state.style, state.canvas, state.selected, items.map(item => item.id)]);
@@ -318,13 +355,16 @@ async function start() {
     state = normalizeSelection(catalog, {...state, font, fontMode: 'manual'}); renderSelection();
   });
   $('font-recommended')?.addEventListener('click', () => {state = normalizeSelection(catalog, {...state, fontMode: 'recommended'}); renderSelection();});
-  renderStyles(); renderCategories(); renderCards(); renderSelection();
+  renderScenarios(); renderStyles(); renderExpressionTasks(); renderCategories(); renderCards(); renderSelection();
+  updateBrowseUrl();
   enhanceDropdowns();
   if (window.location.hash === '#search') $('search')?.focus();
   document.addEventListener('click', event => {
     if (!(event.target instanceof window.Element)) return;
     const element = event.target.closest('button');
     if (!element) return;
+    if (element.dataset.scenario) {scenario = element.dataset.scenario === 'all' ? '' : element.dataset.scenario; renderScenarios(); renderStyles(); updateBrowseUrl(); document.querySelector(`[data-scenario="${scenario || 'all'}"]`)?.focus();}
+    if (element.dataset.expressionTask) {expressionTask = element.dataset.expressionTask; renderExpressionTasks(); renderCards(); updateBrowseUrl(); document.querySelector(`[data-expression-task="${expressionTask}"]`)?.focus();}
     if (element.dataset.style) switchCombination({style: element.dataset.style});
     if (element.dataset.stylePreview) showDetail(catalog.styles.find(item => item.id === element.dataset.stylePreview), true);
     if (element.dataset.category) {category = element.dataset.category; renderCategories(); renderCards();}

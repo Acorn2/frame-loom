@@ -14,7 +14,7 @@ const contrast=(a,b)=>{const x=luminance(a),y=luminance(b);return(Math.max(x,y)+
 describe('independent landscape style and shot combinations',()=>{
  const catalog=buildLibraryCatalog();
  it.each(libraryStyleIds)('%s accepts every scene, hosted action, transition and variant fixture',style=>{
-  const fixtures=libraryPreviewFixtures().filter(f=>f.styleId===style);expect(fixtures).toHaveLength(style === 'whiteboard' ? 11 : ['annotated-reasoning', 'editorial-typography'].includes(style) ? 2 : 63);
+  const fixtures=libraryPreviewFixtures().filter(f=>f.styleId===style);expect(fixtures).toHaveLength(style === 'whiteboard' ? 11 : ['annotated-reasoning', 'editorial-typography'].includes(style) ? 2 : ['retro-zine', 'signal-noir', 'studio-frame'].includes(style) ? 64 : 63);
 
   for(const fixture of fixtures){
    const storyboardPath=path.resolve(fixture.source),board=JSON.parse(fs.readFileSync(storyboardPath));board.style.id=style;delete board.videoTemplate;

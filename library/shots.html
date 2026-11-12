@@ -13,14 +13,14 @@
 <body data-page="shots">
   <a class="skip" href="#main">跳到主要内容</a>
   <header class="masthead">
-    <a class="brand" href="index.html" aria-label="FrameLoom 视频风格"><img class="brand-mark" src="brand/logo.svg" width="40" height="40" alt=""><span>FrameLoom<small>AI 文档转视频</small></span></a>
-    <nav class="page-nav" aria-label="配方库导航"><a href="index.html"><span class="nav-step">01</span>视频风格</a><a href="shots.html" aria-current="page"><span class="nav-step">02</span>镜头配方</a><a href="selection.html"><span class="nav-step">03</span>制作设置<span id="nav-count" class="nav-count">0</span></a></nav>
+    <a class="brand" href="index.html" aria-label="FrameLoom 视频风格"><img class="brand-mark" src="brand/logo.svg" width="40" height="40" alt=""><span>FrameLoom<small>本地视频工作流</small></span></a>
+    <nav class="page-nav" aria-label="配方库导航"><a href="index.html"><span class="nav-step">01</span>用途与画法</a><a href="shots.html" aria-current="page"><span class="nav-step">02</span>镜头配方</a><a href="selection.html"><span class="nav-step">03</span>制作设置<span id="nav-count" class="nav-count">0</span></a></nav>
     <span class="header-note">看效果 · 选组合 · 本地制作</span>
   </header>
   <main id="main" data-screen-label="镜头配方">
     <section class="page-heading"><div><p class="eyebrow">02 / SHOT RECIPES</p><h1>挑选内容的表达方式</h1><p class="page-description">看真实样片，勾选适合内容的镜头。同一配方可以在视频中重复使用。</p></div><div class="canvas-label"><label for="canvas">制作画幅</label><select id="canvas"><option value="landscape">16:9 横屏</option><option value="portrait">9:16 竖屏</option></select></div></section>
     <div class="catalog-layout">
-      <aside class="filters"><div class="current-style"><span class="meta-label">当前风格</span><strong id="current-style"></strong><p id="current-font" class="section-note"></p><a href="index.html">更换风格 <span aria-hidden="true">↗</span></a></div><div class="filter-heading">镜头分类 <span id="catalog-count"></span></div><nav id="categories" aria-label="镜头分类"></nav><p class="aside-note">辅助动作与换章转场可单独查看，不计入镜头选择。</p></aside>
+      <aside class="filters"><div class="current-style"><span class="meta-label">当前风格</span><strong id="current-style"></strong><p id="current-font" class="section-note"></p><a href="index.html">更换风格 <span aria-hidden="true">↗</span></a></div><div class="filter-heading">镜头分类 <span id="catalog-count"></span></div><div class="filter-heading">按表达任务</div><div id="expression-tasks" class="expression-tasks" aria-label="按表达任务筛选"></div><nav id="categories" aria-label="镜头分类"></nav><p class="aside-note">辅助动作与换章转场可单独查看，不计入镜头选择。</p></aside>
       <section class="catalog-main" aria-label="镜头配方">
         <div class="search-row"><label class="search-box"><span class="search-icon" aria-hidden="true"></span><input id="search" type="search" placeholder="搜索名称、用途或配方 ID" aria-label="搜索镜头"><kbd>⌘ K</kbd></label><label class="check-filter"><input id="compatible-only" type="checkbox" checked>只看兼容</label></div>
         <p id="compatibility" class="compatibility" role="status"></p><p class="section-note">镜头样片使用各自的样例字体。所选全片字体用于实际制作，组合样片可在风格页查看。</p><div id="cards" class="cards"></div><div id="empty" class="empty" hidden><strong>没有找到匹配的镜头</strong><p>试试其他关键词，或关闭“只看兼容”。</p></div>

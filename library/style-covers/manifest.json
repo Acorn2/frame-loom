@@ -3,8 +3,8 @@
   "covers": [
     {
       "id": "retro-zine",
-      "source": "examples/template-families/previews/retro-zine-semantic.mp4",
-      "sourceSha256": "a92d5a8d09fa423c6d6b4b76ff4fd2c18f861947abeccfaff52b785e6cbf3ac9",
+      "source": "examples/scenario-directions/previews/editorial.mp4",
+      "sourceSha256": "7d4cd10449774f7fc58d834529295438ff46572148673a7ef28448d42d4f6f98",
       "timeSec": 4.5,
       "width": 960,
       "height": 540
@@ -35,16 +35,16 @@
     },
     {
       "id": "signal-noir",
-      "source": "examples/template-families/previews/signal-noir-semantic.mp4",
-      "sourceSha256": "38bc0716e1d6d74b6e11011590e58df6cacb5bfb2266ce58221cea73d0b92dc9",
+      "source": "examples/scenario-directions/previews/mechanism.mp4",
+      "sourceSha256": "e37ff04914c1461653264e164034887ff12cf3ee7608eb7c3673dcee211fa03f",
       "timeSec": 4.5,
       "width": 960,
       "height": 540
     },
     {
       "id": "studio-frame",
-      "source": "examples/template-families/previews/studio-frame-semantic.mp4",
-      "sourceSha256": "6919b87a97f7978ca066927531f5a0ba17d8cb76bf8366a69a461d958750de52",
+      "source": "examples/scenario-directions/previews/product.mp4",
+      "sourceSha256": "e8ca37beadf5b8e030ae59dc31deed7799169b7302ab60638e302855c4bf8447",
       "timeSec": 4.5,
       "width": 960,
       "height": 540

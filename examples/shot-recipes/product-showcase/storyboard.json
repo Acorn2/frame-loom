@@ -1,0 +1,984 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "studio-frame",
+    "version": "1.0.0"
+  },
+  "font": {
+    "id": "source-han-sans-sc",
+    "version": "2.005"
+  },
+  "layoutPolicy": "content-first-v1",
+  "shotRecipes": [
+    {
+      "id": "product-showcase",
+      "version": "1.2.0"
+    }
+  ],
+  "palette": {
+    "schemaVersion": "1.1",
+    "source": "custom",
+    "referenceAssets": [],
+    "colors": {
+      "accent": "#2855d9",
+      "accentAlt": "#2855d9",
+      "lightBackground": "#f5f7fa",
+      "darkBackground": "#151a1f",
+      "surface": "#ffffff",
+      "ink": "#202835",
+      "muted": "#526478",
+      "captionInk": "#334155"
+    }
+  },
+  "project": {
+    "title": "产品实演：从选型到制作",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 40.0,
+    "durationFrames": 1200,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "opening",
+      "template": "statement",
+      "purpose": "process",
+      "title": "先看见\n再决定",
+      "narration": "先看见，再决定",
+      "durationFrames": 210,
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "先看见\n再决定"
+        },
+        {
+          "id": "kicker",
+          "type": "node",
+          "label": "PRODUCT / FRAMELOOM"
+        },
+        {
+          "id": "lead",
+          "type": "node",
+          "label": "从公开配方库开始"
+        },
+        {
+          "id": "note",
+          "type": "node",
+          "label": "选画法、定字体\n把组合交给本地 Agent"
+        },
+        {
+          "id": "screen",
+          "type": "screenshot",
+          "label": "真实配方库 · 捕获时版本",
+          "asset": "assets/styles-overview.png",
+          "fit": "contain"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "title-reveal",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "kicker-reveal",
+          "target": "kicker",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "lead-reveal",
+          "target": "lead",
+          "action": "reveal",
+          "start": 10,
+          "duration": 18
+        },
+        {
+          "id": "note-reveal",
+          "target": "note",
+          "action": "reveal",
+          "start": 30,
+          "duration": 18
+        },
+        {
+          "id": "screen-reveal",
+          "target": "screen",
+          "action": "reveal",
+          "start": 18,
+          "duration": 18
+        }
+      ],
+      "captions": [],
+      "visual": {
+        "kind": "media",
+        "representation": "source-media",
+        "source": "source.md",
+        "explanation": "真实网页截图状态演示，不是在线编辑器或录屏速度演示"
+      },
+      "shot": {
+        "id": "product-showcase",
+        "version": "1.2.0",
+        "composition": "hero",
+        "slots": {
+          "items": [
+            "title",
+            "kicker",
+            "lead",
+            "note",
+            "screen"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 120,
+            "y": 300,
+            "width": 560,
+            "height": 275,
+            "fontSize": 98,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          },
+          "kicker": {
+            "kind": "text",
+            "x": 120,
+            "y": 96,
+            "width": 1000,
+            "height": 32,
+            "fontSize": 21,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "lead": {
+            "kind": "text",
+            "x": 120,
+            "y": 210,
+            "width": 560,
+            "height": 45,
+            "fontSize": 28,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "note": {
+            "kind": "text",
+            "x": 120,
+            "y": 650,
+            "width": 570,
+            "height": 110,
+            "fontSize": 29,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "screen": {
+            "kind": "media",
+            "x": 740,
+            "y": 180,
+            "width": 1040,
+            "height": 670,
+            "fontSize": 21,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "ink",
+            "align": "left"
+          }
+        },
+        "focus": []
+      },
+      "primaryClaim": "先看见，再决定"
+    },
+    {
+      "id": "style",
+      "template": "statement",
+      "purpose": "process",
+      "title": "看清画法，再选风格",
+      "narration": "看清画法，再选风格",
+      "durationFrames": 270,
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "看清画法，再选风格"
+        },
+        {
+          "id": "kicker",
+          "type": "node",
+          "label": "PRODUCT / FRAMELOOM"
+        },
+        {
+          "id": "screen",
+          "type": "screenshot",
+          "label": "真实界面 · 编辑式排印已选",
+          "asset": "assets/styles-selected.png",
+          "fit": "contain"
+        },
+        {
+          "id": "benefit",
+          "type": "node",
+          "label": "画面怎么展开\n比名字更直观"
+        },
+        {
+          "id": "note",
+          "type": "node",
+          "label": "从实际样片观察文字、关系和动效\n这里选择「编辑式排印」"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "title-reveal",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "kicker-reveal",
+          "target": "kicker",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "screen-reveal",
+          "target": "screen",
+          "action": "reveal",
+          "start": 15,
+          "duration": 18
+        },
+        {
+          "id": "benefit-reveal",
+          "target": "benefit",
+          "action": "reveal",
+          "start": 142,
+          "duration": 18
+        },
+        {
+          "id": "note-reveal",
+          "target": "note",
+          "action": "reveal",
+          "start": 165,
+          "duration": 18
+        },
+        {
+          "id": "camera",
+          "target": "screen",
+          "action": "focus",
+          "start": 70,
+          "duration": 62
+        }
+      ],
+      "captions": [],
+      "visual": {
+        "kind": "media",
+        "representation": "source-media",
+        "source": "source.md",
+        "explanation": "真实网页截图状态演示，不是在线编辑器或录屏速度演示"
+      },
+      "shot": {
+        "id": "product-showcase",
+        "version": "1.2.0",
+        "composition": "focus",
+        "slots": {
+          "items": [
+            "title",
+            "kicker",
+            "screen",
+            "benefit",
+            "note"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 120,
+            "y": 172,
+            "width": 800,
+            "height": 110,
+            "fontSize": 62,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          },
+          "kicker": {
+            "kind": "text",
+            "x": 120,
+            "y": 96,
+            "width": 1000,
+            "height": 32,
+            "fontSize": 21,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "screen": {
+            "kind": "media",
+            "x": 120,
+            "y": 322,
+            "width": 1660,
+            "height": 528,
+            "fontSize": 21,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "ink",
+            "align": "left",
+            "crop": {
+              "x": 0.01815541031227306,
+              "y": 0.39460020768431986,
+              "width": 0.9615105301379812,
+              "height": 0.46417445482866043
+            }
+          },
+          "benefit": {
+            "kind": "text",
+            "x": 120,
+            "y": 360,
+            "width": 760,
+            "height": 125,
+            "fontSize": 43,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          },
+          "note": {
+            "kind": "text",
+            "x": 120,
+            "y": 565,
+            "width": 760,
+            "height": 105,
+            "fontSize": 28,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          }
+        },
+        "focus": [
+          {
+            "trigger": "camera",
+            "target": "screen",
+            "box": {
+              "x": 1040,
+              "y": 145,
+              "width": 740,
+              "height": 705
+            },
+            "crop": {
+              "x": 0.6652142338416849,
+              "y": 0.39771547248182765,
+              "width": 0.3129992737835875,
+              "height": 0.4569055036344756
+            },
+            "verticalDelay": 0.55
+          }
+        ]
+      },
+      "primaryClaim": "看清画法，再选风格"
+    },
+    {
+      "id": "font",
+      "template": "statement",
+      "purpose": "process",
+      "title": "一个选择，贯穿全片",
+      "narration": "一个选择，贯穿全片",
+      "durationFrames": 270,
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "一个选择，贯穿全片"
+        },
+        {
+          "id": "kicker",
+          "type": "node",
+          "label": "PRODUCT / FRAMELOOM"
+        },
+        {
+          "id": "sub",
+          "type": "node",
+          "label": "风格决定画法，字体独立选择"
+        },
+        {
+          "id": "screen",
+          "type": "screenshot",
+          "label": "真实界面 · 字体选择",
+          "asset": "assets/fonts.png",
+          "fit": "contain"
+        },
+        {
+          "id": "font-name",
+          "type": "node",
+          "label": "思源黑体"
+        },
+        {
+          "id": "font-use",
+          "type": "node",
+          "label": "标题、正文、图解\n使用同一个字体家族"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "title-reveal",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "kicker-reveal",
+          "target": "kicker",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "sub-reveal",
+          "target": "sub",
+          "action": "reveal",
+          "start": 10,
+          "duration": 18
+        },
+        {
+          "id": "screen-reveal",
+          "target": "screen",
+          "action": "reveal",
+          "start": 18,
+          "duration": 18
+        },
+        {
+          "id": "font-name-reveal",
+          "target": "font-name",
+          "action": "reveal",
+          "start": 134,
+          "duration": 18
+        },
+        {
+          "id": "font-use-reveal",
+          "target": "font-use",
+          "action": "reveal",
+          "start": 155,
+          "duration": 18
+        },
+        {
+          "id": "camera",
+          "target": "screen",
+          "action": "focus",
+          "start": 68,
+          "duration": 58
+        }
+      ],
+      "captions": [],
+      "visual": {
+        "kind": "media",
+        "representation": "source-media",
+        "source": "source.md",
+        "explanation": "真实网页截图状态演示，不是在线编辑器或录屏速度演示"
+      },
+      "shot": {
+        "id": "product-showcase",
+        "version": "1.2.0",
+        "composition": "detail",
+        "slots": {
+          "items": [
+            "title",
+            "kicker",
+            "sub",
+            "screen",
+            "font-name",
+            "font-use"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 120,
+            "y": 165,
+            "width": 1640,
+            "height": 105,
+            "fontSize": 72,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          },
+          "kicker": {
+            "kind": "text",
+            "x": 120,
+            "y": 96,
+            "width": 1000,
+            "height": 32,
+            "fontSize": 21,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "sub": {
+            "kind": "text",
+            "x": 120,
+            "y": 280,
+            "width": 1600,
+            "height": 45,
+            "fontSize": 28,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "screen": {
+            "kind": "media",
+            "x": 120,
+            "y": 390,
+            "width": 1660,
+            "height": 460,
+            "fontSize": 21,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "ink",
+            "align": "left",
+            "crop": {
+              "x": 0.02178649237472767,
+              "y": 0.2585669781931464,
+              "width": 0.9564270152505446,
+              "height": 0.4402907580477674
+            }
+          },
+          "font-name": {
+            "kind": "text",
+            "x": 1230,
+            "y": 440,
+            "width": 540,
+            "height": 66,
+            "fontSize": 39,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          },
+          "font-use": {
+            "kind": "text",
+            "x": 1230,
+            "y": 540,
+            "width": 540,
+            "height": 110,
+            "fontSize": 28,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          }
+        },
+        "focus": [
+          {
+            "trigger": "camera",
+            "target": "screen",
+            "box": {
+              "x": 120,
+              "y": 390,
+              "width": 1025,
+              "height": 440
+            },
+            "crop": {
+              "x": 0.023238925199709513,
+              "y": 0.3644859813084112,
+              "width": 0.3129992737835875,
+              "height": 0.17653167185877466
+            },
+            "verticalDelay": 0
+          }
+        ]
+      },
+      "primaryClaim": "一个选择，贯穿全片"
+    },
+    {
+      "id": "handoff",
+      "template": "statement",
+      "purpose": "process",
+      "title": "带着选择\n回到本地制作",
+      "narration": "带着选择，回到本地制作",
+      "durationFrames": 270,
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "带着选择\n回到本地制作"
+        },
+        {
+          "id": "kicker",
+          "type": "node",
+          "label": "PRODUCT / FRAMELOOM"
+        },
+        {
+          "id": "instruction",
+          "type": "node",
+          "label": "复制制作指令\n在 Agent 中附上文档与素材"
+        },
+        {
+          "id": "boundary",
+          "type": "node",
+          "label": "网页负责选型，制作在本地进行"
+        },
+        {
+          "id": "screen",
+          "type": "screenshot",
+          "label": "真实界面 · 制作指令入口",
+          "asset": "assets/instruction.png",
+          "fit": "contain"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "title-reveal",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "kicker-reveal",
+          "target": "kicker",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "instruction-reveal",
+          "target": "instruction",
+          "action": "reveal",
+          "start": 20,
+          "duration": 18
+        },
+        {
+          "id": "boundary-reveal",
+          "target": "boundary",
+          "action": "reveal",
+          "start": 40,
+          "duration": 18
+        },
+        {
+          "id": "screen-reveal",
+          "target": "screen",
+          "action": "reveal",
+          "start": 18,
+          "duration": 18
+        }
+      ],
+      "captions": [],
+      "visual": {
+        "kind": "media",
+        "representation": "source-media",
+        "source": "source.md",
+        "explanation": "真实网页截图状态演示，不是在线编辑器或录屏速度演示"
+      },
+      "shot": {
+        "id": "product-showcase",
+        "version": "1.2.0",
+        "composition": "handoff",
+        "slots": {
+          "items": [
+            "title",
+            "kicker",
+            "instruction",
+            "boundary",
+            "screen"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 120,
+            "y": 220,
+            "width": 690,
+            "height": 245,
+            "fontSize": 80,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          },
+          "kicker": {
+            "kind": "text",
+            "x": 120,
+            "y": 96,
+            "width": 1000,
+            "height": 32,
+            "fontSize": 21,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "instruction": {
+            "kind": "text",
+            "x": 120,
+            "y": 530,
+            "width": 655,
+            "height": 110,
+            "fontSize": 29,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "boundary": {
+            "kind": "text",
+            "x": 120,
+            "y": 760,
+            "width": 680,
+            "height": 50,
+            "fontSize": 26,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "accentAlt",
+            "align": "left"
+          },
+          "screen": {
+            "kind": "media",
+            "x": 855,
+            "y": 200,
+            "width": 925,
+            "height": 650,
+            "fontSize": 21,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "ink",
+            "align": "left",
+            "crop": {
+              "x": 0.2701525054466231,
+              "y": 0.3655244029075805,
+              "width": 0.7029774872912128,
+              "height": 0.6344755970924195
+            }
+          }
+        },
+        "focus": []
+      },
+      "primaryClaim": "带着选择，回到本地制作"
+    },
+    {
+      "id": "summary",
+      "template": "statement",
+      "purpose": "process",
+      "title": "网页选型。本地制作。",
+      "narration": "网页选型。本地制作。",
+      "durationFrames": 180,
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "网页选型。本地制作。"
+        },
+        {
+          "id": "kicker",
+          "type": "node",
+          "label": "PRODUCT / FRAMELOOM"
+        },
+        {
+          "id": "sub",
+          "type": "node",
+          "label": "画法、字体和交付用途，随同一条指令交给 Agent"
+        },
+        {
+          "id": "proof0",
+          "type": "screenshot",
+          "label": "真实界面 · 编辑式排印已选",
+          "asset": "assets/styles-selected.png",
+          "fit": "contain"
+        },
+        {
+          "id": "proof1",
+          "type": "screenshot",
+          "label": "真实界面 · 字体选择",
+          "asset": "assets/fonts.png",
+          "fit": "contain"
+        },
+        {
+          "id": "proof2",
+          "type": "screenshot",
+          "label": "真实界面 · 制作指令入口",
+          "asset": "assets/instruction.png",
+          "fit": "contain"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "title-reveal",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "kicker-reveal",
+          "target": "kicker",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "sub-reveal",
+          "target": "sub",
+          "action": "reveal",
+          "start": 10,
+          "duration": 18
+        },
+        {
+          "id": "proof0-reveal",
+          "target": "proof0",
+          "action": "reveal",
+          "start": 30,
+          "duration": 18
+        },
+        {
+          "id": "proof1-reveal",
+          "target": "proof1",
+          "action": "reveal",
+          "start": 42,
+          "duration": 18
+        },
+        {
+          "id": "proof2-reveal",
+          "target": "proof2",
+          "action": "reveal",
+          "start": 54,
+          "duration": 18
+        }
+      ],
+      "captions": [],
+      "visual": {
+        "kind": "media",
+        "representation": "source-media",
+        "source": "source.md",
+        "explanation": "真实网页截图状态演示，不是在线编辑器或录屏速度演示"
+      },
+      "shot": {
+        "id": "product-showcase",
+        "version": "1.2.0",
+        "composition": "summary",
+        "slots": {
+          "items": [
+            "title",
+            "kicker",
+            "sub",
+            "proof0",
+            "proof1",
+            "proof2"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 120,
+            "y": 175,
+            "width": 1650,
+            "height": 145,
+            "fontSize": 98,
+            "bodySize": 24,
+            "weight": "bold",
+            "color": "ink",
+            "align": "left"
+          },
+          "kicker": {
+            "kind": "text",
+            "x": 120,
+            "y": 96,
+            "width": 1000,
+            "height": 32,
+            "fontSize": 21,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "sub": {
+            "kind": "text",
+            "x": 120,
+            "y": 350,
+            "width": 1650,
+            "height": 60,
+            "fontSize": 28,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "muted",
+            "align": "left"
+          },
+          "proof0": {
+            "kind": "media",
+            "x": 120,
+            "y": 490,
+            "width": 530,
+            "height": 360,
+            "fontSize": 21,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "ink",
+            "align": "left",
+            "crop": {
+              "x": 0.664488017429194,
+              "y": 0.39667705088265837,
+              "width": 0.3159041394335512,
+              "height": 0.4569055036344756
+            }
+          },
+          "proof1": {
+            "kind": "media",
+            "x": 690,
+            "y": 490,
+            "width": 530,
+            "height": 360,
+            "fontSize": 21,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "ink",
+            "align": "left",
+            "crop": {
+              "x": 0.023238925199709513,
+              "y": 0.3644859813084112,
+              "width": 0.31227305737109656,
+              "height": 0.17653167185877466
+            }
+          },
+          "proof2": {
+            "kind": "media",
+            "x": 1260,
+            "y": 490,
+            "width": 530,
+            "height": 360,
+            "fontSize": 21,
+            "bodySize": 24,
+            "weight": "regular",
+            "color": "ink",
+            "align": "left",
+            "crop": {
+              "x": 0.2839506172839506,
+              "y": 0.3956386292834891,
+              "width": 0.673202614379085,
+              "height": 0.6043613707165109
+            }
+          }
+        },
+        "focus": []
+      },
+      "primaryClaim": "网页选型。本地制作。"
+    }
+  ]
+}

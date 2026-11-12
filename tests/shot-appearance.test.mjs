@@ -21,7 +21,7 @@ describe('recipe visual treatments',()=>{
   const base=getDefaultStyleTokens();const before=JSON.stringify(base);const backgrounds=new Set();let dark=0,light=0;
   for(const entry of SHOT_CATALOG){
    const board=fixture(entry.id);const source=JSON.stringify(board);const appearance=recipeAppearance(board.scenes[0].shot,base);
-   if (entry.id.startsWith('whiteboard-') || entry.id.startsWith('illustrated-') || ['annotated-manuscript', 'editorial-flow'].includes(entry.id)) {expect(appearance.tokens).toBe(base);expect(appearance.background).toBe(base.background);expect(JSON.stringify(board)).toBe(source);continue;}
+   if (entry.id.startsWith('whiteboard-') || entry.id.startsWith('illustrated-') || ['annotated-manuscript', 'editorial-flow', 'editorial-explainer', 'mechanism-map', 'product-showcase'].includes(entry.id)) {expect(appearance.tokens).toBe(base);expect(appearance.background).toBe(base.background);expect(JSON.stringify(board)).toBe(source);continue;}
    expect(contrast(appearance.tokens.ink,appearance.tokens.paper)).toBeGreaterThanOrEqual(7);
    expect(contrast(appearance.tokens.muted,appearance.tokens.paper)).toBeGreaterThanOrEqual(4.5);
    expect(contrast(captionTextStyle(appearance.tokens).color,appearance.tokens.background)).toBeGreaterThanOrEqual(4.5);

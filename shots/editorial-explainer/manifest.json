@@ -1,0 +1,78 @@
+{
+  "id": "editorial-explainer",
+  "version": "1.2.0",
+  "status": "experimental",
+  "registered": true,
+  "visualKinds": [
+    "statement",
+    "compare",
+    "change",
+    "metric",
+    "sequence"
+  ],
+  "purpose": "墨白杂志：编辑讲解",
+  "inputModes": [
+    "document-only"
+  ],
+  "requiredAssets": [],
+  "styles": [
+    "retro-zine"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "slots": {
+    "items": {
+      "min": 2,
+      "max": 40,
+      "labelMax": 180
+    },
+    "metrics": {
+      "min": 0,
+      "max": 18,
+      "labelMax": 16
+    }
+  },
+  "timing": {
+    "actions": {
+      "reveal": {
+        "minSec": 0.2,
+        "maxSec": 8
+      },
+      "highlight": {
+        "minSec": 0.2,
+        "maxSec": 8
+      },
+      "focus": {
+        "minSec": 0.2,
+        "maxSec": 8
+      }
+    },
+    "readingSec": 1.2,
+    "titleHoldSec": 0.6,
+    "sourceHoldSec": 0.6,
+    "itemHoldSec": 0.12
+  },
+  "motion": {
+    "recipeOwned": [
+      "source-led-columns",
+      "value-derived-bars",
+      "explicit-domain-rescale"
+    ],
+    "styleOwned": [
+      "palette",
+      "font-family"
+    ],
+    "continuousDrift": false
+  },
+  "qa": [
+    "action-mid",
+    "action-complete",
+    "complete",
+    "before-handoff"
+  ],
+  "sound": {
+    "enabled": false,
+    "events": []
+  }
+}

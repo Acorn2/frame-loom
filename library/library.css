@@ -445,3 +445,25 @@ body[data-page="selection"] .export-main {display: grid; gap: 1rem; align-conten
   body[data-page="selection"] .combination-reference {display: none;}
 }
 @media (prefers-reduced-motion: reduce) {.advanced-settings>summary::before {transition: none;}}
+
+/* Task-first browsing; production selection remains in the existing controls. */
+.scenario-section {margin: 1.5rem 0 3rem;}
+.scenario-heading {display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .8rem;}
+.scenario-grid {display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem;}
+.scenario-card {min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: .75rem; background: var(--paper);}
+.scenario-card.active {border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent);}
+.scenario-poster {display: block; position: relative; width: 100%; padding: 0; border: 0; background: var(--bg); cursor: pointer; aspect-ratio: 16/9; overflow: hidden;}
+.scenario-poster img {width: 100%; height: 100%; object-fit: cover; display: block;}
+.scenario-poster span {position: absolute; right: .65rem; bottom: .65rem; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; background: #ffffffed; color: #202835; border: 1px solid #d8e0ea; border-radius: 50%;}
+.scenario-body {padding: 1rem;}
+.scenario-body h2 {font-size: 1.15rem; line-height: 1.45; margin: 0 0 .65rem;}
+.scenario-body p {font-size: .9375rem; line-height: 1.65; margin: 0 0 .9rem; color: var(--muted);}
+.scenario-body small {display: block; font-size: .875rem; line-height: 1.6; color: var(--muted);}
+.scenario-body .text-button {display: block; min-height: 2.75rem; margin-top: .65rem; text-align: left;}
+.style-variants {grid-column: 1/-1; padding: 1rem 0; border-top: 1px solid var(--line);}
+.style-variants>summary {cursor: pointer; font-weight: 650; min-height: 2.75rem; padding: .6rem 0;}
+.style-variants>.styles {margin-top: 1rem;}
+.expression-tasks {display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.2rem;}
+.expression-tasks .category {width: auto; min-height: 2.75rem; border: 1px solid var(--line); padding: .5rem .65rem;}
+@media (min-width: 640px) {.scenario-grid {grid-template-columns: repeat(2, minmax(0, 1fr));}}
+@media (min-width: 1280px) {.scenario-grid {grid-template-columns: repeat(4, minmax(0, 1fr));}}

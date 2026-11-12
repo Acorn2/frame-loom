@@ -101,7 +101,10 @@
               "illustrated-metric",
               "whiteboard-board",
               "annotated-manuscript",
-              "editorial-flow"
+              "editorial-flow",
+              "mechanism-map",
+              "product-showcase",
+              "editorial-explainer"
             ]
           },
           "version": {
@@ -205,7 +208,10 @@
               "illustrated-metric",
               "whiteboard-board",
               "annotated-manuscript",
-              "editorial-flow"
+              "editorial-flow",
+              "mechanism-map",
+              "product-showcase",
+              "editorial-explainer"
             ]
           }
         },

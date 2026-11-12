@@ -24,6 +24,9 @@ npm run init:project -- --slug my-topic --style retro-zine --shots paper-title,d
 
 | 配方 | 表达任务 | 输入边界 | 方法来源 |
 | --- | --- | --- | --- |
+| [editorial-explainer](editorial-explainer/recipe.md) | 来源分栏、证据并置与连续重标尺 | 明确来源与非负原始数值；retro-zine横屏 | 原创实现，方法参考PPT Master |
+| [mechanism-map](mechanism-map/recipe.md) | 分层、流程路径、时间轴与局部确认 | 有来源的关系与显式几何；signal-noir 横屏 | 原创实现，方法参考 PPT Master |
+| [product-showcase](product-showcase/recipe.md) | 真实界面总览、连续取景与状态证据 | 本地真实截图；studio-frame 横屏 | 原创实现，方法参考 PPT Master |
 | [annotated-manuscript](annotated-manuscript/recipe.md) | 正文落定后累积圈注、旁注和明确关系 | 唯一原文短语、显式布局、小幅辅助插画 | 原创批注推演 |
 | [editorial-flow](editorial-flow/recipe.md) | 同一批关键词在阶段间连续重排 | focus绑定完整位置表，关系绑定阶段 | 原创编辑式排印 |
 | [paper-title](paper-title/recipe.md) | 一句主张或章节路标按短语显影，强调一个关键词 | 1–4 个标题短语；可选单重点 | Shotcraft paper-title-card |
@@ -51,7 +54,7 @@ npm run init:project -- --slug my-topic --style retro-zine --shots paper-title,d
 | [network-expand](network-expand/recipe.md) | 一个主体向外展开真实关系 | 1 个主体、2–5 个对象及向外连接 | FrameLoom 原生语义组件 |
 | [semantic-default](semantic-default/recipe.md) | 顺序、变化、数据、来源图片或基础收尾 | 遵守既有语义契约 | FrameLoom 原生语义组件 |
 
-六套图文动效风格各支持43个横屏和4个竖屏场景配方；三套 AI 插画风格目前仅横屏，按[固定制作流程](../references/primary-style-production.md)编排。注册总数包含历史兼容能力，不代表任一风格可选择全部配方。`list:shots` 根据实际 manifest 筛选能力，不把参数读自 Style Pack 当作已经完成所有风格适配。所有配方目前为 experimental。
+六套图文动效风格共享43个横屏和4个竖屏场景配方，墨白杂志、机制图解、产品实演各另有1个专属横屏配方；三套 AI 插画风格目前仅横屏，按[固定制作流程](../references/primary-style-production.md)编排。注册总数包含历史兼容能力，不代表任一风格可选择全部配方。`list:shots` 根据实际 manifest 筛选能力，不把参数读自 Style Pack 当作已经完成所有风格适配。所有配方目前为 experimental。
 
 ## 编排契约
 
@@ -104,3 +107,12 @@ C09/C11/C12 分别对应 `overlap-line-carry` / `overlap-ink` / `overlap-barn-do
 ## 插画讲解镜头
 
 `illustrated-hero`、`illustrated-compare`、`illustrated-process`、`illustrated-explain`、`illustrated-breakdown` 与 `illustrated-metric` 共用独立主体素材与原生文字，支持 whiteboard 与历史 flat-explainer、paper-collage 的横屏兼容路径；新主风格初始化不选择这套六镜头集合。实际生图、原生图解与截图分别记录，不互相冒充；详见[插画生产](../references/illustrated-production.md)。
+
+## 按用途组织的正式配方
+
+- [机制图解](mechanism-map/recipe.md)：signal-noir ×16:9，分层、流程路径、时间轴和确认门。
+- [产品实演](product-showcase/recipe.md)：studio-frame ×16:9，真实本地截图与显式取景阶段。
+
+二者均为新增独立 ID，原六套共享的43项横屏配方和历史版本继续可用；不得将新能力视为所有风格或竖屏均已支持。生产与 QA 见[指南](../references/direction-recipes.md)。
+
+墨白杂志新增[编辑讲解](editorial-explainer/recipe.md)，使用来源、对照与数轴变化展开论证；旧墨白配方及其版本仍可选择，竖屏能力不变。

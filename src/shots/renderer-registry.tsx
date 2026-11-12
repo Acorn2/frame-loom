@@ -1,3 +1,7 @@
+import {EditorialScene} from './editorial/EditorialScene';
+import {isEditorialShot} from './editorial/schema';
+import {DirectionScene} from './directions/DirectionScene';
+import {isDirectionShot} from './directions/schema';
 import {TextLedScene} from './text-led/TextLedScene';
 import {isTextLedShot} from './text-led/schema';
 import {IllustratedScene} from './illustrated/IllustratedScene';
@@ -29,6 +33,9 @@ import {RelationShots} from './shortlist/RelationShots';
 
 const NativeShot = ({plan: _plan, ...props}: ShotRenderProps & {plan: ShotPlan}) => <SemanticScene {...props} />;
 export const SHOT_RENDERERS = {
+  'editorial-explainer': EditorialScene,
+  'mechanism-map': DirectionScene,
+  'product-showcase': DirectionScene,
   'annotated-manuscript': TextLedScene,
   'editorial-flow': TextLedScene,
   'whiteboard-board': WhiteboardBoardScene,
@@ -89,7 +96,7 @@ export function RenderShot(props: ShotRenderProps & {styleVersion: string}) {
   const shot = props.scene.shot;
   if (!shot) throw new Error('2.4 requires explicit shot');
   const plan = compileShot(props.scene, {...config, style: {id: props.tokens.id, version: props.styleVersion}, overlapOutFrames: props.overlapOutFrames});
-  const renderers: Partial<Record<ShotId, React.ComponentType<ShotRenderProps & {plan: ShotPlan}>>> = (isTextLedShot(shot) ? SHOT_RENDERERS : shot.version === '1.0.0' ? LEGACY_RENDERERS : shot.version === '1.1.0' ? PREVIOUS_RENDERERS : SHOT_RENDERERS);
+  const renderers: Partial<Record<ShotId, React.ComponentType<ShotRenderProps & {plan: ShotPlan}>>> = (isEditorialShot(shot) || isTextLedShot(shot) || isDirectionShot(shot) ? SHOT_RENDERERS : shot.version === '1.0.0' ? LEGACY_RENDERERS : shot.version === '1.1.0' ? PREVIOUS_RENDERERS : SHOT_RENDERERS);
   const Renderer = renderers[shot.id];
   if (!Renderer) throw new Error(`Missing exact renderer: ${shot.id}@${shot.version}`);
   const appearance = recipeAppearance(shot, props.tokens);

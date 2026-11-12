@@ -49,6 +49,7 @@ export function overlaps(a: Rect, b: Rect, tolerance = 2): boolean {
 }
 
 export function layoutSignature(scene: StoryboardScene): string {
+  if (scene.shot && 'composition' in scene.shot) return `${scene.shot.id}/${scene.shot.composition}`;
   const native = ['semantic-default', 'compare-reveal', 'network-expand'].includes(scene.shot?.id ?? '');
   const centeredTitle = ['blur-slide', 'split-text-stagger', 'brace-expand', 'lead-word-assemble'].includes(scene.shot?.id ?? '');
   return native ? `semantic/${scene.visual?.kind}/${scene.visual?.networkDirection ?? 'outward'}` : centeredTitle ? 'title/center' : scene.shot?.id ?? scene.template;

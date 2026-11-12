@@ -25,13 +25,20 @@ You install and invoke the workflow through a **Skill**. Remotion renders diagra
 
 ## See the results
 
-**Real case: a children's nature museum promotional document becomes a narrated whiteboard video.** One document supplies the content for illustrations, line-by-line writing, and a four-stage diagram; the silent 10-second GIF below previews the result.
+**Start with what you want to explain.** The editorial, mechanism and product samples use registered production recipes. All three are 40-second, 1080p silent videos for reviewing composition, information reveals and framing.
 
-![Actual FrameLoom case: open whiteboard, four life stages, nature illustrations, and a closing website address](examples/nature-museum-case/previews/highlights.gif)
+| Articles, arguments and data | Mechanisms, processes and systems | Product demos and tutorials |
+| --- | --- | --- |
+| [![Editorial Ink: source columns and data comparisons](examples/scenario-directions/previews/editorial.png)](examples/scenario-directions/previews/editorial.mp4) | [![Mechanism diagrams: feedback, scene targeting and local confirmation](examples/scenario-directions/previews/mechanism.png)](examples/scenario-directions/previews/mechanism.mp4) | [![Product showcase: real interfaces, font selection and agent handoff](examples/scenario-directions/previews/product.png)](examples/scenario-directions/previews/product.mp4) |
+| Read sources → compare evidence → rescale continuously → conclude | Engineering layers → overall path → timeline targeting → local confirmation | Watch samples → choose a font → copy instructions → produce locally |
+| [Watch the editorial sample](examples/scenario-directions/previews/editorial.mp4) | [Watch the mechanism sample](examples/scenario-directions/previews/mechanism.mp4) | [Watch the product sample](examples/scenario-directions/previews/product.mp4) |
 
-[Watch the full case · 68 seconds · with narration](examples/nature-museum-case/previews/nature-museum-narrated.mp4) · [Case and sources](examples/nature-museum-case/README.en.md) · [Diagram animation example](examples/template-families/README.md) · [Browse styles and shots online](https://acorn2.github.io/frame-loom/)
+More visual references:
 
-The full video has 7 whiteboard scenes, LXGW WenKai text, natural-speed Chinese narration, and `https://naturemuseum.top/` on the closing screen. The illustrations explain concepts; they are not product screenshots or actual 3D models. Automated QA passed; full playback and public asset-use terms still need review.
+- **Articles, arguments and script explainers:** [Editorial Typography · 18 seconds · silent](examples/template-families/previews/editorial-typography-text-led.mp4), showing words moving, regrouping and connecting.
+- **Knowledge and storytelling:** [Children’s nature museum case · 68 seconds · narrated](examples/nature-museum-case/previews/nature-museum-narrated.mp4), combining whiteboard writing, illustrations and a four-stage diagram. [Materials and sources](examples/nature-museum-case/README.en.md)
+
+[Browse by use case](https://acorn2.github.io/frame-loom/) · [Recipe samples and asset sources](examples/scenario-directions/README.md). Product screenshots retain the interface at capture time; navigation may change between versions. Mechanism timestamps and scene numbers, and the editorial sample’s values 90 and 100, are explicitly illustrative rather than observed business data. Public samples do not constitute delivery approval; finished work still requires full playback review. The live site receives these entry points when this version is published.
 
 ## What can you make?
 
@@ -131,42 +138,34 @@ Attach product screenshots if available, or provide an exact URL for the agent t
 
 ## Choose a style
 
-The nine video styles fall into two groups based on how their visuals are built:
+Start in the library with **product tutorials, mechanisms and processes, articles and arguments, or knowledge and stories**. Watch the corresponding sample, then choose the visual direction, font and production settings. Use-case filters only affect browsing and preserve production choices.
 
-- **AI illustration styles**: Whiteboard (`whiteboard`), Annotated Reasoning (`annotated-reasoning`), and Editorial Typography (`editorial-typography`). For document-only production, the agent generates illustrations to support text and diagrams. Supplied screenshots are used directly without automatic image generation. Each style has a [fixed built-in shot workflow (Chinese)](references/primary-style-production.md).
-- **Text and graphics motion styles**: Editorial Ink, Signal, Sketch Notes, Swiss Blue, Blueprint, and Product Frame. They compose typography, shapes, charts, and interface assets with shot animation, and can also use real images and screenshots. The agent can recommend shots, or you can restrict the selection manually.
+The original six text and graphics styles form three main directions:
 
-These groups describe visual construction; explainers, product introductions, tutorials, and stories are content uses.
-
-### Three AI illustration styles
-
-The three AI illustration samples share the original Chinese copy “好问题，从观察开始” (“Good questions begin with observation”). Each is an 18-second landscape silent preview. These frames come from the actual videos; click a cover or “Watch sample” to see the animation. Text and diagrams lead, with illustrations supporting the explanation.
-
-| Whiteboard | Annotated Reasoning | Editorial Typography |
+| Direction | Base style and new recipe | Suitable materials |
 | --- | --- | --- |
-| [![Whiteboard sample: good questions begin with observation](examples/template-families/previews/whiteboard-original.png)](examples/template-families/previews/whiteboard-original.mp4) | [![Annotated Reasoning sample: good questions begin with observation](examples/template-families/previews/annotated-reasoning-text-led.png)](examples/template-families/previews/annotated-reasoning-text-led.mp4) | [![Editorial Typography sample: good questions begin with observation](examples/template-families/previews/editorial-typography-text-led.png)](examples/template-families/previews/editorial-typography-text-led.mp4) |
-| Line-by-line writing · synchronized pencil · Xiaolai | Phrase annotations · cumulative relations · Source Han Serif | Persistent word rearrangement · unfolding relations · Source Han Sans |
-| [Watch sample](examples/template-families/previews/whiteboard-original.mp4) | [Watch sample](examples/template-families/previews/annotated-reasoning-text-led.mp4) | [Watch sample](examples/template-families/previews/editorial-typography-text-led.mp4) |
+| Editorial explainers | Editorial Ink `retro-zine`, with optional `editorial-explainer`; Swiss Blue is an additional appearance | Articles, arguments, reports and sourced data |
+| Mechanism diagrams | `signal-noir`, with optional `mechanism-map` | Supported processes, system structures and relationships |
+| Product showcase | `studio-frame`, with optional `product-showcase` | Product information, real screenshots and operation states |
 
-All three support landscape video and require no manual shot selection. Text, numbers, and relations lead in Annotated Reasoning and Editorial Typography; auxiliary illustration boxes occupy at most 8% of the canvas. Select a project-wide font independently from the [font catalog (Chinese)](fonts/README.md). See [illustration production](references/illustrated-production.md) and [text-led production](references/text-led-production.md) for detailed steps (Chinese).
+Signal `signal` provides a dark appearance, Swiss Blue `archive-grid` belongs to editorial explainers, and Sketch Notes `scatterbrain` belongs to drawn explainers. Find them under “More appearances and legacy styles.” **All previous IDs, recipe versions and projects remain supported. Existing storyboards are neither remapped nor migrated automatically.**
 
-### Six text and graphics motion styles
+Whiteboard, Annotated Reasoning and Editorial Typography remain available and are recommended by use case. Their document-only route requires actual illustration generation; the screenshot route uses real assets without automatic image generation. Their [fixed built-in workflows](references/primary-style-production.md) remain intact. Fonts are independent; Annotated Reasoning and Editorial Typography prioritize text and relationships, with auxiliary illustration bounds totaling at most 8% of the canvas.
 
-The six text and graphics motion styles below use the same storyboard for comparison. These frames show the completed diagrams; the links open actual silent samples.
+`editorial-explainer`, `mechanism-map` and `product-showcase` initially support 16:9 and their respective styles above. The original six retain their existing portrait capabilities; unsupported combinations fail instead of silently falling back. See the [recipe guide](references/direction-recipes.md) and [font catalog](fonts/README.md).
 
-| Editorial Ink | Signal | Sketch Notes |
-| --- | --- | --- |
-| ![Editorial Ink relationship diagram](examples/template-families/previews/retro-zine-semantic-process.png) | ![Signal relationship diagram](examples/template-families/previews/signal-semantic-process.png) | ![Sketch Notes relationship diagram](examples/template-families/previews/scatterbrain-semantic-process.png) |
-| [Watch sample](examples/template-families/previews/retro-zine-semantic.mp4) | [Watch sample](examples/template-families/previews/signal-semantic.mp4) | [Watch sample](examples/template-families/previews/scatterbrain-semantic.mp4) |
+For example, start a mechanism explainer in your agent:
 
-| Swiss Blue | Blueprint | Product Frame |
-| --- | --- | --- |
-| ![Swiss Blue relationship diagram](examples/template-families/previews/archive-grid-semantic-process.png) | ![Blueprint relationship diagram](examples/template-families/previews/signal-noir-semantic-process.png) | ![Product Frame relationship diagram](examples/template-families/previews/studio-frame-semantic-process.png) |
-| [Watch sample](examples/template-families/previews/archive-grid-semantic.mp4) | [Watch sample](examples/template-families/previews/signal-noir-semantic.mp4) | [Watch sample](examples/template-families/previews/studio-frame-semantic.mp4) |
+```text
+Use the frame-loom Skill to create a landscape silent mechanism preview from my document.
+Use signal-noir. Evaluate mechanism-map and other compatible recipes after reading the source;
+only show supported relationships. Continue in fast mode and provide a local review link,
+the check results and the next action.
+```
 
-Choose a style in the [online library](https://acorn2.github.io/frame-loom/), copy its production prompt, and give it to your local agent with a document. The agent recommends shots from the content by default; manual selection is available. The website displays public samples; production runs in your local project.
+For a product tutorial, use `studio-frame`, provide real screenshots or an exact URL, and ask the agent to evaluate `product-showcase`. The agent recommends recipes after reading the material; explicit manual pools remain strict allowlists.
 
-The current library includes a Chinese / English switch in the upper-right corner. Interface copy and production instructions follow the selected language while preserving production choices. Existing samples and original recipe documents remain in Chinese and are labeled accordingly. Interface language is independent of video content and font. English system labels have their own setting; see [common questions](#common-questions). The hosted site receives these changes when this version is published.
+Chinese and English library instructions preserve the same parameters. Switching interface language retains choices and does not authorize translating the script. Samples keep their original text and attribution. The website supports browsing, selection and instruction copying; video production runs locally.
 
 ## Continue from preview to finished video
 
@@ -196,7 +195,7 @@ For further adjustments, ask the agent to arrange captions and shots using [meas
 
 **Do I need voiceover? Are there charges?** The first silent preview needs no voiceover. Configure just one TTS provider if you want narration. Agent and TTS charges depend on their services; local rendering does not call a generative video API.
 
-**Does it support portrait video?** The six text and graphics motion styles support both 16:9 landscape and 9:16 portrait: each has 43 landscape scene recipes, while portrait supports semantic diagrams, type and filter, AI response generation, and unit-dot regrouping. The three AI illustration styles currently support landscape only and follow their built-in workflows. See the [shot catalog (Chinese)](shots/README.md) for compatibility.
+**Does it support portrait video?** The six text and graphics motion styles support both 16:9 landscape and 9:16 portrait. They share 43 landscape scene recipes; Editorial Ink, Mechanism diagrams and Product showcase each add one dedicated landscape recipe. Portrait supports semantic diagrams, type and filter, AI response generation, and unit-dot regrouping. The three AI illustration styles currently support landscape only and follow their built-in workflows. See the [shot catalog (Chinese)](shots/README.md) for compatibility.
 
 **Are documents uploaded to the library website?** The website does not receive documents. Rendering is local; your chosen agent or TTS service may receive source content or narration according to its configuration and terms.
 
@@ -215,7 +214,7 @@ For further adjustments, ask the agent to arrange captions and shots using [meas
 <details>
 <summary>Developers: current shot capabilities</summary>
 
-The runtime registers 52 scene recipes, 9 hosted actions, and 5 chapter transitions; 48/48 shortlist candidates are adapted. The registered total includes historical compatibility recipes; style support and fixed new-project workflows constrain actual selection. Scene recipes and presets remain experimental. The [capability manifest](src/renderer/capability-manifest.ts) defines supported combinations. See the [optional explainer preset](video-templates/retro-zine-explainer/guide.md) and [local library guide](library/README.md) for technical details (Chinese).
+The runtime registers 55 scene recipes, 9 hosted actions, and 5 chapter transitions; 48/48 shortlist candidates are adapted. The registered total includes historical compatibility recipes; style support and fixed new-project workflows constrain actual selection. Scene recipes and presets remain experimental. The [capability manifest](src/renderer/capability-manifest.ts) defines supported combinations. See the [optional explainer preset](video-templates/retro-zine-explainer/guide.md) and [local library guide](library/README.md) for technical details (Chinese).
 
 </details>
 
@@ -243,3 +242,5 @@ The portfolio also includes 读镜 / READFRAME, 亲友记 / KinKeep, 组局记 /
 - Bundled fonts retain original copyright notices and SIL OFL 1.1 licenses; see the [font directory](fonts/README.md).
 
 FrameLoom's own code is [MIT licensed](LICENSE). Remotion has a separate [official license](https://www.remotion.dev/license). Fonts, images, music, and TTS output follow their own terms; FrameLoom's MIT license does not replace them.
+
+PPT Master’s blueprint composition, artifact-first product presentation and semantic motion methods informed the three new recipes. FrameLoom’s code and graphics are original; no upstream media was copied. Source and MIT license links are retained in the [editorial-explainer](shots/editorial-explainer/provenance.json), [mechanism-map](shots/mechanism-map/provenance.json) and [product-showcase](shots/product-showcase/provenance.json) records.

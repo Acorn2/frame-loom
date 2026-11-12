@@ -18,9 +18,44 @@ import {publicTtsPresets} from '../scripts/lib/library-tts-catalog.mjs';
 import {fixedStyleRecipeIds, recipeLibraryItems} from '../library/style-policy.mjs';
 import {resolveLocale, translateUI} from '../library/i18n.mjs';
 import {localizeCatalog, recipes as englishRecipes} from '../library/catalog.en.mjs';
+import {scenarioItems, scenarioStyles, variantStyles, directionRecipeHint, recipeHasTask} from '../library/scenarios.mjs';
 
 const catalog = {...buildLibraryCatalog(), ttsPresets: publicTtsPresets()};
 const defaultProduction = {goal: 'narrated', audio: 'tts', ttsPreset: 'configured', review: false, colorMode: 'auto', brandName: ''};
+describe('scenario browsing and direction handoffs', () => {
+  it('filters by real tasks while preserving the selected legacy appearance and catalog', () => {
+    const before = JSON.stringify(catalog.styles);
+    expect(scenarioItems('zh').map(item => item.id)).toEqual(scenarioItems('en').map(item => item.id));
+    for (const task of scenarioItems('zh')) {
+      const recommended = scenarioStyles(catalog.styles, task.id, 'archive-grid');
+      expect(recommended.some(style => style.id === 'archive-grid')).toBe(true);
+      expect(recommended.some(style => style.id === task.sample)).toBe(true);
+    }
+    expect(scenarioStyles(catalog.styles, 'all', 'signal')).toHaveLength(9);
+    expect(variantStyles).toEqual(['signal', 'archive-grid', 'scatterbrain']);
+    expect(JSON.stringify(catalog.styles)).toBe(before);
+    expect(recipeHasTask(catalog.recipes.find(recipe => recipe.id === 'mechanism-map'), 'relations')).toBe(true);
+    expect(recipeHasTask(catalog.recipes.find(recipe => recipe.id === 'product-showcase'), 'evidence')).toBe(true);
+  });
+  it('recommends new recipes only in compatible automatic pools, equally in both languages', () => {
+    for (const [style, recipe] of [['retro-zine', 'editorial-explainer'], ['signal-noir', 'mechanism-map'], ['studio-frame', 'product-showcase']]) {
+      for (const locale of ['zh', 'en']) {
+        const state = {style, font: 'xiaolai', fontMode: 'manual', shotSelection: 'auto', production: {...defaultProduction, audio: 'external', review: true}};
+        const automatic = createExports(catalog, state, locale);
+        expect(automatic.prompt).toContain(directionRecipeHint(style, 'landscape', locale));
+        expect(automatic.prompt).toContain(recipe);
+        const manual = createExports(catalog, {...state, shotSelection: 'manual', selected: ['paper-title']}, locale);
+        expect(manual.prompt).not.toContain(recipe);
+        const selected = createExports(catalog, {...state, shotSelection: 'manual', selected: [recipe]}, locale);
+        expect(selected.prompt).toContain(recipe);
+        expect(selected.prompt).not.toContain('list:shots');
+        expect(directionRecipeHint(style, 'portrait', locale)).toBe('');
+      }
+      expect(() => createExports(catalog, {style, canvas: 'portrait', shotSelection: 'manual', selected: [recipe]})).toThrow();
+    }
+    expect(directionRecipeHint('whiteboard', 'landscape')).toBe('');
+  });
+});
 fs.mkdirSync(path.join(projectRoot, '.tmp'), {recursive: true});
 const directory = fs.mkdtempSync(path.join(projectRoot, '.tmp/library-test-'));
 const output = await buildLibrary(path.join(directory, 'site'));
@@ -38,6 +73,9 @@ describe('local library capabilities and selection', () => {
     expect(translateUI('播放样片', 'en')).toBe('Play sample');
     expect(translateUI('已选 3 个镜头', 'en')).toBe('3 shots selected');
     expect(translateUI('A private name: 标题', 'en')).toBe('A private name: 标题');
+    const sampleNote = fs.readFileSync(path.join(projectRoot, 'library/index.html'), 'utf8').match(/<details class="library-note">.*?<p>(.*?)<\/p>/u)[1];
+    expect(translateUI(sampleNote, 'en')).toContain('Editorial, mechanism and product samples');
+    expect(translateUI(sampleNote, 'en')).not.toMatch(/[\u4e00-\u9fff]/u);
   });
   it('localizes all display metadata without changing IDs, compatibility, fonts or source bytes', () => {
     const original = JSON.stringify(catalog);
@@ -174,7 +212,7 @@ describe('local library capabilities and selection', () => {
   it('hides fixed-style-only recipes without removing shared selectable or production capabilities', () => {
     const visible = recipeLibraryItems(catalog);
     const hiddenIds = ['annotated-manuscript', 'editorial-flow', 'whiteboard-board', 'illustrated-hero', 'illustrated-explain', 'illustrated-compare', 'illustrated-process', 'illustrated-breakdown', 'illustrated-metric'];
-    expect(visible.filter(recipe => recipe.kind === 'scene')).toHaveLength(43);
+    expect(visible.filter(recipe => recipe.kind === 'scene')).toHaveLength(46);
     for (const id of hiddenIds) {
       expect(catalog.recipes.some(recipe => recipe.id === id)).toBe(true);
       expect(visible.some(recipe => recipe.id === id)).toBe(false);
@@ -226,7 +264,7 @@ describe('local library capabilities and selection', () => {
   });
   it('joins actual catalog entries and public fixtures without counting hosted actions as scenes', () => {
     expect(catalog.styles).toHaveLength(9);
-    expect(catalog.recipes.filter(item => item.kind === 'scene')).toHaveLength(52);
+    expect(catalog.recipes.filter(item => item.kind === 'scene')).toHaveLength(55);
     expect(catalog.recipes.filter(item => item.kind === 'hosted-action')).toHaveLength(9);
     expect(catalog.recipes.filter(item => item.kind === 'cross-scene-transition')).toHaveLength(5);
     for (const fixture of libraryFixtures()) expect(fs.existsSync(path.join(projectRoot, fixture.source))).toBe(true);
@@ -239,7 +277,8 @@ describe('local library capabilities and selection', () => {
   it('filters all style and orientation combinations using manifest compatibility', () => {
     for (const style of catalog.styles) for (const canvas of ['landscape', 'portrait']) {
       const recipes = catalog.recipes.filter(item => compatible(item, style.id, canvas));
-      expect(recipes).toHaveLength(style.role === 'primary' ? canvas === 'landscape' ? style.id === 'whiteboard' ? 11 : 2 : 0 : canvas === 'landscape' ? 43 : 4);
+      const directionCount = ['retro-zine', 'signal-noir', 'studio-frame'].includes(style.id) ? 1 : 0;
+      expect(recipes).toHaveLength(style.role === 'primary' ? canvas === 'landscape' ? style.id === 'whiteboard' ? 11 : 2 : 0 : canvas === 'landscape' ? 43 + directionCount : 4);
       expect(recipes.some(item => item.id === 'semantic-default')).toBe(canvas === 'landscape' || style.role !== 'primary');
     }
   });
@@ -405,7 +444,7 @@ describe('read-only library serving', () => {
     expect(html).toContain('src="app.mjs"'); expect(html).toContain('href="library.css"');
     for (const name of ['index.html', 'shots.html', 'selection.html']) {
       const page = await (await fetch(new URL(name, pageUrl))).text();
-      expect(page).toContain('<small>AI 文档转视频</small>');
+      expect(page).toContain('<small>本地视频工作流</small>');
       expect(page).toContain('src="brand/logo.svg"');
       for (const [asset, type] of [['favicon.svg', 'image/svg+xml'], ['favicon.ico', 'image/vnd.microsoft.icon'], ['apple-touch-icon.png', 'image/png']]) {
         expect(page).toContain(`href="brand/${asset}"`);
@@ -589,10 +628,10 @@ describe('style card capability and preview evidence', () => {
   });
   it('counts compatible scenes for the current canvas, excluding auxiliary actions and chapter transitions', () => {
     const retro = catalog.styles.find(style => style.id === 'retro-zine');
-    expect(styleCardInfo(retro, catalog.recipes, 'landscape').count).toBe(43);
+    expect(styleCardInfo(retro, catalog.recipes, 'landscape').count).toBe(44);
     expect(styleCardInfo(retro, catalog.recipes, 'portrait').count).toBe(4);
     expect(styleCardInfo(retro, catalog.recipes, 'portrait').basicOnly).toBe(false);
-    for (const style of catalog.styles.filter(style => style.id !== 'retro-zine')) expect(styleCardInfo(style, catalog.recipes, 'landscape').capability).toBe(style.role === 'primary' ? '镜头自动编排' : '43 个可用镜头');
+    for (const style of catalog.styles.filter(style => style.id !== 'retro-zine')) expect(styleCardInfo(style, catalog.recipes, 'landscape').capability).toBe(style.role === 'primary' ? '镜头自动编排' : `${['retro-zine', 'signal-noir', 'studio-frame'].includes(style.id) ? 44 : 43} 个可用镜头`);
   });
   it('publishes readable covers from the same video and color roles from the actual style tokens', async () => {
     const published = await (await fetch(`${base}/catalog.json`)).json();

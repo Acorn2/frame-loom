@@ -1,0 +1,23 @@
+{
+  "id": "editorial-explainer",
+  "mode": "method-reference",
+  "source": "https://github.com/hugohe3/ppt-master",
+  "revision": "01fe549371b98f44be22cd337bbc911013452f09",
+  "implementation": "src/shots/editorial/EditorialScene.tsx",
+  "implementationLicense": "MIT",
+  "notice": "Original FrameLoom implementation adapted from user-approved design studies; no upstream code or media copied.",
+  "references": [
+    "skills/ppt-master/references/video-design.md"
+  ],
+  "upstreamLicense": "MIT",
+  "retained": [
+    "稳定对象与语义分场",
+    "来源、证据和结论的编辑层级",
+    "示例与真实材料区分"
+  ],
+  "omitted": [
+    "示例产品文案",
+    "上游素材与字体",
+    "动态代码执行"
+  ]
+}

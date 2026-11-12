@@ -62,6 +62,9 @@ const parameters = {
   'network-expand': '一个主体与2–5个对象；每个对象恰好一条从主体出发的真实连接，连线避开文字，不把关联改写为因果。'
 };
 const overrides = {
+  'editorial-explainer': {input: '有出处的文章、摘录、类别与非负数值，图表使用统一单位。', motion: '先建立观点，再按阅读顺序展开来源主栏与解释旁栏；并排展示有依据的图表，必要时对同一组数据连续还原数轴，最后用准确数值收束结论。', params: '数字标签保留输入原值，柱高根据实际数值与数轴范围计算。非零起点明确说明；重标尺保持成员、数值和单位不变。', traps: '不借用示例数据补造事实，不把截短后的柱长比例说成实际数值比例；来源、对照与结论需要有不同构图。'},
+  'mechanism-map': {input: '有来源的流程、关系、状态与说明文字。', motion: '先建立标题，再按解释顺序展开分层图、路径、时间轴或确认门；节点落定后再描画实际连接，需要强调时只突出已有节点，最后保持完整结构供阅读。', params: '每项绑定唯一内容与明确位置；连线端点跟随节点边缘，折线避开正文。先确认关系有依据，再选择分层、路径或时间轴构图。', traps: '不把装饰线当作真实关系；不靠重复卡片填充画面，复杂结构应拆镜头。'},
+  'product-showcase': {input: '真实产品说明、有来源的本地截图与需要展示的操作状态。', motion: '先展示界面上下文，再从同一张截图连续取景到关键区域；说明文字与取景错峰进入，操作状态和结果都来自真实截图，最后停留供阅读。', params: '保持截图比例，取景区域完整位于原图内；连续移动时避开标题与字幕，先完成一个取景动作再开始下一个。', traps: '不重画虚构界面，不用放大填补低清素材；截图只证明所展示的状态，不代表视频执行了真实操作。'},
   'integration-hub': {motion: '先阅读旧结构，再将同一个载体翻面露出中枢；中枢和外围节点同步进入，节点落定约1/3秒后同时描画真实连接。'},
   'scroll-brake': {motion: '先建立完整真实列表，再将指定重点项随整体滚动逐渐移到中央；运动模糊随速度变化，刹停时归零，其他条目降低对比度但保留上下文。'},
   'member-grid': {motion: '卡片按中心距离分环显影与缩放，没有飞入位移；集合完全建立后，逐项标记指定成员，统计分母只计算实际可见成员。'},
@@ -108,6 +111,11 @@ export function portableRecipe(item) {
     attribution.push(`方法参考：${source.repository}`);
     const revision = source.commit ?? 'HEAD';
     for (const field of ['recipe', 'implementation']) if (source[field] && !source[field].includes('..') && !source[field].startsWith('/')) attribution.push(`${field === 'recipe' ? '参考文档' : '参考实现'}：${source.repository}/blob/${revision}/${source[field]}`);
+    if (source.upstreamLicense) attribution.push(`参考项目许可：${source.upstreamLicense}；FrameLoom实现：${source.implementationLicense ?? '以仓库许可为准'}。`);
+  }
+  if (!source.repository && source.mode === 'method-reference' && /^https:\/\//u.test(source.source ?? '')) {
+    attribution.push(`方法参考：${source.source}`);
+    if (source.revision) attribution.push(`固定参考：${source.source}/tree/${source.revision}`);
     if (source.upstreamLicense) attribution.push(`参考项目许可：${source.upstreamLicense}；FrameLoom实现：${source.implementationLicense ?? '以仓库许可为准'}。`);
   }
   attribution.push('方法参考不包含上游图片、字体、音乐或媒体授权；这些素材需自行准备并登记来源。');

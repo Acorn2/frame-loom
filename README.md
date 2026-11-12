@@ -25,13 +25,20 @@ A local video production workflow for Codex, Claude Code, and other coding agent
 
 ## 效果展示
 
-**真实案例：把儿童自然博物馆宣传文稿，做成带旁白的白板视频。** 输入一份文稿，生成插画、逐行书写和四阶段图解；下方用 10 秒无声动图展示效果。
+**先按你要解释的内容看样片。** 编辑讲解、机制图解与产品实演均由正式配方渲染，为 40 秒、1080p 静音样片，用于观察构图、信息展开与取景。
 
-![FrameLoom 真实案例：开放白板、四阶段图解、自然主题插画与片尾网站入口](examples/nature-museum-case/previews/highlights.gif)
+| 文章、观点与数据 | 原理、流程与系统 | 产品介绍与功能教程 |
+| --- | --- | --- |
+| [![墨白杂志：来源分栏与数据对照](examples/scenario-directions/previews/editorial.png)](examples/scenario-directions/previews/editorial.mp4) | [![机制图解：从反馈定位到局部确认](examples/scenario-directions/previews/mechanism.png)](examples/scenario-directions/previews/mechanism.mp4) | [![产品实演：真实界面、字体选择与制作交接](examples/scenario-directions/previews/product.png)](examples/scenario-directions/previews/product.mp4) |
+| 来源阅读 → 证据并置 → 连续重标尺 → 结论收束 | 工程分层 → 整体路径 → 时间轴定位 → 局部确认 | 看样片 → 选择字体 → 复制指令 → 本地制作 |
+| [观看编辑讲解](examples/scenario-directions/previews/editorial.mp4) | [观看机制图解](examples/scenario-directions/previews/mechanism.mp4) | [观看产品实演](examples/scenario-directions/previews/product.mp4) |
 
-[观看完整案例 · 68 秒 · 含旁白](examples/nature-museum-case/previews/nature-museum-narrated.mp4) · [案例与素材来源](examples/nature-museum-case/README.md) · [图解动画示例](examples/template-families/README.md) · [在线浏览风格与镜头](https://acorn2.github.io/frame-loom/)
+更多表达参考：
 
-完整视频包含 7 场白板动画，使用霞鹜文楷与自然语速旁白，片尾展示 `https://naturemuseum.top/`。插画用于概念示意，不是产品界面或实际三维模型。自动 QA 已通过，完整播放与素材公开使用仍待复核。
+- **文章、观点与文案讲解**：[编辑式排印样片 · 18 秒 · 静音](examples/template-families/previews/editorial-typography-text-led.mp4)，展示关键词迁移、归组与关系展开。
+- **知识与故事讲解**：[儿童自然博物馆案例 · 68 秒 · 含旁白](examples/nature-museum-case/previews/nature-museum-narrated.mp4)，展示白板书写、插画与四阶段图解。[材料与来源](examples/nature-museum-case/README.md)
+
+[按用途浏览配方库](https://acorn2.github.io/frame-loom/) · [新配方与素材来源](examples/scenario-directions/README.md)。产品样片保留捕获时的真实网页，具体入口可能随版本调整；机制片的时间码与编号、编辑片的 90 与 100 均为明确标注的示意，不对应业务实测。公开样片不等于交付批准，正式成片仍需完整播放复核。在线站点需发布本版本后显示新入口。
 
 ## 适合用来做什么
 
@@ -131,42 +138,33 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文，编写逐场�
 
 ## 选一种喜欢的风格
 
-当前九套视频风格按画面构建方式分为两类：
+在配方库先选**产品教程、机制流程、文章观点、知识故事**之一，看对应用途的实际样片，再选择画法、字体和制作设置。用途筛选只改变浏览范围，保留当前制作选择。
 
-- **AI 插画风格**：手绘白板、批注推演、编辑式排印。纯文档制作时，Agent 调用 AI 生成人物、物件或情境插画，再编排文字、图解与动画；提供真实截图时直接使用截图，不自动生图。三套使用各自的[固定内置镜头流程](references/primary-style-production.md)。
-- **图文动效风格**：墨白杂志、暗场信号、手绘便签、瑞士蓝、工程蓝图、产品演示。以文字排版、图形、图表与界面素材构成画面，通过镜头动效逐步呈现，也可使用真实图片和截图；镜头可由 Agent 推荐或手动限定。
+原六套图文动效在主入口收敛为三条方向：
 
-这两类描述画面构建方式，知识讲解、产品介绍、教程或故事属于内容用途。
-
-### 三套 AI 插画风格
-
-三套 AI 插画风格使用同一份“好问题，从观察开始”的文案，均为18秒横屏静音样片。下面展示实际视频的完成态，点击封面或“观看样片”即可查看动画；文案、图解为主体，插画辅助表达。
-
-| 手绘白板 · Whiteboard | 批注推演 · Annotated Reasoning | 编辑式排印 · Editorial Typography |
+| 方向 | 基础风格与新配方 | 适合的材料 |
 | --- | --- | --- |
-| [![手绘白板样片：好问题，从观察开始](examples/template-families/previews/whiteboard-original.png)](examples/template-families/previews/whiteboard-original.mp4) | [![批注推演样片：好问题，从观察开始](examples/template-families/previews/annotated-reasoning-text-led.png)](examples/template-families/previews/annotated-reasoning-text-led.mp4) | [![编辑式排印样片：好问题，从观察开始](examples/template-families/previews/editorial-typography-text-led.png)](examples/template-families/previews/editorial-typography-text-led.mp4) |
-| 逐行书写 · 同步铅笔 · 小赖字体 | 圈词旁注 · 关系累积 · 思源宋体 | 关键词重排 · 关系展开 · 思源黑体 |
-| [观看样片](examples/template-families/previews/whiteboard-original.mp4) | [观看样片](examples/template-families/previews/annotated-reasoning-text-led.mp4) | [观看样片](examples/template-families/previews/editorial-typography-text-led.mp4) |
+| 编辑讲解 | 墨白杂志 `retro-zine`，可选 `editorial-explainer`；瑞士蓝为补充外观 | 文章、观点、报告与带来源的数据 |
+| 机制图解 | `signal-noir`，可选 `mechanism-map` | 有依据的流程、系统结构与关系 |
+| 产品实演 | `studio-frame`，可选 `product-showcase` | 产品说明、真实截图与操作状态 |
 
-三套均支持横屏，用户选风格即可，不需要再选镜头集合。批注推演与编辑式排印以正文、数字和关系为主体，辅助插画的声明框总面积最多占画布 8%。全片字体可独立选择，详见[字体清单](fonts/README.md)；素材准备见[插画生产流程](references/illustrated-production.md)，分镜编排见[文案动画制作](references/text-led-production.md)。
+暗场信号 `signal` 作为深色外观，瑞士蓝 `archive-grid` 归入编辑讲解，手绘便签 `scatterbrain` 归入手绘讲解，在“更多外观与旧风格”中保留。**全部旧 ID、配方版本和项目继续可用，不自动映射或迁移旧分镜。**
 
-### 六套图文动效风格
+手绘白板、批注推演、编辑式排印三套 AI 插画画法继续保留，按使用场景推荐。纯文档路线需要 Agent 实际生成插画；截图路线使用真实素材，不自动生图。三套仍使用各自[固定内置流程](references/primary-style-production.md)，字体独立选择；批注推演和编辑式排印以文字与关系为主，辅助插画框总面积最多占画布 8%。
 
-下面六套图文动效风格使用同一份分镜，便于比较；展示图解完成态，可点击观看实际静音样片。
+`editorial-explainer`、`mechanism-map` 与 `product-showcase` 首轮仅支持 16:9，分别适配上述风格。原六套的既有竖屏能力保留，新配方不静默回退。完整步骤与输入约束见[编辑讲解、机制图解与产品实演指南](references/direction-recipes.md)；全部字体见[字体清单](fonts/README.md)。
 
-| 墨白杂志 · Editorial Ink | 暗场信号 · Signal | 手绘便签 · Sketch Notes |
-| --- | --- | --- |
-| ![墨白杂志关系图解](examples/template-families/previews/retro-zine-semantic-process.png) | ![暗场信号关系图解](examples/template-families/previews/signal-semantic-process.png) | ![手绘便签关系图解](examples/template-families/previews/scatterbrain-semantic-process.png) |
-| [观看样片](examples/template-families/previews/retro-zine-semantic.mp4) | [观看样片](examples/template-families/previews/signal-semantic.mp4) | [观看样片](examples/template-families/previews/scatterbrain-semantic.mp4) |
+例如，在 Agent 对话中开始新的机制讲解：
 
-| 瑞士蓝 · Swiss Blue | 工程蓝图 · Blueprint | 产品演示 · Product Frame |
-| --- | --- | --- |
-| ![瑞士蓝关系图解](examples/template-families/previews/archive-grid-semantic-process.png) | ![工程蓝图关系图解](examples/template-families/previews/signal-noir-semantic-process.png) | ![产品演示关系图解](examples/template-families/previews/studio-frame-semantic-process.png) |
-| [观看样片](examples/template-families/previews/archive-grid-semantic.mp4) | [观看样片](examples/template-families/previews/signal-noir-semantic.mp4) | [观看样片](examples/template-families/previews/studio-frame-semantic.mp4) |
+```text
+请使用 frame-loom Skill，把我提供的文档做成机制图解横屏静音预览。
+使用 signal-noir，根据原文评估 mechanism-map 与其他兼容镜头；只表现有依据的关系。
+用 fast 模式继续制作，完成后给我本机审片入口、检查结果和下一步。
+```
 
-在[在线配方库](https://acorn2.github.io/frame-loom/)选择风格，复制制作指令，再交给本地 Agent 和你的文档。Agent 默认根据内容推荐镜头；也可手动限定。网页只展示公开样例，视频生产在本地进行。
+制作产品教程时，改为 `studio-frame`，附上真实截图或准确网址，要求评估 `product-showcase`。Agent 先读取文档再推荐镜头；手动限定的集合仍是严格白名单。
 
-当前版本的配方库提供右上角中文／英文切换，界面与制作指令随语言切换，保留制作选择。现有样片和原始配方文档保留中文并明确标注；界面语言独立于成片内容和字体。英文系统标签另行设置，见下方[常见问题](#常见问题)。在线站点需发布当前版本后获得这些更新。
+配方库中英文界面与制作指令保持相同参数，切换语言保留选择；界面语言不授权翻译讲稿。公开样片保留原始文字与来源。网页只用于浏览、选择和复制指令，视频生产在本地完成。
 
 ## 预览满意后，继续完成视频
 
@@ -195,7 +193,7 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文，编写逐场�
 
 **必须配置配音吗？是否收费？** 第一条静音预览无需配音。使用 TTS 时只配置一家服务；Agent 和 TTS 的费用取决于各自服务，本地渲染不调用生成式视频 API。
 
-**支持竖屏吗？** 六套图文动效风格支持 16:9 横屏和 9:16 竖屏：横屏每套有 43 个场景配方，竖屏支持基础语义、操作筛选、结果生成和单位点阵重组四项配方。三套 AI 插画风格目前只支持横屏，并按各自内置流程编排；完整兼容范围见[镜头配方库](shots/README.md)。
+**支持竖屏吗？** 六套图文动效风格支持 16:9 横屏和 9:16 竖屏：共享 43 个横屏场景配方，墨白杂志、机制图解、产品实演各新增 1 个专属横屏配方；竖屏支持基础语义、操作筛选、结果生成和单位点阵重组四项配方。三套 AI 插画风格目前只支持横屏，并按各自内置流程编排；完整兼容范围见[镜头配方库](shots/README.md)。
 
 **文档会上传到配方库网站吗？** 网站不接收文档。渲染在本机进行；你选择的 Agent 或 TTS 服务可能接收文档内容或旁白，按其配置与服务条款使用。
 
@@ -214,7 +212,7 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文，编写逐场�
 <details>
 <summary>开发者：当前镜头能力摘要</summary>
 
-当前运行时：52 个场景配方、9 个宿主动作、5 个换章配方；筛选清单接入 48/48。
+当前运行时：55 个场景配方、9 个宿主动作、5 个换章配方；筛选清单接入 48/48。
 
 注册总数包含历史兼容能力，具体风格可用范围与新项目的固定流程分别约束选用。当前场景配方与预设组合为 experimental；兼容范围以[能力清单](src/renderer/capability-manifest.ts)为准。可选预设见[知识讲解组合](video-templates/retro-zine-explainer/guide.md)，本地网页维护见[配方库指南](library/README.md)。
 
@@ -244,3 +242,5 @@ FrameLoom 由 **[Hresh赫什](https://hreshhao.com/)** 维护。我是一名用 
 - 项目字体保留原始版权与 SIL OFL 1.1 许可，见[字体目录](fonts/README.md)。
 
 FrameLoom 自有代码采用 [MIT](LICENSE)。Remotion 使用独立的[官方许可](https://www.remotion.dev/license)；字体、图片、配乐和 TTS 输出按各自来源条款使用，本项目的 MIT 不替代这些许可。
+
+PPT Master 的蓝图构图、真实产物优先与语义动画方法为三项新配方提供参考；实现与图形由 FrameLoom 原创，未复制上游素材。来源和 MIT 许可链接保留在 [editorial-explainer](shots/editorial-explainer/provenance.json)、[mechanism-map](shots/mechanism-map/provenance.json) 与 [product-showcase](shots/product-showcase/provenance.json) 的记录中。

@@ -153,8 +153,9 @@ export function createDetailView({selected, available, styleName, onSelect, onVa
       if (item.hosts?.length) sectionBlock(byId('detail-overview'), '支持的宿主镜头', item.hosts, true);
       for (const section of recipeSections(item.recipe)) sectionBlock(byId('detail-doc'), section.title || '适用场景', section.lines);
       const source = item.provenance ?? {};
-      sectionBlock(byId('detail-attribution'), source.repository ? '方法参考 · Video Shotcraft' : 'FrameLoom 原生配方', [source.recipe ?? '本项目公开语义渲染能力'], Boolean(source.recipe));
-      if (source.repository && /^https:\/\//u.test(source.repository)) {const link = document.createElement('a'); link.href = source.repository; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = '查看参考项目 ↗'; byId('detail-attribution').append(link);}
+      const reference = source.repository ?? (source.mode === 'method-reference' ? source.source : undefined);
+      sectionBlock(byId('detail-attribution'), source.repository ? '方法参考 · Video Shotcraft' : reference ? '方法参考' : 'FrameLoom 原生配方', [source.recipe ?? source.references?.join(' · ') ?? '本项目公开语义渲染能力'], Boolean(source.recipe || source.references));
+      if (reference && /^https:\/\//u.test(reference)) {const link = document.createElement('a'); link.href = reference; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = '查看参考项目 ↗'; byId('detail-attribution').append(link);}
       if (source.upstreamLicense) sectionBlock(byId('detail-attribution'), '许可记录', [`参考项目：${source.upstreamLicense}；本项目实现：${source.implementationLicense ?? '以仓库许可为准'}。`], true);
       sectionBlock(byId('detail-attribution'), '使用边界', ['方法参考与独立实现不代表已取得上游媒体授权。示例只使用本项目公开素材。']);
       byId('detail-source').textContent = recipeDisplayText(JSON.stringify(source, (key, value) => /version/iu.test(key) ? undefined : value, 2));

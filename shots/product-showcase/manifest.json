@@ -1,0 +1,72 @@
+{
+  "id": "product-showcase",
+  "version": "1.2.0",
+  "status": "experimental",
+  "registered": true,
+  "visualKinds": [
+    "statement",
+    "sequence",
+    "network",
+    "change",
+    "compare",
+    "media"
+  ],
+  "purpose": "产品实演",
+  "inputModes": [
+    "document-with-assets"
+  ],
+  "requiredAssets": [
+    "real-local-screenshot"
+  ],
+  "styles": [
+    "studio-frame"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "slots": {
+    "items": {
+      "min": 2,
+      "max": 40,
+      "labelMax": 160
+    }
+  },
+  "timing": {
+    "actions": {
+      "reveal": {
+        "minSec": 0.2,
+        "maxSec": 8
+      },
+      "focus": {
+        "minSec": 0.2,
+        "maxSec": 8
+      }
+    },
+    "readingSec": 1.2,
+    "titleHoldSec": 0.6,
+    "sourceHoldSec": 0.6,
+    "itemHoldSec": 0.12
+  },
+  "motion": {
+    "recipeOwned": [
+      "explicit-content-geometry",
+      "real-media-framing",
+      "bounded-stages"
+    ],
+    "styleOwned": [
+      "palette",
+      "font-family"
+    ],
+    "continuousDrift": false
+  },
+  "qa": [
+    "action-mid",
+    "action-complete",
+    "complete",
+    "before-handoff"
+  ],
+  "sound": {
+    "enabled": false,
+    "events": []
+  }
+}

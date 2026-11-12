@@ -1,0 +1,40 @@
+{
+  "status": "design-preview",
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "font": {"id": "source-han-sans-sc", "version": "2.005"},
+  "capabilities": {
+    "layers": ["node", "label", "annotation", "screenshot", "callout"],
+    "actions": ["enter", "reveal", "draw", "focus", "highlight", "camera-push"],
+    "transitions": ["fade"]
+  },
+  "films": [
+    {
+      "id": "MechanismStudy",
+      "slug": "mechanism",
+      "name": "机制图解 · 一次修改，如何回到正确的镜头",
+      "source": "README.md#制作工作流; references/usage-guide.md#边看边提意见按镜头复核新版",
+      "scenes": [
+        {"id": "m-opening", "seconds": 6, "title": "先改这一镜，再更新整片", "intent": "分解的画面层与一条修改路径建立工程图解语言", "takeaway": "返工先定位镜头"},
+        {"id": "m-map", "seconds": 9, "title": "一次返工，沿着这条路径", "intent": "展开审片、反馈、场景、局部预览、整片五个阶段；路径按顺序被强调", "takeaway": "先有局部预览，后有整片更新"},
+        {"id": "m-anchor", "seconds": 9, "title": "时间码定位，场景 ID 接住修改", "intent": "从整片时间轴进入单个稳定场景，示意时码和编号清楚标注", "takeaway": "时间变化仍有场景记录可追踪"},
+        {"id": "m-confirm", "seconds": 9, "title": "先确认局部，再更新整片", "intent": "旧镜头和修改镜头对照；创作者确认门连接最终整片", "takeaway": "局部确认是整片更新的前提"},
+        {"id": "m-close", "seconds": 7, "title": "改动有范围，交付有依据", "intent": "回到总览并保留场景、反馈和版本线索", "takeaway": "修改与来源可以追踪"}
+      ]
+    },
+    {
+      "id": "ProductStudy",
+      "slug": "product",
+      "name": "产品实演 · 从看样片到交给 Agent",
+      "source": "本仓库配方库实际页面截图；assets/sources.json",
+      "scenes": [
+        {"id": "p-opening", "seconds": 7, "title": "先看见，再决定", "intent": "真实配方库大画面与简短价值主张", "takeaway": "从实际样片选择表达方式"},
+        {"id": "p-style", "seconds": 9, "title": "看清画法，再选风格", "intent": "从全页取景进入已选编辑式排印的真实卡片", "takeaway": "风格选择基于画面而不是名字"},
+        {"id": "p-font", "seconds": 9, "title": "一个选择，贯穿全片", "intent": "真实字体面板的大幅取景，强调统一字体选项", "takeaway": "字体独立于风格"},
+        {"id": "p-handoff", "seconds": 9, "title": "带着选择，回到本地制作", "intent": "实际制作设置与复制指令入口；不展示虚构在线编辑器", "takeaway": "网页用于选型，Agent 负责本地制作"},
+        {"id": "p-close", "seconds": 6, "title": "网页选型，本地制作", "intent": "将真实界面收束为一次清楚的制作交接", "takeaway": "附上材料后在 Agent 中继续"}
+      ]
+    }
+  ]
+}

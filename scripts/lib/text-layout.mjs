@@ -1,3 +1,7 @@
+import {isEditorialShot} from '../../src/shots/editorial/schema.ts';
+import {checkEditorialText} from './editorial-text-layout.mjs';
+import {isDirectionShot} from '../../src/shots/directions/schema.ts';
+import {checkDirectionText} from './direction-text-layout.mjs';
 import {checkTextLedText} from './text-led-text-layout.mjs';
 import {checkIllustratedText} from './illustrated-text-layout.mjs';
 import {checkBoardText} from './whiteboard-board-text-layout.mjs';
@@ -81,6 +85,8 @@ export function checkTextLayout(storyboard, style = loadStylePack(storyboard.sty
     issues.push(...checkIllustratedText(scene, storyboard, style, estimateTextLines));
     issues.push(...checkBoardText(scene, estimateTextLines));
     issues.push(...checkTextLedText(scene, estimateTextLines));
+    issues.push(...checkDirectionText(scene, estimateTextLines), ...checkEditorialText(scene, estimateTextLines));
+    if (scene.shot && (isEditorialShot(scene.shot) || isDirectionShot(scene.shot))) continue;
     issues.push(...checkWhiteboardText(scene, storyboard, style, estimateTextLines));
     issues.push(...checkExpansionText(scene, contentWidth / scale, contentHeight / scale, estimateTextLines));
     issues.push(...checkShortlistText(scene, contentWidth, contentHeight, scale, estimateTextLines, storyboard.project.language));

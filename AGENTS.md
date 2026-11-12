@@ -45,7 +45,7 @@ npm run inspect:output -- /tmp/frame-loom-preview.mp4 examples/article-video/sto
 - 配方库面向用户的卡片、详情与复制指令不展示风格或镜头版本号；使用名称与ID选择，内部生产契约保留兼容性与复现记录。镜头选择库只展示当前可选风格的配方，AI 插画风格专属内置镜头不进入卡片、搜索和分类统计；共享可选镜头保留，完整 catalog、样片与生产能力不裁剪。
 - 配方库中英文语言偏好独立于制作状态，切换须保留风格、字体、画幅、镜头与制作选项，存储禁用时通过公开 URL 恢复。英文制作指令必须与中文保持相同参数及制作边界，不把界面语言作为翻译讲稿的授权。样片、字体示例、配方原文和许可保留原始内容并标注；品牌输入、ID 与来源路径不翻译。
 - 无项目配色时，当前镜头配方的展示与生产外观使用白色、冷灰或石墨中性底色；whiteboard 按上游视觉基准使用 #fffdf7 点阵纸色，默认强调色由风格提供。采用主体产品截图／网址配色时，背景、文字、表面及强调色均以来源为准，允许来源暖色或有色底；不得只取按钮颜色后强制改成冷灰。风格保留构图、装饰和运动。全片字体独立单选并覆盖标题、正文、图解与字幕。未指定字体的旧分镜保留原字体栈。封面与动画必须由同一实际 renderer 生成。
-- 原六套当前风格支持43个横屏场景配方；三套当前主风格为 whiteboard、annotated-reasoning、editorial-typography。Whiteboard 保留开放白板、基础白板及插画能力；后两套分别使用 annotated-manuscript、editorial-flow 与 semantic-default 固定内置范围。旧 flat-explainer、paper-collage 从新选择入口隐藏，生产能力保留，不迁移旧分镜。样片、详情、封面必须使用所选风格实际 renderer。竖屏维持原六套已有能力；新两套仅横屏。
+- 原六套共享43个横屏场景配方；retro-zine 另有 editorial-explainer、signal-noir 另有 mechanism-map、studio-frame 另有 product-showcase，新增三项仅16:9，不回写旧输入；三套当前主风格为 whiteboard、annotated-reasoning、editorial-typography。Whiteboard 保留开放白板、基础白板及插画能力；后两套分别使用 annotated-manuscript、editorial-flow 与 semantic-default 固定内置范围。旧 flat-explainer、paper-collage 从新选择入口隐藏，生产能力保留，不迁移旧分镜。样片、详情、封面必须使用所选风格实际 renderer。竖屏维持原六套已有能力；新两套仅横屏。
 - Renderer 只能使用 `src/renderer/capability-manifest.ts` 声明的能力。
 - 所有视频模板的旁白字幕与场景字幕都直接显示在画布上，不得添加实色或半透明的字幕底板、胶囊或背景色。字幕使用有效配色中独立的 `captionInk`，与正文 `ink` 区分：浅色画布使用深色字幕，深色画布使用白色字幕，并保证文字对比度和安全区。
 - 底部旁白字幕按短句单行展示，不把整场讲稿一次铺满画面。TTS 项目的每场旁白起点要贴合镜头起点，旁白结束到换镜的空档不得超过 0.5 秒；需要更长的视觉停留时，拆成独立镜头。
@@ -81,3 +81,5 @@ Whiteboard 默认按开放白板编排：Rough.js 双线、逐行文字擦出、
 三套主风格共用右上角独立品牌层，配置入口为仓库／项目 `config.json`；视频和同源封面使用相同标识，品牌配置与启用 Logo 字节绑定生产、审核和缓存。公开样片始终使用 Your Brand 占位，不读取私有品牌；原六套不加标识。见 `references/branding.md`。
 
 三套 AI 插画风格的风格库主样片使用同一标题、完整旁白文本、画面文字与情境，便于比较画法、构图和动效；参考文案不成为用户生产的系统默认讲稿。
+
+配方库先按产品教程、机制流程、文章观点、知识故事浏览；用途筛选独立于制作状态。原六套主入口呈现墨白杂志、机制图解和产品实演；signal、archive-grid、scatterbrain 保留在更多外观中，旧链接和手动镜头意图不变。正式配方与公开样片见 references/direction-recipes.md。

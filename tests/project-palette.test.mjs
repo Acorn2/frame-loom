@@ -62,10 +62,11 @@ describe('project palette contract and rendering', () => {
       const selected = fullPalette();
       const chosen = applyProjectPalette(base, selected);
       for (const shot of SHOT_CATALOG.filter(shot => shot.styles.includes(id))) {
+        const stageText = shot.id.startsWith('whiteboard-') || ['editorial-explainer', 'mechanism-map', 'product-showcase'].includes(shot.id);
         const appearance = recipeAppearance(read(shot.id).scenes[0].shot, chosen);
         expect(appearance.background).toBe(appearance.dark ? selected.colors.darkBackground : selected.colors.lightBackground);
         expect(appearance.tokens.paper).toBe(selected.colors.surface);
-        expect(appearance.tokens.ink).toBe(shot.id.startsWith('whiteboard-') ? chosen.ink : selected.colors.ink);
+        expect(appearance.tokens.ink).toBe(stageText ? chosen.ink : selected.colors.ink);
         expect(appearance.tokens.captionInk).toBe(appearance.dark ? '#ffffff' : selected.colors.captionInk);
         expect(contrastRatio(appearance.stageInk, appearance.background)).toBeGreaterThanOrEqual(7);
         expect(contrastRatio(appearance.tokens.captionInk, appearance.background)).toBeGreaterThanOrEqual(4.5);
@@ -114,9 +115,10 @@ describe('project palette contract and rendering', () => {
           expect(contrastRatio(appearance.stageInk, appearance.background)).toBeGreaterThanOrEqual(7);
           expect(contrastRatio(appearance.stageMuted, appearance.background)).toBeGreaterThanOrEqual(4.5);
           expect(contrastRatio(appearance.tokens.captionInk, appearance.background)).toBeGreaterThanOrEqual(4.5);
-          expect(contrastRatio(appearance.tokens.ink, shot.id.startsWith('whiteboard-') ? appearance.background : appearance.tokens.paper)).toBeGreaterThanOrEqual(7);
+          const stageText = shot.id.startsWith('whiteboard-') || ['editorial-explainer', 'mechanism-map', 'product-showcase'].includes(shot.id);
+          expect(contrastRatio(appearance.tokens.ink, stageText ? appearance.background : appearance.tokens.paper)).toBeGreaterThanOrEqual(7);
           expect(contrastRatio(appearance.tokens.paperAccent, appearance.tokens.paper)).toBeGreaterThanOrEqual(4.5);
-          if (!['semantic-default', 'compare-reveal', 'network-expand'].includes(shot.id) && !shot.id.startsWith('whiteboard-')) expect(contrastRatio(appearance.tokens.accentAlt, appearance.tokens.paper)).toBeGreaterThanOrEqual(4.5);
+          if (!['semantic-default', 'compare-reveal', 'network-expand'].includes(shot.id) && !stageText) expect(contrastRatio(appearance.tokens.accentAlt, appearance.tokens.paper)).toBeGreaterThanOrEqual(4.5);
           expect(JSON.stringify(scene)).toBe(before);
         }
       }

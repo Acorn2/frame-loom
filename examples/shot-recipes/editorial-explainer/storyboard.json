@@ -1,0 +1,1932 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "retro-zine",
+    "version": "1.0.0"
+  },
+  "font": {
+    "id": "source-han-serif-sc",
+    "version": "2.003"
+  },
+  "layoutPolicy": "content-first-v1",
+  "shotRecipes": [
+    {
+      "id": "editorial-explainer",
+      "version": "1.2.0"
+    }
+  ],
+  "palette": {
+    "schemaVersion": "1.1",
+    "source": "custom",
+    "referenceAssets": [],
+    "colors": {
+      "accent": "#c84634",
+      "accentAlt": "#b93827",
+      "lightBackground": "#f5f5f3",
+      "darkBackground": "#242424",
+      "surface": "#ffffff",
+      "ink": "#242424",
+      "muted": "#5c605f",
+      "captionInk": "#55575b"
+    }
+  },
+  "project": {
+    "title": "墨白杂志：同样的数据，另一种结论？",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 40.0,
+    "durationFrames": 1200,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "opening",
+      "template": "statement",
+      "purpose": "evidence",
+      "title": "同样的数据\n另一种结论？",
+      "narration": "同样的数据，另一种结论？",
+      "durationFrames": 210,
+      "connections": [],
+      "captions": [],
+      "visual": {
+        "kind": "statement",
+        "representation": "diagram",
+        "source": "source.md; Government Analysis Function / Bar charts; 90、100为明确标注的示意数据",
+        "explanation": "来源分栏、同一组示意数据与明确的比较尺度；不代表任何业务实测"
+      },
+      "primaryClaim": "同样的数据，另一种结论？",
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "同样的数据\n另一种结论？"
+        },
+        {
+          "id": "masthead",
+          "type": "node",
+          "label": "墨白杂志 / EDITORIAL INK"
+        },
+        {
+          "id": "section",
+          "type": "node",
+          "label": "01 / 提出问题"
+        },
+        {
+          "id": "source-note",
+          "type": "node",
+          "label": "演示数据：A=90，B=100，不对应真实业务指标"
+        },
+        {
+          "id": "sample-note",
+          "type": "node",
+          "label": "静音样片"
+        },
+        {
+          "id": "topic",
+          "type": "node",
+          "label": "数据阅读"
+        },
+        {
+          "id": "deck",
+          "type": "node",
+          "label": "有时，差别藏在数轴的起点"
+        },
+        {
+          "id": "reading",
+          "type": "node",
+          "label": "先看表达，再看判断"
+        },
+        {
+          "id": "figure",
+          "type": "node",
+          "label": "A 与 B",
+          "text": "从零比较 · 示意数据"
+        },
+        {
+          "id": "figure-A",
+          "type": "metric",
+          "label": "A",
+          "value": 90
+        },
+        {
+          "id": "figure-B",
+          "type": "metric",
+          "label": "B",
+          "value": 100
+        }
+      ],
+      "beats": [
+        {
+          "id": "title-enter",
+          "target": "title",
+          "action": "reveal",
+          "start": 7,
+          "duration": 15
+        },
+        {
+          "id": "masthead-enter",
+          "target": "masthead",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "section-enter",
+          "target": "section",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "source-note-enter",
+          "target": "source-note",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "sample-note-enter",
+          "target": "sample-note",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "topic-enter",
+          "target": "topic",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "deck-enter",
+          "target": "deck",
+          "action": "reveal",
+          "start": 35,
+          "duration": 15
+        },
+        {
+          "id": "reading-enter",
+          "target": "reading",
+          "action": "reveal",
+          "start": 100,
+          "duration": 15
+        },
+        {
+          "id": "figure-enter",
+          "target": "figure",
+          "action": "reveal",
+          "start": 10,
+          "duration": 15
+        },
+        {
+          "id": "figure-A-enter",
+          "target": "figure-A",
+          "action": "reveal",
+          "start": 44,
+          "duration": 30
+        },
+        {
+          "id": "figure-B-enter",
+          "target": "figure-B",
+          "action": "reveal",
+          "start": 44,
+          "duration": 30
+        }
+      ],
+      "shot": {
+        "id": "editorial-explainer",
+        "version": "1.2.0",
+        "composition": "opening",
+        "slots": {
+          "items": [
+            "title",
+            "masthead",
+            "section",
+            "source-note",
+            "sample-note",
+            "topic",
+            "deck",
+            "reading",
+            "figure"
+          ],
+          "metrics": [
+            "figure-A",
+            "figure-B"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 120,
+            "y": 240,
+            "width": 920,
+            "height": 310,
+            "fontSize": 110,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "bold",
+            "align": "left"
+          },
+          "masthead": {
+            "kind": "text",
+            "x": 120,
+            "y": 100,
+            "width": 1000,
+            "height": 33,
+            "fontSize": 23,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "bold",
+            "align": "left"
+          },
+          "section": {
+            "kind": "text",
+            "x": 1450,
+            "y": 100,
+            "width": 350,
+            "height": 33,
+            "fontSize": 23,
+            "bodySize": 26,
+            "color": "muted",
+            "weight": "regular",
+            "align": "right"
+          },
+          "source-note": {
+            "kind": "text",
+            "x": 120,
+            "y": 813,
+            "width": 1330,
+            "height": 31,
+            "fontSize": 22,
+            "bodySize": 26,
+            "color": "muted",
+            "weight": "regular",
+            "align": "left"
+          },
+          "sample-note": {
+            "kind": "text",
+            "x": 1580,
+            "y": 813,
+            "width": 220,
+            "height": 31,
+            "fontSize": 22,
+            "bodySize": 26,
+            "color": "muted",
+            "weight": "regular",
+            "align": "right"
+          },
+          "topic": {
+            "kind": "text",
+            "x": 120,
+            "y": 180,
+            "width": 900,
+            "height": 37,
+            "fontSize": 26,
+            "bodySize": 26,
+            "color": "accent",
+            "weight": "regular",
+            "align": "left"
+          },
+          "deck": {
+            "kind": "text",
+            "x": 120,
+            "y": 620,
+            "width": 900,
+            "height": 42,
+            "fontSize": 30,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "regular",
+            "align": "left"
+          },
+          "reading": {
+            "kind": "text",
+            "x": 120,
+            "y": 737,
+            "width": 900,
+            "height": 35,
+            "fontSize": 25,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "regular",
+            "align": "left"
+          },
+          "figure": {
+            "kind": "chart",
+            "x": 1080,
+            "y": 230,
+            "width": 720,
+            "height": 540,
+            "fontSize": 24,
+            "bodySize": 24,
+            "color": "ink",
+            "weight": "regular",
+            "align": "left",
+            "valueSize": 82,
+            "axisWidth": 100,
+            "barWidth": 0.52,
+            "grid": false
+          }
+        },
+        "charts": {
+          "figure": {
+            "metrics": [
+              "figure-A",
+              "figure-B"
+            ],
+            "domain": {
+              "min": 0,
+              "max": 110
+            },
+            "accent": "figure-B"
+          }
+        },
+        "rules": [
+          {
+            "x": 120,
+            "y": 150,
+            "length": 1680,
+            "color": "muted",
+            "width": 1,
+            "vertical": false
+          },
+          {
+            "x": 120,
+            "y": 150,
+            "length": 310,
+            "color": "accent",
+            "width": 3,
+            "vertical": false
+          },
+          {
+            "x": 120,
+            "y": 800,
+            "length": 1680,
+            "color": "muted",
+            "width": 1,
+            "vertical": false
+          },
+          {
+            "x": 120,
+            "y": 580,
+            "length": 760,
+            "color": "accent",
+            "width": 2,
+            "vertical": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "source",
+      "template": "statement",
+      "purpose": "evidence",
+      "title": "先读规则，再看结论",
+      "narration": "先读规则，再看结论",
+      "durationFrames": 240,
+      "connections": [],
+      "captions": [],
+      "visual": {
+        "kind": "statement",
+        "representation": "diagram",
+        "source": "source.md; Government Analysis Function / Bar charts; 90、100为明确标注的示意数据",
+        "explanation": "来源分栏、同一组示意数据与明确的比较尺度；不代表任何业务实测"
+      },
+      "primaryClaim": "先读规则，再看结论",
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "先读规则，再看结论"
+        },
+        {
+          "id": "masthead",
+          "type": "node",
+          "label": "墨白杂志 / EDITORIAL INK"
+        },
+        {
+          "id": "section",
+          "type": "node",
+          "label": "02 / 阅读来源"
+        },
+        {
+          "id": "source-note",
+          "type": "node",
+          "label": "规则依据：Government Analysis Function《Bar charts》；中文为意译"
+        },
+        {
+          "id": "sample-note",
+          "type": "node",
+          "label": "静音样片"
+        },
+        {
+          "id": "source-label",
+          "type": "node",
+          "label": "规则摘记 / 英国政府分析职能部门"
+        },
+        {
+          "id": "extract",
+          "type": "node",
+          "label": "条形图的数轴\n应从零开始"
+        },
+        {
+          "id": "explanation",
+          "type": "node",
+          "label": "截短起点，会改变柱长的相对比例\n比较时，保留完整的数量背景"
+        },
+        {
+          "id": "scope",
+          "type": "node",
+          "label": "这里讨论的是：以长度编码数量的条形图"
+        },
+        {
+          "id": "index-1",
+          "type": "node",
+          "label": "01"
+        },
+        {
+          "id": "point-1",
+          "type": "node",
+          "label": "长度就是数值"
+        },
+        {
+          "id": "body-1",
+          "type": "node",
+          "label": "我们先读出柱子的高低\n再形成对数量差别的印象"
+        },
+        {
+          "id": "index-2",
+          "type": "node",
+          "label": "02"
+        },
+        {
+          "id": "point-2",
+          "type": "node",
+          "label": "起点影响比例"
+        },
+        {
+          "id": "body-2",
+          "type": "node",
+          "label": "缺掉的部分，也在改变判断\n因此先把比较的尺度讲清楚"
+        }
+      ],
+      "beats": [
+        {
+          "id": "title-enter",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "masthead-enter",
+          "target": "masthead",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "section-enter",
+          "target": "section",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "source-note-enter",
+          "target": "source-note",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "sample-note-enter",
+          "target": "sample-note",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "source-label-enter",
+          "target": "source-label",
+          "action": "reveal",
+          "start": 16,
+          "duration": 15
+        },
+        {
+          "id": "extract-enter",
+          "target": "extract",
+          "action": "reveal",
+          "start": 29,
+          "duration": 15
+        },
+        {
+          "id": "extract-underline",
+          "target": "extract",
+          "action": "highlight",
+          "start": 65,
+          "duration": 25
+        },
+        {
+          "id": "explanation-enter",
+          "target": "explanation",
+          "action": "reveal",
+          "start": 80,
+          "duration": 15
+        },
+        {
+          "id": "scope-enter",
+          "target": "scope",
+          "action": "reveal",
+          "start": 104,
+          "duration": 15
+        },
+        {
+          "id": "index-1-enter",
+          "target": "index-1",
+          "action": "reveal",
+          "start": 61,
+          "duration": 15
+        },
+        {
+          "id": "point-1-enter",
+          "target": "point-1",
+          "action": "reveal",
+          "start": 61,
+          "duration": 15
+        },
+        {
+          "id": "body-1-enter",
+          "target": "body-1",
+          "action": "reveal",
+          "start": 61,
+          "duration": 15
+        },
+        {
+          "id": "index-2-enter",
+          "target": "index-2",
+          "action": "reveal",
+          "start": 113,
+          "duration": 15
+        },
+        {
+          "id": "point-2-enter",
+          "target": "point-2",
+          "action": "reveal",
+          "start": 113,
+          "duration": 15
+        },
+        {
+          "id": "body-2-enter",
+          "target": "body-2",
+          "action": "reveal",
+          "start": 113,
+          "duration": 15
+        }
+      ],
+      "shot": {
+        "id": "editorial-explainer",
+        "version": "1.2.0",
+        "composition": "source",
+        "slots": {
+          "items": [
+            "title",
+            "masthead",
+            "section",
+            "source-note",
+            "sample-note",
+            "source-label",
+            "extract",
+            "explanation",
+            "scope",
+            "index-1",
+            "point-1",
+            "body-1",
+            "index-2",
+            "point-2",
+            "body-2"
+          ],
+          "metrics": []
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 120,
+            "y": 190,
+            "width": 1680,
+            "height": 108,
+            "fontSize": 73,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "bold",
+            "align": "left"
+          },
+          "masthead": {
+            "kind": "text",
+            "x": 120,
+            "y": 100,
+            "width": 1000,
+            "height": 33,
+            "fontSize": 23,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "bold",
+            "align": "left"
+          },
+          "section": {
+            "kind": "text",
+            "x": 1450,
+            "y": 100,
+            "width": 350,
+            "height": 33,
+            "fontSize": 23,
+            "bodySize": 26,
+            "color": "muted",
+            "weight": "regular",
+            "align": "right"
+          },
+          "source-note": {
+            "kind": "text",
+            "x": 120,
+            "y": 813,
+            "width": 1330,
+            "height": 31,
+            "fontSize": 22,
+            "bodySize": 26,
+            "color": "muted",
+            "weight": "regular",
+            "align": "left"
+          },
+          "sample-note": {
+            "kind": "text",
+            "x": 1580,
+            "y": 813,
+            "width": 220,
+            "height": 31,
+            "fontSize": 22,
+            "bodySize": 26,
+            "color": "muted",
+            "weight": "regular",
+            "align": "right"
+          },
+          "source-label": {
+            "kind": "text",
+            "x": 120,
+            "y": 328,
+            "width": 1000,
+            "height": 34,
+            "fontSize": 24,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "regular",
+            "align": "left"
+          },
+          "extract": {
+            "kind": "text",
+            "x": 120,
+            "y": 392,
+            "width": 960,
+            "height": 184,
+            "fontSize": 64,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "medium",
+            "align": "left",
+            "underline": "应从零开始"
+          },
+          "explanation": {
+            "kind": "text",
+            "x": 120,
+            "y": 620,
+            "width": 1000,
+            "height": 84,
+            "fontSize": 29,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "regular",
+            "align": "left"
+          },
+          "scope": {
+            "kind": "text",
+            "x": 120,
+            "y": 737,
+            "width": 1000,
+            "height": 33,
+            "fontSize": 23,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "regular",
+            "align": "left"
+          },
+          "index-1": {
+            "kind": "text",
+            "x": 1270,
+            "y": 360,
+            "width": 95,
+            "height": 88,
+            "fontSize": 60,
+            "bodySize": 26,
+            "color": "accent",
+            "weight": "regular",
+            "align": "left"
+          },
+          "point-1": {
+            "kind": "text",
+            "x": 1400,
+            "y": 365,
+            "width": 390,
+            "height": 58,
+            "fontSize": 38,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "medium",
+            "align": "left"
+          },
+          "body-1": {
+            "kind": "text",
+            "x": 1270,
+            "y": 472,
+            "width": 530,
+            "height": 78,
+            "fontSize": 26,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "regular",
+            "align": "left"
+          },
+          "index-2": {
+            "kind": "text",
+            "x": 1270,
+            "y": 583,
+            "width": 95,
+            "height": 88,
+            "fontSize": 60,
+            "bodySize": 26,
+            "color": "accent",
+            "weight": "regular",
+            "align": "left"
+          },
+          "point-2": {
+            "kind": "text",
+            "x": 1400,
+            "y": 588,
+            "width": 390,
+            "height": 58,
+            "fontSize": 38,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "medium",
+            "align": "left"
+          },
+          "body-2": {
+            "kind": "text",
+            "x": 1270,
+            "y": 695,
+            "width": 530,
+            "height": 78,
+            "fontSize": 26,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "regular",
+            "align": "left"
+          }
+        },
+        "charts": {},
+        "rules": [
+          {
+            "x": 120,
+            "y": 150,
+            "length": 1680,
+            "color": "muted",
+            "width": 1,
+            "vertical": false
+          },
+          {
+            "x": 120,
+            "y": 150,
+            "length": 310,
+            "color": "accent",
+            "width": 3,
+            "vertical": false
+          },
+          {
+            "x": 120,
+            "y": 800,
+            "length": 1680,
+            "color": "muted",
+            "width": 1,
+            "vertical": false
+          },
+          {
+            "x": 1200,
+            "y": 324,
+            "length": 430,
+            "color": "muted",
+            "width": 1,
+            "vertical": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "compare",
+      "template": "statement",
+      "purpose": "evidence",
+      "title": "同一组数值，两种视觉印象",
+      "narration": "同一组数值，两种视觉印象",
+      "durationFrames": 300,
+      "connections": [],
+      "captions": [],
+      "visual": {
+        "kind": "compare",
+        "representation": "diagram",
+        "source": "source.md; Government Analysis Function / Bar charts; 90、100为明确标注的示意数据",
+        "explanation": "来源分栏、同一组示意数据与明确的比较尺度；不代表任何业务实测"
+      },
+      "primaryClaim": "同一组数值，两种视觉印象",
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "同一组数值，两种视觉印象"
+        },
+        {
+          "id": "masthead",
+          "type": "node",
+          "label": "墨白杂志 / EDITORIAL INK"
+        },
+        {
+          "id": "section",
+          "type": "node",
+          "label": "03 / 并置证据"
+        },
+        {
+          "id": "source-note",
+          "type": "node",
+          "label": "演示数据：A=90，B=100，不对应真实业务指标"
+        },
+        {
+          "id": "sample-note",
+          "type": "node",
+          "label": "静音样片"
+        },
+        {
+          "id": "zero",
+          "type": "node",
+          "label": "零起点",
+          "text": "两图均为 A=90、B=100"
+        },
+        {
+          "id": "zero-A",
+          "type": "metric",
+          "label": "A",
+          "value": 90
+        },
+        {
+          "id": "zero-B",
+          "type": "metric",
+          "label": "B",
+          "value": 100
+        },
+        {
+          "id": "cut",
+          "type": "node",
+          "label": "截短到 80",
+          "text": "柱长 2 倍，数值并未翻倍"
+        },
+        {
+          "id": "cut-A",
+          "type": "metric",
+          "label": "A",
+          "value": 90
+        },
+        {
+          "id": "cut-B",
+          "type": "metric",
+          "label": "B",
+          "value": 100
+        }
+      ],
+      "beats": [
+        {
+          "id": "title-enter",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "masthead-enter",
+          "target": "masthead",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "section-enter",
+          "target": "section",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "source-note-enter",
+          "target": "source-note",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "sample-note-enter",
+          "target": "sample-note",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "zero-enter",
+          "target": "zero",
+          "action": "reveal",
+          "start": 14,
+          "duration": 15
+        },
+        {
+          "id": "zero-A-enter",
+          "target": "zero-A",
+          "action": "reveal",
+          "start": 40,
+          "duration": 30
+        },
+        {
+          "id": "zero-B-enter",
+          "target": "zero-B",
+          "action": "reveal",
+          "start": 40,
+          "duration": 30
+        },
+        {
+          "id": "cut-enter",
+          "target": "cut",
+          "action": "reveal",
+          "start": 77,
+          "duration": 15
+        },
+        {
+          "id": "cut-A-enter",
+          "target": "cut-A",
+          "action": "reveal",
+          "start": 100,
+          "duration": 30
+        },
+        {
+          "id": "cut-B-enter",
+          "target": "cut-B",
+          "action": "reveal",
+          "start": 100,
+          "duration": 30
+        }
+      ],
+      "shot": {
+        "id": "editorial-explainer",
+        "version": "1.2.0",
+        "composition": "compare",
+        "slots": {
+          "items": [
+            "title",
+            "masthead",
+            "section",
+            "source-note",
+            "sample-note",
+            "zero",
+            "cut"
+          ],
+          "metrics": [
+            "zero-A",
+            "zero-B",
+            "cut-A",
+            "cut-B"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 120,
+            "y": 190,
+            "width": 1680,
+            "height": 105,
+            "fontSize": 70,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "bold",
+            "align": "left"
+          },
+          "masthead": {
+            "kind": "text",
+            "x": 120,
+            "y": 100,
+            "width": 1000,
+            "height": 33,
+            "fontSize": 23,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "bold",
+            "align": "left"
+          },
+          "section": {
+            "kind": "text",
+            "x": 1450,
+            "y": 100,
+            "width": 350,
+            "height": 33,
+            "fontSize": 23,
+            "bodySize": 26,
+            "color": "muted",
+            "weight": "regular",
+            "align": "right"
+          },
+          "source-note": {
+            "kind": "text",
+            "x": 120,
+            "y": 813,
+            "width": 1330,
+            "height": 31,
+            "fontSize": 22,
+            "bodySize": 26,
+            "color": "muted",
+            "weight": "regular",
+            "align": "left"
+          },
+          "sample-note": {
+            "kind": "text",
+            "x": 1580,
+            "y": 813,
+            "width": 220,
+            "height": 31,
+            "fontSize": 22,
+            "bodySize": 26,
+            "color": "muted",
+            "weight": "regular",
+            "align": "right"
+          },
+          "zero": {
+            "kind": "chart",
+            "x": 180,
+            "y": 318,
+            "width": 680,
+            "height": 455,
+            "fontSize": 38,
+            "bodySize": 24,
+            "color": "ink",
+            "weight": "regular",
+            "align": "left",
+            "valueSize": 39,
+            "axisWidth": 100,
+            "barWidth": 0.52
+          },
+          "cut": {
+            "kind": "chart",
+            "x": 1090,
+            "y": 318,
+            "width": 680,
+            "height": 455,
+            "fontSize": 38,
+            "bodySize": 24,
+            "color": "ink",
+            "weight": "regular",
+            "align": "left",
+            "valueSize": 39,
+            "axisWidth": 100,
+            "barWidth": 0.52
+          }
+        },
+        "charts": {
+          "zero": {
+            "metrics": [
+              "zero-A",
+              "zero-B"
+            ],
+            "domain": {
+              "min": 0,
+              "max": 110
+            },
+            "accent": "zero-B"
+          },
+          "cut": {
+            "metrics": [
+              "cut-A",
+              "cut-B"
+            ],
+            "domain": {
+              "min": 80,
+              "max": 110
+            },
+            "accent": "cut-B"
+          }
+        },
+        "rules": [
+          {
+            "x": 120,
+            "y": 150,
+            "length": 1680,
+            "color": "muted",
+            "width": 1,
+            "vertical": false
+          },
+          {
+            "x": 120,
+            "y": 150,
+            "length": 310,
+            "color": "accent",
+            "width": 3,
+            "vertical": false
+          },
+          {
+            "x": 120,
+            "y": 800,
+            "length": 1680,
+            "color": "muted",
+            "width": 1,
+            "vertical": false
+          },
+          {
+            "x": 960,
+            "y": 323,
+            "length": 450,
+            "color": "muted",
+            "width": 1,
+            "vertical": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "rescale",
+      "template": "statement",
+      "purpose": "evidence",
+      "title": "把起点补回来",
+      "narration": "把起点补回来",
+      "durationFrames": 240,
+      "connections": [],
+      "captions": [],
+      "visual": {
+        "kind": "change",
+        "representation": "diagram",
+        "source": "source.md; Government Analysis Function / Bar charts; 90、100为明确标注的示意数据",
+        "explanation": "来源分栏、同一组示意数据与明确的比较尺度；不代表任何业务实测"
+      },
+      "primaryClaim": "把起点补回来",
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "把起点补回来"
+        },
+        {
+          "id": "masthead",
+          "type": "node",
+          "label": "墨白杂志 / EDITORIAL INK"
+        },
+        {
+          "id": "section",
+          "type": "node",
+          "label": "04 / 展开论证"
+        },
+        {
+          "id": "source-note",
+          "type": "node",
+          "label": "演示数据：A=90，B=100，不对应真实业务指标"
+        },
+        {
+          "id": "sample-note",
+          "type": "node",
+          "label": "静音样片"
+        },
+        {
+          "id": "index-1",
+          "type": "node",
+          "label": "01"
+        },
+        {
+          "id": "step-1",
+          "type": "node",
+          "label": "看数值",
+          "text": "始终是 90 和 100"
+        },
+        {
+          "id": "index-2",
+          "type": "node",
+          "label": "02"
+        },
+        {
+          "id": "step-2",
+          "type": "node",
+          "label": "看起点",
+          "text": "把被截掉的部分补回来"
+        },
+        {
+          "id": "index-3",
+          "type": "node",
+          "label": "03"
+        },
+        {
+          "id": "step-3",
+          "type": "node",
+          "label": "看比较方式",
+          "text": "用同一把尺子读差异"
+        },
+        {
+          "id": "rescaled",
+          "type": "node",
+          "label": "数据不变，只还原比较尺度",
+          "text": "始终是同一组 90 与 100"
+        },
+        {
+          "id": "rescaled-A",
+          "type": "metric",
+          "label": "A",
+          "value": 90
+        },
+        {
+          "id": "rescaled-B",
+          "type": "metric",
+          "label": "B",
+          "value": 100
+        }
+      ],
+      "beats": [
+        {
+          "id": "title-enter",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "masthead-enter",
+          "target": "masthead",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "section-enter",
+          "target": "section",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "source-note-enter",
+          "target": "source-note",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "sample-note-enter",
+          "target": "sample-note",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "index-1-enter",
+          "target": "index-1",
+          "action": "reveal",
+          "start": 8,
+          "duration": 15
+        },
+        {
+          "id": "step-1-enter",
+          "target": "step-1",
+          "action": "reveal",
+          "start": 8,
+          "duration": 15
+        },
+        {
+          "id": "index-2-enter",
+          "target": "index-2",
+          "action": "reveal",
+          "start": 52,
+          "duration": 15
+        },
+        {
+          "id": "step-2-enter",
+          "target": "step-2",
+          "action": "reveal",
+          "start": 52,
+          "duration": 15
+        },
+        {
+          "id": "index-3-enter",
+          "target": "index-3",
+          "action": "reveal",
+          "start": 143,
+          "duration": 15
+        },
+        {
+          "id": "step-3-enter",
+          "target": "step-3",
+          "action": "reveal",
+          "start": 143,
+          "duration": 15
+        },
+        {
+          "id": "rescaled-enter",
+          "target": "rescaled",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "rescaled-A-enter",
+          "target": "rescaled-A",
+          "action": "reveal",
+          "start": 20,
+          "duration": 30
+        },
+        {
+          "id": "rescaled-B-enter",
+          "target": "rescaled-B",
+          "action": "reveal",
+          "start": 20,
+          "duration": 30
+        },
+        {
+          "id": "rescaled-rescale",
+          "target": "rescaled",
+          "action": "focus",
+          "start": 60,
+          "duration": 100
+        }
+      ],
+      "shot": {
+        "id": "editorial-explainer",
+        "version": "1.2.0",
+        "composition": "rescale",
+        "slots": {
+          "items": [
+            "title",
+            "masthead",
+            "section",
+            "source-note",
+            "sample-note",
+            "index-1",
+            "step-1",
+            "index-2",
+            "step-2",
+            "index-3",
+            "step-3",
+            "rescaled"
+          ],
+          "metrics": [
+            "rescaled-A",
+            "rescaled-B"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 120,
+            "y": 190,
+            "width": 1680,
+            "height": 108,
+            "fontSize": 73,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "bold",
+            "align": "left"
+          },
+          "masthead": {
+            "kind": "text",
+            "x": 120,
+            "y": 100,
+            "width": 1000,
+            "height": 33,
+            "fontSize": 23,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "bold",
+            "align": "left"
+          },
+          "section": {
+            "kind": "text",
+            "x": 1450,
+            "y": 100,
+            "width": 350,
+            "height": 33,
+            "fontSize": 23,
+            "bodySize": 26,
+            "color": "muted",
+            "weight": "regular",
+            "align": "right"
+          },
+          "source-note": {
+            "kind": "text",
+            "x": 120,
+            "y": 813,
+            "width": 1330,
+            "height": 31,
+            "fontSize": 22,
+            "bodySize": 26,
+            "color": "muted",
+            "weight": "regular",
+            "align": "left"
+          },
+          "sample-note": {
+            "kind": "text",
+            "x": 1580,
+            "y": 813,
+            "width": 220,
+            "height": 31,
+            "fontSize": 22,
+            "bodySize": 26,
+            "color": "muted",
+            "weight": "regular",
+            "align": "right"
+          },
+          "index-1": {
+            "kind": "text",
+            "x": 120,
+            "y": 355,
+            "width": 70,
+            "height": 40,
+            "fontSize": 28,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "regular",
+            "align": "left"
+          },
+          "step-1": {
+            "kind": "text",
+            "x": 210,
+            "y": 355,
+            "width": 780,
+            "height": 115,
+            "fontSize": 42,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "medium",
+            "align": "left"
+          },
+          "index-2": {
+            "kind": "text",
+            "x": 120,
+            "y": 500,
+            "width": 70,
+            "height": 40,
+            "fontSize": 28,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "regular",
+            "align": "left"
+          },
+          "step-2": {
+            "kind": "text",
+            "x": 210,
+            "y": 500,
+            "width": 780,
+            "height": 115,
+            "fontSize": 42,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "medium",
+            "align": "left"
+          },
+          "index-3": {
+            "kind": "text",
+            "x": 120,
+            "y": 645,
+            "width": 70,
+            "height": 40,
+            "fontSize": 28,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "regular",
+            "align": "left"
+          },
+          "step-3": {
+            "kind": "text",
+            "x": 210,
+            "y": 645,
+            "width": 780,
+            "height": 115,
+            "fontSize": 42,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "medium",
+            "align": "left"
+          },
+          "rescaled": {
+            "kind": "chart",
+            "x": 1040,
+            "y": 318,
+            "width": 760,
+            "height": 455,
+            "fontSize": 26,
+            "bodySize": 24,
+            "color": "ink",
+            "weight": "regular",
+            "align": "left",
+            "valueSize": 43,
+            "axisWidth": 100,
+            "barWidth": 0.52
+          }
+        },
+        "charts": {
+          "rescaled": {
+            "metrics": [
+              "rescaled-A",
+              "rescaled-B"
+            ],
+            "domain": {
+              "min": 80,
+              "max": 110
+            },
+            "accent": "rescaled-B",
+            "rescale": {
+              "trigger": "rescaled-rescale",
+              "domain": {
+                "min": 0,
+                "max": 110
+              }
+            }
+          }
+        },
+        "rules": [
+          {
+            "x": 120,
+            "y": 150,
+            "length": 1680,
+            "color": "muted",
+            "width": 1,
+            "vertical": false
+          },
+          {
+            "x": 120,
+            "y": 150,
+            "length": 310,
+            "color": "accent",
+            "width": 3,
+            "vertical": false
+          },
+          {
+            "x": 120,
+            "y": 800,
+            "length": 1680,
+            "color": "muted",
+            "width": 1,
+            "vertical": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "closing",
+      "template": "statement",
+      "purpose": "evidence",
+      "title": "好观点，要经得起\n同一把尺子的比较",
+      "narration": "好观点，要经得起，同一把尺子的比较",
+      "durationFrames": 210,
+      "connections": [],
+      "captions": [],
+      "visual": {
+        "kind": "statement",
+        "representation": "diagram",
+        "source": "source.md; Government Analysis Function / Bar charts; 90、100为明确标注的示意数据",
+        "explanation": "来源分栏、同一组示意数据与明确的比较尺度；不代表任何业务实测"
+      },
+      "primaryClaim": "好观点，要经得起，同一把尺子的比较",
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "好观点，要经得起\n同一把尺子的比较"
+        },
+        {
+          "id": "masthead",
+          "type": "node",
+          "label": "墨白杂志 / EDITORIAL INK"
+        },
+        {
+          "id": "section",
+          "type": "node",
+          "label": "05 / 给出结论"
+        },
+        {
+          "id": "source-note",
+          "type": "node",
+          "label": "演示数据：A=90，B=100，不对应真实业务指标"
+        },
+        {
+          "id": "sample-note",
+          "type": "node",
+          "label": "静音样片"
+        },
+        {
+          "id": "values",
+          "type": "node",
+          "label": "90 → 100"
+        },
+        {
+          "id": "difference",
+          "type": "node",
+          "label": "+10",
+          "text": "增加的数量"
+        },
+        {
+          "id": "relative",
+          "type": "node",
+          "label": "+11.1%",
+          "text": "以 90 为基数，四舍五入"
+        },
+        {
+          "id": "principle-0",
+          "type": "node",
+          "label": "保留上下文"
+        },
+        {
+          "id": "principle-1",
+          "type": "node",
+          "label": "对齐比较尺度"
+        },
+        {
+          "id": "principle-2",
+          "type": "node",
+          "label": "标明材料来源"
+        }
+      ],
+      "beats": [
+        {
+          "id": "title-enter",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "masthead-enter",
+          "target": "masthead",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "section-enter",
+          "target": "section",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "source-note-enter",
+          "target": "source-note",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "sample-note-enter",
+          "target": "sample-note",
+          "action": "reveal",
+          "start": 0,
+          "duration": 15
+        },
+        {
+          "id": "values-enter",
+          "target": "values",
+          "action": "reveal",
+          "start": 23,
+          "duration": 15
+        },
+        {
+          "id": "difference-enter",
+          "target": "difference",
+          "action": "reveal",
+          "start": 39,
+          "duration": 15
+        },
+        {
+          "id": "relative-enter",
+          "target": "relative",
+          "action": "reveal",
+          "start": 39,
+          "duration": 15
+        },
+        {
+          "id": "principle-0-enter",
+          "target": "principle-0",
+          "action": "reveal",
+          "start": 75,
+          "duration": 15
+        },
+        {
+          "id": "principle-1-enter",
+          "target": "principle-1",
+          "action": "reveal",
+          "start": 90,
+          "duration": 15
+        },
+        {
+          "id": "principle-2-enter",
+          "target": "principle-2",
+          "action": "reveal",
+          "start": 105,
+          "duration": 15
+        }
+      ],
+      "shot": {
+        "id": "editorial-explainer",
+        "version": "1.2.0",
+        "composition": "closing",
+        "slots": {
+          "items": [
+            "title",
+            "masthead",
+            "section",
+            "source-note",
+            "sample-note",
+            "values",
+            "difference",
+            "relative",
+            "principle-0",
+            "principle-1",
+            "principle-2"
+          ],
+          "metrics": []
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 120,
+            "y": 185,
+            "width": 1100,
+            "height": 235,
+            "fontSize": 82,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "bold",
+            "align": "left"
+          },
+          "masthead": {
+            "kind": "text",
+            "x": 120,
+            "y": 100,
+            "width": 1000,
+            "height": 33,
+            "fontSize": 23,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "bold",
+            "align": "left"
+          },
+          "section": {
+            "kind": "text",
+            "x": 1450,
+            "y": 100,
+            "width": 350,
+            "height": 33,
+            "fontSize": 23,
+            "bodySize": 26,
+            "color": "muted",
+            "weight": "regular",
+            "align": "right"
+          },
+          "source-note": {
+            "kind": "text",
+            "x": 120,
+            "y": 813,
+            "width": 1330,
+            "height": 31,
+            "fontSize": 22,
+            "bodySize": 26,
+            "color": "muted",
+            "weight": "regular",
+            "align": "left"
+          },
+          "sample-note": {
+            "kind": "text",
+            "x": 1580,
+            "y": 813,
+            "width": 220,
+            "height": 31,
+            "fontSize": 22,
+            "bodySize": 26,
+            "color": "muted",
+            "weight": "regular",
+            "align": "right"
+          },
+          "values": {
+            "kind": "text",
+            "x": 120,
+            "y": 477,
+            "width": 1000,
+            "height": 205,
+            "fontSize": 145,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "bold",
+            "align": "left"
+          },
+          "difference": {
+            "kind": "text",
+            "x": 1300,
+            "y": 418,
+            "width": 500,
+            "height": 150,
+            "fontSize": 70,
+            "bodySize": 26,
+            "color": "accent",
+            "weight": "bold",
+            "align": "left"
+          },
+          "relative": {
+            "kind": "text",
+            "x": 1300,
+            "y": 575,
+            "width": 500,
+            "height": 150,
+            "fontSize": 70,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "bold",
+            "align": "left"
+          },
+          "principle-0": {
+            "kind": "text",
+            "x": 120,
+            "y": 742,
+            "width": 540,
+            "height": 45,
+            "fontSize": 31,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "medium",
+            "align": "left"
+          },
+          "principle-1": {
+            "kind": "text",
+            "x": 685,
+            "y": 742,
+            "width": 540,
+            "height": 45,
+            "fontSize": 31,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "medium",
+            "align": "left"
+          },
+          "principle-2": {
+            "kind": "text",
+            "x": 1250,
+            "y": 742,
+            "width": 540,
+            "height": 45,
+            "fontSize": 31,
+            "bodySize": 26,
+            "color": "ink",
+            "weight": "medium",
+            "align": "left"
+          }
+        },
+        "charts": {},
+        "rules": [
+          {
+            "x": 120,
+            "y": 150,
+            "length": 1680,
+            "color": "muted",
+            "width": 1,
+            "vertical": false
+          },
+          {
+            "x": 120,
+            "y": 150,
+            "length": 310,
+            "color": "accent",
+            "width": 3,
+            "vertical": false
+          },
+          {
+            "x": 120,
+            "y": 800,
+            "length": 1680,
+            "color": "muted",
+            "width": 1,
+            "vertical": false
+          },
+          {
+            "x": 120,
+            "y": 717,
+            "length": 970,
+            "color": "accent",
+            "width": 1,
+            "vertical": false
+          }
+        ]
+      }
+    }
+  ]
+}

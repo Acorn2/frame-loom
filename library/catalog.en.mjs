@@ -1,5 +1,8 @@
 // Display metadata only. IDs, compatibility, source documents and asset paths stay intact.
 export const recipes = {
+  'editorial-explainer': ['Editorial explainer', 'Explain sourced articles and data with editorial columns, comparisons and continuous axis rescaling.'],
+  'mechanism-map': ['Mechanism diagram', 'Explain sourced layers, paths, timelines and decision gates with explicit connections.'],
+  'product-showcase': ['Product showcase', 'Present real local screenshots through explicit, bounded framing stages.'],
   'paper-title': ['Paper title', 'Reveal a claim phrase by phrase and retain one key word.'],
   'title-to-label': ['Title to chapter label', 'Establish the topic, then shrink the title into a label to make room for the explanation.'],
   'blur-slide': ['Soft-focus slide', 'Bring the title and subtitle into focus with a gentle entrance.'],
@@ -72,12 +75,12 @@ export const styles = {
   whiteboard: ['Hand-drawn Whiteboard', 'Open dot-grid board, original stickers and progressive drawing. The sample shows a family observing, comparing and asking questions.'],
   'annotated-reasoning': ['Annotated Reasoning', 'Stable text with accumulating circles, notes and relationship lines; small illustrations establish context.'],
   'editorial-typography': ['Editorial Typography', 'Restrained type on a light canvas. The same words move, regroup and connect through explicit stages.'],
-  'retro-zine': ['Editorial Ink', 'Chinese serif type, magazine columns and red stamps for viewpoints, knowledge and stories.'],
+  'retro-zine': ['Editorial Ink', 'Serif type and red accents frame sourced articles, evidence comparisons and continuous axis rescaling.'],
   signal: ['Signal', 'Graphite canvas and a central focal point for key claims, turning points and emphasis.'],
   scatterbrain: ['Sketch Notes', 'Sticky notes, handwritten type and drawn annotations for learning and methods.'],
   'archive-grid': ['Swiss Blue', 'Blue panels, a precise grid and strong type contrast for reports and analysis.'],
-  'signal-noir': ['Engineering Blueprint', 'A graphite grid, monospace labels and amber routes for mechanisms and systems.'],
-  'studio-frame': ['Product Demo', 'A cool-gray workspace with interface layers and state changes for products and tutorials.']
+  'signal-noir': ['Mechanism diagrams', 'Engineering layers, timelines, paths and decision gates reveal the overall process and its details.'],
+  'studio-frame': ['Product showcase', 'Real interfaces, focused framing and source evidence explain product tasks without a fabricated UI.']
 };
 
 export const fonts = {

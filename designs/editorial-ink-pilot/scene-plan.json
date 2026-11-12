@@ -1,0 +1,16 @@
+{
+  "status": "design-preview",
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "font": {"id": "source-han-serif-sc", "version": "2.003"},
+  "data": {"A": 90, "B": 100, "truncatedOrigin": 80, "maximum": 110, "kind": "illustrative-not-observed"},
+  "capabilities": {"layers": ["label", "annotation", "metric"], "actions": ["enter", "reveal", "draw", "focus", "highlight"], "transitions": ["fade", "carry"]},
+  "scenes": [
+    {"id": "opening", "seconds": 7, "title": "同样的数据，另一种结论？", "intent": "宋体大标题、红色细线与真实比例的两根柱构成杂志开篇", "takeaway": "画面表达会影响读者对差异的判断"},
+    {"id": "source", "seconds": 8, "title": "先读规则，再看结论", "intent": "原文规则的中文意译占据主栏，旁栏按顺序解释长度与起点", "takeaway": "以长度编码数量的条形图应保留零起点"},
+    {"id": "compare", "seconds": 10, "title": "同一组数值，两种视觉印象", "intent": "同一组90和100并置于零起点与80起点，逐步揭示比例差异", "takeaway": "右图柱长2倍，不等于数据翻倍"},
+    {"id": "rescale", "seconds": 8, "title": "把起点补回来", "intent": "同一组柱子连续重标尺，数据标签始终保持90和100", "takeaway": "看数值、看起点、看比较方式"},
+    {"id": "closing", "seconds": 7, "title": "好观点，要经得起同一把尺子的比较", "intent": "回到实际数值与增量，收束为三项编辑原则", "takeaway": "保留上下文、对齐尺度、标明来源"}
+  ]
+}

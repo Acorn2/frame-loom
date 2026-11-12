@@ -1,6 +1,14 @@
 {
   "shots": [
     {
+      "id": "editorial-explainer",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "墨白杂志：编辑讲解",
+      "manifest": "editorial-explainer/manifest.json",
+      "recipe": "editorial-explainer/recipe.md"
+    },
+    {
       "id": "semantic-default",
       "version": "1.0.0",
       "status": "experimental",
@@ -399,6 +407,22 @@
       "purpose": "编辑式排印",
       "manifest": "editorial-flow/manifest.json",
       "recipe": "editorial-flow/recipe.md"
+    },
+    {
+      "id": "mechanism-map",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "机制图解",
+      "manifest": "mechanism-map/manifest.json",
+      "recipe": "mechanism-map/recipe.md"
+    },
+    {
+      "id": "product-showcase",
+      "version": "1.2.0",
+      "status": "experimental",
+      "purpose": "产品实演",
+      "manifest": "product-showcase/manifest.json",
+      "recipe": "product-showcase/recipe.md"
     }
   ]
 }

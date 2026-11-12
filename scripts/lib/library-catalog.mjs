@@ -1,3 +1,4 @@
+import {styleMediaSources} from './style-media.mjs';
 import {illustrationFiles} from './illustrations.mjs';
 import {fixtureAssets} from './library-assets.mjs';
 import fs from 'node:fs';
@@ -21,12 +22,12 @@ const styleDescriptions = {
   'flat-explainer': ['彩色手绘讲解', '大幅漫画人物与物件置于有机舞台，说明围绕主体展开；对照与流程横向推进，曲线关系配合连续入场。样片“好问题，从观察开始”与另外两套使用相同文案。'],
   'paper-collage': ['像素讲解笔记', '紧凑像素主体配浅灰笔记线与阶梯模块；对照和流程纵向逐项展开，直角关系、分块显现与短促重点提示。样片“好问题，从观察开始”与另外两套使用相同文案。'],
   whiteboard: ['手绘白板', '开放点阵白板配手绘人物与物件，文字、步骤和单支铅笔逐项展开；原创样片“好问题，从观察开始”展示亲子观察、比较和提问。'],
-  'retro-zine': ['墨白杂志', '中文宋体、杂志分栏与朱红印章；内容逐段揭示。适合观点、知识与故事。'],
+  'retro-zine': ['墨白杂志', '宋体与朱红保留杂志气质，通过来源分栏、图表对照与连续重标尺展开论证。适合文章、观点与数据。'],
   signal: ['暗场信号', '石墨暗场、中央焦点与淡紫强调；一次聚焦一个重点。适合核心观点与转折。'],
   scatterbrain: ['手绘便签', '黄色便签、中文楷体与蓝色批注；贴入后沿关系描线。适合笔记与方法拆解。'],
   'archive-grid': ['瑞士蓝', '克莱因蓝、直角色块与强字号对比；按网格组织内容。适合报告、分析与方法论。'],
-  'signal-noir': ['工程蓝图', '石墨蓝灰网格、等宽标注与琥珀路由；模块按连接展开。适合技术机制与系统流程。'],
-  'studio-frame': ['产品演示', '冷灰工作台、界面层次与绿色状态；说明跟随操作步骤。适合产品、教程与更新。']
+  'signal-noir': ['机制图解', '从整体路径进入局部，使用工程分层、时间轴、关系线与确认门解释流程。'],
+  'studio-frame': ['产品实演', '以真实界面、局部取景和状态证据解释功能与制作步骤；不重画虚构产品界面。']
 };
 export const previewRoot = path.join(projectRoot, 'library/previews');
 export function readLibraryText(relative) {return fs.readFileSync(path.join(projectRoot, relative), 'utf8');}
@@ -108,8 +109,7 @@ export function buildLibraryCatalog({previewManifest = readPreviewManifest(), pr
     const description = styleDescriptions[item.id];
     if (!description) throw new Error(`风格缺少配方库说明：${item.id}`);
     return {...item, recommendedFont: recommendedFont(item.id).id, subtitle: description[0], description: description[1],
-      posterSource: `examples/template-families/previews/${item.id}-${item.id === 'whiteboard' ? 'original' : ['annotated-reasoning', 'editorial-typography'].includes(item.id) ? 'text-led' : item.role === 'primary' ? 'illustrated' : 'semantic-process'}.png`,
-      videoSource: `examples/template-families/previews/${item.id}-${item.id === 'whiteboard' ? 'original' : ['annotated-reasoning', 'editorial-typography'].includes(item.id) ? 'text-led' : item.role === 'primary' ? 'illustrated' : 'semantic'}.mp4`};
+      ...styleMediaSources(item)};
   });
   const fixtures = libraryFixtures();
   const recipes = [...SHOT_CATALOG, ...AUXILIARY_CATALOG, ...CHAPTER_TRANSITIONS].map((item) => {

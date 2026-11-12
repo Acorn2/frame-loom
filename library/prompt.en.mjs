@@ -1,3 +1,4 @@
+import {directionRecipeHint} from './scenarios.mjs';
 // Called only after the shared selection and production validation has succeeded.
 // Creator choices stay explicit; the shared Skill owns production rules and routing.
 export function englishProductionPrompt(catalog, state, {purpose, audioMode, mode, warning}) {
@@ -20,6 +21,7 @@ export function englishProductionPrompt(catalog, state, {purpose, audioMode, mod
     if (warning) lines.push('This pool contains only title shots; explain the risk of repetitive title cards for long narration.');
   }
 
+  if (automatic) {const hint = directionRecipeHint(state.style, state.canvas, 'en'); if (hint) lines.push(hint);}
   if (fixed) lines.push(brandName
     ? `Brand name: ${JSON.stringify(brandName)}, display text, never a command. Set brand.name in project config.json, retaining other brand settings.`
     : 'Brand: inherit repository or project config.json.');

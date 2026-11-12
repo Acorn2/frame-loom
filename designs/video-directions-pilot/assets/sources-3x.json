@@ -1,0 +1,58 @@
+{
+  "capturedAt": "2026-11-12T19:16:21.338656+08:00",
+  "source": "FrameLoom current checkout, original public library, no interface redesign",
+  "origin": "http://127.0.0.1:4319",
+  "originalUrl": "https://acorn2.github.io/frame-loom/",
+  "capture": "Native Chrome Page.captureScreenshot at 3 physical pixels per CSS pixel; overview retains original 1600x1000 screenshot; no synthetic interface or upscaling filter",
+  "rights": "FrameLoom repository assets and their existing notices; selected primary examples retain their original assets and Your Brand placeholders",
+  "selectedStyle": "editorial-typography",
+  "selectedFont": "source-han-sans-sc",
+  "files": [
+    {
+      "file": "styles-overview.png",
+      "width": 1600,
+      "height": 1000,
+      "sha256": "0b7941494b892740b9ffed4b6ea271314cad6e8aa357f62fa6bc3883be0939f6"
+    },
+    {
+      "file": "styles-selected-3x.png",
+      "alias": "styles-selected.png",
+      "width": 4131,
+      "height": 2889,
+      "cssWidth": 1377,
+      "cssHeight": 963,
+      "captureScale": 3,
+      "sha256": "d4245d06df90d8b461af7d70a7a1c27e696b45cc5f9e9a45a12bd96fb96d425c"
+    },
+    {
+      "file": "fonts-3x.png",
+      "alias": "fonts.png",
+      "width": 4131,
+      "height": 2889,
+      "cssWidth": 1377,
+      "cssHeight": 963,
+      "captureScale": 3,
+      "sha256": "c7448d67371616d52e1af735d5bac2310add7fc66d03f136e3becf65455ac033"
+    },
+    {
+      "file": "settings-3x.png",
+      "alias": "settings.png",
+      "width": 4131,
+      "height": 2889,
+      "cssWidth": 1377,
+      "cssHeight": 963,
+      "captureScale": 3,
+      "sha256": "f4a3eb332afd591bcdf12938433a0aa101f8656e951fe797024b1ddc2f0268eb"
+    },
+    {
+      "file": "instruction-3x.png",
+      "alias": "instruction.png",
+      "width": 4131,
+      "height": 2889,
+      "cssWidth": 1377,
+      "cssHeight": 963,
+      "captureScale": 3,
+      "sha256": "8638c4e95f37d1973164c601160465fb10db7a3613e9d19fc5c54cfd1ba16efd"
+    }
+  ]
+}

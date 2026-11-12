@@ -66,10 +66,11 @@
     "list:video-templates": "node --import tsx/esm scripts/list-video-templates.mjs",
     "list:shots": "node --import tsx/esm scripts/list-shots.mjs",
     "migrate:storyboard": "node --import tsx/esm scripts/migrate-storyboard.mjs",
-    "test:shots": "vitest run --dir tests shot-recipes.test.mjs shortlist-recipes.test.mjs p1-recipes.test.mjs shot-expansion.test.mjs whiteboard-recipes.test.mjs illustrated-recipes.test.mjs whiteboard-board.test.mjs text-led-recipes.test.mjs",
+    "test:shots": "vitest run --dir tests shot-recipes.test.mjs shortlist-recipes.test.mjs p1-recipes.test.mjs shot-expansion.test.mjs whiteboard-recipes.test.mjs illustrated-recipes.test.mjs whiteboard-board.test.mjs text-led-recipes.test.mjs direction-recipes.test.mjs editorial-recipes.test.mjs",
     "prepare:illustrations": "node --import tsx/esm scripts/prepare-illustrations.mjs",
     "register:illustration": "node --import tsx/esm scripts/register-illustration.mjs",
-    "preview:illustrated": "node --import tsx/esm scripts/preview-illustrated-styles.mjs"
+    "preview:illustrated": "node --import tsx/esm scripts/preview-illustrated-styles.mjs",
+    "preview:directions": "node --import tsx/esm scripts/preview-directions.mjs"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.522",

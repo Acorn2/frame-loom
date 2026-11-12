@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="light">
-  <title>视频风格 · FrameLoom</title>
+  <title>用途与画法 · FrameLoom</title>
   <link rel="icon" href="brand/favicon.ico" sizes="16x16 32x32 48x48">
   <link rel="icon" href="brand/favicon.svg" type="image/svg+xml" sizes="any">
   <link rel="apple-touch-icon" href="brand/apple-touch-icon.png" sizes="180x180">
@@ -13,13 +13,14 @@
 <body data-page="styles">
   <a class="skip" href="#main">跳到主要内容</a>
   <header class="masthead">
-    <a class="brand" href="index.html" aria-label="FrameLoom 视频风格"><img class="brand-mark" src="brand/logo.svg" width="40" height="40" alt=""><span>FrameLoom<small>AI 文档转视频</small></span></a>
-    <nav class="page-nav" aria-label="配方库导航"><a href="index.html" aria-current="page"><span class="nav-step">01</span>视频风格</a><a href="shots.html"><span class="nav-step">02</span>镜头配方</a><a href="selection.html"><span class="nav-step">03</span>制作设置<span id="nav-count" class="nav-count">0</span></a></nav>
+    <a class="brand" href="index.html" aria-label="FrameLoom 视频风格"><img class="brand-mark" src="brand/logo.svg" width="40" height="40" alt=""><span>FrameLoom<small>本地视频工作流</small></span></a>
+    <nav class="page-nav" aria-label="配方库导航"><a href="index.html" aria-current="page"><span class="nav-step">01</span>用途与画法</a><a href="shots.html"><span class="nav-step">02</span>镜头配方</a><a href="selection.html"><span class="nav-step">03</span>制作设置<span id="nav-count" class="nav-count">0</span></a></nav>
     <span class="header-note">看效果 · 选组合 · 本地制作</span>
   </header>
   <main id="main" data-screen-label="视频风格">
-    <section class="page-heading"><div><p class="eyebrow">01 / VISUAL LANGUAGE</p><h1>找到画面的气质</h1><p class="page-description">先看动态样片，选择画法与动效；全片字体单独设置。</p></div><div class="page-tools"><a class="text-button" href="#font-section">选择全片字体 <span aria-hidden="true">↓</span></a><div class="canvas-label"><label for="canvas">制作画幅</label><select id="canvas"><option value="landscape">16:9 横屏</option><option value="portrait">9:16 竖屏</option></select></div></div></section>
-    <details class="library-note"><summary><span class="note-label">样片说明</span><span>原始字体 · 默认配色</span></summary><p>三套 AI 插画样片统一使用“好问题，从观察开始”的文案与亲子观察情境，便于比较画法、构图和动效。全片字体在下方单独选择；有主体截图时，制作配色优先参考截图。镜头数量按所选画幅计算。</p></details>
+    <section class="page-heading"><div><p class="eyebrow">01 / VISUAL LANGUAGE</p><h1>你想做什么视频？</h1><p class="page-description">先按用途看实际效果，再选择画法、字体与制作设置。</p></div><div class="page-tools"><a class="text-button" href="#font-section">选择全片字体 <span aria-hidden="true">↓</span></a><div class="canvas-label"><label for="canvas">制作画幅</label><select id="canvas"><option value="landscape">16:9 横屏</option><option value="portrait">9:16 竖屏</option></select></div></div></section>
+    <details class="library-note"><summary><span class="note-label">样片说明</span><span>原始字体 · 样片配色</span></summary><p>墨白、机制与产品样片分别展示证据比较、流程图解和真实界面；三套 AI 插画样片保留同文案对比。全片字体在下方单独选择；有主体截图时，制作配色优先参考截图。镜头数量按所选画幅计算。</p></details>
+    <section class="scenario-section" aria-label="按使用场景浏览"><div class="scenario-heading"><p class="section-note">用途样片 · 点击画面可播放</p><button id="scenario-all" class="text-button" data-scenario="all" aria-pressed="true">查看所有画法</button></div><div id="scenarios" class="scenario-grid"></div><p class="section-note">用途筛选只影响浏览，制作选择保持不变。以下样片为横屏；竖屏按实际兼容能力选型。</p></section>
     <section aria-label="视频风格"><div id="styles" class="styles" role="group" aria-label="选择视频风格"></div></section>
     <section id="font-section" class="font-section" aria-labelledby="font-heading">
       <div class="font-section-heading"><div><h2 id="font-heading">选择全片字体</h2><p>一次选择一个字体家族，用于标题、正文、图解与旁白字幕。</p></div><button id="font-recommended" class="button secondary">使用当前风格推荐字体</button></div>

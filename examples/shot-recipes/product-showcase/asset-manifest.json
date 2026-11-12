@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "id": "styles-overview",
+      "path": "assets/styles-overview.png",
+      "type": "screenshot",
+      "source": "FrameLoom local public library capture 2026-11-12; original repository UI; see capture-sources.json",
+      "license": "MIT; original embedded sample and font notices retained in repository",
+      "intendedUse": "Real interface state for product showcase",
+      "usage": "scene-media"
+    },
+    {
+      "id": "styles-selected",
+      "path": "assets/styles-selected.png",
+      "type": "screenshot",
+      "source": "FrameLoom local public library capture 2026-11-12; original repository UI; see capture-sources.json",
+      "license": "MIT; original embedded sample and font notices retained in repository",
+      "intendedUse": "Real interface state for product showcase",
+      "usage": "scene-media"
+    },
+    {
+      "id": "fonts",
+      "path": "assets/fonts.png",
+      "type": "screenshot",
+      "source": "FrameLoom local public library capture 2026-11-12; original repository UI; see capture-sources.json",
+      "license": "MIT; original embedded sample and font notices retained in repository",
+      "intendedUse": "Real interface state for product showcase",
+      "usage": "scene-media"
+    },
+    {
+      "id": "settings",
+      "path": "assets/settings.png",
+      "type": "screenshot",
+      "source": "FrameLoom local public library capture 2026-11-12; original repository UI; see capture-sources.json",
+      "license": "MIT; original embedded sample and font notices retained in repository",
+      "intendedUse": "Real interface state for product showcase",
+      "usage": "scene-media"
+    },
+    {
+      "id": "instruction",
+      "path": "assets/instruction.png",
+      "type": "screenshot",
+      "source": "FrameLoom local public library capture 2026-11-12; original repository UI; see capture-sources.json",
+      "license": "MIT; original embedded sample and font notices retained in repository",
+      "intendedUse": "Real interface state for product showcase",
+      "usage": "scene-media"
+    }
+  ],
+  "notes": "High-density native capture, no fabricated UI; public URLs are source references and are not displayed as a CTA."
+}

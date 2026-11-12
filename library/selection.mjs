@@ -1,3 +1,4 @@
+import {directionRecipeHint} from './scenarios.mjs';
 import {englishProductionPrompt} from './prompt.en.mjs';
 import {fixedStyleRecipeIds, isFixedStyle} from './style-policy.mjs';
 
@@ -92,6 +93,7 @@ export function createExports(catalog, selection, locale = 'zh') {
     `制作参数：--output-purpose ${purpose} --audio-mode ${audioMode} --mode ${mode}。`,
     review ? `先展示${state.shotSelection === 'fixed' ? '风格内置流程的画面安排' : state.shotSelection === 'auto' ? '推荐组合' : '指定集合内的镜头安排'}、讲稿、分镜和时间安排，等我审核后再渲染。`
       : '简要展示逐场安排后直接完成制作与 QA，不新增组合确认步骤。');
+  if (state.shotSelection === 'auto') {const hint = directionRecipeHint(state.style, state.canvas); if (hint) prompt.push(hint);}
   prompt.push('', '【交付与复核】', `缺少文档或必需素材时先请我提供，不生成占位内容、不补造事实${goal === 'master' ? '。' : '，不退回静音结果。'}`,
     '交接时给我可直接打开的审稿或审片入口，并说明下一步。',
     '修改时先给镜头预览，等我确认后再生成整片。');
