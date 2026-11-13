@@ -14,7 +14,7 @@ for (const style of loadStyleIndex().styles.filter(item => item.status !== 'depr
   const source = styleMediaSources(style).videoSource;
   const file = path.join(projectRoot, source);
   const cover = path.join(folder, `${style.id}.png`);
-  const board = ['annotated-reasoning', 'editorial-typography'].includes(style.id) ? JSON.parse(fs.readFileSync(path.join(projectRoot, 'examples/text-led-video', style.id, 'storyboard.json'))) : style.id === 'whiteboard' ? JSON.parse(fs.readFileSync(path.join(projectRoot, 'examples/whiteboard-original/storyboard.json'))) : null;
+  const board = ['annotated-reasoning', 'editorial-typography'].includes(style.id) ? JSON.parse(fs.readFileSync(path.join(projectRoot, 'examples/shot-recipes', style.id === 'annotated-reasoning' ? 'annotated-image' : 'scene-narrative', 'storyboard.json'))) : style.id === 'whiteboard' ? JSON.parse(fs.readFileSync(path.join(projectRoot, 'examples/whiteboard-original/storyboard.json'))) : null;
   const timeSec = board ? Math.min(board.project.durationFrames - 1, Math.max(...board.scenes[0].beats.map(beat => beat.start + beat.duration)) + Math.ceil(board.project.fps * .5)) / board.project.fps : 4.5;
   const result = spawnSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', String(timeSec), '-i', file, '-frames:v', '1', '-vf', 'scale=960:540', cover], {encoding:'utf8'});
   if (result.error || result.status !== 0) throw new Error(`无法准备 ${style.id} 封面：${result.error?.message ?? result.stderr}`);

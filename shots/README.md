@@ -2,7 +2,7 @@
 
 [项目首页](../README.md) · [文档导航](../references/README.md) · [镜头编排](../references/shot-planning.md)
 
-FrameLoom 的制作选择分为两层：**视频风格决定画面语言，镜头配方决定信息怎样出现、变化与停留**。用户可以选一套风格和多个配方，Agent 按原文决定每场使用哪个、是否重复及顺序。`video-templates/` 是预设组合的快捷入口，不是使用配方库的前提。三套主风格使用固定内置范围；批注推演与编辑式排印的字段、阶段与限额见[文案动画制作](../references/text-led-production.md)，无需用户选择镜头集合。
+FrameLoom 的制作选择分为两层：**视频风格决定画面语言，镜头配方决定信息怎样出现、变化与停留**。用户可以选一套风格和多个配方，Agent 按原文决定每场使用哪个、是否重复及顺序。`video-templates/` 是预设组合的快捷入口，不是使用配方库的前提。三套主风格使用固定内置范围；批注图解与情境叙事的源图区域、取景与素材规范见[图像主导制作](../references/image-led-directions.md)，无需用户选择镜头集合。
 
 **有主体截图时，全片配色优先参考截图的背景、文字、卡片和强调色，风格保留构图与动效。** 本目录配方说明中的白色、冷灰、石墨等外观，以及公开样片的颜色，描述的是默认参考，不强制覆盖素材配色。仅指定风格或镜头不会取消截图配色参考；明确选择“使用风格配色”时才保留默认色。当前素材配色支持已声明兼容的当前横屏风格与镜头，真实截图不染色。详见[项目配色](../references/project-palette.md)。
 
@@ -24,6 +24,8 @@ npm run init:project -- --slug my-topic --style retro-zine --shots paper-title,d
 
 | 配方 | 表达任务 | 输入边界 | 方法来源 |
 | --- | --- | --- | --- |
+| [批注图解](annotated-image/recipe.md) | 大幅主体、细节取景、源图区域圈注 | 本地来源图片、原生文字与显式区域；横屏 | 原创实现 |
+| [情境叙事](scene-narrative/recipe.md) | 连贯场景、人物与观察细节 | 完整来源插画与显式取景；横屏 | 原创实现 |
 | [editorial-explainer](editorial-explainer/recipe.md) | 来源分栏、证据并置与连续重标尺 | 明确来源与非负原始数值；retro-zine横屏 | 原创实现，方法参考PPT Master |
 | [mechanism-map](mechanism-map/recipe.md) | 分层、流程路径、时间轴与局部确认 | 有来源的关系与显式几何；signal-noir 横屏 | 原创实现，方法参考 PPT Master |
 | [product-showcase](product-showcase/recipe.md) | 真实界面总览、连续取景与状态证据 | 本地真实截图；studio-frame 横屏 | 原创实现，方法参考 PPT Master |

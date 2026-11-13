@@ -101,3 +101,7 @@ P2 继续使用现有 React / Remotion / Zod；SVG 滤镜与确定性闭式粒�
 ### 编辑讲解增量
 
 继续使用现有 Zod、React、Remotion 与受控字体，无新增依赖。HTML承载来源分栏文字，SVG从原始数值绘制条形图，同组数据通过显式focus重标尺；不执行文档中的代码或远程内容。
+
+## 图像主导样片
+
+沿用 Remotion、HTML 文字、Img 与 SVG 矢量标记，不新增依赖。原生 imagegen 生成的本地 PNG 与旁白分离；透明主体和完整场景通过版本化规范校验，FFmpeg 与现有布局测量验证正式输出。

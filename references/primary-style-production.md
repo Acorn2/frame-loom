@@ -7,14 +7,14 @@
 | 风格 | 固定内置镜头范围 |
 | --- | --- |
 | 手绘白板 `whiteboard` | `whiteboard-board`，开放白板、单笔书写、贴纸与明确关系 |
-| 批注推演 `annotated-reasoning` | `annotated-manuscript`，正文、圈词、划线、旁注与关系；`semantic-default` 展示真实截图 |
-| 编辑式排印 `editorial-typography` | `editorial-flow`，同一批文字随明确阶段连续重排；`semantic-default` 展示真实截图 |
+| 批注图解 `annotated-reasoning` | `annotated-image`，大幅主体、局部取景、源图圈注与引线；`semantic-default` 展示真实截图 |
+| 情境叙事 `editorial-typography` | `scene-narrative`，完整场景、连贯人物与显式取景；`semantic-default` 展示真实截图 |
 
-内置范围由 `library/style-policy.mjs` 统一维护，页面和初始化共用。固定指镜头体系，不固定文案、场景数或旁白时长。Agent 根据来源编排，不凭空添加关系。两套文案镜头让文字和图解主导，插画声明框总面积最多占画布8%，严格字段、阶段与示例见[文案动画制作](text-led-production.md)。
+内置范围由 `library/style-policy.mjs` 统一维护，页面和初始化共用。固定指镜头体系，不固定文案、场景数或旁白时长。Agent 根据来源编排，不凭空添加关系。两套图像主导配方的严格字段、源图区域和取景规则见[制作指南](image-led-directions.md)。旧 `annotated-manuscript`／`editorial-flow` 仍按[文案动画制作](text-led-production.md)校验，包括辅助插画8%限制；不迁移旧分镜。
 
 ```bash
 npm run init:project -- --slug whiteboard-test --style whiteboard --font xiaolai
-npm run init:project -- --slug annotated-test --style annotated-reasoning --font source-han-serif-sc
+npm run init:project -- --slug annotated-test --style annotated-reasoning --font source-han-sans-sc
 npm run init:project -- --slug editorial-test --style editorial-typography --font source-han-sans-sc
 ```
 

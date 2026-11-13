@@ -35,7 +35,8 @@ You install and invoke the workflow through a **Skill**. Remotion renders diagra
 
 More visual references:
 
-- **Articles, arguments and script explainers:** [Editorial Typography · 18 seconds · silent](examples/template-families/previews/editorial-typography-text-led.mp4), showing words moving, regrouping and connecting.
+- **Object observation and details:** [Annotated Illustration · 30 seconds · silent](examples/illustration-directions/previews/annotated.mp4), showing large subjects, detail framing and source-bound annotations.
+- **Knowledge stories and contextual explanations:** [Scene Narrative · 30 seconds · silent](examples/illustration-directions/previews/narrative.mp4), using consistent characters and full scenes for the same observation story.
 - **Knowledge and storytelling:** [Children’s nature museum case · 68 seconds · narrated](examples/nature-museum-case/previews/nature-museum-narrated.mp4), combining whiteboard writing, illustrations and a four-stage diagram. [Materials and sources](examples/nature-museum-case/README.en.md)
 
 [Browse by use case](https://acorn2.github.io/frame-loom/) · [Recipe samples and asset sources](examples/scenario-directions/README.md). Product screenshots retain the interface at capture time; navigation may change between versions. Mechanism timestamps and scene numbers, and the editorial sample’s values 90 and 100, are explicitly illustrative rather than observed business data. Public samples do not constitute delivery approval; finished work still requires full playback review. The live site receives these entry points when this version is published.
@@ -150,7 +151,15 @@ The original six text and graphics styles form three main directions:
 
 Signal `signal` provides a dark appearance, Swiss Blue `archive-grid` belongs to editorial explainers, and Sketch Notes `scatterbrain` belongs to drawn explainers. Find them under “More appearances and legacy styles.” **All previous IDs, recipe versions and projects remain supported. Existing storyboards are neither remapped nor migrated automatically.**
 
-Whiteboard, Annotated Reasoning and Editorial Typography remain available and are recommended by use case. Their document-only route requires actual illustration generation; the screenshot route uses real assets without automatic image generation. Their [fixed built-in workflows](references/primary-style-production.md) remain intact. Fonts are independent; Annotated Reasoning and Editorial Typography prioritize text and relationships, with auxiliary illustration bounds totaling at most 8% of the canvas.
+Choose the three AI illustration styles by how they explain the material. Each uses a [fixed built-in workflow](references/primary-style-production.md); the video font is selected independently.
+
+| Style | Visual approach | Useful for |
+| --- | --- | --- |
+| Whiteboard | Original stickers, an open board and progressive drawing; unchanged | Observation notes, processes and knowledge explanations |
+| Annotated Illustration | Large subjects, detail framing, source-region circles and leaders | Object observation, details and comparisons |
+| Scene Narrative | Full illustrated scenes, consistent characters and detail framing | Knowledge stories, family observation and contextual explanations |
+
+The two new 30-second silent samples share the same narration text. Whiteboard retains its original 18-second sample. Document-only production requires actual illustration generation and inspection; screenshots use real sources without automatic generation. Existing style IDs, `annotated-manuscript` / `editorial-flow`, and original asset guides remain available for older projects without automatic migration. See the [production guide and sample sources](references/image-led-directions.md).
 
 `editorial-explainer`, `mechanism-map` and `product-showcase` initially support 16:9 and their respective styles above. The original six retain their existing portrait capabilities; unsupported combinations fail instead of silently falling back. See the [recipe guide](references/direction-recipes.md) and [font catalog](fonts/README.md).
 
@@ -214,7 +223,7 @@ For further adjustments, ask the agent to arrange captions and shots using [meas
 <details>
 <summary>Developers: current shot capabilities</summary>
 
-The runtime registers 55 scene recipes, 9 hosted actions, and 5 chapter transitions; 48/48 shortlist candidates are adapted. The registered total includes historical compatibility recipes; style support and fixed new-project workflows constrain actual selection. Scene recipes and presets remain experimental. The [capability manifest](src/renderer/capability-manifest.ts) defines supported combinations. See the [optional explainer preset](video-templates/retro-zine-explainer/guide.md) and [local library guide](library/README.md) for technical details (Chinese).
+The runtime registers 57 scene recipes, 9 hosted actions, and 5 chapter transitions; 48/48 shortlist candidates are adapted. The registered total includes historical compatibility recipes; style support and fixed new-project workflows constrain actual selection. Scene recipes and presets remain experimental. The [capability manifest](src/renderer/capability-manifest.ts) defines supported combinations. See the [optional explainer preset](video-templates/retro-zine-explainer/guide.md) and [local library guide](library/README.md) for technical details (Chinese).
 
 </details>
 

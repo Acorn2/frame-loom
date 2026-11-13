@@ -1,5 +1,7 @@
 // Display metadata only. IDs, compatibility, source documents and asset paths stay intact.
 export const recipes = {
+  'annotated-image': ['Annotated illustration', 'Explain a large source illustration through region-bound circles, leaders and explicit detail framing.'],
+  'scene-narrative': ['Scene narrative', 'Tell a coherent story through complete original scenes, detail framing and native text.'],
   'editorial-explainer': ['Editorial explainer', 'Explain sourced articles and data with editorial columns, comparisons and continuous axis rescaling.'],
   'mechanism-map': ['Mechanism diagram', 'Explain sourced layers, paths, timelines and decision gates with explicit connections.'],
   'product-showcase': ['Product showcase', 'Present real local screenshots through explicit, bounded framing stages.'],
@@ -73,8 +75,8 @@ export const recipes = {
 
 export const styles = {
   whiteboard: ['Hand-drawn Whiteboard', 'Open dot-grid board, original stickers and progressive drawing. The sample shows a family observing, comparing and asking questions.'],
-  'annotated-reasoning': ['Annotated Reasoning', 'Stable text with accumulating circles, notes and relationship lines; small illustrations establish context.'],
-  'editorial-typography': ['Editorial Typography', 'Restrained type on a light canvas. The same words move, regroup and connect through explicit stages.'],
+  'annotated-reasoning': ['Annotated Illustration', 'Large subject illustrations with source-bound circles and leaders. Move from the whole object into its details.'],
+  'editorial-typography': ['Scene Narrative', 'Complete original scenes, consistent characters and detail framing carry an observation story.'],
   'retro-zine': ['Editorial Ink', 'Serif type and red accents frame sourced articles, evidence comparisons and continuous axis rescaling.'],
   signal: ['Signal', 'Graphite canvas and a central focal point for key claims, turning points and emphasis.'],
   scatterbrain: ['Sketch Notes', 'Sticky notes, handwritten type and drawn annotations for learning and methods.'],
@@ -94,7 +96,7 @@ export const fonts = {
 export function localizeCatalog(catalog, locale) {
   if (locale !== 'en') return catalog;
   return {...catalog,
-    styles: catalog.styles.map(item => ({...item, name: item.id === 'whiteboard' ? 'Whiteboard' : item.name, subtitle: styles[item.id]?.[0] ?? item.name, description: styles[item.id]?.[1] ?? item.description})),
+    styles: catalog.styles.map(item => ({...item, name: item.id === 'whiteboard' ? 'Whiteboard' : ['annotated-reasoning', 'editorial-typography'].includes(item.id) ? styles[item.id][0] : item.name, subtitle: styles[item.id]?.[0] ?? item.name, description: styles[item.id]?.[1] ?? item.description})),
     recipes: catalog.recipes.map(item => ({...item, name: recipes[item.id]?.[0] ?? item.name, description: recipes[item.id]?.[1] ?? item.description,
       previewVariants: item.previewVariants?.map(variant => ({...variant, name: variant.id === 'concept-matrix-wireframe' ? 'Wireframe drawing' : variant.id === 'card-stack-tape' ? 'Tape landing' : variant.name}))})),
     fonts: catalog.fonts.map(item => ({...item, name: fonts[item.id]?.[0] ?? item.name, category: fonts[item.id]?.[1] ?? item.category, description: fonts[item.id]?.[2] ?? item.description})),

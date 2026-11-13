@@ -35,7 +35,8 @@ A local video production workflow for Codex, Claude Code, and other coding agent
 
 更多表达参考：
 
-- **文章、观点与文案讲解**：[编辑式排印样片 · 18 秒 · 静音](examples/template-families/previews/editorial-typography-text-led.mp4)，展示关键词迁移、归组与关系展开。
+- **对象观察与细节解释**：[批注图解 · 30 秒 · 静音](examples/illustration-directions/previews/annotated.mp4)，展示大幅主体、局部取景和源图圈注。
+- **知识故事与情境讲解**：[情境叙事 · 30 秒 · 静音](examples/illustration-directions/previews/narrative.mp4)，用连贯人物和完整场景推进相同的观察故事。
 - **知识与故事讲解**：[儿童自然博物馆案例 · 68 秒 · 含旁白](examples/nature-museum-case/previews/nature-museum-narrated.mp4)，展示白板书写、插画与四阶段图解。[材料与来源](examples/nature-museum-case/README.md)
 
 [按用途浏览配方库](https://acorn2.github.io/frame-loom/) · [新配方与素材来源](examples/scenario-directions/README.md)。产品样片保留捕获时的真实网页，具体入口可能随版本调整；机制片的时间码与编号、编辑片的 90 与 100 均为明确标注的示意，不对应业务实测。公开样片不等于交付批准，正式成片仍需完整播放复核。在线站点需发布本版本后显示新入口。
@@ -150,7 +151,15 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文，编写逐场�
 
 暗场信号 `signal` 作为深色外观，瑞士蓝 `archive-grid` 归入编辑讲解，手绘便签 `scatterbrain` 归入手绘讲解，在“更多外观与旧风格”中保留。**全部旧 ID、配方版本和项目继续可用，不自动映射或迁移旧分镜。**
 
-手绘白板、批注推演、编辑式排印三套 AI 插画画法继续保留，按使用场景推荐。纯文档路线需要 Agent 实际生成插画；截图路线使用真实素材，不自动生图。三套仍使用各自[固定内置流程](references/primary-style-production.md)，字体独立选择；批注推演和编辑式排印以文字与关系为主，辅助插画框总面积最多占画布 8%。
+三套 AI 插画风格按画面讲述方式选择，均使用[固定内置流程](references/primary-style-production.md)，全片字体独立选择：
+
+| 风格 | 画面方式 | 适合的材料 |
+| --- | --- | --- |
+| 手绘白板 | 开放白板、原创贴纸、逐笔展开；保持原版 | 观察笔记、流程拆解、知识解释 |
+| 批注图解 | 大幅主体、细节取景、源图区域圈注与引线 | 对象观察、细节解释、比较 |
+| 情境叙事 | 完整插画场景、连贯人物与细节取景 | 知识故事、亲子观察、情境讲解 |
+
+批注图解与情境叙事的两条 30 秒静音样片使用相同的旁白文本；手绘白板保留原 18 秒样片。纯文档路线需要 Agent 实际生成并检查插画；截图路线使用真实素材，不自动生图。旧风格 ID、`annotated-manuscript`／`editorial-flow` 和原有素材规范仍服务旧项目，旧分镜不自动迁移。新配方与样片来源见[制作指南](references/image-led-directions.md)。
 
 `editorial-explainer`、`mechanism-map` 与 `product-showcase` 首轮仅支持 16:9，分别适配上述风格。原六套的既有竖屏能力保留，新配方不静默回退。完整步骤与输入约束见[编辑讲解、机制图解与产品实演指南](references/direction-recipes.md)；全部字体见[字体清单](fonts/README.md)。
 
@@ -212,7 +221,7 @@ Agent 会新建 `projects/YYYYMMDD-内容主题/`，保留原文，编写逐场�
 <details>
 <summary>开发者：当前镜头能力摘要</summary>
 
-当前运行时：55 个场景配方、9 个宿主动作、5 个换章配方；筛选清单接入 48/48。
+当前运行时：57 个场景配方、9 个宿主动作、5 个换章配方；筛选清单接入 48/48。
 
 注册总数包含历史兼容能力，具体风格可用范围与新项目的固定流程分别约束选用。当前场景配方与预设组合为 experimental；兼容范围以[能力清单](src/renderer/capability-manifest.ts)为准。可选预设见[知识讲解组合](video-templates/retro-zine-explainer/guide.md)，本地网页维护见[配方库指南](library/README.md)。
 

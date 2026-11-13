@@ -87,7 +87,7 @@ npm run init:project -- --slug compare-details --series examples/whiteboard-orig
 
 先选择视频风格和全片字体，再按风格进入对应制作流程：
 
-- **三套 AI 插画风格**：手绘白板、批注推演、编辑式排印使用[固定内置镜头流程](primary-style-production.md)，不需要选择镜头集合。纯文档由 Agent 实际生成辅助插画，文档＋截图使用真实素材。
+- **三套 AI 插画风格**：手绘白板、批注图解、情境叙事使用[固定内置镜头流程](primary-style-production.md)，不需要选择镜头集合。纯文档由 Agent 实际生成透明主体或完整场景插画，文档＋截图使用真实素材。
 - **六套图文动效风格**：Agent 根据原文推荐兼容镜头，或遵守你指定的严格集合；详见[镜头编排](shot-planning.md)与[配方目录](../shots/README.md)。`retro-zine-explainer` 是可选预设快捷入口。
 
 风格决定构图、装饰与基础运动；提供主体截图时，全片配色优先参考来源。字体独立单选，覆盖标题、正文、图解和旁白字幕。风格与镜头流程、`fast`／`review`、音频来源和交付目标分别设置。
@@ -243,8 +243,8 @@ npm run init:project -- --slug compare-details --series examples/whiteboard-orig
 | 风格（`--style` ID） | 画面表达 | 内置镜头 |
 | --- | --- | --- |
 | 手绘白板 · `whiteboard` | 开放白板、逐行书写、贴纸与同步铅笔 | `whiteboard-board` |
-| 批注推演 · `annotated-reasoning` | 正文先落定，再圈词、划线、展开旁注与关系 | `annotated-manuscript`、`semantic-default` |
-| 编辑式排印 · `editorial-typography` | 关键词持续在场，随阶段重排位置、字号和关系 | `editorial-flow`、`semantic-default` |
+| 批注图解 · `annotated-reasoning` | 大幅主体、细节取景、源图区域圈注与引线 | `annotated-image`、`semantic-default` |
+| 情境叙事 · `editorial-typography` | 完整场景、连贯人物与有限取景 | `scene-narrative`、`semantic-default` |
 
 三套目前只支持横屏。纯文档路线实际生成透明主体，文档＋截图保留真实来源；后两套辅助插画的声明框总面积最多占画布8%。镜头流程固定，文案、场景数、旁白和字体由项目决定。见[主风格制作](primary-style-production.md)、[插画生产](illustrated-production.md)与[文案动画](text-led-production.md)。
 
@@ -279,7 +279,7 @@ npm run init:project -- --slug compare-details --series examples/whiteboard-orig
 
 ## 全片字体选择
 
-视频风格与字体独立选择，一次选择一个字体家族。风格页提供五套字体的真实字形与九套风格 × 五套字体的横屏组合样片。墨白杂志与批注推演推荐思源宋体、手绘便签推荐霞鹜文楷、手绘白板推荐小赖，其余风格推荐思源黑体；手动选字体后切换风格保留该选择，“使用当前风格推荐字体”恢复跟随推荐。字体与其他公开选择跨页保存，并进入 Agent 制作指令。
+视频风格与字体独立选择，一次选择一个字体家族。风格页提供五套字体的真实字形与九套风格 × 五套字体的横屏组合样片。墨白杂志推荐思源宋体，批注图解与情境叙事推荐思源黑体、手绘便签推荐霞鹜文楷、手绘白板推荐小赖，其余风格推荐思源黑体；手动选字体后切换风格保留该选择，“使用当前风格推荐字体”恢复跟随推荐。字体与其他公开选择跨页保存，并进入 Agent 制作指令。
 
 ```bash
 npm run validate:fonts

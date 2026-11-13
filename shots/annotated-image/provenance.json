@@ -1,0 +1,6 @@
+{
+  "id": "annotated-image",
+  "mode": "native",
+  "description": "Native implementation of hresh-approved original image-led design pilot; no upstream code copied",
+  "source": "designs/illustration-directions-pilot/BRIEF.md"
+}

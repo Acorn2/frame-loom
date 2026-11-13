@@ -31,6 +31,10 @@
       ],
       "additionalProperties": false
     },
+    "guideVersion": {
+      "type": "string",
+      "const": "2.0"
+    },
     "assets": {
       "maxItems": 24,
       "type": "array",

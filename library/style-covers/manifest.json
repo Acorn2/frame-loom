@@ -59,17 +59,17 @@
     },
     {
       "id": "annotated-reasoning",
-      "source": "examples/template-families/previews/annotated-reasoning-text-led.mp4",
-      "sourceSha256": "eb3697ef0970fdb538395b8a58193e92744d0c72061269fe6f89d781470530a6",
-      "timeSec": 15.766666666666667,
+      "source": "examples/illustration-directions/previews/annotated.mp4",
+      "sourceSha256": "f72e7dcca1080290c79896896f7f18327ca6299eb8d4ec646d368ebae89ff820",
+      "timeSec": 2.433333333333333,
       "width": 960,
       "height": 540
     },
     {
       "id": "editorial-typography",
-      "source": "examples/template-families/previews/editorial-typography-text-led.mp4",
-      "sourceSha256": "fd3206c8829f39796090cb520344574c17505d82a1f0efbf3f4c64b2c02b98d1",
-      "timeSec": 16.9,
+      "source": "examples/illustration-directions/previews/narrative.mp4",
+      "sourceSha256": "1fac7d521836bc3ac7fef1b71efdad19d1cffc0ba484a1d3e004d5280eaf8a0a",
+      "timeSec": 3.966666666666667,
       "width": 960,
       "height": 540
     }

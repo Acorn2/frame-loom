@@ -60,7 +60,9 @@
         "editorial-flow",
         "mechanism-map",
         "product-showcase",
-        "editorial-explainer"
+        "editorial-explainer",
+        "annotated-image",
+        "scene-narrative"
       ]
     },
     "version": {

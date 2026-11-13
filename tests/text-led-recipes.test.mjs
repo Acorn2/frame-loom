@@ -77,7 +77,7 @@ describe('text-led production contracts', () => {
     const root = path.resolve('.tmp/text-led-rollout/init-tests'); fs.mkdirSync(root, {recursive: true});
     const target = initProject(['--slug', 'text-led-contract', '--style', style, '--input-mode', 'document', '--projects-dir', root]);
     const board = read(path.join(target, 'storyboard.draft.json'));
-    expect(board.scenes).toEqual([]); expect(board.shotRecipes.map(s => s.id)).toEqual([style === styles[0] ? 'annotated-manuscript' : 'editorial-flow', 'semantic-default']);
+    expect(board.scenes).toEqual([]); expect(board.shotRecipes.map(s => s.id)).toEqual([style === styles[0] ? 'annotated-image' : 'scene-narrative', 'semantic-default']);
     expect(read(path.join(target, 'project-input.json')).illustrationPolicy).toBe('generated-subjects-v1');
     const planFile = path.join(target, 'illustration-plan.json'), plan = read(planFile);
     plan.assets = [{id: 'auxiliary', path: 'assets/auxiliary.png', subject: 'A researcher checking a source document', sourceClaim: '先核对来源', purpose: 'Small auxiliary illustration beside native text'}];

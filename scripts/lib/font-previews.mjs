@@ -1,3 +1,4 @@
+import {fixtureAssets} from './library-assets.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
@@ -17,6 +18,7 @@ export function fontPreviewFingerprint() {
   const hash = createHash('sha256');
   for (const file of [...files(path.join(projectRoot, 'src')), ...files(path.join(projectRoot, 'styles')),
     ...previewRuntimeFiles(projectRoot),
+    ...['annotated-image', 'scene-narrative'].flatMap(id => {const p = path.join(projectRoot, `examples/shot-recipes/${id}/storyboard.json`); return [p, ...fixtureAssets(p)];}),
     ...['fonts/font-index.json', fontPreviewFixture, 'scripts/preview-fonts.mjs', 'scripts/lib/font-previews.mjs', 'package-lock.json'].map(name => path.join(projectRoot, name))].sort()) {
     hash.update(path.relative(projectRoot, file)); hash.update(fs.readFileSync(file));
   }

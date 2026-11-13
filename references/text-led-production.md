@@ -2,18 +2,9 @@
 
 [文档导航](README.md) · [固定制作流程](primary-style-production.md)
 
-当前主风格为手绘白板、批注推演 `annotated-reasoning`、编辑式排印 `editorial-typography`。新两套均为已注册的横屏风格与严格镜头，首轮不支持竖屏。全片字体、来源配色、字幕、音频、品牌和生产审核继续使用既有入口。
+本文保留旧 `annotated-manuscript`／`editorial-flow` 的生产契约和示例。新项目已改为「批注图解」与「情境叙事」，使用 [图像主导配方](image-led-directions.md)；风格 ID 保持不变。下文的8%限制只约束这两项旧文字配方，不限制新图像主导配方。
 
-纯文档初始化启用实际 imagegen 主体策略，按原文生成少量辅助人物或物件、检查透明 PNG 后登记。插画总框面积上限为画布8%，用于限制这两套的辅助素材；它不代表每场必须放满8%。有来源的图像也可走 `document-images`，不得冒充重新生成。真实截图需要完整可读的证据场，选用固定流程中的 `semantic-default`；不要把整个界面缩成角落贴纸。
-
-## 固定制作入口
-
-```bash
-npm run init:project -- --slug my-topic --style annotated-reasoning
-npm run init:project -- --slug my-topic --style editorial-typography
-```
-
-默认字体分别为思源宋体、思源黑体，可独立替换。初始化自动选定 `annotated-manuscript + semantic-default` 或 `editorial-flow + semantic-default`，不要求用户选择镜头。Agent 根据实际内容编排，不强制用完所有配方，也不把示例讲稿填成默认内容。
+旧分镜、素材规范与精确版本继续按原路径复现，不自动迁移。旧示例的默认字体和初始化组合属于当时版本；当前入口见[固定制作流程](primary-style-production.md)。
 
 ## 共用文字与素材契约
 

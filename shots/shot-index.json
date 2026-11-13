@@ -423,6 +423,20 @@
       "purpose": "产品实演",
       "manifest": "product-showcase/manifest.json",
       "recipe": "product-showcase/recipe.md"
+    },
+    {
+      "id": "annotated-image",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "annotated-image/manifest.json",
+      "recipe": "annotated-image/recipe.md"
+    },
+    {
+      "id": "scene-narrative",
+      "version": "1.2.0",
+      "status": "experimental",
+      "manifest": "scene-narrative/manifest.json",
+      "recipe": "scene-narrative/recipe.md"
     }
   ]
 }

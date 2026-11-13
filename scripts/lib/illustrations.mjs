@@ -26,7 +26,10 @@ export function illustrationContext(directory) {
   const input = ProjectInputSchema.parse(json(path.join(root, 'project-input.json')));
   if (input.inputMode !== 'document' || input.illustrationPolicy !== 'generated-subjects-v1') throw new Error('生图只用于显式启用 generated-subjects-v1 的纯文档路线；截图路线不自动生图。');
   const plan = IllustrationPlanSchema.parse(json(path.join(root, 'illustration-plan.json')));
-  const guide = IllustrationGuideSchema.parse(json(path.join(projectRoot, 'styles', plan.style.id, 'illustration.json')));
+  if (plan.guideVersion && !['annotated-reasoning', 'editorial-typography'].includes(plan.style.id)) throw new Error('该风格没有新版插画规范。');
+  const guideFile = path.join(projectRoot, 'styles', plan.style.id, plan.guideVersion ? 'illustration.v2.json' : 'illustration.json');
+  const guide = IllustrationGuideSchema.parse(json(guideFile));
+  if (guide.guideVersion !== plan.guideVersion) throw new Error('插画规范精确版本不匹配。');
   if (guide.style.version !== plan.style.version) throw new Error('插画规范版本不匹配。');
   let fingerprint = JSON.stringify({plan, guide});
   for (const asset of plan.assets) for (const reference of asset.references ?? []) {
@@ -40,15 +43,15 @@ export function illustrationContext(directory) {
     let assetFingerprint = JSON.stringify({style: plan.style, guide, asset});
     for (const reference of asset.references ?? []) assetFingerprint += reference + hash(fs.readFileSync(localFile(root, reference)));
     const prompt = [
-      'Use case: illustration-story. Asset type: an independent transparent subject for a narrated explainer video.',
+      guide.background === 'scene' ? 'Use case: illustration-story. Asset type: a complete illustrated scene for a narrated video, with a coherent setting and consistent recurring characters.' : 'Use case: illustration-story. Asset type: an independent transparent subject for a narrated explainer video.',
       `Subject: ${asset.subject}`, `Style: ${guide.subjectPrompt}`, `Palette: ${guide.palette.join(', ')}.`,
-      'Keep the entire subject intact with generous clear margin. Use a genuinely transparent background.',
+      guide.background === 'scene' ? 'Use an opaque, complete painted environment with clear focal action and generous breathing room. Keep key faces, hands and story objects intact; no slide panels.' : 'Keep the entire subject intact with generous clear margin. Use a genuinely transparent background.',
       'No text, letters, numbers, logos, watermark, captions, arrows, labels or surrounding slide. Text and relationships will be rendered separately.',
-      asset.references?.length ? 'Use supplied references for drawing style and consistent subject appearance; do not copy their text or background.' : ''
+      asset.references?.length ? guide.background === 'scene' ? 'Use supplied references for consistent character faces, clothing, objects and environment. Do not copy their text.' : 'Use supplied references for drawing style and consistent subject appearance; do not copy their text or background.' : ''
     ].filter(Boolean).join('\n');
     return {...asset, prompt, promptHash: hash(prompt), planHash: hash(assetFingerprint)};
   });
-  return {root, plan, guide, planHash, prompts};
+  return {root, plan, guide, guideFile, planHash, prompts};
 }
 export function prepareIllustrations(directory) {
   const context = illustrationContext(directory);
@@ -58,13 +61,20 @@ export function prepareIllustrations(directory) {
   fs.writeFileSync(file, `${JSON.stringify(output, null, 2)}\n`);
   return file;
 }
-export function inspectIllustration(file) {
+export function inspectIllustration(file, {background = 'transparent'} = {}) {
+  if (!['transparent', 'scene'].includes(background)) throw new Error('未知插画背景策略。');
   const bytes = fs.readFileSync(file);
   if (!bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))) throw new Error('插画产物必须为 PNG。');
   const result = spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'stream=width,height,pix_fmt', '-of', 'json', file], {encoding: 'utf8'});
   if (result.status !== 0) throw new Error('无法解码插画产物。');
   const stream = JSON.parse(result.stdout).streams?.[0];
   if (!stream || Math.min(stream.width, stream.height) < 256) throw new Error('插画尺寸不足 256px。');
+  if (background === 'scene') {
+    const pixels = spawnSync('ffmpeg', ['-v', 'error', '-i', file, '-vf', 'scale=64:64', '-frames:v', '1', '-f', 'rawvideo', '-pix_fmt', 'rgba', 'pipe:1'], {maxBuffer: 1024 * 1024});
+    const data = pixels.stdout;
+    if (pixels.status !== 0 || data.length !== 16384 || !data.some((v, i) => i % 4 === 3 && v > 200) || !data.some((v, i) => i % 4 !== 3 && Math.abs(v - data[i % 4]) > 12)) throw new Error('情境插画必须包含实际可见的场景内容。');
+    return {width: stream.width, height: stream.height, fileHash: hash(bytes)};
+  }
   // Read the actual alpha plane; an RGBA file can still have an opaque backdrop.
   const alpha = spawnSync('ffmpeg', ['-v', 'error', '-i', file, '-vf', 'alphaextract,scale=64:64', '-frames:v', '1', '-f', 'rawvideo', '-pix_fmt', 'gray', 'pipe:1'], {maxBuffer: 1024 * 1024});
   if (alpha.status !== 0 || alpha.stdout.length !== 4096 || !alpha.stdout.some(value => value < 16) || !alpha.stdout.some(value => value > 200)) throw new Error('素材需要真实透明背景与可见主体，请通过生图工具调整后再登记。');
@@ -76,7 +86,7 @@ export function registerIllustration(directory, id, sourceFile, reviewer) {
   if (!asset) throw new Error(`未知素材：${id}`);
   const prepared = json(path.join(context.root, 'illustration-prompts.json'));
   if (prepared.planHash !== context.planHash || prepared.assets.find(item => item.id === id)?.promptHash !== asset.promptHash) throw new Error('素材计划或规范已改变，请重新 prepare:illustrations 并生图。');
-  const image = inspectIllustration(sourceFile), target = localFile(context.root, asset.path);
+  const image = inspectIllustration(sourceFile, {background: context.guide.background}), target = localFile(context.root, asset.path);
   const manifestFile = path.join(context.root, 'asset-manifest.json');
   const manifest = AssetManifestSchema.parse(json(manifestFile));
   if (manifest.assets.some(item => item.id === id || item.path === asset.path)) throw new Error('已登记素材不能覆盖；请使用新 ID 和新路径。');
@@ -124,6 +134,6 @@ export function illustrationFiles(directory) {
   if (!fs.existsSync(path.join(directory, 'illustration-plan.json'))) return [];
   const context = illustrationContext(directory);
   return [path.join(context.root, 'project-input.json'), path.join(context.root, 'illustration-plan.json'), path.join(context.root, 'illustration-prompts.json'),
-    path.join(projectRoot, 'styles', context.plan.style.id, 'illustration.json'),
+    context.guideFile,
     ...context.plan.assets.flatMap(asset => (asset.references ?? []).map(reference => localFile(context.root, reference)))];
 }

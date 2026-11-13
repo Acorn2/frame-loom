@@ -1,0 +1,1126 @@
+{
+  "schemaVersion": "2.4",
+  "style": {
+    "id": "annotated-reasoning",
+    "version": "1.0.0"
+  },
+  "font": {
+    "id": "source-han-sans-sc",
+    "version": "2.005"
+  },
+  "shotRecipes": [
+    {
+      "id": "annotated-image",
+      "version": "1.2.0"
+    },
+    {
+      "id": "semantic-default",
+      "version": "1.0.0"
+    }
+  ],
+  "layoutPolicy": "content-first-v1",
+  "palette": {
+    "schemaVersion": "1.1",
+    "source": "custom",
+    "referenceAssets": [],
+    "colors": {
+      "accent": "#34765b",
+      "accentAlt": "#c66a49",
+      "lightBackground": "#ffffff",
+      "darkBackground": "#17201c",
+      "surface": "#f3f6f4",
+      "ink": "#243b34",
+      "muted": "#65716c",
+      "captionInk": "#42564d"
+    }
+  },
+  "project": {
+    "title": "好问题，从观察开始",
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "durationSec": 30,
+    "durationFrames": 900,
+    "status": "generated"
+  },
+  "scenes": [
+    {
+      "id": "observe",
+      "title": "好问题\n从观察开始",
+      "narration": "好问题，常常从一次仔细观察开始。",
+      "primaryClaim": "好问题，从观察开始",
+      "template": "statement",
+      "purpose": "opening",
+      "durationFrames": 180,
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "好问题\n从观察开始"
+        },
+        {
+          "id": "intro",
+          "type": "node",
+          "label": "一起观察，也一起提问"
+        },
+        {
+          "id": "summary",
+          "type": "node",
+          "label": "先让目光，停在具体的事物上"
+        },
+        {
+          "id": "picture",
+          "type": "object",
+          "label": "先观察 · 原创示意",
+          "asset": "assets/leaf-pair.png",
+          "fit": "contain"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "title-in",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "intro-in",
+          "target": "intro",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "summary-in",
+          "target": "summary",
+          "action": "reveal",
+          "start": 40,
+          "duration": 18
+        },
+        {
+          "id": "picture-in",
+          "target": "picture",
+          "action": "reveal",
+          "start": 15,
+          "duration": 24
+        }
+      ],
+      "captions": [
+        {
+          "id": "cue-0",
+          "text": "好问题",
+          "start": 0,
+          "end": 90
+        },
+        {
+          "id": "cue-1",
+          "text": "常常从一次仔细观察开始",
+          "start": 90,
+          "end": 180
+        }
+      ],
+      "visual": {
+        "kind": "statement",
+        "representation": "diagram",
+        "source": "source.md",
+        "explanation": "原创观察示意，源图主体与原生文字共同解释观察、比较及提问；不主张具体物种事实"
+      },
+      "shot": {
+        "id": "annotated-image",
+        "version": "1.2.0",
+        "composition": "establish",
+        "kicker": "批注图解 / OBSERVATION NOTES",
+        "slots": {
+          "items": [
+            "title",
+            "intro",
+            "summary",
+            "picture"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 114,
+            "y": 285,
+            "width": 660,
+            "height": 230,
+            "fontSize": 82,
+            "bodySize": 30,
+            "color": "ink",
+            "weight": "semibold",
+            "align": "left",
+            "underline": false
+          },
+          "intro": {
+            "kind": "text",
+            "x": 120,
+            "y": 205,
+            "width": 640,
+            "height": 48,
+            "fontSize": 29,
+            "bodySize": 30,
+            "color": "accent",
+            "weight": "regular",
+            "align": "left",
+            "underline": false
+          },
+          "summary": {
+            "kind": "text",
+            "x": 120,
+            "y": 600,
+            "width": 660,
+            "height": 100,
+            "fontSize": 33,
+            "bodySize": 30,
+            "color": "muted",
+            "weight": "regular",
+            "align": "left",
+            "underline": false
+          },
+          "picture": {
+            "kind": "image",
+            "x": 825,
+            "y": 218,
+            "width": 912,
+            "height": 650
+          }
+        },
+        "focus": [],
+        "annotations": {}
+      }
+    },
+    {
+      "id": "details",
+      "title": "看见细节",
+      "narration": "先看叶子的边缘，再看看里面的纹路。",
+      "primaryClaim": "看见细节",
+      "template": "statement",
+      "purpose": "claim",
+      "durationFrames": 180,
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "看见细节"
+        },
+        {
+          "id": "picture",
+          "type": "object",
+          "label": "原创插画 · 观察示意",
+          "asset": "assets/leaf-pair.png",
+          "fit": "contain"
+        },
+        {
+          "id": "edge",
+          "type": "node",
+          "label": "叶子的边缘",
+          "text": "让目光沿着轮廓走一遍"
+        },
+        {
+          "id": "vein",
+          "type": "node",
+          "label": "里面的纹路",
+          "text": "把视线，移向叶片内部"
+        }
+      ],
+      "connections": [
+        {
+          "id": "edge-note",
+          "from": "picture",
+          "to": "edge"
+        },
+        {
+          "id": "vein-note",
+          "from": "picture",
+          "to": "vein"
+        }
+      ],
+      "beats": [
+        {
+          "id": "title-in",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "picture-in",
+          "target": "picture",
+          "action": "reveal",
+          "start": 4,
+          "duration": 24
+        },
+        {
+          "id": "picture-focus",
+          "target": "picture",
+          "action": "focus",
+          "start": 28,
+          "duration": 65
+        },
+        {
+          "id": "edge-in",
+          "target": "edge",
+          "action": "reveal",
+          "start": 58,
+          "duration": 18
+        },
+        {
+          "id": "vein-in",
+          "target": "vein",
+          "action": "reveal",
+          "start": 104,
+          "duration": 18
+        },
+        {
+          "id": "edge-note-draw",
+          "target": "edge-note",
+          "action": "draw",
+          "start": 78,
+          "duration": 22
+        },
+        {
+          "id": "vein-note-draw",
+          "target": "vein-note",
+          "action": "draw",
+          "start": 125,
+          "duration": 18
+        }
+      ],
+      "captions": [
+        {
+          "id": "cue-0",
+          "text": "先看叶子的边缘",
+          "start": 0,
+          "end": 90
+        },
+        {
+          "id": "cue-1",
+          "text": "再看看里面的纹路",
+          "start": 90,
+          "end": 180
+        }
+      ],
+      "visual": {
+        "kind": "statement",
+        "representation": "diagram",
+        "source": "source.md",
+        "explanation": "原创观察示意，源图主体与原生文字共同解释观察、比较及提问；不主张具体物种事实"
+      },
+      "shot": {
+        "id": "annotated-image",
+        "version": "1.2.0",
+        "composition": "detail",
+        "kicker": "批注图解 / OBSERVATION NOTES",
+        "slots": {
+          "items": [
+            "title",
+            "picture",
+            "edge",
+            "vein"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 110,
+            "y": 160,
+            "width": 500,
+            "height": 70,
+            "fontSize": 52,
+            "bodySize": 30,
+            "color": "ink",
+            "weight": "semibold",
+            "align": "left",
+            "underline": false
+          },
+          "picture": {
+            "kind": "image",
+            "x": 140,
+            "y": 235,
+            "width": 625,
+            "height": 665,
+            "crop": {
+              "x": 0.052083333333333336,
+              "y": 0.048828125,
+              "width": 0.5338541666666666,
+              "height": 0.8984375
+            }
+          },
+          "edge": {
+            "kind": "text",
+            "x": 1160,
+            "y": 330,
+            "width": 650,
+            "height": 125,
+            "fontSize": 43,
+            "bodySize": 29,
+            "color": "ink",
+            "weight": "semibold",
+            "align": "left",
+            "underline": false
+          },
+          "vein": {
+            "kind": "text",
+            "x": 1160,
+            "y": 630,
+            "width": 650,
+            "height": 125,
+            "fontSize": 43,
+            "bodySize": 29,
+            "color": "ink",
+            "weight": "semibold",
+            "align": "left",
+            "underline": false
+          }
+        },
+        "focus": [
+          {
+            "trigger": "picture-focus",
+            "target": "picture",
+            "crop": {
+              "x": 0.05859375,
+              "y": 0.0634765625,
+              "width": 0.5208333333333334,
+              "height": 0.869140625
+            }
+          }
+        ],
+        "annotations": {
+          "edge-note": {
+            "region": {
+              "x": 0.49,
+              "y": 0.36,
+              "width": 0.075,
+              "height": 0.1
+            },
+            "color": "accentAlt",
+            "fromSide": "right",
+            "toSide": "left",
+            "via": [
+              [
+                880,
+                510
+              ],
+              [
+                1042,
+                358
+              ]
+            ]
+          },
+          "vein-note": {
+            "region": {
+              "x": 0.3,
+              "y": 0.47,
+              "width": 0.08,
+              "height": 0.1
+            },
+            "color": "accent",
+            "fromSide": "right",
+            "toSide": "left",
+            "via": [
+              [
+                900,
+                665
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "compare",
+      "title": "比较差异",
+      "narration": "把两片叶子放在一起，找出它们的不同。",
+      "primaryClaim": "比较差异",
+      "template": "statement",
+      "purpose": "claim",
+      "durationFrames": 180,
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "比较差异"
+        },
+        {
+          "id": "keyword",
+          "type": "node",
+          "label": "放在一起看"
+        },
+        {
+          "id": "picture",
+          "type": "object",
+          "label": "原创插画 · 观察示意",
+          "asset": "assets/leaf-pair.png",
+          "fit": "contain"
+        },
+        {
+          "id": "edge",
+          "type": "node",
+          "label": "边缘轮廓"
+        },
+        {
+          "id": "shape",
+          "type": "node",
+          "label": "叶片形状"
+        }
+      ],
+      "connections": [
+        {
+          "id": "edge-note",
+          "from": "picture",
+          "to": "edge"
+        },
+        {
+          "id": "shape-note",
+          "from": "picture",
+          "to": "shape"
+        }
+      ],
+      "beats": [
+        {
+          "id": "title-in",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "keyword-in",
+          "target": "keyword",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "picture-in",
+          "target": "picture",
+          "action": "reveal",
+          "start": 9,
+          "duration": 24
+        },
+        {
+          "id": "edge-in",
+          "target": "edge",
+          "action": "reveal",
+          "start": 66,
+          "duration": 18
+        },
+        {
+          "id": "shape-in",
+          "target": "shape",
+          "action": "reveal",
+          "start": 100,
+          "duration": 18
+        },
+        {
+          "id": "edge-note-draw",
+          "target": "edge-note",
+          "action": "draw",
+          "start": 88,
+          "duration": 22
+        },
+        {
+          "id": "shape-note-draw",
+          "target": "shape-note",
+          "action": "draw",
+          "start": 122,
+          "duration": 20
+        }
+      ],
+      "captions": [
+        {
+          "id": "cue-0",
+          "text": "把两片叶子放在一起",
+          "start": 0,
+          "end": 90
+        },
+        {
+          "id": "cue-1",
+          "text": "找出它们的不同",
+          "start": 90,
+          "end": 180
+        }
+      ],
+      "visual": {
+        "kind": "statement",
+        "representation": "diagram",
+        "source": "source.md",
+        "explanation": "原创观察示意，源图主体与原生文字共同解释观察、比较及提问；不主张具体物种事实"
+      },
+      "shot": {
+        "id": "annotated-image",
+        "version": "1.2.0",
+        "composition": "compare",
+        "kicker": "批注图解 / OBSERVATION NOTES",
+        "slots": {
+          "items": [
+            "title",
+            "keyword",
+            "picture",
+            "edge",
+            "shape"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 110,
+            "y": 160,
+            "width": 500,
+            "height": 70,
+            "fontSize": 52,
+            "bodySize": 30,
+            "color": "ink",
+            "weight": "semibold",
+            "align": "left",
+            "underline": false
+          },
+          "keyword": {
+            "kind": "text",
+            "x": 1450,
+            "y": 168,
+            "width": 360,
+            "height": 50,
+            "fontSize": 28,
+            "bodySize": 30,
+            "color": "accent",
+            "weight": "regular",
+            "align": "right",
+            "underline": false
+          },
+          "picture": {
+            "kind": "image",
+            "x": 420,
+            "y": 230,
+            "width": 1000,
+            "height": 635
+          },
+          "edge": {
+            "kind": "text",
+            "x": 140,
+            "y": 600,
+            "width": 265,
+            "height": 65,
+            "fontSize": 37,
+            "bodySize": 30,
+            "color": "ink",
+            "weight": "semibold",
+            "align": "left",
+            "underline": false
+          },
+          "shape": {
+            "kind": "text",
+            "x": 1490,
+            "y": 280,
+            "width": 320,
+            "height": 65,
+            "fontSize": 37,
+            "bodySize": 30,
+            "color": "ink",
+            "weight": "semibold",
+            "align": "left",
+            "underline": false
+          }
+        },
+        "focus": [],
+        "annotations": {
+          "edge-note": {
+            "region": {
+              "x": 0.28,
+              "y": 0.73,
+              "width": 0.07,
+              "height": 0.08
+            },
+            "color": "accentAlt",
+            "fromSide": "left",
+            "toSide": "bottom",
+            "via": [
+              [
+                360,
+                680
+              ]
+            ]
+          },
+          "shape-note": {
+            "region": {
+              "x": 0.69,
+              "y": 0.2,
+              "width": 0.07,
+              "height": 0.08
+            },
+            "color": "accent",
+            "fromSide": "right",
+            "toSide": "bottom",
+            "via": [
+              [
+                1453,
+                365
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "question",
+      "title": "提出问题",
+      "narration": "把看见的细节说清楚，再问一句：为什么？",
+      "primaryClaim": "提出问题",
+      "template": "statement",
+      "purpose": "claim",
+      "durationFrames": 180,
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "提出问题"
+        },
+        {
+          "id": "picture",
+          "type": "object",
+          "label": "原创插画 · 观察示意",
+          "asset": "assets/leaf-pair.png",
+          "fit": "contain"
+        },
+        {
+          "id": "question",
+          "type": "node",
+          "label": "为什么？"
+        },
+        {
+          "id": "summary",
+          "type": "node",
+          "label": "先把看见的细节说清楚\n再给问题，一个具体的起点"
+        }
+      ],
+      "connections": [
+        {
+          "id": "question-note",
+          "from": "picture",
+          "to": "question"
+        }
+      ],
+      "beats": [
+        {
+          "id": "title-in",
+          "target": "title",
+          "action": "reveal",
+          "start": 0,
+          "duration": 18
+        },
+        {
+          "id": "picture-in",
+          "target": "picture",
+          "action": "reveal",
+          "start": 9,
+          "duration": 24
+        },
+        {
+          "id": "question-in",
+          "target": "question",
+          "action": "reveal",
+          "start": 81,
+          "duration": 18
+        },
+        {
+          "id": "summary-in",
+          "target": "summary",
+          "action": "reveal",
+          "start": 108,
+          "duration": 18
+        },
+        {
+          "id": "question-note-draw",
+          "target": "question-note",
+          "action": "draw",
+          "start": 106,
+          "duration": 22
+        }
+      ],
+      "captions": [
+        {
+          "id": "cue-0",
+          "text": "把看见的细节说清楚",
+          "start": 0,
+          "end": 90
+        },
+        {
+          "id": "cue-1",
+          "text": "再问一句：为什么？",
+          "start": 90,
+          "end": 180
+        }
+      ],
+      "visual": {
+        "kind": "statement",
+        "representation": "diagram",
+        "source": "source.md",
+        "explanation": "原创观察示意，源图主体与原生文字共同解释观察、比较及提问；不主张具体物种事实"
+      },
+      "shot": {
+        "id": "annotated-image",
+        "version": "1.2.0",
+        "composition": "question",
+        "kicker": "批注图解 / OBSERVATION NOTES",
+        "slots": {
+          "items": [
+            "title",
+            "picture",
+            "question",
+            "summary"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 110,
+            "y": 160,
+            "width": 500,
+            "height": 70,
+            "fontSize": 52,
+            "bodySize": 30,
+            "color": "ink",
+            "weight": "semibold",
+            "align": "left",
+            "underline": false
+          },
+          "picture": {
+            "kind": "image",
+            "x": 160,
+            "y": 265,
+            "width": 770,
+            "height": 540
+          },
+          "question": {
+            "kind": "text",
+            "x": 1050,
+            "y": 390,
+            "width": 760,
+            "height": 160,
+            "fontSize": 106,
+            "bodySize": 30,
+            "color": "accent",
+            "weight": "semibold",
+            "align": "left",
+            "underline": false
+          },
+          "summary": {
+            "kind": "text",
+            "x": 1058,
+            "y": 570,
+            "width": 745,
+            "height": 145,
+            "fontSize": 31,
+            "bodySize": 30,
+            "color": "muted",
+            "weight": "regular",
+            "align": "left",
+            "underline": false
+          }
+        },
+        "focus": [],
+        "annotations": {
+          "question-note": {
+            "region": {
+              "x": 0.67,
+              "y": 0.36,
+              "width": 0.09,
+              "height": 0.12
+            },
+            "color": "accentAlt",
+            "fromSide": "right",
+            "toSide": "left",
+            "via": [
+              [
+                960,
+                490
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "closing",
+      "title": "让好奇\n有继续探索的方向",
+      "narration": "从观察到比较，再到提问，让好奇有了探索的方向。",
+      "primaryClaim": "让好奇，有继续探索的方向",
+      "template": "statement",
+      "purpose": "closing",
+      "durationFrames": 180,
+      "layers": [
+        {
+          "id": "title",
+          "type": "node",
+          "label": "让好奇\n有继续探索的方向"
+        },
+        {
+          "id": "picture",
+          "type": "object",
+          "label": "原创插画 · 观察示意",
+          "asset": "assets/leaf-pair.png",
+          "fit": "contain"
+        },
+        {
+          "id": "number-0",
+          "type": "node",
+          "label": "01"
+        },
+        {
+          "id": "step-0",
+          "type": "node",
+          "label": "观察"
+        },
+        {
+          "id": "number-1",
+          "type": "node",
+          "label": "02"
+        },
+        {
+          "id": "step-1",
+          "type": "node",
+          "label": "比较"
+        },
+        {
+          "id": "number-2",
+          "type": "node",
+          "label": "03"
+        },
+        {
+          "id": "step-2",
+          "type": "node",
+          "label": "提问"
+        }
+      ],
+      "connections": [],
+      "beats": [
+        {
+          "id": "title-in",
+          "target": "title",
+          "action": "reveal",
+          "start": 4,
+          "duration": 18
+        },
+        {
+          "id": "picture-in",
+          "target": "picture",
+          "action": "reveal",
+          "start": 3,
+          "duration": 24
+        },
+        {
+          "id": "number-0-in",
+          "target": "number-0",
+          "action": "reveal",
+          "start": 30,
+          "duration": 18
+        },
+        {
+          "id": "step-0-in",
+          "target": "step-0",
+          "action": "reveal",
+          "start": 30,
+          "duration": 18
+        },
+        {
+          "id": "step-0-mark",
+          "target": "step-0",
+          "action": "highlight",
+          "start": 52,
+          "duration": 24
+        },
+        {
+          "id": "number-1-in",
+          "target": "number-1",
+          "action": "reveal",
+          "start": 62,
+          "duration": 18
+        },
+        {
+          "id": "step-1-in",
+          "target": "step-1",
+          "action": "reveal",
+          "start": 62,
+          "duration": 18
+        },
+        {
+          "id": "step-1-mark",
+          "target": "step-1",
+          "action": "highlight",
+          "start": 84,
+          "duration": 24
+        },
+        {
+          "id": "number-2-in",
+          "target": "number-2",
+          "action": "reveal",
+          "start": 94,
+          "duration": 18
+        },
+        {
+          "id": "step-2-in",
+          "target": "step-2",
+          "action": "reveal",
+          "start": 94,
+          "duration": 18
+        },
+        {
+          "id": "step-2-mark",
+          "target": "step-2",
+          "action": "highlight",
+          "start": 116,
+          "duration": 24
+        }
+      ],
+      "captions": [
+        {
+          "id": "cue-0",
+          "text": "从观察到比较，再到提问",
+          "start": 0,
+          "end": 90
+        },
+        {
+          "id": "cue-1",
+          "text": "让好奇有了探索的方向",
+          "start": 90,
+          "end": 180
+        }
+      ],
+      "visual": {
+        "kind": "statement",
+        "representation": "diagram",
+        "source": "source.md",
+        "explanation": "原创观察示意，源图主体与原生文字共同解释观察、比较及提问；不主张具体物种事实"
+      },
+      "shot": {
+        "id": "annotated-image",
+        "version": "1.2.0",
+        "composition": "closing",
+        "kicker": "批注图解 / OBSERVATION NOTES",
+        "slots": {
+          "items": [
+            "title",
+            "picture",
+            "number-0",
+            "step-0",
+            "number-1",
+            "step-1",
+            "number-2",
+            "step-2"
+          ]
+        },
+        "elements": {
+          "title": {
+            "kind": "text",
+            "x": 820,
+            "y": 200,
+            "width": 980,
+            "height": 160,
+            "fontSize": 54,
+            "bodySize": 30,
+            "color": "ink",
+            "weight": "semibold",
+            "align": "left",
+            "underline": false
+          },
+          "picture": {
+            "kind": "image",
+            "x": 130,
+            "y": 220,
+            "width": 600,
+            "height": 680,
+            "crop": {
+              "x": 0.045572916666666664,
+              "y": 0.05859375,
+              "width": 0.5208333333333334,
+              "height": 0.87890625
+            }
+          },
+          "number-0": {
+            "kind": "text",
+            "x": 824,
+            "y": 420,
+            "width": 70,
+            "height": 50,
+            "fontSize": 24,
+            "bodySize": 30,
+            "color": "accentAlt",
+            "weight": "regular",
+            "align": "left",
+            "underline": false
+          },
+          "step-0": {
+            "kind": "text",
+            "x": 908,
+            "y": 400,
+            "width": 600,
+            "height": 105,
+            "fontSize": 54,
+            "bodySize": 30,
+            "color": "ink",
+            "weight": "semibold",
+            "align": "left",
+            "underline": true
+          },
+          "number-1": {
+            "kind": "text",
+            "x": 824,
+            "y": 567,
+            "width": 70,
+            "height": 50,
+            "fontSize": 24,
+            "bodySize": 30,
+            "color": "accentAlt",
+            "weight": "regular",
+            "align": "left",
+            "underline": false
+          },
+          "step-1": {
+            "kind": "text",
+            "x": 908,
+            "y": 547,
+            "width": 600,
+            "height": 105,
+            "fontSize": 54,
+            "bodySize": 30,
+            "color": "ink",
+            "weight": "semibold",
+            "align": "left",
+            "underline": true
+          },
+          "number-2": {
+            "kind": "text",
+            "x": 824,
+            "y": 714,
+            "width": 70,
+            "height": 50,
+            "fontSize": 24,
+            "bodySize": 30,
+            "color": "accentAlt",
+            "weight": "regular",
+            "align": "left",
+            "underline": false
+          },
+          "step-2": {
+            "kind": "text",
+            "x": 908,
+            "y": 694,
+            "width": 600,
+            "height": 105,
+            "fontSize": 54,
+            "bodySize": 30,
+            "color": "ink",
+            "weight": "semibold",
+            "align": "left",
+            "underline": true
+          }
+        },
+        "focus": [],
+        "annotations": {}
+      }
+    }
+  ]
+}

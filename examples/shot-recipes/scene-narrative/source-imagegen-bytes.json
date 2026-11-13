@@ -1,0 +1,21 @@
+{
+  "source": "hresh-approved v2 design pilot; originals generated with native imagegen",
+  "assets": [
+    {
+      "id": "story-observe",
+      "sha256": "a4a99af9754df622b3cb084637640ba0560be9123b6616a8b0afa9038fc43c1d"
+    },
+    {
+      "id": "story-compare",
+      "sha256": "152f51ef7d6758d433ac7c850e955aea37fedcda8468977e3a534bdc8b125e83"
+    },
+    {
+      "id": "story-question",
+      "sha256": "fbc38d4a9bb4cd22fccb0ce230a4eb1cfbb96ba1d8dd9f31dba02cb3bee93391"
+    },
+    {
+      "id": "leaf-pair",
+      "sha256": "a2d8c71e40b3d4a8caeedae0b099cc590e285e5c014936af672fbd30a10a08e7"
+    }
+  ]
+}

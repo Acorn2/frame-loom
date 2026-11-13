@@ -1,0 +1,74 @@
+{
+  "id": "scene-narrative",
+  "version": "1.2.0",
+  "status": "experimental",
+  "registered": true,
+  "visualKinds": [
+    "statement",
+    "compare",
+    "sequence"
+  ],
+  "purpose": "情境叙事",
+  "inputModes": [
+    "document-only",
+    "document-with-assets"
+  ],
+  "requiredAssets": [
+    "local-source-image"
+  ],
+  "styles": [
+    "editorial-typography"
+  ],
+  "orientations": [
+    "landscape"
+  ],
+  "slots": {
+    "items": {
+      "min": 2,
+      "max": 24,
+      "labelMax": 80
+    }
+  },
+  "timing": {
+    "actions": {
+      "reveal": {
+        "minSec": 0.2,
+        "maxSec": 8
+      },
+      "highlight": {
+        "minSec": 0.2,
+        "maxSec": 6
+      },
+      "focus": {
+        "minSec": 0.2,
+        "maxSec": 6
+      }
+    },
+    "readingSec": 1,
+    "titleHoldSec": 0.6,
+    "sourceHoldSec": 0.6,
+    "itemHoldSec": 0.12
+  },
+  "motion": {
+    "recipeOwned": [
+      "source-image-regions",
+      "explicit-crop-stages",
+      "native-text-and-labels"
+    ],
+    "styleOwned": [
+      "palette",
+      "font-family"
+    ],
+    "continuousDrift": false
+  },
+  "qa": [
+    "action-mid",
+    "action-complete",
+    "complete",
+    "before-handoff"
+  ],
+  "sound": {
+    "enabled": false,
+    "events": []
+  }
+}

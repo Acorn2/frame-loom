@@ -48,6 +48,12 @@ export async function buildLibrary(output = path.join(projectRoot, 'dist/library
     if (!cover || cover.source !== style.videoSource || cover.sourceSha256 !== createHash('sha256').update(video).digest('hex')) throw new Error(`风格封面已失效：${style.id}；运行 node scripts/prepare-style-covers.mjs。`);
     style.posterSource = `library/style-covers/${style.id}.png`;
     const tokens = JSON.parse(fs.readFileSync(path.join(projectRoot, 'styles', style.id, 'style.json'), 'utf8')).tokens;
+    const imageLed = {'annotated-reasoning': 'annotated-image', 'editorial-typography': 'scene-narrative'}[style.id];
+    if (imageLed) {
+      // Swatches describe the actual public sample; legacy production tokens stay unchanged.
+      const sample = JSON.parse(fs.readFileSync(path.join(projectRoot, 'examples/shot-recipes', imageLed, 'storyboard.json'), 'utf8'));
+      if (sample.palette?.schemaVersion === '1.1') Object.assign(tokens, {background: sample.palette.colors.lightBackground, ink: sample.palette.colors.ink, accent: sample.palette.colors.accent});
+    }
     style.displayColors = ['background', 'ink', 'accent'].map((key, index) => ({role: ['背景', '文字', '强调'][index], color: tokens[key]}));
   }
   if (requirePreviews) assertLibraryPreviews(catalog);

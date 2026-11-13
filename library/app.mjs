@@ -61,7 +61,7 @@ function renderStyles() {
     const info = styleCardInfo(style, catalog.recipes, state.canvas);
     const active = style.id === state.style;
     const colors = style.displayColors ?? [];
-    return `${index === 0 || style.role !== styles[index - 1].role ? `<div class="style-group" style="grid-column:1/-1"><h2>${style.role === 'primary' ? 'AI 插画风格' : '图文动效风格'}</h2><p class="section-note">${style.role === 'primary' ? '文字与图解为主，AI 插画辅助建立情境；也可使用真实截图。' : '通过文字、图形、图表与界面动效逐步讲解；也可使用真实图片。'}</p></div>` : ''}<article class="style-card ${active ? 'active' : ''}" aria-labelledby="style-title-${escape(style.id)}">
+    return `${index === 0 || style.role !== styles[index - 1].role ? `<div class="style-group" style="grid-column:1/-1"><h2>${style.role === 'primary' ? 'AI 插画风格' : '图文动效风格'}</h2><p class="section-note">${style.role === 'primary' ? '以白板书写、对象图解或完整情境讲述内容；插画需实际生成，也可使用真实截图。' : '通过文字、图形、图表与界面动效逐步讲解；也可使用真实图片。'}</p></div>` : ''}<article class="style-card ${active ? 'active' : ''}" aria-labelledby="style-title-${escape(style.id)}">
       <div class="style-preview"><button class="style-poster" data-style-preview="${escape(style.id)}" aria-label="预览风格 ${escape(style.subtitle)}${style.name !== style.subtitle ? ` ${escape(style.name)}` : ''}">
         <img src="${escape(style.poster)}" alt="${escape(style.subtitle)} 真实样片标题帧" width="960" height="540" loading="lazy">
         ${style.video ? `<video data-src="${escape(style.video)}" muted loop playsinline preload="none" aria-hidden="true"></video>` : ''}

@@ -24,7 +24,7 @@
 | 按时间码反馈、确认修改镜头并生成新版 | [审片与返工](usage-guide.md#边看边提意见按镜头复核新版) |
 | 复用角色、品牌和固定结尾制作多期 | [系列制作](usage-guide.md#基于系列新建一期) |
 | 切换成片系统标签的中英文 | [系统标签语言](usage-guide.md#成片系统标签语言) |
-| 使用手绘白板、批注推演或编辑式排印 | [主风格固定制作流程](primary-style-production.md) |
+| 使用手绘白板、批注图解或情境叙事 | [主风格固定制作流程](primary-style-production.md) |
 | 规划、生成和登记辅助插画 | [插画生产](illustrated-production.md) |
 | 编排圈注、旁注、文字重排和阶段关系 | [文案动画制作](text-led-production.md) |
 | 为六套图文动效风格推荐或限定镜头 | [镜头编排](shot-planning.md) · [配方目录](../shots/README.md) |
@@ -67,3 +67,5 @@
 - [风格组合复核](style-shot-compatibility.md)、[横竖屏镜头扩展](shot-expansion-20261009.md)、[配色实施](project-palette-implementation.md)、[样片恢复](library-preview-recovery.md)。
 - [同分镜六风格样片](../examples/template-families/README.md)、[原创白板](../examples/whiteboard-original/README.md)、[当前文案动画](../examples/text-led-video/README.md)。
 - [历史插画风格](../examples/illustrated-video/README.md)、[上游白板对照](../examples/whiteboard-reference/README.md)：保留素材与署名，用于兼容和方法回归。
+
+- [批注图解与情境叙事](image-led-directions.md)：当前图像主导配方、素材规范版本、正式样片与兼容边界。

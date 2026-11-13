@@ -1,0 +1,33 @@
+{
+  "tool": "native-imagegen",
+  "origin": "Approved illustration-directions-pilot; actual original requests, not regenerated under the new guide",
+  "requests": [
+    {
+      "id": "leaf-pair",
+      "prompt": "Use case: scientific-educational. Asset type: original transparent illustration for a 16:9 Chinese observation explainer, NOT a finished slide. Primary request: exactly two separate green leaves, arranged side by side with generous clean spacing, a broad rounded leaf on the left and a slender lanceolate leaf on the right. Both leaves point upward with short stems downward; a visible central vein and several natural branching veins. The rounded leaf has a gently scalloped outline; the narrow leaf has a smooth outline. Fictional generic leaves, no species labels and no claim of scientific specimen accuracy. Style: refined field-guide gouache and colored-pencil illustration with delicate dark forest-green contours, subtle matte pigment, crisp legible veins, adult editorial quality rather than a cute sticker. Palette: varied muted forest and sage greens, restrained warm highlights. Composition: landscape 3:2 canvas, broad leaf centered around x=30%, narrow leaf around x=72%, leaf tips near y=12%, stems ending near y=88%; full silhouettes visible, ample gap between leaves. Background: genuinely transparent, no paper rectangle, no cast shadow. Do not include people, pots, arrows, circles, annotations, numerals, text, typography, logos, or watermarks. The two leaves are the entire asset; annotations will be drawn later by code.",
+      "transparent": true
+    },
+    {
+      "id": "story-observe",
+      "prompt": "Use case: illustration-story. Asset type: original establishing-scene illustration for a 16:9 knowledge video, NOT a slide or UI. Primary request: a fictional East Asian mother and her young son quietly observing a small potted leafy plant together in a bright simple courtyard. Mother has a short dark bob, round thin glasses, a muted teal overshirt with rolled sleeves and navy trousers. Son has short slightly tousled dark hair, a mustard-ochre short-sleeved shirt and charcoal shorts. The child crouches and leans toward a broad rounded leaf while the mother kneels nearby, gently attentive rather than lecturing; both look at the plant. Include one broad rounded leaf and one slender leaf clearly visible on the plant, as a visual observation example. Style: sophisticated contemporary editorial gouache, matte flat color shapes, subtle brush texture, natural expressive silhouettes, calm visual storytelling, hand-painted human warmth, no thick black cartoon sticker outlines. Composition: panoramic 16:9, characters and planter occupy the center-right 65% of frame, whole bodies and pot visible; leftmost 25% kept airy for later titles, upper 15% clear for headers. Very simple pale cool-gray floor and almost-white background, a few restrained green foliage shapes suggesting the courtyard; no rendered text or graphic frames. Palette: deep teal, sage green, mustard, small terracotta accent, neutral light background. No words, numbers, labels, thought bubbles, arrows, logos, watermarks, camera border, page frames or collage panels. Make a single coherent scene with a stable sense of ground and space. Avoid exaggerated baby proportions and stock clipart.",
+      "transparent": false
+    },
+    {
+      "id": "story-compare",
+      "prompt": "Use case: illustration-story. Create a NEW second shot in the SAME illustrated story as reference image 1. Reference image 1 defines the exact fictional mother and boy, their clothes, gouache medium, restrained colors and courtyard. Reference image 2 is only a leaf-shape reference: one broad rounded wavy-edged leaf and one slender smooth-edged leaf; interpret them in the story's painted style. Primary request: medium-close overhead three-quarter view of the boy and mother's hands gently arranging two leaves side by side on a simple cool-gray courtyard bench or tabletop. The child is on the left in the same mustard-ochre shirt; mother is on the right with teal rolled sleeves, round glasses and short dark bob partly visible. The two separate leaves are the focal subjects, clearly separated, large, fully visible, different silhouettes and visible veins. Keep their hands plausible and do not obstruct the main leaf surfaces. Composition: wide cinematic 16:9, leaves around the central 55%, hands framing them; some surrounding torso/context to make it a continuing human scene rather than a scientific diagram. Refined contemporary editorial gouache, warm human expression, subtle matte paint texture, neutral almost-white and cool-gray background, green and teal, no graphic frame. The picture must contain NO text, symbols, arrows, captions, labels, logo, numbers or watermark. No thought bubbles or collage panels. Preserve continuity with the first scene. It is a fictional observation illustration, not a real photograph or botanical species claim.",
+      "references": [
+        "assets/story-observe.png",
+        "assets/leaf-pair.png"
+      ],
+      "transparent": false
+    },
+    {
+      "id": "story-question",
+      "prompt": "Use case: illustration-story. Create a NEW third shot in the SAME illustrated story as reference image 1. Keep exactly the same fictional East Asian mother with short dark bob, round thin glasses, teal rolled-sleeve overshirt and navy trousers, and same young boy with tousled dark hair, mustard-ochre shirt and charcoal shorts. Same refined matte editorial gouache and neutral bright courtyard. Primary request: having observed the plant and compared two leaves, the boy sits beside the mother, holding a small OPEN BLANK white notebook on his knees and a pencil, looking up at her with a thoughtful, curious expression; the mother listens warmly and gestures lightly toward the two leaves resting on the bench or floor between them. The potted plant remains nearby for continuity. The open notebook pages are plainly blank; absolutely no writing, marks, letters, numerals, diagrams or symbols on them. Characters occupy the center-right, whole upper bodies and notebook and leaves visible; airy negative space on the left for later editorial titles. Landscape 16:9, calm scene with a grounded spatial arrangement, subtle paper/brush texture and low-contrast pale cool-gray floor, a few restrained courtyard plants. Do not add speech bubbles, question marks, arrows, decorative stars, graphic frames, headings, labels, logos or watermark. The question and all text will be added by code later. Keep the mother and child's faces and clothing consistent with the reference.",
+      "references": [
+        "assets/story-observe.png"
+      ],
+      "transparent": false
+    }
+  ]
+}

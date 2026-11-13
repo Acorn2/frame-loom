@@ -172,7 +172,7 @@ function populateProject(target, {videoId, canvas, styleId, style, font, colorMo
   }
   write(path.join(target, 'visual-handoff.json'), `${JSON.stringify({schemaVersion: '1.0', facecamRightFraction: 0, subtitleBottomFraction: 0, timelinePolicy: 'picture-locked'}, null, 2)}\n`);
   if (inputMode === 'document' && ILLUSTRATION_STYLES.includes(styleId)) {
-    write(path.join(target, 'illustration-plan.json'), `${JSON.stringify({schemaVersion: '1.0', style: {id: style.id, version: style.version}, assets: []}, null, 2)}\n`);
+    write(path.join(target, 'illustration-plan.json'), `${JSON.stringify({schemaVersion: '1.0', style: {id: style.id, version: style.version}, ...(['annotated-reasoning', 'editorial-typography'].includes(style.id) ? {guideVersion: '2.0'} : {}), assets: []}, null, 2)}\n`);
     fs.appendFileSync(path.join(target, 'production-brief.md'), '\n## Generated subjects\n\nRead references/illustrated-production.md. Populate illustration-plan.json from source claims, prepare prompts, invoke native imagegen, inspect and register each asset. Preparation is not generation. Text and relationships stay native; failed generation must not silently fall back.\n');
   }
   write(path.join(target, 'asset-manifest.json'), `${JSON.stringify({schemaVersion: '1.0', assets: []}, null, 2)}\n`);

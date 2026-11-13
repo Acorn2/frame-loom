@@ -4,7 +4,7 @@ export const ILLUSTRATION_STYLES = ['whiteboard', 'flat-explainer', 'paper-colla
 export const IllustrationStyleRefSchema = z.object({id: z.enum(ILLUSTRATION_STYLES), version: z.literal('1.0.0')}).strict();
 const relativeAsset = z.string().regex(/^assets\/[a-z0-9]+(?:-[a-z0-9]+)*\.png$/);
 export const IllustrationPlanSchema = z.object({
-  schemaVersion: z.literal('1.0'), style: IllustrationStyleRefSchema,
+  schemaVersion: z.literal('1.0'), style: IllustrationStyleRefSchema, guideVersion: z.literal('2.0').optional(),
   assets: z.array(z.object({
     id: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/), path: relativeAsset,
     subject: z.string().min(1).max(2000), purpose: z.string().min(1).max(500),
@@ -15,6 +15,7 @@ export const IllustrationPlanSchema = z.object({
 
 export const IllustrationGuideSchema = z.object({
   schemaVersion: z.literal('1.0'), style: IllustrationStyleRefSchema,
+  guideVersion: z.literal('2.0').optional(), background: z.enum(['transparent', 'scene']).optional(),
   medium: z.string().min(1), subjectPrompt: z.string().min(1),
   palette: z.array(z.string().regex(/^#[0-9a-f]{6}$/i)).min(3),
   composition: z.array(z.string().min(1)).min(1), motion: z.array(z.string().min(1)).min(1)

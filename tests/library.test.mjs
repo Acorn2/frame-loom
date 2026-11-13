@@ -87,6 +87,7 @@ describe('local library capabilities and selection', () => {
       expect(recipe.recipe).toBe(source.recipe);
       expect(recipe.styles).toEqual(source.styles); expect(recipe.stylePreviews).toEqual(source.stylePreviews);
     }
+    for (const id of ['annotated-reasoning', 'editorial-typography']) expect(english.styles.find(s => s.id === id).name).not.toMatch(/[\u4e00-\u9fff]/u);
     for (const font of english.fonts) expect(font.faces).toEqual(catalog.fonts.find(item => item.id === font.id).faces);
     expect(JSON.stringify(catalog)).toBe(original);
     expect(normalizeSelection(english, {style: 'signal', font: 'lxgw-wenkai', fontMode: 'manual', selected: ['paper-title']}))
@@ -188,7 +189,7 @@ describe('local library capabilities and selection', () => {
       ]);
     }
     const workflow = fs.readFileSync(path.join(projectRoot, 'SKILL.md'), 'utf8');
-    for (const guide of ['primary-style-production', 'shot-planning', 'project-palette', 'illustrated-production', 'text-led-production', 'branding', 'tts-setup', 'audio-integration']) {
+    for (const guide of ['primary-style-production', 'shot-planning', 'project-palette', 'illustrated-production', 'image-led-directions', 'text-led-production', 'branding', 'tts-setup', 'audio-integration']) {
       expect(workflow).toContain(`references/${guide}.md`);
       expect(fs.existsSync(path.join(projectRoot, 'references', `${guide}.md`))).toBe(true);
     }
@@ -211,7 +212,7 @@ describe('local library capabilities and selection', () => {
   });
   it('hides fixed-style-only recipes without removing shared selectable or production capabilities', () => {
     const visible = recipeLibraryItems(catalog);
-    const hiddenIds = ['annotated-manuscript', 'editorial-flow', 'whiteboard-board', 'illustrated-hero', 'illustrated-explain', 'illustrated-compare', 'illustrated-process', 'illustrated-breakdown', 'illustrated-metric'];
+    const hiddenIds = ['annotated-image', 'scene-narrative', 'annotated-manuscript', 'editorial-flow', 'whiteboard-board', 'illustrated-hero', 'illustrated-explain', 'illustrated-compare', 'illustrated-process', 'illustrated-breakdown', 'illustrated-metric'];
     expect(visible.filter(recipe => recipe.kind === 'scene')).toHaveLength(46);
     for (const id of hiddenIds) {
       expect(catalog.recipes.some(recipe => recipe.id === id)).toBe(true);
@@ -224,7 +225,7 @@ describe('local library capabilities and selection', () => {
         .toEqual(catalog.recipes.filter(recipe => compatible(recipe, style, canvas)));
     }
   });
-  it.each(['annotated-reasoning', 'editorial-typography'])('keeps %s primary sample copy aligned with the original whiteboard', style => {
+  it.each(['annotated-reasoning', 'editorial-typography'])('retains %s historical text sample aligned with the original whiteboard', style => {
     const load = file => JSON.parse(fs.readFileSync(path.join(projectRoot, file)));
     const original = load('examples/whiteboard-original/storyboard.json');
     const sample = load(`examples/text-led-video/${style}/storyboard.json`);
@@ -264,7 +265,7 @@ describe('local library capabilities and selection', () => {
   });
   it('joins actual catalog entries and public fixtures without counting hosted actions as scenes', () => {
     expect(catalog.styles).toHaveLength(9);
-    expect(catalog.recipes.filter(item => item.kind === 'scene')).toHaveLength(55);
+    expect(catalog.recipes.filter(item => item.kind === 'scene')).toHaveLength(57);
     expect(catalog.recipes.filter(item => item.kind === 'hosted-action')).toHaveLength(9);
     expect(catalog.recipes.filter(item => item.kind === 'cross-scene-transition')).toHaveLength(5);
     for (const fixture of libraryFixtures()) expect(fs.existsSync(path.join(projectRoot, fixture.source))).toBe(true);
@@ -278,7 +279,7 @@ describe('local library capabilities and selection', () => {
     for (const style of catalog.styles) for (const canvas of ['landscape', 'portrait']) {
       const recipes = catalog.recipes.filter(item => compatible(item, style.id, canvas));
       const directionCount = ['retro-zine', 'signal-noir', 'studio-frame'].includes(style.id) ? 1 : 0;
-      expect(recipes).toHaveLength(style.role === 'primary' ? canvas === 'landscape' ? style.id === 'whiteboard' ? 11 : 2 : 0 : canvas === 'landscape' ? 43 + directionCount : 4);
+      expect(recipes).toHaveLength(style.role === 'primary' ? canvas === 'landscape' ? style.id === 'whiteboard' ? 11 : 3 : 0 : canvas === 'landscape' ? 43 + directionCount : 4);
       expect(recipes.some(item => item.id === 'semantic-default')).toBe(canvas === 'landscape' || style.role !== 'primary');
     }
   });
@@ -633,11 +634,13 @@ describe('style card capability and preview evidence', () => {
     expect(styleCardInfo(retro, catalog.recipes, 'portrait').basicOnly).toBe(false);
     for (const style of catalog.styles.filter(style => style.id !== 'retro-zine')) expect(styleCardInfo(style, catalog.recipes, 'landscape').capability).toBe(style.role === 'primary' ? '镜头自动编排' : `${['retro-zine', 'signal-noir', 'studio-frame'].includes(style.id) ? 44 : 43} 个可用镜头`);
   });
-  it('publishes readable covers from the same video and color roles from the actual style tokens', async () => {
+  it('publishes same-video covers and colors from the actual sample palette or original style tokens', async () => {
     const published = await (await fetch(`${base}/catalog.json`)).json();
     for (const style of published.styles) {
       const tokens = JSON.parse(fs.readFileSync(path.join(projectRoot, 'styles', style.id, 'style.json'), 'utf8')).tokens;
-      expect(style.displayColors.map(color => color.color)).toEqual([tokens.background, tokens.ink, tokens.accent]);
+      const imageLed = {'annotated-reasoning': 'annotated-image', 'editorial-typography': 'scene-narrative'}[style.id];
+      const colors = imageLed ? JSON.parse(fs.readFileSync(path.join(projectRoot, 'examples/shot-recipes', imageLed, 'storyboard.json'))).palette.colors : null;
+      expect(style.displayColors.map(color => color.color)).toEqual(colors ? [colors.lightBackground, colors.ink, colors.accent] : [tokens.background, tokens.ink, tokens.accent]);
       expect(style.displayColors.map(color => color.role)).toEqual(['背景','文字','强调']);
       const cover = await fetch(`${base}/${style.poster}`);
       expect(style.poster).toMatch(/\.webp$/u);

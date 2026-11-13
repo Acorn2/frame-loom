@@ -3,6 +3,7 @@ import path from 'node:path';
 import {bundle} from '@remotion/bundler';
 import {getCompositions, openBrowser, renderMedia, renderStill} from '@remotion/renderer';
 import {projectRoot} from './lib/style-catalog.mjs';
+import {hydrateLibraryAssets} from './lib/library-assets.mjs';
 import {fontPreviewRoot, fontPreviewFixture, fontPreviewCombinations, fontPreviewFingerprint} from './lib/font-previews.mjs';
 import {FONT_CATALOG} from '../src/fonts/catalog.ts';
 import {verifyAllFonts} from '../src/fonts/assets.ts';
@@ -23,7 +24,10 @@ const serveUrl = await bundle({entryPoint: path.join(projectRoot, 'src/index.ts'
 const browser = await openBrowser('chrome');
 try {
   for (const [index, item] of pending.entries()) {
-    const storyboard = JSON.parse(fs.readFileSync(path.join(projectRoot, fontPreviewFixture), 'utf8'));
+    const imageLedId = {'annotated-reasoning': 'annotated-image', 'editorial-typography': 'scene-narrative'}[item.style];
+    const source = path.join(projectRoot, imageLedId ? `examples/shot-recipes/${imageLedId}/storyboard.json` : fontPreviewFixture);
+    const storyboard = hydrateLibraryAssets(JSON.parse(fs.readFileSync(source, 'utf8')), source);
+    if (imageLedId) {storyboard.scenes = storyboard.scenes.slice(0, 1); storyboard.project.durationFrames = 180; storyboard.project.durationSec = 6;}
     storyboard.style.id = item.style;
     const font = FONT_CATALOG.find(font => font.id === item.font);
     storyboard.font = {id: font.id, version: font.version};

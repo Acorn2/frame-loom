@@ -1,0 +1,16 @@
+{
+  "title": "好问题，从观察开始",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "audio": "silent-by-creator-choice",
+  "font": {"id": "source-han-sans-sc", "version": "2.005"},
+  "capabilities": {"actions": ["reveal", "draw", "focus", "camera-push", "highlight"], "transitions": ["fade"]},
+  "scenes": [
+    {"id": "observe", "seconds": 6, "heading": "好问题，从观察开始", "keyword": "先观察", "narration": "好问题，常常从一次仔细观察开始。", "captions": ["好问题", "常常从一次仔细观察开始"]},
+    {"id": "details", "seconds": 6, "heading": "看见细节", "keyword": "看清楚", "narration": "先看叶子的边缘，再看看里面的纹路。", "captions": ["先看叶子的边缘", "再看看里面的纹路"]},
+    {"id": "compare", "seconds": 6, "heading": "比较差异", "keyword": "放在一起看", "narration": "把两片叶子放在一起，找出它们的不同。", "captions": ["把两片叶子放在一起", "找出它们的不同"]},
+    {"id": "question", "seconds": 6, "heading": "提出问题", "keyword": "为什么？", "narration": "把看见的细节说清楚，再问一句：为什么？", "captions": ["把看见的细节说清楚", "再问一句：为什么？"]},
+    {"id": "closing", "seconds": 6, "heading": "让好奇，有继续探索的方向", "keyword": "观察 → 比较 → 提问", "narration": "从观察到比较，再到提问，让好奇有了探索的方向。", "captions": ["从观察到比较，再到提问", "让好奇有了探索的方向"]}
+  ]
+}

@@ -1,3 +1,4 @@
+import {spawnSync} from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import {bundle} from '@remotion/bundler';
@@ -17,7 +18,12 @@ const serveUrl = await bundle({entryPoint: path.join(projectRoot, 'src/index.ts'
 const browser = await openBrowser('chrome');
 try {
   for (const id of selected) {
-    const textLed = ['annotated-reasoning', 'editorial-typography'].includes(id);
+    if (['annotated-reasoning', 'editorial-typography'].includes(id)) {
+      const result = spawnSync(process.execPath, ['--import', 'tsx/esm', path.join(projectRoot, 'scripts/preview-image-led.mjs'), id === 'annotated-reasoning' ? '--annotated' : '--narrative', '--force'], {cwd: projectRoot, stdio: 'inherit'});
+      if (result.error || result.status !== 0) throw new Error(`插画主样片生成失败：${id}`);
+      continue;
+    }
+    const textLed = false;
     const file = textLed ? path.join(projectRoot, 'examples/text-led-video', id, 'storyboard.json') : id === 'whiteboard' ? path.join(projectRoot, 'examples/whiteboard-original/storyboard.json') : path.join(projectRoot, 'examples/illustrated-video', id, 'curiosity.json');
     const board = JSON.parse(fs.readFileSync(file));
     const visual = checkVisualInput(board);

@@ -14,7 +14,7 @@ const contrast=(a,b)=>{const x=luminance(a),y=luminance(b);return(Math.max(x,y)+
 describe('independent landscape style and shot combinations',()=>{
  const catalog=buildLibraryCatalog();
  it.each(libraryStyleIds)('%s accepts every scene, hosted action, transition and variant fixture',style=>{
-  const fixtures=libraryPreviewFixtures().filter(f=>f.styleId===style);expect(fixtures).toHaveLength(style === 'whiteboard' ? 11 : ['annotated-reasoning', 'editorial-typography'].includes(style) ? 2 : ['retro-zine', 'signal-noir', 'studio-frame'].includes(style) ? 64 : 63);
+  const fixtures=libraryPreviewFixtures().filter(f=>f.styleId===style);expect(fixtures).toHaveLength(style === 'whiteboard' ? 11 : ['annotated-reasoning', 'editorial-typography'].includes(style) ? 3 : ['retro-zine', 'signal-noir', 'studio-frame'].includes(style) ? 64 : 63);
 
   for(const fixture of fixtures){
    const storyboardPath=path.resolve(fixture.source),board=JSON.parse(fs.readFileSync(storyboardPath));board.style.id=style;delete board.videoTemplate;
@@ -27,7 +27,7 @@ describe('independent landscape style and shot combinations',()=>{
     expect(contrast(appearance.stageInk,appearance.tokens.background),fixture.id).toBeGreaterThanOrEqual(7);
     expect(contrast(appearance.stageMuted,appearance.tokens.background),fixture.id).toBeGreaterThanOrEqual(4.5);
     expect(contrast(appearance.tokens.captionInk,appearance.tokens.background),fixture.id).toBeGreaterThanOrEqual(4.5);
-    if(!['semantic-default','compare-reveal','network-expand','annotated-manuscript','editorial-flow'].includes(scene.shot.id) && !scene.shot.id.startsWith('whiteboard-') && !scene.shot.id.startsWith('illustrated-')) expect(contrast(appearance.tokens.accentAlt,appearance.tokens.paper),fixture.id).toBeGreaterThanOrEqual(4.5);
+    if(!['semantic-default','compare-reveal','network-expand','annotated-image','scene-narrative','annotated-manuscript','editorial-flow'].includes(scene.shot.id) && !scene.shot.id.startsWith('whiteboard-') && !scene.shot.id.startsWith('illustrated-')) expect(contrast(appearance.tokens.accentAlt,appearance.tokens.paper),fixture.id).toBeGreaterThanOrEqual(4.5);
     expect(appearance.tokens.bodyFont).toBe(tokens.bodyFont);expect(appearance.tokens.safeArea).toEqual(tokens.safeArea);
    }
   }

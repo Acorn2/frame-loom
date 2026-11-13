@@ -1,0 +1,78 @@
+{
+  "verifiedAt": "2026-11-13T03:37:45.780090+00:00",
+  "purpose": "public silent style previews; not a narrated-video delivery approval",
+  "tests": {
+    "command": "npm test -- --no-file-parallelism --testTimeout 20000",
+    "filesPassed": 49,
+    "testsPassed": 881,
+    "subsequentLibraryTestsPassed": 71
+  },
+  "checks": [
+    "typecheck",
+    "lint",
+    "validate:shots (57 scene recipes, 9 hosted actions, 5 chapter transitions)",
+    "validate:fonts (all registered bytes and licenses)",
+    "check:docs (347 Markdown files, 1138 local links)",
+    "isolated Remotion bundle",
+    "strict library build with current 398 recipe previews and 45 font previews",
+    "full FFmpeg decode of both videos",
+    "actual 18-second render of both legacy text-led storyboards",
+    "Chinese and English UI, retained production parameters, 390px layout without horizontal overflow",
+    "28 image-led regression tests, including 8 added pre-push edge cases",
+    "actual 20-second article-video compatibility render"
+  ],
+  "compatibility": {
+    "styleIdsUnchanged": true,
+    "oldTextRecipesRetained": true,
+    "oldIllustrationGuideBytesUnchanged": true,
+    "whiteboardVideoPosterStoryboardAndStyleBytesUnchanged": true
+  },
+  "samples": [
+    {
+      "id": "annotated-image",
+      "video": "previews/annotated.mp4",
+      "sha256": "f72e7dcca1080290c79896896f7f18327ca6299eb8d4ec646d368ebae89ff820",
+      "durationSec": 30,
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "audioStreams": 0,
+      "automatedPassed": true,
+      "requiredLayoutFrames": 77,
+      "stableLayoutErrors": 0,
+      "completePlayback": {
+        "playedFrom": 0,
+        "endedAt": 30,
+        "timeupdateEvents": 114,
+        "maximumObservedTimeGapSec": 0.26737,
+        "mediaError": null
+      },
+      "visualReview": "All QA contact sheets, full-size compositions and final browser frame reviewed; finite framing and final-frame hold confirmed"
+    },
+    {
+      "id": "scene-narrative",
+      "video": "previews/narrative.mp4",
+      "sha256": "1fac7d521836bc3ac7fef1b71efdad19d1cffc0ba484a1d3e004d5280eaf8a0a",
+      "durationSec": 30,
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "audioStreams": 0,
+      "automatedPassed": true,
+      "requiredLayoutFrames": 82,
+      "stableLayoutErrors": 0,
+      "completePlayback": {
+        "playedFrom": 0,
+        "endedAt": 30,
+        "timeupdateEvents": 114,
+        "maximumObservedTimeGapSec": 0.271608,
+        "mediaError": null
+      },
+      "visualReview": "All QA contact sheets, full-size compositions and final browser frame reviewed; finite framing and final-frame hold confirmed"
+    }
+  ],
+  "reviewFixes": [
+    "Preflight measures authored rows with schema defaults, rejects implicit wrapping, and ignores empty optional body fields.",
+    "Contain framing clips to the selected source rectangle; letterbox space cannot expose neighboring source pixels."
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "id": "story-observe",
+      "path": "assets/story-observe.png",
+      "type": "image",
+      "usage": "scene-media",
+      "source": "Original native imagegen output from approved illustration-directions-pilot; source-imagegen-requests.json#story-observe",
+      "license": "AI-generated output; subject to image provider terms; fictional illustration, not a factual photograph",
+      "intendedUse": "Source illustration for region annotation or a complete fictional observation scene"
+    },
+    {
+      "id": "story-compare",
+      "path": "assets/story-compare.png",
+      "type": "image",
+      "usage": "scene-media",
+      "source": "Original native imagegen output from approved illustration-directions-pilot; source-imagegen-requests.json#story-compare",
+      "license": "AI-generated output; subject to image provider terms; fictional illustration, not a factual photograph",
+      "intendedUse": "Source illustration for region annotation or a complete fictional observation scene"
+    },
+    {
+      "id": "story-question",
+      "path": "assets/story-question.png",
+      "type": "image",
+      "usage": "scene-media",
+      "source": "Original native imagegen output from approved illustration-directions-pilot; source-imagegen-requests.json#story-question",
+      "license": "AI-generated output; subject to image provider terms; fictional illustration, not a factual photograph",
+      "intendedUse": "Source illustration for region annotation or a complete fictional observation scene"
+    },
+    {
+      "id": "leaf-pair",
+      "path": "assets/leaf-pair.png",
+      "type": "image",
+      "source": "Original native imagegen reference used by story-compare; source-imagegen-requests.json#leaf-pair",
+      "license": "AI-generated output; subject to image provider terms; fictional observation illustration",
+      "intendedUse": "Historical imagegen reference for leaf-shape continuity; not an additional on-screen picture"
+    }
+  ]
+}

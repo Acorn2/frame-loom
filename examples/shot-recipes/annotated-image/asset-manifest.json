@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "id": "leaf-pair",
+      "path": "assets/leaf-pair.png",
+      "type": "image",
+      "usage": "scene-media",
+      "source": "Original native imagegen output from approved illustration-directions-pilot; source-imagegen-requests.json#leaf-pair",
+      "license": "AI-generated output; subject to image provider terms; fictional illustration, not a factual photograph",
+      "intendedUse": "Source illustration for region annotation or a complete fictional observation scene"
+    }
+  ]
+}

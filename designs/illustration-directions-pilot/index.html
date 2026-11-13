@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>批注图解与情境叙事 · 设计试片</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#f3f6f4;color:#243b34;font:16px/1.65 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}main{max-width:1540px;margin:auto;padding:48px 24px 64px}.eyebrow{font-size:13px;letter-spacing:.12em;color:#65716c}h1{font-size:clamp(28px,3.6vw,46px);line-height:1.3;margin:12px 0 16px}h2{font-size:24px;margin:0 0 8px}.intro{max-width:900px;color:#65716c}.toolbar{display:flex;flex-wrap:wrap;gap:12px;margin:26px 0}button,.link{min-height:44px;border:1px solid #bdcec2;border-radius:8px;background:#fff;color:#243b34;padding:10px 18px;font:inherit;cursor:pointer;text-decoration:none}button.primary{background:#34765b;color:#fff;border-color:#34765b}.grid{display:grid;grid-template-columns:1fr;gap:24px}article{overflow:hidden;border:1px solid #d4dfd7;border-radius:14px;background:#fff}video{display:block;width:100%;aspect-ratio:16/9;background:#fff}.body{padding:24px}.body p{color:#65716c;margin:0 0 20px}.meta{font-size:14px;color:#65716c}.detail{margin-top:30px;padding:22px;border-top:1px solid #d4dfd7}.detail p{margin:0 0 14px}.detail summary{cursor:pointer;min-height:44px}.script{max-width:900px}footer{margin-top:28px;color:#65716c;font-size:14px}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #c66a49;outline-offset:4px}@media(min-width:1040px){.grid{grid-template-columns:1fr 1fr}}@media(max-width:520px){main{padding:26px 14px 40px}.body{padding:18px}.toolbar button{flex:1}h2{font-size:22px}}
+  </style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">FRAMELOOM / ILLUSTRATION STUDIES</div>
+  <h1>同一段讲解，两种画面</h1>
+  <p class="intro">主题：好问题，从观察开始。两条片使用相同旁白文本与字幕时码，均为30秒静音样片。先看插画是否帮助理解，再看构图和信息展开。</p>
+  <div class="toolbar"><button class="primary" id="compare">一起从头播放</button><button id="pause">一起暂停</button></div>
+  <section class="grid" aria-label="两条设计试片">
+    <article><video id="annotated" controls playsinline muted preload="metadata" poster="output/v2/annotated-poster.jpg" aria-label="批注图解 30秒静音样片"><source src="output/v2/annotated.mp4" type="video/mp4"></video><div class="body"><h2>批注图解</h2><p>以叶片为观察对象：看整体、放大局部、标记细节，再并置比较。批注指向图中的具体位置。</p><p class="meta">30秒 · 1920×1080 · 静音</p><a class="link" href="output/v2/annotated.mp4">单独打开样片</a></div></article>
+    <article><video id="narrative" controls playsinline muted preload="metadata" poster="output/v2/narrative-poster.jpg" aria-label="情境叙事 30秒静音样片"><source src="output/v2/narrative.mp4" type="video/mp4"></video><div class="body"><h2>情境叙事</h2><p>以同一组人物与物件建立情境：从观察全景进入比较近景，再到记录和提问。场景变化推进讲解。</p><p class="meta">30秒 · 1920×1080 · 静音</p><a class="link" href="output/v2/narrative.mp4">单独打开样片</a></div></article>
+  </section>
+  <details class="detail"><summary>查看两条片共用的旁白</summary><div class="script">
+    <p><strong>00:00–00:06</strong>　好问题，常常从一次仔细观察开始。</p>
+    <p><strong>00:06–00:12</strong>　先看叶子的边缘，再看看里面的纹路。</p>
+    <p><strong>00:12–00:18</strong>　把两片叶子放在一起，找出它们的不同。</p>
+    <p><strong>00:18–00:24</strong>　把看见的细节说清楚，再问一句：为什么？</p>
+    <p><strong>00:24–00:30</strong>　从观察到比较，再到提问，让好奇有了探索的方向。</p>
+  </div></details>
+  <footer>原创AI插画，虚构观察情境。当前是独立设计试片，正式风格库与手绘白板保持原样。可按时间码提出画面意见。</footer>
+</main>
+<script>
+const videos=[...document.querySelectorAll('video')];
+document.querySelector('#compare').addEventListener('click',()=>{for(const video of videos){video.currentTime=0;video.muted=true;video.play().catch(()=>{});}});
+document.querySelector('#pause').addEventListener('click',()=>{for(const video of videos)video.pause();});
+</script>
+</body>
+</html>

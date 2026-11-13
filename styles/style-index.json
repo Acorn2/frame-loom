@@ -295,12 +295,12 @@
     },
     {
       "id": "annotated-reasoning",
-      "name": "Annotated Reasoning",
+      "name": "批注图解",
       "version": "1.0.0",
       "category": "editorial",
       "mood": [
         "clear",
-        "text-first",
+        "illustrated",
         "annotated"
       ],
       "bestFor": [
@@ -323,13 +323,13 @@
     },
     {
       "id": "editorial-typography",
-      "name": "Editorial Typography",
+      "name": "情境叙事",
       "version": "1.0.0",
       "category": "editorial",
       "mood": [
         "clear",
-        "text-first",
-        "organized"
+        "illustrated",
+        "narrative"
       ],
       "bestFor": [
         "knowledge",

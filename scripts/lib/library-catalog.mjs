@@ -17,8 +17,8 @@ import {previewRuntimeFiles} from './preview-inputs.mjs';
 // Catalogs own capabilities; this file only joins presentation labels and public evidence.
 const labels = JSON.parse(fs.readFileSync(path.join(projectRoot, 'library/catalog-labels.json'), 'utf8'));
 const styleDescriptions = {
-  'annotated-reasoning': ['批注推演', '文案保持稳定，圈词、旁注与关系线按讲述顺序累积；小插画只提供情境。样片与白板使用同一观察文案。'],
-  'editorial-typography': ['编辑式排印', '浅色画布、克制字号与细线；文字连续迁移、归组、沿关系追踪，再连接成解释。辅助插画保持在角落。'],
+  'annotated-reasoning': ['批注图解', '大幅主体、细节取景与源图圈注，沿引线解释具体观察。与情境叙事使用相同的30秒旁白文本。'],
+  'editorial-typography': ['情境叙事', '完整原创场景、连贯人物与细节取景，依次推进观察、比较和提问。与批注图解使用相同的30秒旁白文本。'],
   'flat-explainer': ['彩色手绘讲解', '大幅漫画人物与物件置于有机舞台，说明围绕主体展开；对照与流程横向推进，曲线关系配合连续入场。样片“好问题，从观察开始”与另外两套使用相同文案。'],
   'paper-collage': ['像素讲解笔记', '紧凑像素主体配浅灰笔记线与阶梯模块；对照和流程纵向逐项展开，直角关系、分块显现与短促重点提示。样片“好问题，从观察开始”与另外两套使用相同文案。'],
   whiteboard: ['手绘白板', '开放点阵白板配手绘人物与物件，文字、步骤和单支铅笔逐项展开；原创样片“好问题，从观察开始”展示亲子观察、比较和提问。'],
@@ -77,6 +77,7 @@ export function previewFingerprint() {
     ...libraryPreviewFixtures().flatMap(item => fixtureAssets(path.join(projectRoot, item.source))),
     ...[...new Set(libraryPreviewFixtures().filter(item => item.recipeId.startsWith('illustrated-') || item.recipeId === 'whiteboard-board').map(item => path.dirname(path.join(projectRoot, item.source))))].flatMap(directory => [path.join(directory, 'asset-manifest.json'), ...illustrationFiles(directory)]),
     ...['annotated-reasoning', 'editorial-typography'].flatMap(id => ['asset-manifest.json', 'project-input.json', 'source.md', 'source-imagegen-requests.json'].map(file => path.join(projectRoot, 'examples/text-led-video', id, file))),
+    ...['annotated-image', 'scene-narrative'].flatMap(id => ['asset-manifest.json', 'project-input.json', 'source.md', 'source-imagegen-requests.json', 'source-imagegen-bytes.json'].map(file => path.join(projectRoot, 'examples/shot-recipes', id, file))),
     path.join(projectRoot, 'scripts/lib/library-assets.mjs'), path.join(projectRoot, 'scripts/render-library-previews.mjs'), path.join(projectRoot, 'scripts/lib/library-catalog.mjs'), path.join(projectRoot, 'package-lock.json')];
   for (const input of [...new Set([...inputs, ...previewRuntimeFiles(projectRoot)])].sort()) {hash.update(path.relative(projectRoot, input)); hash.update(fs.readFileSync(input));}
   return hash.digest('hex');

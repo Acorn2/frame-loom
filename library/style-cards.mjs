@@ -3,8 +3,8 @@ import {isFixedStyle} from './style-policy.mjs';
 export {createCardPreviewPlayback as createStyleCardPlayback} from './playback.mjs';
 
 const copy = {
-  'annotated-reasoning': {features: '正文稳定 · 圈词旁注 · 关系累积', use: '知识讲解、观点分析、阅读笔记'},
-  'editorial-typography': {features: '浅色排印 · 文字归组 · 路径追踪', use: '流程解释、关系梳理、方法拆解'},
+  'annotated-reasoning': {features: '大幅主体 · 局部圈注 · 引线图解', use: '知识观察、细节解释、对象比较'},
+  'editorial-typography': {features: '完整场景 · 连贯人物 · 细节取景', use: '知识故事、亲子观察、情境讲解'},
   'flat-explainer': {features: '大幅情境 · 有机曲线 · 连续入场', use: '情境讲解、关系解释、流程对照'},
   'paper-collage': {features: '阶梯模块 · 像素笔记 · 分块显现', use: '日常情境、逐项笔记、行动清单'},
   whiteboard: {features: '原创手绘贴纸 · 开放白板 · 逐笔展开', use: '观察笔记、流程拆解、知识解释'},

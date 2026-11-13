@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0",
+  "style": {
+    "id": "editorial-typography",
+    "version": "1.0.0"
+  },
+  "guideVersion": "2.0",
+  "background": "scene",
+  "medium": "scene-led gouache narrative",
+  "subjectPrompt": "Complete editorial story illustration, delicate gouache and pencil texture, coherent real-world setting, natural gestures and readable focal action. Keep recurring fictional characters, clothing, props and environment consistent across related scenes. Restrained green and warm accents with clean light breathing room.",
+  "palette": [
+    "#ffffff",
+    "#243b34",
+    "#34765b",
+    "#c66a49"
+  ],
+  "composition": [
+    "Each image is a full narrative scene, not a small corner sticker.",
+    "Plan establishing view, source-supported detail, comparison and question or resolution as needed.",
+    "Generate no text, labels or interfaces; keep narration and all on-screen words native."
+  ],
+  "motion": [
+    "Explicit finite crop stages, never continuous drift.",
+    "Annotation regions track the same source-to-canvas transform.",
+    "Cuts between declared scenes; do not imply generated character acting."
+  ]
+}

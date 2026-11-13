@@ -1,0 +1,22 @@
+{
+  "tool": "native-imagegen",
+  "requests": [
+    {
+      "id": "story-compare",
+      "prompt": "Use case: illustration-story. Create a NEW second shot in the SAME illustrated story as reference image 1. Reference image 1 defines the exact fictional mother and boy, their clothes, gouache medium, restrained colors and courtyard. Reference image 2 is only a leaf-shape reference: one broad rounded wavy-edged leaf and one slender smooth-edged leaf; interpret them in the story's painted style. Primary request: medium-close overhead three-quarter view of the boy and mother's hands gently arranging two leaves side by side on a simple cool-gray courtyard bench or tabletop. The child is on the left in the same mustard-ochre shirt; mother is on the right with teal rolled sleeves, round glasses and short dark bob partly visible. The two separate leaves are the focal subjects, clearly separated, large, fully visible, different silhouettes and visible veins. Keep their hands plausible and do not obstruct the main leaf surfaces. Composition: wide cinematic 16:9, leaves around the central 55%, hands framing them; some surrounding torso/context to make it a continuing human scene rather than a scientific diagram. Refined contemporary editorial gouache, warm human expression, subtle matte paint texture, neutral almost-white and cool-gray background, green and teal, no graphic frame. The picture must contain NO text, symbols, arrows, captions, labels, logo, numbers or watermark. No thought bubbles or collage panels. Preserve continuity with the first scene. It is a fictional observation illustration, not a real photograph or botanical species claim.",
+      "references": [
+        "assets/story-observe.png",
+        "assets/leaf-pair.png"
+      ],
+      "transparent": false
+    },
+    {
+      "id": "story-question",
+      "prompt": "Use case: illustration-story. Create a NEW third shot in the SAME illustrated story as reference image 1. Keep exactly the same fictional East Asian mother with short dark bob, round thin glasses, teal rolled-sleeve overshirt and navy trousers, and same young boy with tousled dark hair, mustard-ochre shirt and charcoal shorts. Same refined matte editorial gouache and neutral bright courtyard. Primary request: having observed the plant and compared two leaves, the boy sits beside the mother, holding a small OPEN BLANK white notebook on his knees and a pencil, looking up at her with a thoughtful, curious expression; the mother listens warmly and gestures lightly toward the two leaves resting on the bench or floor between them. The potted plant remains nearby for continuity. The open notebook pages are plainly blank; absolutely no writing, marks, letters, numerals, diagrams or symbols on them. Characters occupy the center-right, whole upper bodies and notebook and leaves visible; airy negative space on the left for later editorial titles. Landscape 16:9, calm scene with a grounded spatial arrangement, subtle paper/brush texture and low-contrast pale cool-gray floor, a few restrained courtyard plants. Do not add speech bubbles, question marks, arrows, decorative stars, graphic frames, headings, labels, logos or watermark. The question and all text will be added by code later. Keep the mother and child's faces and clothing consistent with the reference.",
+      "references": [
+        "assets/story-observe.png"
+      ],
+      "transparent": false
+    }
+  ]
+}

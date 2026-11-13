@@ -42,3 +42,8 @@ vibe_images
 !examples/scenario-directions/previews/product.mp4
 
 !examples/scenario-directions/previews/editorial.mp4
+
+!examples/illustration-directions/previews/annotated.mp4
+!examples/illustration-directions/previews/narrative.mp4
+examples/illustration-directions/previews/*-review/
+examples/illustration-directions/previews/*.png.render.json
